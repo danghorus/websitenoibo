@@ -23,15 +23,16 @@
                                 </div>
                                 <div class="col" >
                                     <button type="submit" class="btn btn-primary mb-2"
-                                        style="margin: 0px -650px; background-color:#999da1; border-radius:0px 60px 60px 0px; border: 2px;">
+                                        style="margin: 0px -71%; background-color:#999da1; border-radius:0px 60px 60px 0px; border: 2px;">
                                         <i class="fas fa-search" style="color:#ffffff; " ></i>
                                 </button>
                                 </div>
+                                <a href= "{{ route('users.create') }}" class="btn btn-primary mb-2" style="float:right;">Thêm nhân viên</a>
                             </div>
                         </form>
                     </div>
                     <div>
-                        <a href= "{{ route('users.create') }}" class="btn btn-primary mb-2" style="float:right; margin:-45px 0px 0px 0px;">Thêm nhân viên</a>
+                        
                     </div>
                 </div>
             </div>

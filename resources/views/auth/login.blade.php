@@ -1,11 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.side')
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+                <div class="card-header" style="text-align:center;"><h2>{{ __('Đăng nhập') }}</h2></div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
@@ -45,7 +45,7 @@
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                                     <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
+                                        {{ __('Ghi nhớ đăng nhập') }}
                                     </label>
                                 </div>
                             </div>
@@ -53,13 +53,13 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
+                                <button type="submit" class="btn btn-primary" style="width: 120px; border-radius:7px;">
+                                    {{ __('Đăng nhập') }}
                                 </button>
 
                                 @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
+                                    <a class="btn btn-link" href="{{ route('password.request') }}" style="padding:0px 100px;">
+                                        {{ __('Quên mật khẩu?') }}
                                     </a>
                                 @endif
                             </div>

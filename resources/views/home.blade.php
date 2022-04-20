@@ -17,8 +17,8 @@
                                             </i></nav>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="nhansu.php">Xem chi tiết</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        <a class="small text-grey stretched" href="nhansu.php">Xem chi tiết</a>
+                                        <div class="small text-gray"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
                             </div>
@@ -31,7 +31,7 @@
                                             </i></nav>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="duan.php">Xem chi tiết</a>
+                                        <a class="small text-gray stretched-link" href="duan.php">Xem chi tiết</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -45,7 +45,7 @@
                                             </i></nav>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="yeucaucanduyet.php">Xem chi tiết</a>
+                                        <a class="small text-gray stretched-link" href="yeucaucanduyet.php">Xem chi tiết</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -59,7 +59,7 @@
                                         </i></nav>
                                 </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="baocao.php">Xem chi tiết</a>
+                                        <a class="small text-gray stretched-link" href="baocao.php">Xem chi tiết</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
