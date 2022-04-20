@@ -1,0 +1,126 @@
+	
+.button {
+ border: 3px solid #111;
+ color: rgb(255, 255, 255);
+ text-decoration: none;
+}
+	
+
+.popup {
+ position: fixed;
+ width: 100%;
+ height: 100%;
+ top: -2%;
+ left: 6%;
+ background: rgba(0,0,0,0.6);
+ display: none;
+}
+
+#xmas-popup .popup-content{
+ width: 86%;
+ height: 91%;
+ background: rgb(224, 220, 220);
+ margin: 100px auto;
+ position: relative;
+ border: 2px solid #fff;
+}
+
+.close {
+ position: absolute;
+ top: 0px;
+ right: 10px;
+ border-radius: 50%;
+ background: 0;
+ border: 0px solid #fff;
+ color: rgb(161, 158, 158);
+ text-decoration: none;
+ line-height: 0;
+ padding: 10px 0 10px;
+ width: 30px;
+ text-align: center;
+}
+	
+.popup:target {
+  display: block;
+}
+
+
+
+
+.col-wrap {
+  display: table;
+  width: 100%;
+}
+
+.col {
+  display: table-cell;
+  padding: 1rem
+}
+
+.col:nth-child(even) {
+  background-color: orange;
+}
+
+.col:nth-child(odd) {
+  background-color: yellow;
+}
+
+/* flexbox */
+
+.f-grid {
+  display: flex;
+  justify-content: space-between;
+  margin-left: -1rem;
+  flex-flow: row wrap;
+}
+
+.f-grid-col {
+  flex: 1 0;
+  background-color: green;
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+/* grid */
+
+.g-grid {
+  display: grid;
+  /* W(adjusted) = W(individual) - (1rem * 1/2) */
+  grid-template-columns: calc(50% - (30px * 1/2)) calc(50% - (30px * 1/2));
+  grid-column-gap: 30px;
+}
+
+.g-grid-col {
+  padding: 30px;
+  background-color: red;
+  color: #fff;
+}
+
+
+
+
+*{
+    margin: 0px;
+    padding: 0px;
+}
+ul{
+    list-style: none;
+}
+a{
+    text-decoration: none;
+}
+#wrapper{
+    width: 100%;
+}
+ul#main-menu{
+    display: flex;
+}
+ul#main-menu a{
+    display: block;
+    left: -50px;
+    color: #ffffff;
+}
+ul#main-menu li:hover a{
+    color: #4f4242;
+}
