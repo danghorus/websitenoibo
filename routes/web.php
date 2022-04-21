@@ -23,7 +23,7 @@ use App\Http\Controllers\UploadImageController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/home');
 });
 
 Auth::routes();
