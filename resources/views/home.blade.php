@@ -1,12 +1,10 @@
 @extends('layouts.menu')
 
 @section('content')
+<br>
 <div id="layoutSidenav_content" style=" margin-top:-20px;">
                 <main>
                     <div class="container-fluid px-4">
-                            <ol class="breadcrumb mb-4">
-                                <li class="breadcrumb-item active">Trang chủ</li>
-                            </ol>
                         <div class="row">
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">

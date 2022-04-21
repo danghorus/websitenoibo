@@ -20,7 +20,7 @@ class UserController extends Controller
     {
         $users = User::all();
         if ($request->has('search')) {
-            $users = User::where('username', 'like', "%{$request->search}%")->orWhere('email', 'like', "%{$request->search}%")->get();
+            $users = User::where('email', 'like', "%{$request->search}%")->get();
         }
         return view('users.index', compact('users'));
     }
@@ -44,10 +44,13 @@ class UserController extends Controller
     public function store(UserStoreRequest $request)
     {
         User::create([
-            'username' => $request->username,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+            'fullname' => $request->fullname,
+            'phone' => $request->phone,
+            'birthday' => $request->birthday,
+            'bophan' => $request->bophan,
             'email' => $request->email,
+            'chucdanh' => $request->chucdanh,
+            'quyen' => $request->quyen,
             'password' => Hash::make($request->password),
         ]);
 
@@ -75,10 +78,13 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, User $user)
     {
         $user->update([
-            'username' => $request->username,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+            'fullname' => $request->fullname,
+            'phone' => $request->phone,
+            'birthday' => $request->birthday,
             'email' => $request->email,
+            'bophan' => $request->bophan,
+            'chucdanh' => $request->chucdanh,
+            'quyen' => $request->quyen,
         ]);
 
         return redirect()->route('users.index')->with('message', 'User Updated Succesfully');

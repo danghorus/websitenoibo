@@ -39,37 +39,39 @@
             <div class="card-body">
                 <table class="table">
                     <thead>
-                        <tr> 
+                        <tr style="text-align:center;"> 
                             <th scope="col">STT</th>
                             <th scope="col">Mã nhân viên</th>
                             <th scope="col">Ảnh đại diện</th>
                             <th scope="col" >Họ và tên</th>
                             <th scope="col" >Số điện thoại</th>
-                            <th scope="col">Username</th>
                             <th scope="col">Email</th>
                             <th scope="col" >Ngày sinh</th>
                             <th scope="col" >Bộ phận</th>
                             <th scope="col" >Chức danh</th>
-                            <th scope="col" >Hoạt động</th>
                             <th scope="col" >Quyền truy cập</th>
                             <th scope="col" >Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($users as $user)
-                            <tr>
+                            <tr style="text-align:center;">
                                 <td></td>
-                                <th scope="row">{{ $user->id }}</th>
-                                <td></td>
-                                <td>{{ $user->first_name }} {{ $user->last_name }}</td>
-                                <td></td>
-                                <td>{{ $user->username }}</td>
+                                <td scope="row">{{ $user->id }}</td>
+                                <td ><img src="{{ asset('img/avt.jpg') }}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
+                                <td>{{ $user->fullname }}</td>
+                                <td scope="row">{{ $user->phone }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td scope="row">{{ $user->birthday }}</td>
+                                <td scope="row">{{ $user->bophan }}</td>
+                                <td scope="row">{{ $user->chucdanh }}</td>
+                                <td scope="row">
+                                @if ($user->quyen ==0)
+                                    Nhân viên 
+                                @else
+                                    Quản lý
+                                @endif
+                                </td>
                                 <td>
                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-success">Chỉnh sửa</a>
                                 </td>

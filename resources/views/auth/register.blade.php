@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.side')
 
 @section('content')
     <div class="container">
@@ -8,19 +8,27 @@
                     <div class="card-header">{{ __('Register') }}</div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('register') }}">
+                        <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                             @csrf
 
                             <div class="form-group row">
-                                <label for="username"
-                                    class="col-md-4 col-form-label text-md-right">{{ __('Username') }}</label>
+                                <label for="avatar" class="col-md-4 col-form-label text-md-right">{{ __('Avatar (optional)') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="username" type="text"
-                                        class="form-control @error('name') is-invalid @enderror" name="username"
-                                        value="{{ old('name') }}" required autocomplete="username" autofocus>
+                                    <input id="avatar" type="file" class="form-control" name="avatar">
+                                </div>
+                            </div>
 
-                                    @error('username')
+                            <div class="form-group row">
+                                <label for="fullname"
+                                    class="col-md-4 col-form-label text-md-right">{{ __('Họ và tên') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="fullname" type="text"
+                                        class="form-control @error('name') is-invalid @enderror" name="fullname"
+                                        value="{{ old('name') }}" required autocomplete="fullname" autofocus>
+
+                                    @error('fullname')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -29,7 +37,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="first_name"
+                                <label for="phone"
                                     class="col-md-4 col-form-label text-md-right">{{ __('First Name') }}</label>
 
                                 <div class="col-md-6">
