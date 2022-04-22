@@ -26,7 +26,7 @@
                         Check in: 08:00:00 <br>
                         Check out: 17:30:00
                     </th>
-                    <th style="font-size: 13px" class="table-danger">
+                    <th style="font-size: 13px" class="table-danger" @click="showModal()">
                         Giờ hành chính:<br>
                         Check in: 08:01:01 <br>
                         Check out: --:--:--
@@ -59,12 +59,12 @@
                 </tr>
                 <tr>
                     <th>Bùi Ngọc Đăng</th>
-                    <th style="font-size: 13px" class="table-success">
+                    <th style="font-size: 13px" class="table-success" @click="showModal()">
                         Giờ hành chính:<br>
                         Check in: 08:00:00 <br>
                         Check out: 17:30:00
                     </th>
-                    <th style="font-size: 13px" class="table-danger">
+                    <th style="font-size: 13px" class="table-danger" @click="showModal()">
                         Giờ hành chính:<br>
                         Check in: 08:01:01 <br>
                         Check out: --:--:--
@@ -107,7 +107,7 @@
                 <div class="modal-dialog" role="document" style="  max-width: 80%;">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Chi tiết chấm công: Lê Văn Duy</h5>
+                            <h5 class="modal-title">Chi tiết chấm công: Lê Văn Duy - Ngày 22/04/2022</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal()">
                                 <span aria-hidden="true">&times;</span>
                             </button>
