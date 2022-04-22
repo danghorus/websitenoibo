@@ -15,7 +15,7 @@
                                             </i></nav>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-grey stretched" href="nhansu.php">Xem chi tiết</a>
+                                        <a class="small text-grey stretched" href="{{route('users.index')}}">Xem chi tiết</a>
                                         <div class="small text-gray"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
