@@ -13,7 +13,11 @@
             <select class="form-select col-lg-2" style="position: absolute; right: 20px; top: 80px">
                 <option>Theo tuần</option>
                 <option>Theo tháng</option>
+                <option>Tùy chọn</option>
             </select>
+            <div>
+                
+            </div>
             <table class="table table-bordered mt-5">
                 <thead class="table-active">
                 <tr>
@@ -113,7 +117,7 @@
             </div>
         </div>
         <div>
-            <div ref="modal" class="modal" tabindex="-1" role="dialog">
+            <div ref="modalDetail" class="modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document" style="  max-width: 80%;">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -169,10 +173,10 @@ export default {
     methods: {
         showModal() {
             this.showDetail = true;
-            $(this.$refs.modal).modal('show');
+            $(this.$refs.modalDetail).modal('show');
         },
         closeModal() {
-            $(this.$refs.modal).modal('hide');
+            $(this.$refs.modalDetail).modal('hide');
             this.showDetail = false;
         },
         showModalConfig() {

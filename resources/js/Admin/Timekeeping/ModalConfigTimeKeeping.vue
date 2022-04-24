@@ -15,39 +15,142 @@
         <div class="tab-content mt-5" id="myTabContent">
             <div class="tab-pane fade show active" id="time-keeping" role="tabpanel" aria-labelledby="time-keeping-tab">
                 <div class="form-group">
-                    <label><span style="color: red">*</span>Checkin:</label>
-                    <DatePicker
-                        v-model="value"
-                        value-type="format"
-                        type="time"
-                        :open.sync="open"
-                        placeholder="Select time"
-                        @change="handleChange"
-                    ></DatePicker>
+                    <label><span style="color: red">*</span>Thứ 2:</label>
+                    <div class="row">
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label><span style="color: red">*</span>Checkout:</label>
-                    <DatePicker
-                        v-model="value"
-                        value-type="format"
-                        type="time"
-                        :open.sync="open"
-                        placeholder="Select time"
-                        @change="handleChange"
-                    ></DatePicker>
+                    <label><span style="color: red">*</span>Thứ 3:</label>
+                    <div class="row">
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><span style="color: red">*</span>Thứ 4:</label>
+                    <div class="row">
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><span style="color: red">*</span>Thứ 5:</label>
+                    <div class="row">
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><span style="color: red">*</span>Thứ 6:</label>
+                    <div class="row">
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><span style="color: red">*</span>Thứ 7:</label>
+                    <div class="row">
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><span style="color: red">*</span>Chủ nhật:</label>
+                    <div class="row">
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                        <DatePicker
+                            v-model="value"
+                            value-type="format"
+                            type="time"
+                            placeholder="Select time"
+                            @change="handleChange"
+                        ></DatePicker>
+                    </div>
                 </div>
                 <button class="btn btn-primary">Lưu</button>
             </div>
             <div class="tab-pane" id="connect" role="tabpanel" aria-labelledby="connect-tab">
-                <div class="form-group">
-                    <label><span style="color: red">*</span>Client:</label>
-                    <input type="text" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label><span style="color: red">*</span>Secret:</label>
-                    <input type="text" class="form-control">
-                </div>
-                <button class="btn btn-primary">Kết nối</button>
+                <setting-config-partner />
             </div>
         </div>
     </div>
@@ -56,10 +159,11 @@
 <script>
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+import SettingConfigPartner from "./SettingConfigPartner";
 
 export default {
     name: "ModalConfigTimeKeeping",
-    components: {DatePicker},
+    components: {SettingConfigPartner, DatePicker},
     data() {
         return {
             value: null,
