@@ -17,11 +17,11 @@
                             <div class="form-input-wide">
                                 <label for="password"class="col-md-4 col-form-label text-md-right"></label>
                                 <div class="avatar-wrapper1" style="margin: 0px 0px 0px 10% ;">  
-                                    <img id="avatar" name="avatar" class="profile-pic" src="{{ asset('img/avt.jpg') }}"/>
+                                    <img id="image" name="image" class="profile-pic" src="{{ $user->image }}"/>
                                     <div class="upload-button">
                                         <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
                                     </div>
-                                    <input class="file-upload" name="avatar" id="avatar" type="file" accept="image/*" value="" />
+                                    <input class="file-upload" name="image" id="image" type="file" accept="image/*" value="" />
                                     @error('password')
                                         <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                     @enderror
@@ -59,8 +59,7 @@
                                 <div class="col-md-6">
                                     <input id="fullname" type="text"
                                         class="form-control @error('name') is-invalid @enderror" name="fullname"
-                                        value="{{ old('fullname', $user->fullname) }}" required autocomplete="fullname"
-                                        autofocus>
+                                        value="{{ old('fullname', $user->fullname) }}" required autocomplete="fullname">
 
                                     @error('fullname')
                                         <span class="invalid-feedback" role="alert">
@@ -78,7 +77,7 @@
                                     <input id="phone" type="text"
                                         class="form-control @error('name') is-invalid @enderror" name="phone"
                                         value="{{ old('phone', $user->phone) }}" required
-                                        autocomplete="phone" autofocus>
+                                        autocomplete="phone">
 
                                     @error('phone')
                                         <span class="invalid-feedback" role="alert">
@@ -96,7 +95,7 @@
                                     <input id="birthday" type="date"
                                         class="form-control @error('name') is-invalid @enderror" name="birthday"
                                         value="{{ old('birthday', $user->birthday) }}" required
-                                        autocomplete="birthday" autofocus>
+                                        autocomplete="birthday" >
 
                                     @error('birthday')
                                         <span class="invalid-feedback" role="alert">
@@ -128,8 +127,8 @@
 
                                 <div class="col-md-6">
                                     <select id="bophan" type="text" class="form-control @error('name') is-invalid @enderror" name="bophan"
-                                        required autocomplete="bophan" autofocus>
-                                        <option >{{ $user->bophan }}</option>
+                                        required autocomplete="bophan">
+                                        <option>{{ $user->bophan }}</option>
                                         <option value="Dev">Dev</option>
                                         <option value="Game design">Game design</option>
                                         <option value="Art">Art</option>
@@ -150,7 +149,7 @@
 
                                 <div class="col-md-6">
                                 <select id="chucdanh" type="text" class="form-control @error('name') is-invalid @enderror" name="chucdanh"
-                                        required autocomplete="chucdanh" autofocus>
+                                        required autocomplete="chucdanh" >
                                     <option > {{$user->chucdanh }} </option>
                                     <option value="Nhân viên">Nhân viên</option>
                                     <option value="Leader">Leader</option>
@@ -172,16 +171,11 @@
 
                                 <div class="col-md-6">
                                     <select id="quyen" type="text" class="form-control @error('name') is-invalid @enderror" name="quyen"
-                                        value="" required autocomplete="quyen" autofocus>
-                                        <option >
-                                            @if ($user->quyen ==0)
-                                            Nhân viên 
-                                            @else
-                                            Quản lý
-                                            @endif
-                                        </option>
-                                        <option value="0">Nhân viên</option>
-                                        <option value="1">Quản lý</option>
+                                        value="" required autocomplete="quyen">
+                                        <option value="0" {{old('quyen')==0 || $user->quyen==0?'selected':false}}>Nhân viên</option>
+                                        <option value="1" {{old('quyen')==1 || $user->quyen==1?'selected':false}}>Quản lý</option>
+                                        
+                                        
                                     </select>
 
                                     @error('quyen')
@@ -194,9 +188,7 @@
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Cập nhật thông tin') }}
-                                    </button>
+                                    <button type="submit" class="btn btn-primary"> {{ __('Cập nhật thông tin') }} </button>
                                 </div>
                             </div>
                         </form>

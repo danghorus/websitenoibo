@@ -38,7 +38,7 @@
                             <a class="nav-link" href="{{ url('/time-keeping') }}" style="color: #5e6e82;"> Chấm công  </a>
                             <a class="nav-link" href="{{ url('/') }}" style="color: #5e6e82;">Việc của tôi</a>
                             <a class="nav-link" href="{{ url('/') }}" style="color: #5e6e82;"> Dự án</a>
-                            <a class="nav-link" href="{{ url('/') }}" style="color: #5e6e82;"> Yêu cầu</a>
+                            <a class="nav-link" href="{{ url('/yeucau') }}" style="color: #5e6e82;"> Yêu cầu</a>
                             <a class="nav-link" href="{{ url('/') }}" style="color: #5e6e82;">Báo cáo</a>
                             <a class="nav-link" href="{{ url('/') }}" style="color: #5e6e82;">Lương công việc</a>
                             <a class="nav-link" href="{{ url('/') }}" style="color: #5e6e82;">Thưởng dự án</a>

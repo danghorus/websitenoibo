@@ -58,20 +58,14 @@
                             <tr style="text-align:center;">
                                 <td></td>
                                 <td scope="row">{{ $user->id }}</td>
-                                <td ><img src="{{ asset('img/avt.jpg') }}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
+                                <td ><img src="{{ $user->image }}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
                                 <td>{{ $user->fullname }}</td>
                                 <td scope="row">{{ $user->phone }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td scope="row">{{ $user->birthday }}</td>
                                 <td scope="row">{{ $user->bophan }}</td>
                                 <td scope="row">{{ $user->chucdanh }}</td>
-                                <td scope="row">
-                                @if ($user->quyen ==0)
-                                    Nhân viên 
-                                @else
-                                    Quản lý
-                                @endif
-                                </td>
+                                <td scope="row">{{ $user->quyen==0?'Nhân viên':'Quản lý' }} </td>
                                 <td>
                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-success">Chỉnh sửa</a>
                                 </td>

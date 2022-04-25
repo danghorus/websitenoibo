@@ -43,8 +43,10 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
+
         User::create([
             'fullname' => $request->fullname,
+            'image' => $request->image,
             'phone' => $request->phone,
             'birthday' => $request->birthday,
             'bophan' => $request->bophan,
@@ -78,13 +80,14 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, User $user)
     {
         $user->update([
+
             'fullname' => $request->fullname,
             'phone' => $request->phone,
             'birthday' => $request->birthday,
             'email' => $request->email,
             'bophan' => $request->bophan,
             'chucdanh' => $request->chucdanh,
-            'quyen' => $request->quyen,
+            'quyen' => $request->quyen
         ]);
 
         return redirect()->route('users.index')->with('message', 'User Updated Succesfully');
