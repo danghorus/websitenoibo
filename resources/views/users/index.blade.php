@@ -58,7 +58,7 @@
                             <tr style="text-align:center;">
                                 <td></td>
                                 <td scope="row">{{ $user->id }}</td>
-                                <td ><img src="{{ $user->image }}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
+                                <td ><img src="{{ $user->avatar }}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
                                 <td>{{ $user->fullname }}</td>
                                 <td scope="row">{{ $user->phone }}</td>
                                 <td>{{ $user->email }}</td>

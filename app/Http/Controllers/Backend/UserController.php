@@ -8,6 +8,7 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Image;
 
 class UserController extends Controller
 {
@@ -20,7 +21,7 @@ class UserController extends Controller
     {
         $users = User::all();
         if ($request->has('search')) {
-            $users = User::where('email', 'like', "%{$request->search}%")->get();
+            $users = User::where('fullname', 'like', "%{$request->search}%")->get();
         }
         return view('users.index', compact('users'));
     }
@@ -42,11 +43,10 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(UserStoreRequest $request)
-    {
-
+    {   
         User::create([
             'fullname' => $request->fullname,
-            'image' => $request->image,
+            'avatar' => $request->avatar,
             'phone' => $request->phone,
             'birthday' => $request->birthday,
             'bophan' => $request->bophan,
@@ -55,8 +55,10 @@ class UserController extends Controller
             'quyen' => $request->quyen,
             'password' => Hash::make($request->password),
         ]);
+        
 
         return redirect()->route('users.index')->with('message', 'User Register Succesfully');
+
     }
 
     /**

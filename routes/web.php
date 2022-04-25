@@ -33,12 +33,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::resource('users', UserController::class);
 Route::resource('time-keeping', TimeKeepingController::class);
 Route::resource('yeucau', YeuCauController::class);
-Route::get('upload-image', [UploadImageController::class, 'index']);
-Route::post('save', [UploadImageController::class, 'save']);
-
 
 
 Route::post('users/{user}/change-password', [ChangePasswordController::class, 'change_password'])->name('users.change.password');
+Route::post('users/{user}/change-avatar', [ChangeAvatarController::class, 'change_avatar'])->name('users.change.avatar');
+
 
 Route::get('{any}', function () {
     return view('employees.index');

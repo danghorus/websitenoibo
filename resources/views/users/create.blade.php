@@ -17,16 +17,16 @@
                             @csrf
 
                             <div class="form-group row">
-                                <label for="fullname" class="col-md-4 col-form-label text-md-right">{{ __('Ảnh đại diện') }}</label>
+                                <label for="avatar" class="col-md-4 col-form-label text-md-right">{{ __('Ảnh đại diện') }}</label>
 
                                 <div class="form-input-wide">
                                 <label for="password"class="col-md-4 col-form-label text-md-right"></label>
                                 <div class="avatar-wrapper" style="margin: -14% 0px 0px 45% ;">  
-                                    <img id="image" name="image" class="profile-pic" src="{{ asset('img/avt.jpg') }}"/>
+                                    <img id="avatar" name="avatar" class="profile-pic" src="{{ asset('img/avt.jpg') }}"/>
                                     <div class="upload-button">
                                         <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
                                     </div>
-                                    <input class="file-upload" name="image" id="image" type="file" accept="image/*" value="" />
+                                    <input class="file-upload" name="avatar" id="avatar" type="file" accept="image/*" value="" />
                                     @error('password')
                                         <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                     @enderror
