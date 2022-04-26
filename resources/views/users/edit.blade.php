@@ -12,8 +12,9 @@
                         <a class="btn btn-secondary" href="{{ route('users.index') }}" style="float:right; margin:-43px -15px 0px 0px;">Quay lại</a>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="">
+                        <form method="POST" action="users.change.avatar">
                             @csrf
+                            @method('PUT')
                             <div class="form-input-wide">
                                 <label for="password"class="col-md-4 col-form-label text-md-right"></label>
                                 <div class="avatar-wrapper1" style="margin: 0px 0px 0px 10% ;">  
@@ -122,20 +123,20 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="bophan"
+                                <label for="department"
                                     class="col-md-4 col-form-label text-md-right">{{ __('Bộ phận') }}</label>
 
                                 <div class="col-md-6">
-                                    <select id="bophan" type="text" class="form-control @error('name') is-invalid @enderror" name="bophan"
-                                        required autocomplete="bophan">
-                                        <option>{{ $user->bophan }}</option>
+                                    <select id="department" type="text" class="form-control @error('name') is-invalid @enderror" name="department"
+                                        required autocomplete="department">
+                                        <option>{{ $user->department }}</option>
                                         <option value="Dev">Dev</option>
                                         <option value="Game design">Game design</option>
                                         <option value="Art">Art</option>
                                         <option value="Tester">Tester</option>
                                 </select>
 
-                                    @error('bophan')
+                                    @error('department')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -144,20 +145,20 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="chucdanh"
+                                <label for="position"
                                     class="col-md-4 col-form-label text-md-right">{{ __('Chức danh') }}</label>
 
                                 <div class="col-md-6">
-                                <select id="chucdanh" type="text" class="form-control @error('name') is-invalid @enderror" name="chucdanh"
-                                        required autocomplete="chucdanh" >
-                                    <option > {{$user->chucdanh }} </option>
+                                <select id="position" type="text" class="form-control @error('name') is-invalid @enderror" name="position"
+                                        required autocomplete="position" >
+                                    <option > {{$user->position }} </option>
                                     <option value="Nhân viên">Nhân viên</option>
                                     <option value="Leader">Leader</option>
                                     <option value="Quản lý">Quản lý</option>
                                     <option value="Giám đốc">Giám đốc</option>
                                 </select>
 
-                                    @error('chucdanh')
+                                    @error('position')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -166,19 +167,19 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="quyen"
+                                <label for="permission"
                                     class="col-md-4 col-form-label text-md-right">{{ __('Quyền truy cập') }}</label>
 
                                 <div class="col-md-6">
-                                    <select id="quyen" type="text" class="form-control @error('name') is-invalid @enderror" name="quyen"
-                                        value="" required autocomplete="quyen">
-                                        <option value="0" {{old('quyen')==0 || $user->quyen==0?'selected':false}}>Nhân viên</option>
-                                        <option value="1" {{old('quyen')==1 || $user->quyen==1?'selected':false}}>Quản lý</option>
+                                    <select id="permission" type="text" class="form-control @error('name') is-invalid @enderror" name="permission"
+                                        value="" required autocomplete="permission">
+                                        <option value="0" {{old('permission')==0 || $user->permission==0?'selected':false}}>Nhân viên</option>
+                                        <option value="1" {{old('permission')==1 || $user->permission==1?'selected':false}}>Quản lý</option>
                                         
                                         
                                     </select>
 
-                                    @error('quyen')
+                                    @error('permission')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

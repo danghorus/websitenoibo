@@ -13,9 +13,8 @@
                     </div><br>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('users.store') }}">
+                        <form method="POST" action="{{ route('users.store') }}" enctype="multipart/form-data">
                             @csrf
-
                             <div class="form-group row">
                                 <label for="avatar" class="col-md-4 col-form-label text-md-right">{{ __('Ảnh đại diện') }}</label>
 
@@ -27,7 +26,7 @@
                                         <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
                                     </div>
                                     <input class="file-upload" name="avatar" id="avatar" type="file" accept="image/*" value="" />
-                                    @error('password')
+                                    @error('avatar')
                                         <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                     @enderror
                                 </div>
@@ -102,19 +101,19 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="bophan"
+                                <label for="department"
                                     class="col-md-4 col-form-label text-md-right">{{ __('Bộ phận') }}</label>
 
                                 <div class="col-md-6">
-                                    <select id="bophan" type="text" class="form-control @error('bophan') is-invalid @enderror"
-                                        name="bophan" value="{{ old('bophan') }}" required autocomplete="bophan">
+                                    <select id="department" type="text" class="form-control @error('department') is-invalid @enderror"
+                                        name="department" value="{{ old('department') }}" required autocomplete="department">
                                                     <option >Lựa chọn</option>
                                                     <option value="Dev">Dev</option>
                                                     <option value="Game design">Game design</option>
                                                     <option value="Art">Art</option>
                                                     <option value="Tester">Tester</option>
                                                 </select>
-                                    @error('bophan')
+                                    @error('department')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -123,19 +122,19 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="chucdanh"
+                                <label for="position"
                                     class="col-md-4 col-form-label text-md-right">{{ __('Chức danh') }}</label>
 
                                 <div class="col-md-6">
-                                    <select id="chucdanh" type="text" class="form-control @error('chucdanh') is-invalid @enderror"
-                                        name="chucdanh" value="{{ old('chucdanh') }}" required autocomplete="chucdanh">
+                                    <select id="position" type="text" class="form-control @error('position') is-invalid @enderror"
+                                        name="position" value="{{ old('position') }}" required autocomplete="position">
                                                     <option >Lựa chọn</option>
                                                     <option value="Nhân viên">Nhân viên</option>
                                                     <option value="Leader">Leader</option>
                                                     <option value="Quản lý">Quản lý</option>
                                                     <option value="Giám đốc">Giám đốc</option>
                                                 </select>
-                                    @error('chucdanh')
+                                    @error('position')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -144,17 +143,17 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="quyen"
+                                <label for="permission"
                                     class="col-md-4 col-form-label text-md-right">{{ __('Quyền truy cập') }}</label>
 
                                 <div class="col-md-6">
-                                    <select id="quyen" type="text" class="form-control @error('quyen') is-invalid @enderror"
-                                        name="quyen" value="{{ old('quyen') }}" required autocomplete="quyen">
+                                    <select id="permission" type="text" class="form-control @error('permission') is-invalid @enderror"
+                                        name="permission" value="{{ old('permission') }}" required autocomplete="permission">
                                                     <option >Lựa chọn</option>
                                                     <option value="0">Nhân viên</option>
                                                     <option value="1">Quản lý</option>
                                                 </select>
-                                    @error('quyen')
+                                    @error('permission')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

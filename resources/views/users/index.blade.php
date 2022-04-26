@@ -43,6 +43,7 @@
                             <th scope="col">STT</th>
                             <th scope="col">Mã nhân viên</th>
                             <th scope="col">Ảnh đại diện</th>
+                            <th scope="col" >Tên ảnh</th>
                             <th scope="col" >Họ và tên</th>
                             <th scope="col" >Số điện thoại</th>
                             <th scope="col">Email</th>
@@ -51,6 +52,7 @@
                             <th scope="col" >Chức danh</th>
                             <th scope="col" >Quyền truy cập</th>
                             <th scope="col" >Thao tác</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -58,17 +60,19 @@
                             <tr style="text-align:center;">
                                 <td></td>
                                 <td scope="row">{{ $user->id }}</td>
-                                <td ><img src="{{ $user->avatar }}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
+                                <td ><img src="{{asset('image/'.$user->avatar)}}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
+                                <td>{{$user->avatar}}</td>
                                 <td>{{ $user->fullname }}</td>
                                 <td scope="row">{{ $user->phone }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td scope="row">{{ $user->birthday }}</td>
-                                <td scope="row">{{ $user->bophan }}</td>
-                                <td scope="row">{{ $user->chucdanh }}</td>
-                                <td scope="row">{{ $user->quyen==0?'Nhân viên':'Quản lý' }} </td>
+                                <td scope="row">{{ $user->department }}</td>
+                                <td scope="row">{{ $user->position }}</td>
+                                <td scope="row">{{ $user->permission==0?'Nhân viên':'Quản lý' }} </td>
                                 <td>
                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-success">Chỉnh sửa</a>
                                 </td>
+                                
                             </tr>
                         @endforeach
                     </tbody>

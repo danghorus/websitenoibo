@@ -44,15 +44,26 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request)
     {   
+        //Lưu hình thẻ khi có file hình
+	if($request->hasFile('avatar')){
+		//Hàm kiểm tra dữ liệu
+		//Lưu hình ảnh vào thư mục public/upload/hinhthe
+		$avatar = $request->file('avatar');
+		$destinationPath = public_path('image');
+        $filename = $avatar->getClientOriginalName();
+		$avatar->move($destinationPath, $filename);
+        }
+
+
         User::create([
             'fullname' => $request->fullname,
             'avatar' => $request->avatar,
             'phone' => $request->phone,
             'birthday' => $request->birthday,
-            'bophan' => $request->bophan,
+            'department' => $request->department,
             'email' => $request->email,
-            'chucdanh' => $request->chucdanh,
-            'quyen' => $request->quyen,
+            'position' => $request->position,
+            'permission' => $request->permission,
             'password' => Hash::make($request->password),
         ]);
         
@@ -87,9 +98,9 @@ class UserController extends Controller
             'phone' => $request->phone,
             'birthday' => $request->birthday,
             'email' => $request->email,
-            'bophan' => $request->bophan,
-            'chucdanh' => $request->chucdanh,
-            'quyen' => $request->quyen
+            'department' => $request->department,
+            'position' => $request->position,
+            'permission' => $request->permission
         ]);
 
         return redirect()->route('users.index')->with('message', 'User Updated Succesfully');

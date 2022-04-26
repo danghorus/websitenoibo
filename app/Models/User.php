@@ -23,10 +23,10 @@ class User extends Authenticatable
         'avatar',
         'phone',
         'birthday',
-        'bophan',
+        'department',
         'email',
-        'chucdanh',
-        'quyen' ,
+        'position',
+        'permission' ,
     ];
 
     /**
