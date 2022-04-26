@@ -85,7 +85,7 @@
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>{{ Auth::user()->fullname }}</a>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <div class="avatar-wrapper">
-                                    <img class="profile-pic"src="{{URL::asset('/image/avt.png')}}" />
+                                    <img class="profile-pic" src="{{asset('image/'.Auth::user()->avatar)}}" />
                                 </div>
                                 <hr class="dropdown-divider" />
                                 <button class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault();

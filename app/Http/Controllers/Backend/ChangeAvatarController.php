@@ -7,16 +7,38 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 class ChangeAvatarController extends Controller
+
 {
+
+
     public function change_avatar(Request $request, User $user)
     {
-        $request->validate([
-          'avatar' => ['nullable', 'image', 'max:1024'],
-      ]);
+      $avatar_name = '';
+    if($request->hasFile('avatar')){
+      //Hàm kiểm tra dữ liệu
+      $this->validate($request, 
+        [
+          //Kiểm tra đúng file đuôi .jpg,.jpeg,.png.gif và dung lượng không quá 2M
+          'avatar' => 'mimes:jpg,jpeg,png,gif|max:2048',
+        ],			
+        [
+          //Tùy chỉnh hiển thị thông báo không thõa điều kiện
+          'avatar.mimes' => 'Chỉ chấp nhận ảnh đại diện với đuôi .jpg .jpeg .png .gif',
+          'avatar.max' => 'Ảnh đại diện giới hạn dung lượng không quá 2M',
+        ]
+      );
+      
+      //Lưu hình ảnh vào thư mục public/upload/hinhthe
+      $avatar = $request->file('avatar');
+      $avatar_name = time().'_'.$avatar->getClientOriginalName();
+      $destinationPath = public_path('image');
+      $avatar->move($destinationPath, $avatar_name);
+          
 
         $user->update([
-          'avatar' => $request->avatar,
+            'avatar' => $avatar_name,
       ]);
+      }
 
         return redirect()->route('users.index')->with('message', 'User Avatar Updated Succesfully');
     }

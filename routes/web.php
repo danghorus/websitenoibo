@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\ChangePassword;
 use App\Http\Controllers\Backend\ChangePasswordController;
+use App\Http\Controllers\Backend\ChangeAvatarController;
 use App\Http\Controllers\Backend\CityController;
 use App\Http\Controllers\Backend\CountryController;
 use App\Http\Controllers\Backend\DepartmentController;
@@ -31,8 +32,9 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('users', UserController::class);
+Route::post('save', [UserController::class, 'save']);
 Route::resource('time-keeping', TimeKeepingController::class);
-Route::resource('yeucau', YeuCauController::class);
+Route::resource('request', YeuCauController::class);
 
 
 Route::post('users/{user}/change-password', [ChangePasswordController::class, 'change_password'])->name('users.change.password');

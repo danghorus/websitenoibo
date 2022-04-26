@@ -23,7 +23,7 @@
                                 </div>
                                 <div class="col" >
                                     <button type="submit" class="btn btn-primary mb-2"
-                                        style="margin: 0px -71%; background-color:#999da1; border-radius:0px 60px 60px 0px; border: 2px;">
+                                        style="height:38px; margin: 0px -71.5%; background-color:#999da1; border-radius:0px 60px 60px 0px; border: 2px;">
                                         <i class="fas fa-search" style="color:#ffffff; " ></i>
                                 </button>
                                 </div>
@@ -43,7 +43,6 @@
                             <th scope="col">STT</th>
                             <th scope="col">Mã nhân viên</th>
                             <th scope="col">Ảnh đại diện</th>
-                            <th scope="col" >Tên ảnh</th>
                             <th scope="col" >Họ và tên</th>
                             <th scope="col" >Số điện thoại</th>
                             <th scope="col">Email</th>
@@ -61,7 +60,6 @@
                                 <td></td>
                                 <td scope="row">{{ $user->id }}</td>
                                 <td ><img src="{{asset('image/'.$user->avatar)}}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
-                                <td>{{$user->avatar}}</td>
                                 <td>{{ $user->fullname }}</td>
                                 <td scope="row">{{ $user->phone }}</td>
                                 <td>{{ $user->email }}</td>

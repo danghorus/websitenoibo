@@ -12,18 +12,17 @@
                         <a class="btn btn-secondary" href="{{ route('users.index') }}" style="float:right; margin:-43px -15px 0px 0px;">Quay lại</a>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="users.change.avatar">
+                        <form method="POST" action="{{ route('users.change.avatar', $user->id) }}" enctype="multipart/form-data">
                             @csrf
-                            @method('PUT')
                             <div class="form-input-wide">
                                 <label for="password"class="col-md-4 col-form-label text-md-right"></label>
                                 <div class="avatar-wrapper1" style="margin: 0px 0px 0px 10% ;">  
-                                    <img id="avatar" name="avatar" class="profile-pic" src="{{ $user->avatar }}"/>
+                                    <img id="avatar" name="avatar" class="profile-pic" src="{{asset('image/'.$user->avatar)}}"/>
                                     <div class="upload-button">
                                         <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
                                     </div>
                                     <input class="file-upload" name="avatar" id="avatar" type="file" accept="image/*" value="" />
-                                    @error('password')
+                                    @error('avatar')
                                         <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                     @enderror
                                 </div>
