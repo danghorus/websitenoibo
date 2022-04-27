@@ -27,6 +27,9 @@ class User extends Authenticatable
         'email',
         'position',
         'permission' ,
+        'place_id' ,
+        'place_name' ,
+        'face_image_url' ,
     ];
 
     /**

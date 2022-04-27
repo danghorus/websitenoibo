@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\EmployeeDataController;
+use App\Http\Controllers\Api\PartnerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,3 +31,13 @@ Route::get('/employees/{state}/cities', [EmployeeDataController::class, 'cities'
 // Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
 
 Route::apiResource('employees', EmployeeController::class);
+
+Route::post('/partner/connect', [PartnerController::class, 'connect']);
+Route::get('/partner/get_auth_code', [PartnerController::class, 'getAuthCode']);
+Route::get('/partner/get_devices', [PartnerController::class, 'getDevices']);
+Route::get('/partner/get_config', [PartnerController::class, 'getConfig']);
+Route::get('/partner/sync_device', [PartnerController::class, 'syncDevice']);
+Route::get('/partner/get_device_info', [PartnerController::class, 'getDeviceInfo']);
+Route::post('/partner/update_device', [PartnerController::class, 'updateDevice']);
+Route::post('/partner/update_user', [PartnerController::class, 'updateUser']);
+Route::get('/partner/get_users', [PartnerController::class, 'getUsers']);
