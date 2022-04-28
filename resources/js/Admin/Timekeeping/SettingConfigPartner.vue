@@ -36,7 +36,9 @@
                         <td>{{ user.id }}</td>
                         <td>{{ user.fullname }}</td>
                         <td>{{ user.place_name }}</td>
-                        <td>{{ user.place_name }}</td>
+                        <td>
+                            <img :src="user.face_image_url" width="150" height="150" />
+                        </td>
                         <td>
                             <button class="btn btn-outline-primary" data-toggle="collapse" data-target="#collapseFace"
                                     aria-expanded="false" aria-controls="collapseFace" @click="showEditFaceId(user)">
@@ -116,8 +118,8 @@
                 </div>
                 <div class="form-group">
                     <label>Địa điểm đăng kí:</label>
-                    <select class="form-select" v-model="place">
-                        <option v-for="place in places" :value="place">{{ place.name }}</option>
+                    <select class="form-select" v-model="place" :disabled="user.place_id">
+                        <option v-for="p in places" :value="p" :selected="p.id == user.place_id">{{ p.name }}</option>
                     </select>
                 </div>
                 <div class="row">
@@ -217,23 +219,50 @@ export default {
         },
         async updateUser(userId) {
             let files = this.$refs.uploader.files;
-            const res = await $upload('https://partner.hanet.ai/person/register', [],  {
-                placeID: this.place.id,
-                aliasID: userId,
-                token: this.config?.access_token,
-                title: this.user?.position,
-                name: this.user?.fullname,
-                file: files[0],
-            })
-            if (res.returnCode === 1 ) {
-                const r = await $post('/partner/get_users', {
-                    place_id: this.place.id,
-                    place_name: this.place.name,
-                    user_id: userId,
-                    file_image_url: res.data?.file
+            if (this.user.face_image_url) {
+                const res = await $upload('https://partner.hanet.ai/person/updateByFaceImage', [],  {
+                    placeID: this.user.place_id,
+                    aliasID: userId,
+                    token: this.config?.access_token,
+                    file: files[0],
                 })
+
+                if (res.returnCode === 1 ) {
+                    const r = await $post('/api/partner/update_user', {
+                        user_id: userId,
+                        face_image_url: res.data?.path
+                    })
+                    if (r.code === 200) {
+                        this.closeCol();
+                        this.getUsers();
+                    }
+                } else {
+                    toastr.error(res.returnMessage);
+                }
             } else {
-                toastr.error(res.returnMessage);
+                const res = await $upload('https://partner.hanet.ai/person/register', [],  {
+                    placeID: this.place.id,
+                    aliasID: userId,
+                    token: this.config?.access_token,
+                    title: this.user?.position,
+                    name: this.user?.fullname,
+                    file: files[0],
+                })
+
+                if (res.returnCode === 1 ) {
+                    const r = await $post('/api/partner/update_user', {
+                        place_id: this.place.id,
+                        place_name: this.place.name,
+                        user_id: userId,
+                        face_image_url: res.data?.file
+                    })
+                    if (r.code === 200) {
+                        this.closeCol();
+                        this.getUsers();
+                    }
+                } else {
+                    toastr.error(res.returnMessage);
+                }
             }
         },
         async getUsers() {
