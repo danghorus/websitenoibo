@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\EmployeeDataController;
 use App\Http\Controllers\Api\PartnerController;
+use App\Http\Controllers\Api\TimeKeepingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,3 +42,6 @@ Route::get('/partner/get_device_info', [PartnerController::class, 'getDeviceInfo
 Route::post('/partner/update_device', [PartnerController::class, 'updateDevice']);
 Route::post('/partner/update_user', [PartnerController::class, 'updateUser']);
 Route::get('/partner/get_users', [PartnerController::class, 'getUsers']);
+
+
+Route::get('/time-keeping/get', [TimeKeepingController::class, 'get']);

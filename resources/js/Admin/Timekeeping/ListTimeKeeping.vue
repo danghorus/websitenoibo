@@ -10,13 +10,16 @@
 
         </div>
         <div class="card-body table-responsive">
-            <select class="form-select col-lg-2" style="position: absolute; right: 20px; top: 80px">
-                <option>Theo tuần</option>
-                <option>Theo tháng</option>
-                <option>Tùy chọn</option>
+            <select class="form-select col-lg-2" style="position: absolute; right: 20px; top: 80px" v-model="option" @change="changeOption()">
+                <option value="1">Theo tuần</option>
+                <option value="2">Theo tháng</option>
+                <option value="3">
+                    <button data-toggle="collapse"  data-target="#collapseOtherTime"
+                            aria-expanded="false" aria-controls="collapseOtherTime">Tùy chọn</button>
+                </option>
             </select>
             <div>
-                
+
             </div>
             <table class="table table-bordered mt-5">
                 <thead class="table-active">
@@ -24,91 +27,9 @@
                     <th style="width: 15%">
                         <input type="text" name="search" class="form-control mb-2 input-search" id="inlineFormInput" placeholder="Tìm kiếm">
                     </th>
-                    <th>T2 18/4</th>
-                    <th>T3 19/4</th>
-                    <th>T4 20/4</th>
-                    <th>T5 21/4</th>
-                    <th>T6 22/4</th>
-                    <th>T7 23/4</th>
-                    <th>CN 24/4</th>
+                    <th v-for="label in labels">{{ label }}</th>
                 </tr>
                 </thead>
-                <tr>
-                    <th>Lê Văn Duy</th>
-                    <th style="font-size: 13px" class="table-success" @click="showModal()">
-                        Giờ hành chính:<br>
-                        Check in: 08:00:00 <br>
-                        Check out: 17:30:00
-                    </th>
-                    <th style="font-size: 13px" class="table-danger" @click="showModal()">
-                        Giờ hành chính:<br>
-                        Check in: 08:01:01 <br>
-                        Check out: --:--:--
-                    </th>
-                    <th style="font-size: 13px">
-                        Giờ hành chính:<br>
-                        Check in: --:--:-- <br>
-                        Check out: --:--:--
-                    </th>
-                    <th style="font-size: 13px">
-                        Giờ hành chính:<br>
-                        Check in: --:--:-- <br>
-                        Check out: --:--:--
-                    </th>
-                    <th style="font-size: 13px">
-                        Giờ hành chính:<br>
-                        Check in: --:--:-- <br>
-                        Check out: --:--:--
-                    </th>
-                    <th style="font-size: 13px">
-                        Giờ hành chính:<br>
-                        Check in: --:--:-- <br>
-                        Check out: --:--:--
-                    </th>
-                    <th style="font-size: 13px">
-                        Giờ hành chính:<br>
-                        Check in: --:--:-- <br>
-                        Check out: --:--:--
-                    </th>
-                </tr>
-                <tr>
-                    <th>Bùi Ngọc Đăng</th>
-                    <th style="font-size: 13px" class="table-success" @click="showModal()">
-                        Giờ hành chính:<br>
-                        Check in: 08:00:00 <br>
-                        Check out: 17:30:00
-                    </th>
-                    <th style="font-size: 13px" class="table-warning" @click="showModal()">
-                        Giờ hành chính:<br>
-                        Check in: 08:01:01 <br>
-                        Check out: --:--:--
-                    </th>
-                    <th style="font-size: 13px">
-                        Giờ hành chính:<br>
-                        Check in: --:--:-- <br>
-                        Check out: --:--:--
-                    </th>
-                    <th style="font-size: 13px">
-                        Giờ hành chính:<br>
-                        Check in: --:--:-- <br>
-                        Check out: --:--:--
-                    </th>
-                    <th style="font-size: 13px">
-                        Giờ hành chính:<br>
-                        Check in: --:--:-- <br>
-                        Check out: --:--:--
-                    </th>
-                    <th style="font-size: 13px">
-                        Giờ hành chính:<br>
-                        Check in: --:--:-- <br>
-                        Check out: --:--:--
-                    </th>
-                    <th style="font-size: 13px">
-                        Giờ hành chính:<br>
-                        Check in: --:--:-- <br>
-                        Check out: --:--:--
-                    </th>
-                </tr>
             </table>
             <div>
                 <p><i class="fa fa-circle" style="color: red"></i>  Chưa checkin (checkout)</p>
@@ -152,12 +73,22 @@
                 </div>
             </div>
         </div>
+        <div class="collapse" id="collapseOtherTime" v-if="showOtherTime">
+            <div class="card card-body collapse-edit">
+                <div class="row">
+                    <button class="btn btn-primary col-6">Cập nhật</button>
+                    <button class="btn btn-default col-6">Đóng</button>
+                </div>
+
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import ModalDetailTimeKeepingInDay from "./ModalDetailTimeKeepingInDay";
 import ModalConfigTimeKeeping from "./ModalConfigTimeKeeping";
+import {$get} from "../../ultis";
 
 export default {
     name: "ListTimeKeeping",
@@ -167,10 +98,38 @@ export default {
     data() {
         return {
             showDetail: false,
-            modalConfig: false
+            modalConfig: false,
+            showOtherTime: false,
+            option: 1,
+            labels: [],
+            start_date: '',
+            end_date: ''
         }
     },
+    created() {
+        this.getTimeKeepings();
+    },
     methods: {
+        async getTimeKeepings() {
+            if (this.option != 3 || (this.option == 3 && this.start_date != '' && this.end_date != '')) {
+                let params = {
+                    option: this.option
+                };
+                const res = await $get('/api/time-keeping/get', {...params});
+                if (res.code === 200) {
+                    this.labels = res.labels;
+                }
+            }
+        },
+        changeOption() {
+            if (this.option === 3) {
+                this.showOtherTime = true;
+            } else {
+                this.start_date = '';
+                this.end_date = '';
+                this.getTimeKeepings();
+            }
+        },
         showModal() {
             this.showDetail = true;
             $(this.$refs.modalDetail).modal('show');
