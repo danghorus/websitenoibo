@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -23,7 +23,8 @@ class PartnerController extends Controller
     /**
      * @param Request $request
      */
-    public function connect(Request $request) {
+    public function connect(Request $request)
+    {
         $data = $request->all();
 
         $url = $this->partnerService->connect($data);
@@ -36,13 +37,15 @@ class PartnerController extends Controller
         }
     }
 
-    public function getDevices(Request $request) {
+    public function getDevices(Request $request)
+    {
         $data = $this->partnerService->getDevices();
 
         return $data;
     }
 
-    public function getDeviceInfo(Request $request) {
+    public function getDeviceInfo(Request $request)
+    {
         $code = $request->input('code');
         if ($code) {
             $data = $this->partnerService->getDeviceInfo($code);
@@ -60,7 +63,8 @@ class PartnerController extends Controller
         ];
     }
 
-    public function syncDevice(Request $request) {
+    public function syncDevice(Request $request)
+    {
         $isSync = $this->partnerService->syncDevices();
 
         return (bool) $isSync;
@@ -72,7 +76,8 @@ class PartnerController extends Controller
         return $data;
     }
 
-    public function getAuthCode(Request $request) {
+    public function getAuthCode(Request $request)
+    {
         $code = $request->input('code');
 
         if ($code) {
@@ -82,7 +87,8 @@ class PartnerController extends Controller
         }
     }
 
-    public function updateDevice(Request $request) {
+    public function updateDevice(Request $request)
+    {
         $data = $request->all();
         if (isset($data['device_code'])) {
             $isUpdated = $this->partnerService->updateDevice($data);
@@ -99,7 +105,8 @@ class PartnerController extends Controller
         ];
     }
 
-    public function getUsers(Request $request) {
+    public function getUsers(Request $request)
+    {
         $data = $request->all();
         $users = User::all();
 
@@ -112,13 +119,32 @@ class PartnerController extends Controller
         ];
     }
 
-    public function updateUser(Request $request) {
+    public function updateUser(Request $request)
+    {
         $data = $request->all();
 
-        $places = $this->partnerService->updateUser($data);
+        $this->partnerService->updateUser($data);
 
         return [
             'code' => 200
         ];
+    }
+
+    public function updateConfig(Request $request)
+    {
+        $data = $request->all();
+
+        $this->partnerService->updateConfig($data);
+
+        return [
+            'code' => 200
+        ];
+    }
+
+    public function getConfigTime(Request $request)
+    {
+        $settings = $this->partnerService->getConfigTime();
+
+        return $settings;
     }
 }

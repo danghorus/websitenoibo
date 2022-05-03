@@ -16,7 +16,7 @@
                             @csrf
                             <div class="form-input-wide">
                                 <label for="password"class="col-md-4 col-form-label text-md-right"></label>
-                                <div class="avatar-wrapper1" style="margin: 0px 0px 0px 10% ;">  
+                                <div class="avatar-wrapper1" style="margin: 0px 0px 0px 10% ;">
                                     <img id="avatar" name="avatar" class="profile-pic" src="{{asset('image/'.$user->avatar)}}"/>
                                     <div class="upload-button">
                                         <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
@@ -44,7 +44,7 @@
                             <form method="POST" action="{{ route('users.destroy', $user->id) }}">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-danger" style="float:right; margin:-50px -30px 0px 0px;">Xoá {{ $user->fullname }}</button>  
+                                <button class="btn btn-danger" style="float:right; margin:-50px -30px 0px 0px;">Xoá {{ $user->fullname }}</button>
                             </form>
                         </div>
                     </div>
@@ -174,11 +174,32 @@
                                         value="" required autocomplete="permission">
                                         <option value="0" {{old('permission')==0 || $user->permission==0?'selected':false}}>Nhân viên</option>
                                         <option value="1" {{old('permission')==1 || $user->permission==1?'selected':false}}>Quản lý</option>
-                                        
-                                        
+
+
                                     </select>
 
                                     @error('permission')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="permission"
+                                    class="col-md-4 col-form-label text-md-right">Loại chấm công</label>
+
+                                <div class="col-md-6">
+                                    <select id="check_type" type="text" class="form-control @error('name') is-invalid @enderror" name="check_type"
+                                        value="" required autocomplete="check_type">
+                                        <option value="1" {{old('check_type')==1 || $user->check_type==1?'selected':false}}>Camera AI</option>
+                                        <option value="2" {{old('check_type')==2 || $user->check_type==2?'selected':false}}>Thủ công</option>
+
+
+                                    </select>
+
+                                    @error('check_type')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

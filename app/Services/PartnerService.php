@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ConfigTimeKeeping;
 use App\Models\DeviceTimeKeeping;
 use App\Models\User;
 use App\Repositories\DeviceTimeKeepingRepository;
@@ -174,5 +175,38 @@ class PartnerService
 
         return true;
 
+    }
+
+    public function updateConfig(array $data)
+    {
+        $config = ConfigTimeKeeping::query()->where('code', '=', $data['code'])->first();
+
+        if ($config) {
+            $config->settings = json_encode($data['settings'] ?? []);
+            $config->save();
+        } else {
+            $config = new ConfigTimeKeeping();
+            $config->settings = json_encode($data['settings'] ?? []);
+            $config->code = $data['code'] ?? '';
+            $config->name = $data['name'] ?? '';
+            $config->save();
+        }
+
+        return true;
+    }
+
+    public function getConfigTime()
+    {
+        $config = ConfigTimeKeeping::query()->where('code', '=', 'TIME')->first();
+        if ($config && $config->settings) {
+            return [
+                'code' => 200,
+                'settings' => json_decode($config->settings)
+            ];
+        }
+
+        return [
+            'code' => 404
+        ];
     }
 }

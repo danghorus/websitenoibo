@@ -74,7 +74,26 @@ class HanetRepository
         return $data;
     }
 
-    public function registerPerson(array $data,User $user,string $accessToken)
+    public function getCheckinByPlaceIdInDay($accessToken, $date, $devicesArr, User $user)
+    {
+        $client = new Client();
+        $res = $client->post($this->url. '/person/getCheckinByPlaceIdInDay', [
+            'form_params' => [
+                'token' => $accessToken,
+                'placeID' => $user->place_id,
+                'date' => $date,
+                'type' => 0,
+                'aliasID' => $user->id,
+                'devices' => implode(',', $devicesArr),
+            ]
+        ]);
+
+        $data = json_decode($res->getBody()->getContents());
+
+        return $data;
+    }
+
+    public function registerPerson(array $data, User $user,string $accessToken)
     {
         $client = new Client();
 

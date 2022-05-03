@@ -168,7 +168,7 @@ export default {
                 partner_code: 'HANET',
                 active: 1
             };
-            const res = await $post('/api/partner/connect',
+            const res = await $post('/partner/connect',
                 {...data},
                 false)
             if (res.code === 200) {
@@ -177,13 +177,13 @@ export default {
         },
         async getDevices() {
             this.closeCol();
-            const res = await $get('/api/partner/get_devices')
+            const res = await $get('/partner/get_devices')
             if (res.code === 200) {
                 this.devices = res.data;
             }
         },
         async getConfig() {
-            const res = await $get('/api/partner/get_config')
+            const res = await $get('/partner/get_config')
             if (res.code === 200) {
                 this.config = res.data;
                 this.clientId = res.data.client_id;
@@ -191,7 +191,7 @@ export default {
             }
         },
         async syncDevice() {
-            const res = await $get('/api/partner/sync_device')
+            const res = await $get('/partner/sync_device')
             if (res) {
                 this.getDevices();
             }
@@ -199,7 +199,7 @@ export default {
         async getDeviceInfo(code) {
             this.showEdit = true;
 
-            const res = await $get('/api/partner/get_device_info', {code: code})
+            const res = await $get('/partner/get_device_info', {code: code})
             if (res.code === 200) {
                 this.device = res.data;
                 this.deviceName = this.device.device_name;
@@ -207,7 +207,7 @@ export default {
             }
         },
         async updateDivice() {
-            const res = await $post('/api/partner/update_device', {
+            const res = await $post('/partner/update_device', {
                 device_code: this.device.device_code,
                 device_name: this.device.device_name,
                 type: this.device.type,
@@ -228,7 +228,7 @@ export default {
                 })
 
                 if (res.returnCode === 1 ) {
-                    const r = await $post('/api/partner/update_user', {
+                    const r = await $post('/partner/update_user', {
                         user_id: userId,
                         face_image_url: res.data?.path
                     })
@@ -250,7 +250,7 @@ export default {
                 })
 
                 if (res.returnCode === 1 ) {
-                    const r = await $post('/api/partner/update_user', {
+                    const r = await $post('/partner/update_user', {
                         place_id: this.place.id,
                         place_name: this.place.name,
                         user_id: userId,
@@ -267,7 +267,7 @@ export default {
         },
         async getUsers() {
             this.closeCol();
-            const res = await $get('/api/partner/get_users')
+            const res = await $get('/partner/get_users')
             if (res.code === 200) {
                 this.users = res.users;
                 this.places = res.places;

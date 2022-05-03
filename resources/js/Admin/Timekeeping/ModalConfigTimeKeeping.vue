@@ -15,17 +15,17 @@
         <div class="tab-content mt-5" id="myTabContent">
             <div class="tab-pane fade show active" id="time-keeping" role="tabpanel" aria-labelledby="time-keeping-tab">
                 <div class="form-group">
-                    <label><span style="color: red">*</span>Thứ 2:</label>
+                    <label>Thứ 2:</label>
                     <div class="row">
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.monday.start_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.monday.end_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
@@ -34,17 +34,17 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label><span style="color: red">*</span>Thứ 3:</label>
+                    <label>Thứ 3:</label>
                     <div class="row">
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.tuesday.start_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.tuesday.end_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
@@ -53,17 +53,17 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label><span style="color: red">*</span>Thứ 4:</label>
+                    <label>Thứ 4:</label>
                     <div class="row">
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.wednesday.start_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.wednesday.end_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
@@ -72,17 +72,17 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label><span style="color: red">*</span>Thứ 5:</label>
+                    <label>Thứ 5:</label>
                     <div class="row">
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.thursday.start_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.thursday.end_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
@@ -91,17 +91,17 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label><span style="color: red">*</span>Thứ 6:</label>
+                    <label>Thứ 6:</label>
                     <div class="row">
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.friday.start_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.friday.end_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
@@ -110,17 +110,17 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label><span style="color: red">*</span>Thứ 7:</label>
+                    <label>Thứ 7:</label>
                     <div class="row">
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.saturday.start_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.saturday.end_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
@@ -129,17 +129,17 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label><span style="color: red">*</span>Chủ nhật:</label>
+                    <label>Chủ nhật:</label>
                     <div class="row">
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.sunday.start_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
                         <DatePicker
-                            v-model="value"
+                            v-model="settings.sunday.end_time"
                             value-type="format"
                             type="time"
                             placeholder="Select time"
@@ -147,7 +147,7 @@
                         ></DatePicker>
                     </div>
                 </div>
-                <button class="btn btn-primary">Lưu</button>
+                <button class="btn btn-primary" @click="saveConfig()">Lưu</button>
             </div>
             <div class="tab-pane" id="connect" role="tabpanel" aria-labelledby="connect-tab">
                 <setting-config-partner />
@@ -160,6 +160,7 @@
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import SettingConfigPartner from "./SettingConfigPartner";
+import {$get, $post} from "../../ultis";
 
 export default {
     name: "ModalConfigTimeKeeping",
@@ -168,7 +169,40 @@ export default {
         return {
             value: null,
             open: false,
+            settings: {
+                monday: {
+                    start_time: '',
+                    end_time: ''
+                },
+                tuesday: {
+                    start_time: '',
+                    end_time: ''
+                },
+                wednesday: {
+                    start_time: '',
+                    end_time: ''
+                },
+                thursday: {
+                    start_time: '',
+                    end_time: ''
+                },
+                friday: {
+                    start_time: '',
+                    end_time: ''
+                },
+                saturday: {
+                    start_time: '',
+                    end_time: ''
+                },
+                sunday: {
+                    start_time: '',
+                    end_time: ''
+                },
+            }
         };
+    },
+    created() {
+        this.getConfigTime();
     },
     methods: {
         handleChange(value, type) {
@@ -176,6 +210,23 @@ export default {
                 this.open = false;
             }
         },
+        async saveConfig() {
+            const r = await $post('/partner/update_config', {
+                code: 'TIME',
+                name: 'time config',
+                settings: this.settings
+            })
+
+            if (res.code === 200) {
+
+            }
+        },
+        async getConfigTime() {
+            const res = await $get('/partner/get_config_time')
+            if (res.code === 200) {
+                this.settings = res.settings;
+            }
+        }
     },
 }
 </script>

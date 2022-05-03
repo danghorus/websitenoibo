@@ -27,6 +27,7 @@ class User extends Authenticatable
         'email',
         'position',
         'permission' ,
+        'check_type' ,
         'place_id' ,
         'place_name' ,
         'face_image_url' ,
@@ -50,4 +51,25 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function timeKeeping()
+    {
+        return $this->hasMany('App\Models\TimeKeeping');
+    }
+
+    public static function getAllUser(array $filters, array $range) {
+         $builder = User::query();
+
+         if (isset($filters['search']) && $filters['search'] != '') {
+             $builder->where('fullname', 'like', "%{$filters['search']}%");
+         }
+
+         $builder->with(['timeKeeping' => function ($q) use ($range) {
+            $q->whereIn('check_date', array_keys($range));
+        }]);
+
+        $data = $builder->get();
+
+        return $data;
+    }
 }

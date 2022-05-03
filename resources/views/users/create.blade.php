@@ -20,7 +20,7 @@
 
                                 <div class="form-input-wide">
                                 <label for="password"class="col-md-4 col-form-label text-md-right"></label>
-                                    <div class="avatar-wrapper" style="margin: -14% 0px 0px 45% ;">  
+                                    <div class="avatar-wrapper" style="margin: -14% 0px 0px 45% ;">
                                         <img id="avatar" name="avatar" class="profile-pic" src="{{ asset('img/avt.jpg') }}"/>
                                         <div class="upload-button">
                                             <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
@@ -154,6 +154,24 @@
                                                     <option value="1">Quản lý</option>
                                                 </select>
                                     @error('permission')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="permission"
+                                    class="col-md-4 col-form-label text-md-right">Loại chấm công</label>
+
+                                <div class="col-md-6">
+                                    <select id="check_type" type="text" class="form-control @error('check_type') is-invalid @enderror"
+                                        name="check_type" value="{{ old('check_type') }}" required autocomplete="check_type">
+                                                    <option value="1">Camera AI</option>
+                                                    <option value="2">Thủ công</option>
+                                                </select>
+                                    @error('check_type')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

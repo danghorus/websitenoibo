@@ -43,23 +43,23 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(UserStoreRequest $request)
-    {   
+    {
         //Lưu hình thẻ khi có file hình
 	$avatar_name = '';
 	if($request->hasFile('avatar')){
 		//Hàm kiểm tra dữ liệu
-		$this->validate($request, 
+		$this->validate($request,
 			[
 				//Kiểm tra đúng file đuôi .jpg,.jpeg,.png.gif và dung lượng không quá 2M
 				'avatar' => 'mimes:jpg,jpeg,png,gif|max:2048',
-			],			
+			],
 			[
 				//Tùy chỉnh hiển thị thông báo không thõa điều kiện
 				'avatar.mimes' => 'Chỉ chấp nhận ảnh đại diện với đuôi .jpg .jpeg .png .gif',
 				'avatar.max' => 'Ảnh đại diện giới hạn dung lượng không quá 2M',
 			]
 		);
-		
+
 		//Lưu hình ảnh vào thư mục public/upload/hinhthe
 		$avatar = $request->file('avatar');
 		$avatar_name = time().'_'.$avatar->getClientOriginalName();
@@ -76,6 +76,7 @@ class UserController extends Controller
             'email' => $request->email,
             'position' => $request->position,
             'permission' => $request->permission,
+            'check_type' => $request->check_type,
             'password' => Hash::make($request->password),
         ]);
 
@@ -112,7 +113,8 @@ class UserController extends Controller
             'email' => $request->email,
             'department' => $request->department,
             'position' => $request->position,
-            'permission' => $request->permission
+            'permission' => $request->permission,
+            'check_type' => $request->check_type
         ]);
 
         return redirect()->route('users.index')->with('message', 'User Updated Succesfully');

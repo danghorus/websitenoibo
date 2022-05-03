@@ -16,7 +16,7 @@ export async function  $get(uri, params = {}, progress = true) {
         NProgress.start();
     }
 
-    uri = isHttp(uri) ? uri :  (API_URL ?? '' + uri);
+    uri = isHttp(uri) ? uri :  ((API_URL ?? '') + uri);
 
     let url =  uri + '?' + buildQuery(params);
 
@@ -31,17 +31,20 @@ export async function  $get(uri, params = {}, progress = true) {
 
 export async function $post(uri, params = {}, progress = true) {
 
-    uri = isHttp(uri) ? uri :  (API_URL ?? '' + uri);
+    uri = isHttp(uri) ? uri :  ((API_URL ?? '') + uri);
 
     //   let formData = buildQuery(params);
     if (progress) {
         NProgress.start();
     }
 
+    var token = $("meta[name='csrf-token']").attr("content");
+
     return fetch(uri, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token,
         },
         body: JSON.stringify(params),
     })
