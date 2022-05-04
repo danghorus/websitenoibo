@@ -104,7 +104,7 @@ class PartnerService
     public function syncDevices()
     {
         $partnerConfig = $this->partnerRepository->getOne('HANET');
-        $setting = $partnerConfig->setting;
+        $setting = $partnerConfig? $partnerConfig->setting: '';
         if ($setting && $setting->access_token) {
             $accessToken = $setting->access_token;
 
@@ -152,7 +152,7 @@ class PartnerService
     public function getPlaces()
     {
         $partnerConfig = $this->partnerRepository->getOne('HANET');
-        $setting = $partnerConfig->setting;
+        $setting = $partnerConfig? $partnerConfig->setting: '';
         if ($setting && $setting->access_token) {
             $accessToken = $setting->access_token;
 

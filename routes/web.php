@@ -42,7 +42,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('users/{user}/change-avatar', [ChangeAvatarController::class, 'change_avatar'])->name('users.change.avatar');
 
     Route::post('/partner/connect', [PartnerController::class, 'connect']);
-    Route::get('/partner/get_auth_code', [PartnerController::class, 'getAuthCode']);
     Route::get('/partner/get_devices', [PartnerController::class, 'getDevices']);
     Route::get('/partner/get_config', [PartnerController::class, 'getConfig']);
     Route::get('/partner/sync_device', [PartnerController::class, 'syncDevice']);

@@ -133,7 +133,7 @@ class TimeKeepingService
     public function getDetailTimeKeeping(array $filters)
     {
         $partnerConfig = $this->partnerRepository->getOne('HANET');
-        $setting = $partnerConfig->setting;
+        $setting = $partnerConfig? $partnerConfig->setting: '';
         if ($setting && $setting->access_token) {
             $accessToken = $setting->access_token;
 
@@ -195,7 +195,7 @@ class TimeKeepingService
     public function checkin(array $data)
     {
         if (isset($data['data_type']) && $data['data_type'] === 'log'
-            && isset($data['personType']) && $data['data_type'] == 0) {
+            && isset($data['personType']) && $data['personType'] == 0) {
 
             $user = \App\Models\User::query()->where('id', '=', $data['aliasID'])->first();
 
