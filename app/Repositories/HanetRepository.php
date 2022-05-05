@@ -20,7 +20,7 @@ class HanetRepository
         return $this->url_auth. '/oauth2/authorize?'. http_build_query([
             'response_type' => 'code',
             'client_id' => $clientId,
-            'redirect_uri' => 'https://547e-113-22-125-183.ap.ngrok.io/api/partner/get_auth_code',
+            'redirect_uri' => 'https://dccf-14-248-85-119.ngrok.io/api/partner/get_auth_code',
             'scope' => 'full'
         ]);
     }
