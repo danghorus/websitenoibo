@@ -42,9 +42,7 @@ class PartnerRepository
     public function getOne(string $partnerCode)
     {
         $partner = PartnerConfig::query()->where('partner_code', $partnerCode)->first();
-        if ($partner) {
-            $partner->setting = $partner->setting? json_decode($partner->setting): '';
-        }
+        $partner->setting = $partner->setting? json_decode($partner->setting): '';
         return $partner;
     }
 

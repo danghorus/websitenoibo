@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\EmployeeDataController;
-use App\Http\Controllers\Backend\PartnerController;
 use App\Http\Controllers\Backend\TimeKeepingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,7 +28,6 @@ Route::get('/employees/{state}/cities', [EmployeeDataController::class, 'cities'
 
 
 Route::post('/time-keeping/checkin_data', [TimeKeepingController::class, 'timeKeeping']);
-Route::get('/partner/get_auth_code', [PartnerController::class, 'getAuthCode']);
 
 // Route::get('/employees', [EmployeeController::class, 'index']);
 // Route::post('/employees', [EmployeeController::class, 'store']);
