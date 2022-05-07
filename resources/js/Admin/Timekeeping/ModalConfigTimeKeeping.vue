@@ -211,14 +211,15 @@ export default {
             }
         },
         async saveConfig() {
-            const r = await $post('/partner/update_config', {
+            const res = await $post('/partner/update_config', {
                 code: 'TIME',
                 name: 'time config',
                 settings: this.settings
             })
 
             if (res.code === 200) {
-
+                toastr.success('Lưu thành công');
+                this.$emit('closeModalConfig')
             }
         },
         async getConfigTime() {

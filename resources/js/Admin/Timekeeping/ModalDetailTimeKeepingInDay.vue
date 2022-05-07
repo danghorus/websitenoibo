@@ -44,7 +44,7 @@
             <tbody>
                 <tr v-for="(time, index) in data">
                     <th scope="row">{{ index + 1 }}</th>
-                    <td>07:58:59</td>
+                    <td>{{ time.time }}</td>
                     <td>{{ time.personName }}</td>
                     <td>
                         <img :src="time.avatar" />
@@ -114,6 +114,7 @@ export default {
 
             const res = await $post('/time-keeping/update', {...data});
             if (res.code == 200) {
+                toastr.success('Cập nhật thành công');
                 this.getTimeKeepingInfo();
                 this.close();
             }

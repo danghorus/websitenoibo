@@ -11,25 +11,16 @@
 
         </div>
         <div class="card-body table-responsive">
-            <select class="form-select col-lg-2" style="position: absolute; right: 20px; top: 80px" v-model="option" @change="changeOption()">
+            <select class="form-select col-lg-2" style="position: absolute; right: 20px; top: 80px" v-model="option">
                 <option value="1">Theo tuần</option>
                 <option value="2">Theo tháng</option>
-                <option value="3">
-                    <button data-toggle="collapse" data-target="#collapseOtherTime"
-                            aria-expanded="false" aria-controls="collapseOtherTime">Tùy chọn</button>
-                </option>
             </select>
-
-            <div class="collapse" id="collapseOtherTime" v-if="showOtherTime">
-                <div class="card card-body collapse-edit">
-                    <p>123</p>
-                    <div class="row">
-                        <button class="btn btn-primary col-6">Cập nhật</button>
-                        <button class="btn btn-default col-6">Đóng</button>
-                    </div>
-
-                </div>
-            </div>
+            <date-picker v-if="option == 2" v-model="timeSelected" type="month" placeholder="Vui lòng chọn tháng để tìm kiếm"
+                         @change="changeOption()" style="position: absolute;right: 350px;top: 80px;">
+            </date-picker>
+            <date-picker v-if="option == 1" v-model="timeSelected" type="week" placeholder="Vui lòng chọn tuần để tìm kiếm"
+                         @change="changeOption()" style="position: absolute;right: 350px;top: 80px;">
+            </date-picker>
             <table class="table table-bordered mt-5">
                 <thead class="table-active">
                     <tr>
@@ -44,8 +35,8 @@
                         <td>{{ user.fullname }}</td>
                         <td v-for="time in user.time_keeping" :class="time.class" @click="showModal(user.id, user.fullname, time)">
                             <span v-if="option == 1">Giờ hành chính:</span><br>
-                            <span v-if="option == 1">Check in: </span>{{ time.checkin ? time.checkin: '--:--:--' }} <br>
-                            <span v-if="option == 1">Check out: </span>{{ time.checkout ? time.checkout: '--:--:--' }}
+                            <span v-if="option == 1">Check in: </span>{{ time.checkin ? time.checkin: (option == 1? '--:--:--': '--:--' )}} <br>
+                            <span v-if="option == 1">Check out: </span>{{ time.checkout ? time.checkout: (option == 1? '--:--:--': '--:--' ) }}
                         </td>
                     </tr>
                 </tbody>
@@ -85,7 +76,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <ModalConfigTimeKeeping v-if="modalConfig" />
+                            <ModalConfigTimeKeeping v-if="modalConfig" @closeModalConfig="closeModalConfig()"/>
                         </div>
 
                     </div>
@@ -96,14 +87,17 @@
 </template>
 
 <script>
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
 import ModalDetailTimeKeepingInDay from "./ModalDetailTimeKeepingInDay";
 import ModalConfigTimeKeeping from "./ModalConfigTimeKeeping";
 import {$get, $post} from "../../ultis";
+import moment from "moment";
 
 export default {
     name: "ListTimeKeeping",
     components: {
-        ModalDetailTimeKeepingInDay, ModalConfigTimeKeeping
+        ModalDetailTimeKeepingInDay, ModalConfigTimeKeeping, DatePicker
     },
     data() {
         return {
@@ -121,7 +115,8 @@ export default {
             userId: '',
             userName: '',
             time: '',
-            currentUser: ''
+            currentUser: '',
+            timeSelected: '',
         }
     },
     created() {
@@ -129,32 +124,25 @@ export default {
     },
     methods: {
         async getTimeKeepings() {
-            if (this.option != 3 || (this.option == 3 && this.start_date != '' && this.end_date != '')) {
-                let params = {
-                    option: this.option,
-                    search: this.search
-                };
-                const res = await $get('/time-keeping/get', {...params});
-                if (res.code === 200) {
-                    this.labels = res.labels;
-                    this.data = res.data;
-                    this.currentUser = res.current_user;
-                    if (res.showBtn && res.showBtn == 'checkin') {
-                        this.showCheckIn = true;
-                    } else if (res.showBtn && res.showBtn == 'checkout') {
-                        this.showCheckOut = true;
-                    }
+            let params = {
+                option: this.option,
+                search: this.search,
+                time: this.timeSelected? moment(this.timeSelected).format('YYYY-MM-DD'): ''
+            };
+            const res = await $get('/time-keeping/get', {...params});
+            if (res.code === 200) {
+                this.labels = res.labels;
+                this.data = res.data;
+                this.currentUser = res.current_user;
+                if (res.showBtn && res.showBtn == 'checkin') {
+                    this.showCheckIn = true;
+                } else if (res.showBtn && res.showBtn == 'checkout') {
+                    this.showCheckOut = true;
                 }
             }
         },
         changeOption() {
-            if (this.option == 3) {
-                this.showOtherTime = true;
-            } else {
-                this.start_date = '';
-                this.end_date = '';
-                this.getTimeKeepings();
-            }
+            this.getTimeKeepings();
         },
         showModal(userId, userName, time) {
             this.userId = userId;
@@ -189,11 +177,13 @@ export default {
             }
         },
         async exportData() {
-            let params = {
-                option: this.option,
-                search: this.search
-            };
-            const res = await $get('/time-keeping/export', {...params});
+
+                let option = this.option;
+                let search = this.search;
+                let time = this.timeSelected? moment(this.timeSelected).format('YYYY-MM-DD'): '';
+            // const res = await $get('/time-keeping/export', {...params});
+
+            window.open("/time-keeping/export?option="+option+"&search="+search+"&time="+time,'_blank');
         }
     }
 }

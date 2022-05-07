@@ -96,6 +96,6 @@ class TimeKeepingController extends Controller
 
         $data = $this->timeKeepingService->getAllTimeKeeping($filters);
 
-        return Excel::download(new TimeKeepingExport($filters), 'timekeeping.xlsx')->getFile();
+        return Excel::download(new TimeKeepingExport($data), 'timekeeping.xlsx');
     }
 }

@@ -34,18 +34,22 @@ class TimeKeepingService
     }
 
     public function getAllTimeKeeping(array $filters = []) {
-        $start_date = '';
-        $end_date = '';
-        switch ($filters['option']) {
-            case 1:
-                $start_date = date('Y-m-d',strtotime('monday this week'));
-                $end_date = date('Y-m-d',strtotime('sunday this week +1 days'));
-                break;
-            case 2:
-                $start_date = date('Y-m-01');
-                $end_date = date('Y-m-d', strtotime('+1 day', strtotime(date('Y-m-t'))));
-                break;
+        if ($filters['time']) {
+            switch ($filters['option']) {
+                case 1:
+                    $start_date = date('Y-m-d', strtotime($filters['time']));
+                    $end_date = date('Y-m-d',strtotime('+7 days', strtotime($start_date)));
+                    break;
+                case 2:
+                    $start_date = $filters['time'];
+                    $end_date = date('Y-m-d', strtotime('+1 day', strtotime(date('Y-m-t', strtotime($filters['time'])))));
+                    break;
+            }
+        } else {
+            $start_date = date('Y-m-d',strtotime('monday this week'));
+            $end_date = date('Y-m-d',strtotime('sunday this week +1 days'));
         }
+
         $labels = [];
 
         $range = $this->getLabelTimeKeeping($start_date, $end_date, $labels);
@@ -69,8 +73,8 @@ class TimeKeepingService
                     if ($user->timeKeeping) {
                         foreach ($user->timeKeeping as $time) {
                             if ($time->check_date == $key) {
-                                $tmp[$key]['checkin'] = $time->checkin;
-                                $tmp[$key]['checkout'] = $time->checkout;
+                                $tmp[$key]['checkin'] = $filters['option'] ==1? $time->checkin: date('H:i', strtotime($key. ' '. $time->checkin));
+                                $tmp[$key]['checkout'] = $filters['option'] ==1? $time->checkout: date('H:i', strtotime($key. ' '. $time->checkout));
 
                                 $configTimeKeepingDay = $settings[$day]?? [];
 
@@ -148,7 +152,11 @@ class TimeKeepingService
             $data = $this->hanetRepository->getCheckinByPlaceIdInDay($accessToken, $filters['date'], $devicesArr, $user);
 
             if ($data->statusCode === 0) {
-                return $data->data;
+                $result = $data->data;
+                foreach ($result as $key => $value) {
+                    $value->time = date('H:i:s', $value->checkinTime/1000);
+                }
+                return $result;
             }
         }
 
@@ -160,13 +168,12 @@ class TimeKeepingService
      */
     private function getLabelTimeKeeping(string $start_date, string $end_date, array &$labels)
     {
-
         $period = new DatePeriod(
             new DateTime($start_date),
             new DateInterval('P1D'),
             new DateTime($end_date)
         );
-
+        $dateRange = [];
         foreach ($period as $key => $value) {
             $day = $value->format('Y-m-d');
 

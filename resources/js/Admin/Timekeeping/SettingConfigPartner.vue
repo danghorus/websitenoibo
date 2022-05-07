@@ -194,6 +194,7 @@ export default {
             const res = await $get('/partner/sync_device')
             if (res) {
                 this.getDevices();
+                toastr.success('Đồng bộ thành công');
             }
         },
         async getDeviceInfo(code) {
@@ -213,6 +214,7 @@ export default {
                 type: this.device.type,
             })
             if (res.code === 200) {
+                toastr.success('Cập nhật thành công');
                 this.closeCol();
                 this.getDevices();
             }
@@ -233,6 +235,7 @@ export default {
                         face_image_url: res.data?.path
                     })
                     if (r.code === 200) {
+                        toastr.success('Đăng ký thành công');
                         this.closeCol();
                         this.getUsers();
                     }
@@ -257,6 +260,7 @@ export default {
                         face_image_url: res.data?.file
                     })
                     if (r.code === 200) {
+                        toastr.success('Đăng ký thành công');
                         this.closeCol();
                         this.getUsers();
                     }
