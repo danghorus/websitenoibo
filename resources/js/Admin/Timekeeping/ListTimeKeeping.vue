@@ -16,10 +16,10 @@
                 <option value="2">Theo tháng</option>
             </select>
             <date-picker v-if="option == 2" v-model="timeSelected" type="month" placeholder="Vui lòng chọn tháng để tìm kiếm"
-                         @change="changeOption()" style="position: absolute;right: 350px;top: 80px;">
+                         @change="changeOption()" style="position: absolute;right: 400px;top: 80px;">
             </date-picker>
             <date-picker v-if="option == 1" v-model="timeSelected" type="week" placeholder="Vui lòng chọn tuần để tìm kiếm"
-                         @change="changeOption()" style="position: absolute;right: 350px;top: 80px;">
+                         @change="changeOption()" style="position: absolute;right: 400px;top: 80px;">
             </date-picker>
             <table class="table table-bordered mt-5">
                 <thead class="table-active">
@@ -185,6 +185,12 @@ export default {
 
             window.open("/time-keeping/export?option="+option+"&search="+search+"&time="+time,'_blank');
         }
+    },
+    watch: {
+        'option': function (newVal) {
+            this.timeSelected = '';
+            this.changeOption();
+        },
     }
 }
 </script>

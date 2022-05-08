@@ -35,7 +35,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::resource('users', UserController::class);
     Route::post('save', [UserController::class, 'save']);
-    Route::get('time-keeping', [TimeKeepingController::class, 'index']);
     Route::resource('request', YeuCauController::class);
 
     Route::post('users/{user}/change-password', [ChangePasswordController::class, 'change_password'])->name('users.change.password');
@@ -52,12 +51,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/partner/get_config_time', [PartnerController::class, 'getConfigTime']);
     Route::post('/partner/update_config', [PartnerController::class, 'updateConfig']);
 
+    Route::get('time-keeping', [TimeKeepingController::class, 'index']);
     Route::get('/time-keeping/get', [TimeKeepingController::class, 'get']);
     Route::get('/time-keeping/get_user', [TimeKeepingController::class, 'getUser']);
     Route::get('/time-keeping/detail', [TimeKeepingController::class, 'detail']);
     Route::post('/time-keeping/checkin', [TimeKeepingController::class, 'checkin']);
     Route::post('/time-keeping/update', [TimeKeepingController::class, 'update']);
     Route::get('/time-keeping/export', [TimeKeepingController::class, 'export']);
+    Route::get('/time-keeping/get-report', [TimeKeepingController::class, 'getReport']);
+
+    Route::get('time-keeping-report', [TimeKeepingController::class, 'report']);
 });
 
 

@@ -46,8 +46,16 @@ class TimeKeepingService
                     break;
             }
         } else {
-            $start_date = date('Y-m-d',strtotime('monday this week'));
-            $end_date = date('Y-m-d',strtotime('sunday this week +1 days'));
+            switch ($filters['option']) {
+                case 1:
+                    $start_date = date('Y-m-d', strtotime('monday this week'));
+                    $end_date = date('Y-m-d', strtotime('sunday this week +1 days'));
+                    break;
+                case 2:
+                    $start_date = date('Y-m-01');
+                    $end_date = date('Y-m-d', strtotime('+1 day', strtotime(date('Y-m-t'))));
+                    break;
+            }
         }
 
         $labels = [];
@@ -306,6 +314,196 @@ class TimeKeepingService
         return true;
     }
 
+    public function report(array $filters)
+    {
+        $start_date = $filters['start_date'];
+        $end_date = date('Y-m-d',strtotime('+1 day', strtotime($filters['end_date'])));
+
+        $timeExpected = $this->timeReport($start_date, $end_date);
+
+        $expectedWar1 = $timeExpected['total'] * 2;
+        $expectedWar2 = $timeExpected['total'] * 3;
+        $expectedWar3 = $timeExpected['total'] * 4;
+
+        $timeNow = $this->timeReport($start_date, date('Y-m-d', time()));
+
+        $nowWar1 = $timeNow['total'] * 2;
+        $nowWar2 = $timeNow['total'] * 3;
+        $nowWar3 = $timeNow['total'] * 4;
+
+        $range = $timeNow['range'];
+
+        $keyArr = array_keys($range);
+
+        $diff = date_diff(date_create($filters['end_date']), date_create(end($keyArr)));
+
+        $timeRange = $diff->format('%a');
+
+        $users = \App\Models\User::getAllUser($filters, $range);
+
+        $config = ConfigTimeKeeping::query()->where('code', '=', 'TIME')->first();
+
+        if ($config && $config->settings) {
+            $settings = json_decode($config->settings, true);
+        }
+
+        $result = [];
+
+
+
+        foreach ($users as $user) {
+            if ($user) {
+                $totalGoLate = 0;
+                $timeGoLate = 0;
+                $totalGoEarly = 0;
+                $timeGoEarly = 0;
+
+                $totalAboutLate = 0;
+                $timeAboutLate = 0;
+                $totalAboutEarly = 0;
+                $timeAboutEarly = 0;
+
+                $totalTimeKeeping = 0;
+                $totalUnpaidLeave = 0;
+                $totalHourEfforts = 0;
+
+                foreach ($user->timeKeeping as $value) {
+                    $labelDay = $range[$value->check_date];
+                    $configDay = $settings[$labelDay] ?? [];
+
+                    $checkIn = $value->checkin? strtotime($value->check_date. ' '. $value->checkin): '';
+                    $checkOut = $value->checkout? strtotime($value->check_date. ' '. $value->checkout): '';
+
+                    if ($configDay) {
+                        $start = $configDay['start_time'] != ''? strtotime($value->check_date. ' '. $configDay['start_time']): '';
+                        $end = $configDay['end_time'] != ''? strtotime($value->check_date. ' '. $configDay['end_time']): '';
+
+                        if ($checkIn > $start) {
+                            $totalGoLate++;
+                            $timeGoLate += $checkIn - $start;
+                        } else if ($checkIn < $start) {
+                            $totalGoEarly++;
+                            $timeGoEarly += $start - $checkIn;
+                        }
+
+                        if ($checkOut > $end) {
+                            $totalAboutLate++;
+                            $timeAboutLate += $checkOut - $end;
+                        } else if ($checkOut < $end) {
+                            $totalAboutEarly++;
+                            $timeAboutEarly += $end - $checkOut;
+                        }
+                    }
+
+                    if ($checkIn && $checkOut) {
+                        switch ($labelDay) {
+                            case 'monday':
+                            case 'tuesday':
+                            case 'wednesday':
+                            case 'thursday':
+                            case 'friday':
+                                $totalTimeKeeping++;
+                                break;
+                            case 'saturday':
+                                $totalTimeKeeping = $totalTimeKeeping + 1/2;
+                                break;
+                        }
+                    } elseif (!$checkIn && !$checkOut) {
+                        switch ($labelDay) {
+                            case 'monday':
+                            case 'tuesday':
+                            case 'wednesday':
+                            case 'thursday':
+                            case 'friday':
+                                $totalUnpaidLeave++;
+                                break;
+                            case 'saturday':
+                                $totalUnpaidLeave = $totalUnpaidLeave + 1/2;
+                                break;
+                        }
+                    }
+                }
+
+                $totalHourEfforts = (($timeGoEarly + $timeAboutLate) - ($timeGoLate + $timeAboutEarly))/3600;
+                $currentWar = '';
+                $nextWar = '';
+                $timeHoldWar = 0;
+                $timeIncreaseWar = 0;
+                $avgTimeHoldWar = 0;
+                $avgTimeIncreaseWar = 0;
+
+                if ($totalHourEfforts < $nowWar1) {
+                    $currentWar = 'Solider';
+                    $nextWar = 'Warrior 1';
+                    $timeIncreaseWar = $nowWar1 - $totalHourEfforts;
+                } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
+                    $currentWar = 'Warrior 1';
+                    $nextWar = 'Warrior 2';
+                    $timeHoldWar = $totalHourEfforts - $nowWar1;
+                    $timeIncreaseWar = $nowWar2 - $totalHourEfforts;
+                } elseif ($totalHourEfforts > $nowWar2 && $totalHourEfforts< $nowWar3) {
+                    $currentWar = 'Warrior 2';
+                    $nextWar = 'Warrior 3';
+                    $timeHoldWar = $totalHourEfforts - $nowWar2;
+                    $timeIncreaseWar = $nowWar3 - $totalHourEfforts;
+                } elseif ($totalHourEfforts > $nowWar3) {
+                    $currentWar = 'Warrior 3';
+                    $nextWar = 'Warrior 3';
+                    $timeHoldWar = $totalHourEfforts - $nowWar3;
+                    $timeIncreaseWar = $totalHourEfforts - $nowWar3;
+                }
+
+                $avgTimeHoldWar = $timeHoldWar/$timeRange;
+                $avgTimeIncreaseWar = $timeIncreaseWar/$timeRange;
+                $rateGoLate = ($totalGoLate/$totalTimeKeeping) * 100;
+
+                $result[] = [
+                    'fullname' => $user->fullname,
+                    'id' => $user->id,
+                    'totalGoLate' => $totalGoLate,
+                    'timeGoLate' => $timeGoLate/3600,
+                    'totalGoEarly' => $totalGoEarly,
+                    'timeGoEarly' => $timeGoEarly/3600,
+                    'totalAboutLate' => $totalAboutLate,
+                    'timeAboutLate' => $timeAboutLate/3600,
+                    'totalAboutEarly' => $totalAboutEarly,
+                    'timeAboutEarly' => $timeAboutEarly/3600,
+                    'totalTimeKeeping' => $totalTimeKeeping,
+                    'totalUnpaidLeave' => $totalUnpaidLeave,
+                    'totalHourEfforts' => $totalHourEfforts,
+                    'currentWar' => $currentWar,
+                    'nextWar' => $nextWar,
+                    'timeHoldWar' => $timeHoldWar,
+                    'timeIncreaseWar' => $timeIncreaseWar,
+                    'avgTimeHoldWar' => $avgTimeHoldWar,
+                    'avgTimeIncreaseWar' => $avgTimeIncreaseWar,
+                    'rateGoLate' => $rateGoLate,
+                    'totalGoLateAboutEarly' => $timeGoLate/3600 + $timeAboutEarly/3600,
+                ];
+            }
+        }
+
+        return [
+            'result' => $result,
+            'expected' => [
+                'start_date' => $filters['start_date'],
+                'end_date' => $filters['end_date'],
+                'total' => $timeExpected['total'],
+                'warrior1' => $expectedWar1,
+                'warrior2' => $expectedWar2,
+                'warrior3' => $expectedWar3,
+            ],
+            'current' => [
+                'start_date' => $filters['start_date'],
+                'end_date' => end($keyArr),
+                'total' => $timeNow['total'],
+                'warrior1' => $nowWar1,
+                'warrior2' => $nowWar2,
+                'warrior3' => $nowWar3,
+            ]
+        ];
+    }
+
     public function checkinHandmade(User $user)
     {
         if ($user->check_type == 2) {
@@ -340,5 +538,49 @@ class TimeKeepingService
         }
 
         return false;
+    }
+
+    /**
+     * @param string $start_date
+     * @param string $end_date
+     * @return array
+     * @throws \Exception
+     */
+    private function timeReport(string $start_date, string $end_date): array
+    {
+        $period = new DatePeriod(
+            new DateTime($start_date),
+            new DateInterval('P1D'),
+            new DateTime($end_date)
+        );
+
+        $totalDate = 0;
+        $dateRange = [];
+
+        foreach ($period as $key => $value) {
+
+            $day = $value->format('Y-m-d');
+            $dateRange[$day] = $day;
+            $dayLabel = lcfirst(date('l', strtotime($day)));
+            $dateRange[$day] = $dayLabel;
+
+            switch ($dayLabel) {
+                case 'monday':
+                case 'tuesday':
+                case 'wednesday':
+                case 'thursday':
+                case 'friday':
+                    $totalDate++;
+                    break;
+                case 'saturday':
+                    $totalDate = $totalDate + 1/2;
+                    break;
+            }
+        }
+
+        return [
+            'total' => $totalDate,
+            'range' => $dateRange
+        ];
     }
 }

@@ -28,6 +28,11 @@ class TimeKeepingController extends Controller
         return view('timekeeping.index');
     }
 
+    public function report(Request $request)
+    {
+        return view('timekeeping.report');
+    }
+
     public function get(Request $request) {
         $filters = $request->all();
 
@@ -97,5 +102,17 @@ class TimeKeepingController extends Controller
         $data = $this->timeKeepingService->getAllTimeKeeping($filters);
 
         return Excel::download(new TimeKeepingExport($data), 'timekeeping.xlsx');
+    }
+
+    public function getReport(Request $request)
+    {
+        $filters = $request->all();
+
+        $data = $this->timeKeepingService->report($filters);
+
+        return [
+            'code' => 200,
+            'data' => $data
+        ];
     }
 }

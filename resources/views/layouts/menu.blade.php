@@ -40,18 +40,45 @@
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!" style=" margin-left:-48px;">
                 <!--<img style="width:35px; height:35px;" src="" />-->
             </button> &ensp;&ensp;&ensp;
-                        <div class="nav" style=" color: #5e6e82;">
-                            <!--<div class="sb-sidenav-menu-heading">Core</div>-->
-                            <a class="nav-link" href="{{url('/home') }}" style="color: #5e6e82;"> Trang chủ </a>
-                            <a class="nav-link" href="{{ url('/users') }}" style="color: #5e6e82;"> Nhân sự </a>
-                            <a class="nav-link" href="{{ url('/time-keeping') }}" style="color: #5e6e82;"> Chấm công  </a>
-                            <a class="nav-link" href="{{ url('/') }}" style="color: #5e6e82;">Việc của tôi</a>
-                            <a class="nav-link" href="{{ url('/') }}" style="color: #5e6e82;"> Dự án</a>
-                            <a class="nav-link" href="{{ url('/') }}" style="color: #5e6e82;"> Yêu cầu</a>
-                            <a class="nav-link" href="{{ url('/') }}" style="color: #5e6e82;">Báo cáo</a>
-                            <a class="nav-link" href="{{ url('/') }}" style="color: #5e6e82;">Lương công việc</a>
-                            <a class="nav-link" href="{{ url('/') }}" style="color: #5e6e82;">Thưởng dự án</a>
-                        </div>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url('/home') }}">Trang chủ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/users') }}">Nhân sự</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Chấm công
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ url('/time-keeping') }}">Chấm công</a>
+                                <a class="dropdown-item" href="{{ url('/time-keeping-report') }}">Thống kê</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">Việc của tôi</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">Dự án</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">Yêu cầu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">Báo cáo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">Lương công việc</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/') }}">Thưởng dự án</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
             </form>
             <!-- Navbar-->
