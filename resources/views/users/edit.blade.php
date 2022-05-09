@@ -28,7 +28,7 @@
                                 </div>
                             </div><br>
                             <div class="form-group row mb-0">
-                                <div class="col-md-6 offset-md-4" style="margin: -27% 0px 0px 60% ;">
+                                <div class="col-md-6 offset-md-4" style="margin: -21% 0px 0px 60% ;">
                                     <button type="submit" class="btn btn-primary">{{ __('Cập nhật ảnh đại diện') }}</button>
                                 </div>
                             </div>

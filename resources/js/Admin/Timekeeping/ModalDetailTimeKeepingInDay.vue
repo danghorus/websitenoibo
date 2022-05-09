@@ -42,7 +42,7 @@
             </tr>
             </thead>
             <tbody>
-                <tr v-for="(time, index) in data">
+                <tr v-for="(time, index) in data" :key="time">
                     <th scope="row">{{ index + 1 }}</th>
                     <td>{{ time.time }}</td>
                     <td>{{ time.personName }}</td>

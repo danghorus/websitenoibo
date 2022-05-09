@@ -67,7 +67,7 @@ class UserController extends Controller
 		$avatar->move($destinationPath, $avatar_name);
         }
 
-        return User::create([
+        User::create([
             'fullname' => $request->fullname,
             'avatar' => $avatar_name,
             'phone' => $request->phone,

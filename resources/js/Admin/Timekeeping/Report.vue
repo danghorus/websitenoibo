@@ -8,15 +8,15 @@
             </div>
         </div>
         <div class="card-body table-responsive">
-            <div>
+            <div style="margin: -50px 0px 0px 0px">
                 <table class="table table-bordered mt-5">
                     <thead class="table-active">
-                        <tr>
+                        <tr style=" text-align:center;">
                             <th>Thời gian thống kê</th>
                             <th>Công chuẩn</th>
-                            <th>Warrior 1</th>
-                            <th>Warrior 2</th>
-                            <th>Warrior 3</th>
+                            <th>WARRIOR 1</th>
+                            <th>WARRIOR 2</th>
+                            <th>WARRIOR 3</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,54 +37,64 @@
                     </tbody>
                 </table>
             </div>
-            <table class="table table-bordered mt-5">
-                <thead class="table-active">
-                    <tr>
-                        <th>Mã NV</th>
-                        <th>Tên nhân viên</th>
-                        <th>Số lần đi muộn</th>
-                        <th>Thời gian đi muộn</th>
-                        <th>Số lần về sớm</th>
-                        <th>Thời gian về sớm</th>
-                        <th>Tổng giờ đi muộn về sớm</th>
-                        <th>Số giờ về muộn</th>
-                        <th>Số giờ đi sớm</th>
-                        <th>Nghỉ không lương</th>
-                        <th>Số ngày chấm công</th>
-                        <th>Tổng giờ nỗ lực</th>
-                        <th>Cấp độ Warrior đạt được</th>
-                        <th>Số giờ cần giữ Warrior</th>
-                        <th>TB thời gian cần giữ Warrior</th>
-                        <th>Cấp độ Warrior tiếp theo</th>
-                        <th>Số giờ còn thiếu để lên Warrior</th>
-                        <th>TB thời gian nỗ lực để lên giữ Warrior</th>
-                        <th>Tỷ lệ đi muộn</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(user, index) in data" :key="index">
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.fullname }}</td>
-                        <td>{{ user.totalGoLate }}</td>
-                        <td>{{ formatNumber(user.timeGoLate) }}</td>
-                        <td>{{ user.totalAboutEarly }}</td>
-                        <td>{{ formatNumber(user.timeAboutEarly) }}</td>
-                        <td>{{ user.totalGoLateAboutEarly }}</td>
-                        <td>{{ formatNumber(user.timeAboutLate) }}</td>
-                        <td>{{ formatNumber(user.timeGoEarly) }}</td>
-                        <td>{{ user.totalUnpaidLeave }}</td>
-                        <td>{{ user.totalTimeKeeping }}</td>
-                        <td>{{ formatNumber(user.totalHourEfforts) }}</td>
-                        <td>{{ user.currentWar }}</td>
-                        <td>{{ formatNumber(user.timeHoldWar) }}</td>
-                        <td>{{ formatNumber(user.avgTimeHoldWar) }}</td>
-                        <td>{{ user.nextWar }}</td>
-                        <td>{{ formatNumber(user.timeIncreaseWar) }}</td>
-                        <td>{{ formatNumber(user.avgTimeIncreaseWar) }}</td>
-                        <td>{{ user.rateGoLate }} %</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div style="margin: -40px 0px 0px 0px">
+                <table class="table table-bordered mt-5" style="border:2px;" >
+                    <thead class="table-active">
+                        <tr style="vertical-align: middle; font-size:12px; text-align:center; ">
+                            <th rowspan="2" style="vertical-align: middle;">MNV</th>
+                            <th style="vertical-align: middle; width:200px;" rowspan="2">Nhân viên</th>
+                            <th colspan="2" style="vertical-align: middle;">Đi muộn</th>
+                            <th colspan="2" style="vertical-align: middle;">Về sớm</th>
+                            <th rowspan="2" style="vertical-align: middle;">Tổng giờ ĐMVS</th>
+                            <th rowspan="2" style="vertical-align: middle;">Số giờ đi sớm</th>
+                            <th rowspan="2" style="vertical-align: middle;">Số giờ về muộn</th>
+                            <th rowspan="2" style="vertical-align: middle;">Nghỉ không lương</th>
+                            <th rowspan="2" style="vertical-align: middle;">Số ngày chấm công</th>
+                            <th rowspan="2" style="vertical-align: middle;">Số ngày không checkin</th>
+                            <th rowspan="2" style="vertical-align: middle;">Số ngày không checkout</th>
+                            <th rowspan="2" style="vertical-align: middle;">Tổng giờ nỗ lực</th>
+                            <th rowspan="2" style="vertical-align: middle; width:120px;">Warrior hiện tại</th>
+                            <th rowspan="2" style="vertical-align: middle;">TG để giữ Warrior</th>
+                            <th rowspan="2" style="vertical-align: middle;">TGTB để giữ Warrior</th>
+                            <th rowspan="2" style="vertical-align: middle; width:120px;">Warrior tiếp theo</th>
+                            <th rowspan="2" style="vertical-align: middle;">TG để lên Warrior</th>
+                            <th rowspan="2" style="vertical-align: middle;">TGTB để lên Warrior</th>
+                            <th rowspan="2" style="vertical-align: middle;">Tỷ lệ đi muộn</th>
+                        </tr>
+                        <tr style="font-size:12px; text-align:center;">
+                            <th>Số lần</th>
+                            <th>Thời gian</th>
+                            <th>Số lần</th>
+                            <th>Thời gian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(user, index) in data" :key="index">
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.fullname }}</td>
+                            <td>{{ user.totalGoLate }}</td>
+                            <td>{{ formatNumber(user.timeGoLate) }}</td>
+                            <td>{{ user.totalAboutEarly }}</td>
+                            <td>{{ formatNumber(user.timeAboutEarly) }}</td>
+                            <td>{{ user.totalGoLateAboutEarly }}</td>
+                            <td>{{ formatNumber(user.timeGoEarly) }}</td>
+                            <td>{{ formatNumber(user.timeAboutLate) }}</td>
+                            <td>{{ user.totalUnpaidLeave }}</td>
+                            <td>{{ user.totalNocheckIn }}</td>
+                            <td>{{ user.totalNocheckOut }}</td>
+                            <td>{{ user.totalTimeKeeping }}</td>
+                            <td>{{ formatNumber(user.totalHourEfforts) }}</td>
+                            <td>{{ user.currentWar }}</td>
+                            <td>{{ formatNumber(user.timeHoldWar) }}</td>
+                            <td>{{ formatNumber(user.avgTimeHoldWar) }}</td>
+                            <td>{{ user.nextWar }}</td>
+                            <td>{{ formatNumber(user.timeIncreaseWar) }}</td>
+                            <td>{{ formatNumber(user.avgTimeIncreaseWar) }}</td>
+                            <td>{{ user.rateGoLate }} %</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </template>

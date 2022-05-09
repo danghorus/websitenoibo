@@ -42,7 +42,7 @@
             </button> &ensp;&ensp;&ensp;
             <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
+                    <ul class="navbar-nav mr-auto" style="font-size:16px;" id="">
                         <li class="nav-item">
                             <a class="nav-link" href="{{url('/home') }}">Trang chủ</a>
                         </li>
@@ -50,13 +50,13 @@
                             <a class="nav-link" href="{{ url('/users') }}">Nhân sự</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Chấm công
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ url('/time-keeping') }}">Chấm công</a>
-                                <a class="dropdown-item" href="{{ url('/time-keeping-report') }}">Thống kê</a>
-                            </div>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{{ url('/time-keeping') }}">Chấm công</a></li>
+                                <li><a class="dropdown-item" href="{{ url('/time-keeping-report') }}">Thống kê</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">Việc của tôi</a>
@@ -65,7 +65,7 @@
                             <a class="nav-link" href="{{ url('/') }}">Dự án</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">Yêu cầu</a>
+                            <a class="nav-link" href="{{ url('/request') }}">Yêu cầu</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">Báo cáo</a>
@@ -79,8 +79,6 @@
                     </ul>
                 </div>
             </nav>
-            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-            </form>
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                 <li class="nav-item dropdown">

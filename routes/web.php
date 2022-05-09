@@ -8,7 +8,7 @@ use App\Http\Controllers\Backend\CountryController;
 use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\StateController;
 use App\Http\Controllers\Backend\UserController;
-use App\Http\Controllers\Backend\YeuCauController;
+use App\Http\Controllers\Backend\RequestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UploadImageController;
 
@@ -35,7 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::resource('users', UserController::class);
     Route::post('save', [UserController::class, 'save']);
-    Route::resource('request', YeuCauController::class);
+    Route::resource('request', RequestController::class);
 
     Route::post('users/{user}/change-password', [ChangePasswordController::class, 'change_password'])->name('users.change.password');
     Route::post('users/{user}/change-avatar', [ChangeAvatarController::class, 'change_avatar'])->name('users.change.avatar');

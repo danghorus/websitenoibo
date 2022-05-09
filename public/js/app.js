@@ -5279,9 +5279,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _ModalDetailTimeKeepingInDay__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ModalDetailTimeKeepingInDay */ "./resources/js/Admin/Timekeeping/ModalDetailTimeKeepingInDay.vue");
-/* harmony import */ var _ModalConfigTimeKeeping__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ModalConfigTimeKeeping */ "./resources/js/Admin/Timekeeping/ModalConfigTimeKeeping.vue");
-/* harmony import */ var _ultis__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../ultis */ "./resources/js/ultis.js");
+/* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue2-datepicker */ "./node_modules/vue2-datepicker/index.esm.js");
+/* harmony import */ var vue2_datepicker_index_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue2-datepicker/index.css */ "./node_modules/vue2-datepicker/index.css");
+/* harmony import */ var _ModalDetailTimeKeepingInDay__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ModalDetailTimeKeepingInDay */ "./resources/js/Admin/Timekeeping/ModalDetailTimeKeepingInDay.vue");
+/* harmony import */ var _ModalConfigTimeKeeping__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ModalConfigTimeKeeping */ "./resources/js/Admin/Timekeeping/ModalConfigTimeKeeping.vue");
+/* harmony import */ var _ultis__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../ultis */ "./resources/js/ultis.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
 
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -5394,11 +5398,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
+
+
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "ListTimeKeeping",
   components: {
-    ModalDetailTimeKeepingInDay: _ModalDetailTimeKeepingInDay__WEBPACK_IMPORTED_MODULE_1__["default"],
-    ModalConfigTimeKeeping: _ModalConfigTimeKeeping__WEBPACK_IMPORTED_MODULE_2__["default"]
+    ModalDetailTimeKeepingInDay: _ModalDetailTimeKeepingInDay__WEBPACK_IMPORTED_MODULE_3__["default"],
+    ModalConfigTimeKeeping: _ModalConfigTimeKeeping__WEBPACK_IMPORTED_MODULE_4__["default"],
+    DatePicker: vue2_datepicker__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   data: function data() {
     return {
@@ -5416,7 +5424,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       userId: '',
       userName: '',
       time: '',
-      currentUser: ''
+      currentUser: '',
+      timeSelected: ''
     };
   },
   created: function created() {
@@ -5432,19 +5441,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!(_this.option != 3 || _this.option == 3 && _this.start_date != '' && _this.end_date != '')) {
-                  _context.next = 6;
-                  break;
-                }
-
                 params = {
                   option: _this.option,
-                  search: _this.search
+                  search: _this.search,
+                  time: _this.timeSelected ? moment__WEBPACK_IMPORTED_MODULE_6___default()(_this.timeSelected).format('YYYY-MM-DD') : ''
                 };
-                _context.next = 4;
-                return (0,_ultis__WEBPACK_IMPORTED_MODULE_3__.$get)('/time-keeping/get', _objectSpread({}, params));
+                _context.next = 3;
+                return (0,_ultis__WEBPACK_IMPORTED_MODULE_5__.$get)('/time-keeping/get', _objectSpread({}, params));
 
-              case 4:
+              case 3:
                 res = _context.sent;
 
                 if (res.code === 200) {
@@ -5459,7 +5464,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 }
 
-              case 6:
+              case 5:
               case "end":
                 return _context.stop();
             }
@@ -5468,13 +5473,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     changeOption: function changeOption() {
-      if (this.option == 3) {
-        this.showOtherTime = true;
-      } else {
-        this.start_date = '';
-        this.end_date = '';
-        this.getTimeKeepings();
-      }
+      this.getTimeKeepings();
     },
     showModal: function showModal(userId, userName, time) {
       this.userId = userId;
@@ -5505,7 +5504,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return (0,_ultis__WEBPACK_IMPORTED_MODULE_3__.$post)('/time-keeping/checkin');
+                return (0,_ultis__WEBPACK_IMPORTED_MODULE_5__.$post)('/time-keeping/checkin');
 
               case 2:
                 res = _context2.sent;
@@ -5534,20 +5533,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        var params, res;
+        var option, search, time;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                params = {
-                  option: _this3.option,
-                  search: _this3.search
-                };
-                _context3.next = 3;
-                return (0,_ultis__WEBPACK_IMPORTED_MODULE_3__.$get)('/time-keeping/export', _objectSpread({}, params));
+                option = _this3.option;
+                search = _this3.search;
+                time = _this3.timeSelected ? moment__WEBPACK_IMPORTED_MODULE_6___default()(_this3.timeSelected).format('YYYY-MM-DD') : ''; // const res = await $get('/time-keeping/export', {...params});
 
-              case 3:
-                res = _context3.sent;
+                window.open("/time-keeping/export?option=" + option + "&search=" + search + "&time=" + time, '_blank');
 
               case 4:
               case "end":
@@ -5556,6 +5551,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee3);
       }))();
+    }
+  },
+  watch: {
+    'option': function option(newVal) {
+      this.timeSelected = '';
+      this.changeOption();
     }
   }
 });
@@ -5802,7 +5803,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var r;
+        var res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -5815,9 +5816,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 2:
-                r = _context.sent;
+                res = _context.sent;
 
-                if (res.code === 200) {}
+                if (res.code === 200) {
+                  toastr.success('Lưu thành công');
+
+                  _this.$emit('closeModalConfig');
+                }
 
               case 4:
               case "end":
@@ -6055,6 +6060,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 res = _context3.sent;
 
                 if (res.code == 200) {
+                  toastr.success('Cập nhật thành công');
+
                   _this3.getTimeKeepingInfo();
 
                   _this3.close();
@@ -6080,6 +6087,207 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.showUpdateCheckIn = false;
       this.showUpdateCheckOut = false;
       this.showUpdateReason = false;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Admin/Timekeeping/Report.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Admin/Timekeeping/Report.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue2-datepicker */ "./node_modules/vue2-datepicker/index.esm.js");
+/* harmony import */ var vue2_datepicker_index_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue2-datepicker/index.css */ "./node_modules/vue2-datepicker/index.css");
+/* harmony import */ var _ultis__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../ultis */ "./resources/js/ultis.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "Report",
+  components: {
+    DatePicker: vue2_datepicker__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      dateRange: '',
+      data: [],
+      expected: {},
+      current: {}
+    };
+  },
+  methods: {
+    getReport: function getReport() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var params, res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (!_this.dateRange.length) {
+                  _context.next = 8;
+                  break;
+                }
+
+                params = {
+                  start_date: moment__WEBPACK_IMPORTED_MODULE_4___default()(_this.dateRange[0]).format('YYYY-MM-DD'),
+                  end_date: moment__WEBPACK_IMPORTED_MODULE_4___default()(_this.dateRange[1]).format('YYYY-MM-DD')
+                };
+                _context.next = 4;
+                return (0,_ultis__WEBPACK_IMPORTED_MODULE_3__.$get)('/time-keeping/get-report', _objectSpread({}, params));
+
+              case 4:
+                res = _context.sent;
+
+                if (res.code == 200) {
+                  _this.data = res.data.result;
+                  _this.expected = res.data.expected;
+                  _this.current = res.data.current;
+                }
+
+                _context.next = 9;
+                break;
+
+              case 8:
+                toastr.error('Vui lòng chọn thời gian thống kê');
+
+              case 9:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    formatNumber: function formatNumber(val) {
+      return (Math.round(val * 100) / 100).toFixed(2);
     }
   }
 });
@@ -6381,6 +6589,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 if (res) {
                   _this4.getDevices();
+
+                  toastr.success('Đồng bộ thành công');
                 }
 
               case 4:
@@ -6443,6 +6653,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 res = _context6.sent;
 
                 if (res.code === 200) {
+                  toastr.success('Cập nhật thành công');
+
                   _this6.closeCol();
 
                   _this6.getDevices();
@@ -6499,6 +6711,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 r = _context7.sent;
 
                 if (r.code === 200) {
+                  toastr.success('Đăng ký thành công');
+
                   _this7.closeCol();
 
                   _this7.getUsers();
@@ -6545,6 +6759,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _r = _context7.sent;
 
                 if (_r.code === 200) {
+                  toastr.success('Đăng ký thành công');
+
                   _this7.closeCol();
 
                   _this7.getUsers();
@@ -7599,6 +7815,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_employees_Create__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/employees/Create */ "./resources/js/components/employees/Create.vue");
 /* harmony import */ var _components_employees_Edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/employees/Edit */ "./resources/js/components/employees/Edit.vue");
 /* harmony import */ var _Admin_Timekeeping_ListTimeKeeping__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Admin/Timekeeping/ListTimeKeeping */ "./resources/js/Admin/Timekeeping/ListTimeKeeping.vue");
+/* harmony import */ var _Admin_Timekeeping_Report__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Admin/Timekeeping/Report */ "./resources/js/Admin/Timekeeping/Report.vue");
+/* harmony import */ var _Admin_Request_ListRequest__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Admin/Request/ListRequest */ "./resources/js/Admin/Request/ListRequest.vue");
+
+
 
 
 
@@ -7619,6 +7839,14 @@ var routes = [{
   path: "/time-keeping",
   name: "ListTimeKeeping",
   component: _Admin_Timekeeping_ListTimeKeeping__WEBPACK_IMPORTED_MODULE_3__["default"]
+}, {
+  path: "/time-keeping-report",
+  name: "Report",
+  component: _Admin_Timekeeping_Report__WEBPACK_IMPORTED_MODULE_4__["default"]
+}, {
+  path: "/request",
+  name: "ListRequest",
+  component: _Admin_Request_ListRequest__WEBPACK_IMPORTED_MODULE_5__["default"]
 }];
 
 /***/ }),
@@ -67319,6 +67547,43 @@ module.exports = function (list, options) {
 
 /***/ }),
 
+/***/ "./resources/js/Admin/Request/ListRequest.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/Admin/Request/ListRequest.vue ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ListRequest_vue_vue_type_template_id_0902ff3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ListRequest.vue?vue&type=template&id=0902ff3a&scoped=true& */ "./resources/js/Admin/Request/ListRequest.vue?vue&type=template&id=0902ff3a&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+var script = {}
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
+  script,
+  _ListRequest_vue_vue_type_template_id_0902ff3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _ListRequest_vue_vue_type_template_id_0902ff3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "0902ff3a",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/Admin/Request/ListRequest.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/Admin/Timekeeping/ListTimeKeeping.vue":
 /*!************************************************************!*\
   !*** ./resources/js/Admin/Timekeeping/ListTimeKeeping.vue ***!
@@ -67432,6 +67697,45 @@ var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__
 /* hot reload */
 if (false) { var api; }
 component.options.__file = "resources/js/Admin/Timekeeping/ModalDetailTimeKeepingInDay.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/Admin/Timekeeping/Report.vue":
+/*!***************************************************!*\
+  !*** ./resources/js/Admin/Timekeeping/Report.vue ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Report_vue_vue_type_template_id_bc23651e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Report.vue?vue&type=template&id=bc23651e&scoped=true& */ "./resources/js/Admin/Timekeeping/Report.vue?vue&type=template&id=bc23651e&scoped=true&");
+/* harmony import */ var _Report_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Report.vue?vue&type=script&lang=js& */ "./resources/js/Admin/Timekeeping/Report.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Report_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Report_vue_vue_type_template_id_bc23651e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _Report_vue_vue_type_template_id_bc23651e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "bc23651e",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/Admin/Timekeeping/Report.vue"
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
 
 /***/ }),
@@ -67642,6 +67946,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Admin/Timekeeping/Report.vue?vue&type=script&lang=js&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/Admin/Timekeeping/Report.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Report_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Report.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Admin/Timekeeping/Report.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Report_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/Admin/Timekeeping/SettingConfigPartner.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************!*\
   !*** ./resources/js/Admin/Timekeeping/SettingConfigPartner.vue?vue&type=script&lang=js& ***!
@@ -67719,6 +68039,23 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Admin/Request/ListRequest.vue?vue&type=template&id=0902ff3a&scoped=true&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/Admin/Request/ListRequest.vue?vue&type=template&id=0902ff3a&scoped=true& ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListRequest_vue_vue_type_template_id_0902ff3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListRequest_vue_vue_type_template_id_0902ff3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListRequest_vue_vue_type_template_id_0902ff3a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ListRequest.vue?vue&type=template&id=0902ff3a&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Admin/Request/ListRequest.vue?vue&type=template&id=0902ff3a&scoped=true&");
+
+
+/***/ }),
+
 /***/ "./resources/js/Admin/Timekeeping/ListTimeKeeping.vue?vue&type=template&id=1a7b92c5&scoped=true&":
 /*!*******************************************************************************************************!*\
   !*** ./resources/js/Admin/Timekeeping/ListTimeKeeping.vue?vue&type=template&id=1a7b92c5&scoped=true& ***!
@@ -67766,6 +68103,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalDetailTimeKeepingInDay_vue_vue_type_template_id_2fd3ab10_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalDetailTimeKeepingInDay_vue_vue_type_template_id_2fd3ab10_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ModalDetailTimeKeepingInDay.vue?vue&type=template&id=2fd3ab10&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Admin/Timekeeping/ModalDetailTimeKeepingInDay.vue?vue&type=template&id=2fd3ab10&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/Admin/Timekeeping/Report.vue?vue&type=template&id=bc23651e&scoped=true&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/Admin/Timekeeping/Report.vue?vue&type=template&id=bc23651e&scoped=true& ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Report_vue_vue_type_template_id_bc23651e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Report_vue_vue_type_template_id_bc23651e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Report_vue_vue_type_template_id_bc23651e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Report.vue?vue&type=template&id=bc23651e&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Admin/Timekeeping/Report.vue?vue&type=template&id=bc23651e&scoped=true&");
 
 
 /***/ }),
@@ -67834,6 +68188,184 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_e58eb3a6___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_template_id_e58eb3a6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Index.vue?vue&type=template&id=e58eb3a6& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/employees/Index.vue?vue&type=template&id=e58eb3a6&");
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Admin/Request/ListRequest.vue?vue&type=template&id=0902ff3a&scoped=true&":
+/*!**************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Admin/Request/ListRequest.vue?vue&type=template&id=0902ff3a&scoped=true& ***!
+  \**************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticStyle: { "margin-top": "-20px" },
+      attrs: { id: "layoutSidenav_content" },
+    },
+    [
+      _c("main", [
+        _c("form", [
+          _c("div", { staticClass: "container-fluid px-4" }, [
+            _c("br"),
+            _vm._v(" "),
+            _c("form", [
+              _c(
+                "button",
+                {
+                  attrs: { type: "button", id: "yeucaucanduyet" },
+                  on: {
+                    click: function ($event) {
+                      return _vm.ModalCreateRequest()
+                    },
+                  },
+                },
+                [_vm._v("Yêu cầu cần duyệt")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  attrs: { type: "button", id: "daduyet" },
+                  on: {
+                    click: function ($event) {
+                      return _vm.ModalCreateRequest()
+                    },
+                  },
+                },
+                [_vm._v("Đã duyệt")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  attrs: { type: "button", id: "tuchoi" },
+                  on: {
+                    click: function ($event) {
+                      return _vm.ModalCreateRequest()
+                    },
+                  },
+                },
+                [_vm._v("Từ chối")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  staticStyle: { float: "right" },
+                  on: {
+                    click: function ($event) {
+                      return _vm.ModalCreateRequest()
+                    },
+                  },
+                },
+                [_vm._v("Tạo yêu cầu")]
+              ),
+            ]),
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
+            _vm._m(0),
+          ]),
+        ]),
+      ]),
+    ]
+  )
+}
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "table",
+      { staticClass: "table table-bordered", attrs: { id: "yeucaub" } },
+      [
+        _c("thead", [
+          _c("tr", { staticStyle: { "text-align": "center" } }, [
+            _c("th", { attrs: { width: "3%" } }, [_vm._v("STT")]),
+            _vm._v(" "),
+            _c("th", { attrs: { width: "3%" } }, [_vm._v("ID")]),
+            _vm._v(" "),
+            _c("th", { attrs: { width: "8%" } }, [_vm._v("Người yêu cầu")]),
+            _vm._v(" "),
+            _c("th", { attrs: { width: "10%" } }, [_vm._v("Thông tin")]),
+            _vm._v(" "),
+            _c("th", { attrs: { width: "10%" } }, [_vm._v("Ngày giờ bắt đầu")]),
+            _vm._v(" "),
+            _c("th", { attrs: { width: "10%" } }, [
+              _vm._v("Ngày giờ kết thúc"),
+            ]),
+            _vm._v(" "),
+            _c("th", { attrs: { width: "15%" } }, [_vm._v("Lý do")]),
+            _vm._v(" "),
+            _c("th", { attrs: { width: "10%" } }, [_vm._v("Ngày gửi")]),
+            _vm._v(" "),
+            _c("th", { attrs: { width: "8%" } }, [_vm._v("Người duyệt")]),
+            _vm._v(" "),
+            _c("th", { attrs: { width: "10%" } }, [_vm._v("Thao tác")]),
+          ]),
+        ]),
+        _vm._v(" "),
+        _c("tbody", { staticStyle: { "text-align": "center" } }, [
+          _c("tr", [
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td", [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-success",
+                  staticStyle: { "font-size": "12px" },
+                },
+                [_vm._v("Duyệt")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger",
+                  staticStyle: { "font-size": "12px" },
+                },
+                [_vm._v("Từ chối")]
+              ),
+            ]),
+          ]),
+        ]),
+      ]
+    )
+  },
+]
+render._withStripped = true
+
 
 
 /***/ }),
@@ -67921,23 +68453,25 @@ var render = function () {
       ),
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "card-body table-responsive" }, [
-      _c(
-        "select",
-        {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.option,
-              expression: "option",
-            },
-          ],
-          staticClass: "form-select col-lg-2",
-          staticStyle: { position: "absolute", right: "20px", top: "80px" },
-          on: {
-            change: [
-              function ($event) {
+    _c(
+      "div",
+      { staticClass: "card-body table-responsive" },
+      [
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.option,
+                expression: "option",
+              },
+            ],
+            staticClass: "form-select col-lg-2",
+            staticStyle: { position: "absolute", right: "20px", top: "80px" },
+            on: {
+              change: function ($event) {
                 var $$selectedVal = Array.prototype.filter
                   .call($event.target.options, function (o) {
                     return o.selected
@@ -67950,132 +68484,236 @@ var render = function () {
                   ? $$selectedVal
                   : $$selectedVal[0]
               },
-              function ($event) {
-                return _vm.changeOption()
-              },
-            ],
+            },
           },
-        },
-        [
-          _c("option", { attrs: { value: "1" } }, [_vm._v("Theo tuần")]),
-          _vm._v(" "),
-          _c("option", { attrs: { value: "2" } }, [_vm._v("Theo tháng")]),
-          _vm._v(" "),
-          _vm._m(0),
-        ]
-      ),
-      _vm._v(" "),
-      _vm.showOtherTime
-        ? _c(
-            "div",
-            { staticClass: "collapse", attrs: { id: "collapseOtherTime" } },
-            [_vm._m(1)]
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _c("table", { staticClass: "table table-bordered mt-5" }, [
-        _c("thead", { staticClass: "table-active" }, [
-          _c(
-            "tr",
-            [
-              _c("th", [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.search,
-                      expression: "search",
-                    },
-                  ],
-                  staticClass: "form-control mb-2 input-search",
-                  attrs: {
-                    type: "text",
-                    name: "search",
-                    placeholder: "Tìm kiếm",
-                  },
-                  domProps: { value: _vm.search },
-                  on: {
-                    keyup: function ($event) {
-                      if (
-                        !$event.type.indexOf("key") &&
-                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                      ) {
-                        return null
-                      }
-                      return _vm.getTimeKeepings()
-                    },
-                    input: function ($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.search = $event.target.value
-                    },
-                  },
-                }),
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.labels, function (label) {
-                return _c("th", [_vm._v(_vm._s(label))])
-              }),
-            ],
-            2
-          ),
-        ]),
+          [
+            _c("option", { attrs: { value: "1" } }, [_vm._v("Theo tuần")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "2" } }, [_vm._v("Theo tháng")]),
+          ]
+        ),
         _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.data, function (user) {
-            return _c(
+        _vm.option == 2
+          ? _c("date-picker", {
+              staticStyle: {
+                position: "absolute",
+                right: "400px",
+                top: "80px",
+              },
+              attrs: {
+                type: "month",
+                placeholder: "Vui lòng chọn tháng để tìm kiếm",
+              },
+              on: {
+                change: function ($event) {
+                  return _vm.changeOption()
+                },
+              },
+              model: {
+                value: _vm.timeSelected,
+                callback: function ($$v) {
+                  _vm.timeSelected = $$v
+                },
+                expression: "timeSelected",
+              },
+            })
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.option == 1
+          ? _c("date-picker", {
+              staticStyle: {
+                position: "absolute",
+                right: "400px",
+                top: "80px",
+              },
+              attrs: {
+                type: "week",
+                placeholder: "Vui lòng chọn tuần để tìm kiếm",
+              },
+              on: {
+                change: function ($event) {
+                  return _vm.changeOption()
+                },
+              },
+              model: {
+                value: _vm.timeSelected,
+                callback: function ($$v) {
+                  _vm.timeSelected = $$v
+                },
+                expression: "timeSelected",
+              },
+            })
+          : _vm._e(),
+        _vm._v(" "),
+        _c("table", { staticClass: "table table-bordered mt-5" }, [
+          _c("thead", { staticClass: "table-active" }, [
+            _c(
               "tr",
               [
-                _c("td", [_vm._v(_vm._s(user.fullname))]),
-                _vm._v(" "),
-                _vm._l(user.time_keeping, function (time) {
-                  return _c(
-                    "td",
-                    {
-                      class: time.class,
-                      on: {
-                        click: function ($event) {
-                          return _vm.showModal(user.id, user.fullname, time)
-                        },
+                _c("th", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.search,
+                        expression: "search",
+                      },
+                    ],
+                    staticClass: "form-control mb-2 input-search",
+                    attrs: {
+                      type: "text",
+                      name: "search",
+                      placeholder: "Tìm kiếm",
+                    },
+                    domProps: { value: _vm.search },
+                    on: {
+                      keyup: function ($event) {
+                        if (
+                          !$event.type.indexOf("key") &&
+                          _vm._k(
+                            $event.keyCode,
+                            "enter",
+                            13,
+                            $event.key,
+                            "Enter"
+                          )
+                        ) {
+                          return null
+                        }
+                        return _vm.getTimeKeepings()
+                      },
+                      input: function ($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.search = $event.target.value
                       },
                     },
-                    [
-                      _vm.option == 1
-                        ? _c("span", [_vm._v("Giờ hành chính:")])
-                        : _vm._e(),
-                      _c("br"),
-                      _vm._v(" "),
-                      _vm.option == 1
-                        ? _c("span", [_vm._v("Check in: ")])
-                        : _vm._e(),
-                      _vm._v(
-                        _vm._s(time.checkin ? time.checkin : "--:--:--") + " "
-                      ),
-                      _c("br"),
-                      _vm._v(" "),
-                      _vm.option == 1
-                        ? _c("span", [_vm._v("Check out: ")])
-                        : _vm._e(),
-                      _vm._v(
-                        _vm._s(time.checkout ? time.checkout : "--:--:--") +
-                          "\n                    "
-                      ),
-                    ]
+                  }),
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.labels, function (label) {
+                  return _c(
+                    "th",
+                    {
+                      key: label,
+                      staticStyle: {
+                        "font-size": "13px",
+                        "text-align": "center",
+                        "vertical-align": "middle",
+                      },
+                    },
+                    [_vm._v(_vm._s(label))]
                   )
                 }),
               ],
               2
-            )
-          }),
-          0
-        ),
-      ]),
-      _vm._v(" "),
-      _vm._m(2),
-    ]),
+            ),
+          ]),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.data, function (user) {
+              return _c(
+                "tr",
+                { key: user },
+                [
+                  _c(
+                    "td",
+                    {
+                      staticStyle: {
+                        width: "200px",
+                        "font-size": "14px",
+                        "vertical-align": "middle",
+                      },
+                    },
+                    [_vm._v(_vm._s(user.fullname))]
+                  ),
+                  _vm._v(" "),
+                  _vm._l(user.time_keeping, function (time) {
+                    return _c(
+                      "td",
+                      {
+                        key: time,
+                        class: time.class,
+                        on: {
+                          click: function ($event) {
+                            return _vm.showModal(user.id, user.fullname, time)
+                          },
+                        },
+                      },
+                      [
+                        _vm.option == 1
+                          ? [
+                              _vm.option == 1
+                                ? _c("span", [_vm._v("Giờ hành chính:")])
+                                : _vm._e(),
+                              _c("br"),
+                              _vm._v(" "),
+                              _vm.option == 1
+                                ? _c("span", [_vm._v("Check in: ")])
+                                : _vm._e(),
+                              _vm._v(
+                                _vm._s(
+                                  time.checkin ? time.checkin : "--:--:--"
+                                ) + " "
+                              ),
+                              _c("br"),
+                              _vm._v(" "),
+                              _vm.option == 1
+                                ? _c("span", [_vm._v("Check out: ")])
+                                : _vm._e(),
+                              _vm._v(
+                                _vm._s(
+                                  time.checkout ? time.checkout : "--:--:--"
+                                ) + "\n                        "
+                              ),
+                            ]
+                          : [
+                              _c(
+                                "div",
+                                {
+                                  staticStyle: {
+                                    "font-size": "13px",
+                                    "text-align": "center",
+                                  },
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                " +
+                                      _vm._s(
+                                        time.checkin ? time.checkin : "--:--"
+                                      ) +
+                                      " "
+                                  ),
+                                  _c("br"),
+                                  _vm._v(
+                                    "\n                                " +
+                                      _vm._s(
+                                        time.checkout ? time.checkout : "--:--"
+                                      ) +
+                                      "\n                            "
+                                  ),
+                                ]
+                              ),
+                            ],
+                      ],
+                      2
+                    )
+                  }),
+                ],
+                2
+              )
+            }),
+            0
+          ),
+        ]),
+        _vm._v(" "),
+        _vm._m(0),
+      ],
+      1
+    ),
     _vm._v(" "),
     _c("div", [
       _c(
@@ -68196,7 +68834,17 @@ var render = function () {
                 _c(
                   "div",
                   { staticClass: "modal-body" },
-                  [_vm.modalConfig ? _c("ModalConfigTimeKeeping") : _vm._e()],
+                  [
+                    _vm.modalConfig
+                      ? _c("ModalConfigTimeKeeping", {
+                          on: {
+                            closeModalConfig: function ($event) {
+                              return _vm.closeModalConfig()
+                            },
+                          },
+                        })
+                      : _vm._e(),
+                  ],
                   1
                 ),
               ]),
@@ -68208,43 +68856,6 @@ var render = function () {
   ])
 }
 var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("option", { attrs: { value: "3" } }, [
-      _c(
-        "button",
-        {
-          attrs: {
-            "data-toggle": "collapse",
-            "data-target": "#collapseOtherTime",
-            "aria-expanded": "false",
-            "aria-controls": "collapseOtherTime",
-          },
-        },
-        [_vm._v("Tùy chọn")]
-      ),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card card-body collapse-edit" }, [
-      _c("p", [_vm._v("123")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("button", { staticClass: "btn btn-primary col-6" }, [
-          _vm._v("Cập nhật"),
-        ]),
-        _vm._v(" "),
-        _c("button", { staticClass: "btn btn-default col-6" }, [
-          _vm._v("Đóng"),
-        ]),
-      ]),
-    ])
-  },
   function () {
     var _vm = this
     var _h = _vm.$createElement
@@ -68863,10 +69474,10 @@ var render = function () {
       _c(
         "tbody",
         _vm._l(_vm.data, function (time, index) {
-          return _c("tr", [
+          return _c("tr", { key: time }, [
             _c("th", { attrs: { scope: "row" } }, [_vm._v(_vm._s(index + 1))]),
             _vm._v(" "),
-            _c("td", [_vm._v("07:58:59")]),
+            _c("td", [_vm._v(_vm._s(time.time))]),
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(time.personName))]),
             _vm._v(" "),
@@ -68893,6 +69504,419 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Hình ảnh")]),
       ]),
+    ])
+  },
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Admin/Timekeeping/Report.vue?vue&type=template&id=bc23651e&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Admin/Timekeeping/Report.vue?vue&type=template&id=bc23651e&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-header" }, [
+      _c("h4", [_vm._v("Bảng thống kê chấm công")]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticStyle: { position: "absolute", right: "20px", top: "15px" } },
+        [
+          _c("date-picker", {
+            attrs: {
+              type: "date",
+              range: "",
+              placeholder: "Vui lòng chọn khoảng thời gian thống kê",
+            },
+            model: {
+              value: _vm.dateRange,
+              callback: function ($$v) {
+                _vm.dateRange = $$v
+              },
+              expression: "dateRange",
+            },
+          }),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              on: {
+                click: function ($event) {
+                  return _vm.getReport()
+                },
+              },
+            },
+            [_vm._v("Thống kê")]
+          ),
+        ],
+        1
+      ),
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-body table-responsive" }, [
+      _c("div", { staticStyle: { margin: "-50px 0px 0px 0px" } }, [
+        _c("table", { staticClass: "table table-bordered mt-5" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("tbody", [
+            _c("tr", [
+              _c("td", [
+                _vm._v(
+                  "Dự kiến: " +
+                    _vm._s(_vm.expected.start_date) +
+                    " / " +
+                    _vm._s(_vm.expected.end_date)
+                ),
+              ]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.expected.total))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.expected.warrior1))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.expected.warrior2))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.expected.warrior3))]),
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("td", [
+                _vm._v(
+                  "Thực tế: " +
+                    _vm._s(_vm.current.start_date) +
+                    " / " +
+                    _vm._s(_vm.current.end_date)
+                ),
+              ]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.current.total))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.current.warrior1))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.current.warrior2))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.current.warrior3))]),
+            ]),
+          ]),
+        ]),
+      ]),
+      _vm._v(" "),
+      _c("div", { staticStyle: { margin: "-40px 0px 0px 0px" } }, [
+        _c(
+          "table",
+          {
+            staticClass: "table table-bordered mt-5",
+            staticStyle: { border: "2px" },
+          },
+          [
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.data, function (user, index) {
+                return _c("tr", { key: index }, [
+                  _c("td", [_vm._v(_vm._s(user.id))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.fullname))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.totalGoLate))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(_vm.formatNumber(user.timeGoLate)))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.totalAboutEarly))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(_vm.formatNumber(user.timeAboutEarly))),
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.totalGoLateAboutEarly))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(_vm.formatNumber(user.timeGoEarly))),
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(_vm.formatNumber(user.timeAboutLate))),
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.totalUnpaidLeave))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.totalNocheckIn))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.totalNocheckOut))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.totalTimeKeeping))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(_vm.formatNumber(user.totalHourEfforts))),
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.currentWar))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(_vm.formatNumber(user.timeHoldWar))),
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(_vm.formatNumber(user.avgTimeHoldWar))),
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.nextWar))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(_vm.formatNumber(user.timeIncreaseWar))),
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(_vm.formatNumber(user.avgTimeIncreaseWar))),
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.rateGoLate) + " %")]),
+                ])
+              }),
+              0
+            ),
+          ]
+        ),
+      ]),
+    ]),
+  ])
+}
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "table-active" }, [
+      _c("tr", { staticStyle: { "text-align": "center" } }, [
+        _c("th", [_vm._v("Thời gian thống kê")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Công chuẩn")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("WARRIOR 1")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("WARRIOR 2")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("WARRIOR 3")]),
+      ]),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "table-active" }, [
+      _c(
+        "tr",
+        {
+          staticStyle: {
+            "vertical-align": "middle",
+            "font-size": "12px",
+            "text-align": "center",
+          },
+        },
+        [
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("MNV")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle", width: "200px" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("Nhân viên")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { colspan: "2" },
+            },
+            [_vm._v("Đi muộn")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { colspan: "2" },
+            },
+            [_vm._v("Về sớm")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("Tổng giờ ĐMVS")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("Số giờ đi sớm")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("Số giờ về muộn")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("Nghỉ không lương")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("Số ngày chấm công")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("Số ngày không checkin")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("Số ngày không checkout")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("Tổng giờ nỗ lực")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle", width: "120px" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("Warrior hiện tại")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("TG để giữ Warrior")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("TGTB để giữ Warrior")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle", width: "120px" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("Warrior tiếp theo")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("TG để lên Warrior")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("TGTB để lên Warrior")]
+          ),
+          _vm._v(" "),
+          _c(
+            "th",
+            {
+              staticStyle: { "vertical-align": "middle" },
+              attrs: { rowspan: "2" },
+            },
+            [_vm._v("Tỷ lệ đi muộn")]
+          ),
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "tr",
+        { staticStyle: { "font-size": "12px", "text-align": "center" } },
+        [
+          _c("th", [_vm._v("Số lần")]),
+          _vm._v(" "),
+          _c("th", [_vm._v("Thời gian")]),
+          _vm._v(" "),
+          _c("th", [_vm._v("Số lần")]),
+          _vm._v(" "),
+          _c("th", [_vm._v("Thời gian")]),
+        ]
+      ),
     ])
   },
 ]
@@ -69016,7 +70040,7 @@ var render = function () {
               _c(
                 "tbody",
                 _vm._l(_vm.users, function (user, index) {
-                  return _c("tr", [
+                  return _c("tr", { key: user }, [
                     _c("td", [_vm._v(_vm._s(index + 1))]),
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(user.id))]),
@@ -69103,7 +70127,7 @@ var render = function () {
                 _c(
                   "tbody",
                   _vm._l(_vm.devices, function (device, index) {
-                    return _c("tr", [
+                    return _c("tr", { key: device }, [
                       _c("td", [_vm._v(_vm._s(index + 1))]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(device.device_name))]),
@@ -69383,6 +70407,7 @@ var render = function () {
                   return _c(
                     "option",
                     {
+                      key: p,
                       domProps: {
                         value: p,
                         selected: p.id == _vm.user.place_id,

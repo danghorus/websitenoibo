@@ -20,7 +20,7 @@
 
                                 <div class="form-input-wide">
                                 <label for="password"class="col-md-4 col-form-label text-md-right"></label>
-                                    <div class="avatar-wrapper" style="margin: -14% 0px 0px 45% ;">
+                                    <div class="avatar-wrapper" style="margin: -5% 0px 0px 48% ;">
                                         <img id="avatar" name="avatar" class="profile-pic" src="{{ asset('img/avt.jpg') }}"/>
                                         <div class="upload-button">
                                             <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
@@ -74,7 +74,7 @@
                                 <div class="col-md-6">
                                     <input id="birthday" type="date"
                                         class="form-control @error('name') is-invalid @enderror" name="birthday"
-                                        value="01-01-2000" required autocomplete="birthday" autofocus>
+                                        value="2000-01-01" required autocomplete="birthday" autofocus>
 
                                     @error('birthday')
                                         <span class="invalid-feedback" role="alert">

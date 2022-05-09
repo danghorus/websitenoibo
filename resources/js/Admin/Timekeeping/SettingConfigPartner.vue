@@ -31,7 +31,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(user, index) in users">
+                    <tr v-for="(user, index) in users" :key="user">
                         <td>{{ index+1 }}</td>
                         <td>{{ user.id }}</td>
                         <td>{{ user.fullname }}</td>
@@ -62,7 +62,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(device, index) in devices">
+                            <tr v-for="(device, index) in devices" :key="device">
                                 <td>{{ index+1 }}</td>
                                 <td>{{ device.device_name }}</td>
                                 <td>{{ device.type_text }}</td>
@@ -119,7 +119,7 @@
                 <div class="form-group">
                     <label>Địa điểm đăng kí:</label>
                     <select class="form-select" v-model="place" :disabled="user.place_id">
-                        <option v-for="p in places" :value="p" :selected="p.id == user.place_id">{{ p.name }}</option>
+                        <option v-for="p in places" :key="p" :value="p" :selected="p.id == user.place_id">{{ p.name }}</option>
                     </select>
                 </div>
                 <div class="row">
