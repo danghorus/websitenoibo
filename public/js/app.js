@@ -5394,7 +5394,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 
 
 
@@ -68646,11 +68645,6 @@ var render = function () {
                       [
                         _vm.option == 1
                           ? [
-                              _vm.option == 1
-                                ? _c("span", [_vm._v("Giờ hành chính:")])
-                                : _vm._e(),
-                              _c("br"),
-                              _vm._v(" "),
                               _vm.option == 1
                                 ? _c("span", [_vm._v("Check in: ")])
                                 : _vm._e(),

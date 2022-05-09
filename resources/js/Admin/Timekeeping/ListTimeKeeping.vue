@@ -35,7 +35,6 @@
                         <td style="width:200px; font-size:14px; vertical-align: middle;">{{ user.fullname }}</td>
                         <td v-for="time in user.time_keeping" :key="time" :class="time.class" @click="showModal(user.id, user.fullname, time)">
                             <template v-if="option == 1">
-                                <span v-if="option == 1">Giờ hành chính:</span><br>
                                 <span v-if="option == 1">Check in: </span>{{ time.checkin ? time.checkin: '--:--:--'}} <br>
                                 <span v-if="option == 1">Check out: </span>{{ time.checkout ? time.checkout: '--:--:--' }}
                             </template>
