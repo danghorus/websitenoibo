@@ -26,5 +26,6 @@ class RequestController extends Controller
     {
         return view('request.create');
     }
+    
 
 }

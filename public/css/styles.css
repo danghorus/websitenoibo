@@ -5547,7 +5547,7 @@ textarea.form-control-lg {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 200%;
   pointer-events: auto;
   background-color: #fff;
   background-clip: padding-box;
@@ -11713,7 +11713,7 @@ body {
   width: 232px;
   height: 40px;
 }
-#yeucaucanduyet{
+#unapproved{
   height: 40px;
   background-color: #F5F5F5;
   border: 0px;
@@ -11721,7 +11721,7 @@ body {
   width: 150px;
   color: blue;
 }
-#yeucaucanduyet1{
+#unapproved1{
   height: 40px;
   background-color: #29A9FF;
   border: 0px;
@@ -11730,7 +11730,7 @@ body {
   color: white;
 }
 
-#daduyet{
+#approved{
   height: 40px;
   background-color: #F5F5F5;
   border: 0px;
@@ -11738,7 +11738,7 @@ body {
   width: 110px;
   color: green;
 }
-#daduyet1{
+#approved1{
   height: 40px;
   background-color: #29A9FF;
   border: 0px;
@@ -11746,7 +11746,7 @@ body {
   width: 110px;
   color: white;
 }
-#tuchoi{
+#refuse{
   height: 40px;
   background-color: #F5F5F5;
   border: 0px;
@@ -11754,7 +11754,7 @@ body {
   width: 100px;
   color: red;
 }
-#tuchoi1{
+#refuse1{
   height: 40px;
   background-color: #29A9FF;
   border: 0px;

@@ -47,7 +47,7 @@
                             <a class="nav-link" href="{{url('/home') }}">Trang chủ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/users') }}">Nhân sự</a>
+                            <a class="nav-link" href="{{ url('/users') }}" onclick="changeColor()" >Nhân sự</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -77,6 +77,12 @@
                             <a class="nav-link" href="{{ url('/') }}">Thưởng dự án</a>
                         </li>
                     </ul>
+                    <script>
+                    function changeColor() {
+                        var result = document.getElementById("result");
+                        result.style.color = "red";
+                    }
+                    </script>
                 </div>
             </nav>
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
