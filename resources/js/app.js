@@ -21,4 +21,7 @@ const app = new Vue({
     el: "#app",
     router: router
 });
-
+const request = new Vue({
+    el: "#request",
+    router: router
+});
