@@ -27,8 +27,10 @@
                                         <i class="fas fa-search" style="color:#ffffff; " ></i>
                                 </button>
                                 </div>
-                                <a href= "{{ route('users.create') }}" class="btn btn-primary mb-2" style="float:right;">Thêm nhân viên</a>
+                                <!--<a href= "{{ route('users.create') }}" class="btn btn-primary mb-2" style="float:right;">Thêm nhân viên</a>-->
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float:right;">Thêm nhân viên</button>
                             </div>
+                            
                         </form>
                     </div>
                     <div>
@@ -68,14 +70,16 @@
                                 <td scope="row">{{ $user->position }}</td>
                                 <td scope="row">{{ $user->permission==0?'Nhân viên':'Quản lý' }} </td>
                                 <td>
-                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-success">Chỉnh sửa</a>
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#extraLargeModal_edit">Chỉnh sửa</button>
                                 </td>
-                                
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-        </div>
+            @extends('users.create')
+            @extends('users.edit')
+
+        </div>    
     </div>
 @endsection

@@ -55,6 +55,8 @@ readURL(this);
 $(".upload-button").on('click',function(){
 $(".file-upload").click();
 });
+
+
 /***AVATAR SCRIPT***/
 
 

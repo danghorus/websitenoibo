@@ -20,5 +20,6 @@ class ChangePasswordController extends Controller
       ]);
 
         return redirect()->route('users.index')->with('message', 'User Password Updated Succesfully');
+
     }
 }
