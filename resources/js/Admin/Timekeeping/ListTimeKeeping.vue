@@ -27,18 +27,18 @@
                         <th>
                             <input type="text" name="search" class="form-control mb-2 input-search" v-model="search" placeholder="Tìm kiếm" v-on:keyup.enter="getTimeKeepings()">
                         </th>
-                        <th v-for="label in labels" :key="label" style="font-size:13px; text-align:center; vertical-align: middle;">{{ label }}</th>
+                        <th v-for="(label, index) in labels" :key="index" style="font-size:13px; text-align:center; vertical-align: middle;">{{ label }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="user in data" :key="user">
+                    <tr v-for="(user, index) in data" :key="index">
                         <td style="width:200px; font-size:14px; vertical-align: middle;">{{ user.fullname }}</td>
-                        <td v-for="time in user.time_keeping" :key="time" :class="time.class" @click="showModal(user.id, user.fullname, time)">
+                        <td v-for="(time, index) in user.time_keeping" :key="index" :class="time.class" @click="showModal(user.id, user.fullname, time)">
                             <template v-if="option == 1">
                                 <span v-if="option == 1">Check in: </span>{{ time.checkin ? time.checkin: '--:--:--'}} <br>
                                 <span v-if="option == 1">Check out: </span>{{ time.checkout ? time.checkout: '--:--:--' }}
                             </template>
-                            
+
                             <template v-else>
                                 <div style="font-size:13px; text-align: center;">
                                     {{ time.checkin ? time.checkin: '--:--'}} <br>

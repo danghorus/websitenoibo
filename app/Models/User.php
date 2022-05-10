@@ -57,7 +57,7 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\TimeKeeping');
     }
 
-    public static function getAllUser(array $filters, array $range) {
+    public static function getAllUser(array $filters, array $range = []) {
          $builder = User::query();
 
          if (isset($filters['search']) && $filters['search'] != '') {
@@ -65,7 +65,9 @@ class User extends Authenticatable
          }
 
          $builder->with(['timeKeeping' => function ($q) use ($range) {
-            $q->whereIn('check_date', array_keys($range));
+             if (count($range) > 0) {
+                 $q->whereIn('check_date', array_keys($range));
+             }
         }]);
 
         $data = $builder->get();

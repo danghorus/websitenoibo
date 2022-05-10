@@ -50,13 +50,13 @@
                             <a class="nav-link" href="{{ url('/users') }}" onclick="changeColor()" >Nhân sự</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Chấm công
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ url('/time-keeping') }}">Chấm công</a></li>
-                                <li><a class="dropdown-item" href="{{ url('/time-keeping-report') }}">Thống kê</a></li>
-                            </ul>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ url('/time-keeping') }}">Chấm công</a>
+                                <a class="dropdown-item" href="{{ url('/time-keeping-report') }}">Thống kê</a>
+                            </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">Việc của tôi</a>

@@ -31,7 +31,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(user, index) in users" :key="user">
+                    <tr v-for="(user, index) in users" :key="index">
                         <td>{{ index+1 }}</td>
                         <td>{{ user.id }}</td>
                         <td>{{ user.fullname }}</td>
@@ -40,10 +40,29 @@
                             <img :src="user.face_image_url" width="150" height="150" />
                         </td>
                         <td>
-                            <button class="btn btn-outline-primary" data-toggle="collapse" data-target="#collapseFace"
-                                    aria-expanded="false" aria-controls="collapseFace" @click="showEditFaceId(user)">
+                            <button class="btn btn-outline-primary" data-toggle="collapse" :data-target="'#collapseFace' + index"
+                                    aria-expanded="false" :aria-controls="'collapseFace_' + index" @click="showEditFaceId(user)">
                                 Sửa
                             </button>
+                            <div class="collapse" :id="'collapseFace' + index" v-if="showEditFace">
+                                <div class="card card-body collapse-edit">
+                                    <div class="form-group">
+                                        <label><span style="color: red">*</span>Upload ảnh đăng kí chấm công:</label>
+                                        <input type="file" ref="uploader" accept="image/*" @change="uploadFile($event)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Địa điểm đăng kí:</label>
+                                        <select class="form-select" v-model="place" :disabled="user.place_id">
+                                            <option v-for="(p, i) in places" :key="i" :value="p" :selected="p.id == user.place_id">{{ p.name }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <button class="btn btn-primary col-6" @click="updateUser(user.id)">Cập nhật</button>
+                                        <button class="btn btn-default col-6" @click="closeCol()">Đóng</button>
+                                    </div>
+
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     </tbody>
@@ -62,7 +81,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(device, index) in devices" :key="device">
+                            <tr v-for="(device, index) in devices" :key="index">
                                 <td>{{ index+1 }}</td>
                                 <td>{{ device.device_name }}</td>
                                 <td>{{ device.type_text }}</td>
@@ -110,25 +129,6 @@
 
             </div>
         </div>
-        <div class="collapse" id="collapseFace" v-if="showEditFace">
-            <div class="card card-body collapse-edit">
-                <div class="form-group">
-                    <label><span style="color: red">*</span>Upload ảnh đăng kí chấm công:</label>
-                    <input type="file" ref="uploader" accept="image/*" @change="uploadFile($event)">
-                </div>
-                <div class="form-group">
-                    <label>Địa điểm đăng kí:</label>
-                    <select class="form-select" v-model="place" :disabled="user.place_id">
-                        <option v-for="p in places" :key="p" :value="p" :selected="p.id == user.place_id">{{ p.name }}</option>
-                    </select>
-                </div>
-                <div class="row">
-                    <button class="btn btn-primary col-6" @click="updateUser(user.id)">Cập nhật</button>
-                    <button class="btn btn-default col-6" @click="closeCol()">Đóng</button>
-                </div>
-
-            </div>
-        </div>
     </div>
 </template>
 
@@ -151,7 +151,8 @@ export default {
             showEditFace: false,
             file: '',
             place: '',
-            user: ''
+            user: '',
+            files: ''
         }
     },
     created() {
@@ -219,14 +220,17 @@ export default {
                 this.getDevices();
             }
         },
+        uploadFile(e) {
+            this.files = e.target.files;
+        },
         async updateUser(userId) {
-            let files = this.$refs.uploader.files;
+
             if (this.user.face_image_url) {
                 const res = await $upload('https://partner.hanet.ai/person/updateByFaceImage', [],  {
                     placeID: this.user.place_id,
                     aliasID: userId,
                     token: this.config?.access_token,
-                    file: files[0],
+                    file: this.files[0],
                 })
 
                 if (res.returnCode === 1 ) {
@@ -249,7 +253,7 @@ export default {
                     token: this.config?.access_token,
                     title: this.user?.position,
                     name: this.user?.fullname,
-                    file: files[0],
+                    file: this.files[0],
                 })
 
                 if (res.returnCode === 1 ) {
@@ -295,7 +299,6 @@ export default {
     height: auto;
     position: absolute;
     right: 60px;
-    bottom: 90px;
     z-index: 10;
     box-shadow: 3px 3px #888888;
 }

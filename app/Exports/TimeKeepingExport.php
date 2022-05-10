@@ -49,6 +49,7 @@ class TimeKeepingExport implements WithHeadings, FromArray
         $res = [];
 
         foreach ($this->timeKeeping as $value) {
+            $tmp = [];
             $tmp[] = $value['id'] ?? 0;
             $tmp[] = $value['fullname'] ?? '';
             foreach ($value['time_keeping'] as $val) {

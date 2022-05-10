@@ -80,9 +80,9 @@
                             <td>{{ formatNumber(user.timeGoEarly) }}</td>
                             <td>{{ formatNumber(user.timeAboutLate) }}</td>
                             <td>{{ user.totalUnpaidLeave }}</td>
-                            <td>{{ user.totalNocheckIn }}</td>
-                            <td>{{ user.totalNocheckOut }}</td>
                             <td>{{ user.totalTimeKeeping }}</td>
+                            <td>{{ user.totalNotCheckIn }}</td>
+                            <td>{{ user.totalNotCheckOut }}</td>
                             <td>{{ formatNumber(user.totalHourEfforts) }}</td>
                             <td>{{ user.currentWar }}</td>
                             <td>{{ formatNumber(user.timeHoldWar) }}</td>
@@ -118,21 +118,20 @@ export default {
             current: {},
         }
     },
+    created() {
+        this.getReport();
+    },
     methods: {
         async getReport() {
-            if (this.dateRange.length) {
-                let params = {
-                    start_date: moment(this.dateRange[0]).format('YYYY-MM-DD'),
-                    end_date: moment(this.dateRange[1]).format('YYYY-MM-DD')
-                }
-                const res = await $get('/time-keeping/get-report', {...params});
-                if (res.code == 200) {
-                    this.data = res.data.result;
-                    this.expected = res.data.expected;
-                    this.current = res.data.current;
-                }
-            } else {
-                toastr.error('Vui lòng chọn thời gian thống kê');
+            let params = {
+                start_date: this.dateRange.length > 1? moment(this.dateRange[0]).format('YYYY-MM-DD'): '',
+                end_date: this.dateRange.length > 1? moment(this.dateRange[1]).format('YYYY-MM-DD'): ''
+            }
+            const res = await $get('/time-keeping/get-report', {...params});
+            if (res.code == 200) {
+                this.data = res.data.result;
+                this.expected = res.data.expected;
+                this.current = res.data.current;
             }
 
         },
