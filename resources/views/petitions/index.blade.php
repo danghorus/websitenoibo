@@ -30,7 +30,7 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="content-unapproved" role="tabpanel" aria-labelledby="tab-unapproved">
                             <br>
-                            <table class="table table-bordered" id="yeucaub">
+                            <table class="table table-hover">
                                 <thead>
                                     <tr style="text-align: center;">
                                         <th width=3% >STT</th>
@@ -89,13 +89,12 @@
                                         <td>{{ $petition->created_at }}</td>
                                         <td>
                                             <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
-   
                                                 <a class="btn btn-success" href="{{ route('petitions.show',$petition->id) }}" style="font-size:12px;">Duyệt</a>
-                                
                                                 <a class="btn btn-warning" href="{{ route('petitions.edit',$petition->id) }}" style="font-size:12px;">Từ chối</a>
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('Bạn có chắc chắn xoá yêu cầu này?');" class="btn btn-danger" style="font-size:12px;">Xoá</button>
+                                                <button type="submit" onclick="return confirm('Bạn có chắc chắn xoá yêu cầu này?');" 
+                                                    class="btn btn-danger" style="font-size:12px;">Xoá</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -104,9 +103,8 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="content-approved" role="tabpanel" aria-labelledby="tab-approved">
-
                             <br>
-                            <table class="table table-bordered" id="yeucaub">
+                            <table class="table table-hover">
                                 <thead>
                                     <tr style="text-align: center;">
                                         <th width=3% >STT</th>
@@ -136,7 +134,7 @@
                         </div>
                         <div class="tab-pane fade" id="content-refuse" role="tabpanel" aria-labelledby="tab-refuse">
                             <br>
-                            <table class="table table-bordered" id="yeucaub">
+                            <table class="table table-hover">
                                 <thead>
                                     <tr style="text-align: center;">
                                         <th width=3% >STT</th>
