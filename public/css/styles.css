@@ -11927,6 +11927,7 @@ body {
         height: 100%;
         width: 100%;
     }
+    
 
         .avatar-wrapper .upload-button .fa-arrow-circle-up {
             position: absolute;
@@ -11943,6 +11944,7 @@ body {
         .avatar-wrapper .upload-button:hover .fa-arrow-circle-up {
             opacity: .9;
         }
+        
 
 #avatar-header
 {
@@ -12203,3 +12205,12 @@ body {
 .text-center {
   text-align: center !important
 }
+
+
+
+
+
+/***Avatar them nhan vien***/
+
+
+

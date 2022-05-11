@@ -6240,6 +6240,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       current: {}
     };
   },
+  created: function created() {
+    this.getReport();
+  },
   methods: {
     getReport: function getReport() {
       var _this = this;
@@ -6250,19 +6253,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!_this.dateRange.length) {
-                  _context.next = 8;
-                  break;
-                }
-
                 params = {
-                  start_date: moment__WEBPACK_IMPORTED_MODULE_4___default()(_this.dateRange[0]).format('YYYY-MM-DD'),
-                  end_date: moment__WEBPACK_IMPORTED_MODULE_4___default()(_this.dateRange[1]).format('YYYY-MM-DD')
+                  start_date: _this.dateRange.length > 1 ? moment__WEBPACK_IMPORTED_MODULE_4___default()(_this.dateRange[0]).format('YYYY-MM-DD') : '',
+                  end_date: _this.dateRange.length > 1 ? moment__WEBPACK_IMPORTED_MODULE_4___default()(_this.dateRange[1]).format('YYYY-MM-DD') : ''
                 };
-                _context.next = 4;
+                _context.next = 3;
                 return (0,_ultis__WEBPACK_IMPORTED_MODULE_3__.$get)('/time-keeping/get-report', _objectSpread({}, params));
 
-              case 4:
+              case 3:
                 res = _context.sent;
 
                 if (res.code == 200) {
@@ -6271,13 +6269,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.current = res.data.current;
                 }
 
-                _context.next = 9;
-                break;
-
-              case 8:
-                toastr.error('Vui lòng chọn thời gian thống kê');
-
-              case 9:
+              case 5:
               case "end":
                 return _context.stop();
             }
@@ -6469,7 +6461,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       showEditFace: false,
       file: '',
       place: '',
-      user: ''
+      user: '',
+      files: ''
     };
   },
   created: function created() {
@@ -6667,46 +6660,47 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee6);
       }))();
     },
+    uploadFile: function uploadFile(e) {
+      this.files = e.target.files;
+    },
     updateUser: function updateUser(userId) {
       var _this7 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7() {
-        var files, _this7$config, res, _res$data, r, _this7$config2, _this7$user, _this7$user2, _res, _res$data2, _r;
+        var _this7$config, res, _res$data, r, _this7$config2, _this7$user, _this7$user2, _res, _res$data2, _r;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                files = _this7.$refs.uploader.files;
-
                 if (!_this7.user.face_image_url) {
-                  _context7.next = 15;
+                  _context7.next = 14;
                   break;
                 }
 
-                _context7.next = 4;
+                _context7.next = 3;
                 return (0,_ultis__WEBPACK_IMPORTED_MODULE_1__.$upload)('https://partner.hanet.ai/person/updateByFaceImage', [], {
                   placeID: _this7.user.place_id,
                   aliasID: userId,
                   token: (_this7$config = _this7.config) === null || _this7$config === void 0 ? void 0 : _this7$config.access_token,
-                  file: files[0]
+                  file: _this7.files[0]
                 });
 
-              case 4:
+              case 3:
                 res = _context7.sent;
 
                 if (!(res.returnCode === 1)) {
-                  _context7.next = 12;
+                  _context7.next = 11;
                   break;
                 }
 
-                _context7.next = 8;
+                _context7.next = 7;
                 return (0,_ultis__WEBPACK_IMPORTED_MODULE_1__.$post)('/partner/update_user', {
                   user_id: userId,
                   face_image_url: (_res$data = res.data) === null || _res$data === void 0 ? void 0 : _res$data.path
                 });
 
-              case 8:
+              case 7:
                 r = _context7.sent;
 
                 if (r.code === 200) {
@@ -6717,36 +6711,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this7.getUsers();
                 }
 
-                _context7.next = 13;
+                _context7.next = 12;
                 break;
 
-              case 12:
+              case 11:
                 toastr.error(res.returnMessage);
 
-              case 13:
-                _context7.next = 26;
+              case 12:
+                _context7.next = 25;
                 break;
 
-              case 15:
-                _context7.next = 17;
+              case 14:
+                _context7.next = 16;
                 return (0,_ultis__WEBPACK_IMPORTED_MODULE_1__.$upload)('https://partner.hanet.ai/person/register', [], {
                   placeID: _this7.place.id,
                   aliasID: userId,
                   token: (_this7$config2 = _this7.config) === null || _this7$config2 === void 0 ? void 0 : _this7$config2.access_token,
                   title: (_this7$user = _this7.user) === null || _this7$user === void 0 ? void 0 : _this7$user.position,
                   name: (_this7$user2 = _this7.user) === null || _this7$user2 === void 0 ? void 0 : _this7$user2.fullname,
-                  file: files[0]
+                  file: _this7.files[0]
                 });
 
-              case 17:
+              case 16:
                 _res = _context7.sent;
 
                 if (!(_res.returnCode === 1)) {
-                  _context7.next = 25;
+                  _context7.next = 24;
                   break;
                 }
 
-                _context7.next = 21;
+                _context7.next = 20;
                 return (0,_ultis__WEBPACK_IMPORTED_MODULE_1__.$post)('/partner/update_user', {
                   place_id: _this7.place.id,
                   place_name: _this7.place.name,
@@ -6754,7 +6748,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   face_image_url: (_res$data2 = _res.data) === null || _res$data2 === void 0 ? void 0 : _res$data2.file
                 });
 
-              case 21:
+              case 20:
                 _r = _context7.sent;
 
                 if (_r.code === 200) {
@@ -6765,13 +6759,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this7.getUsers();
                 }
 
-                _context7.next = 26;
+                _context7.next = 25;
                 break;
 
-              case 25:
+              case 24:
                 toastr.error(_res.returnMessage);
 
-              case 26:
+              case 25:
               case "end":
                 return _context7.stop();
             }
@@ -23958,7 +23952,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".collapse-edit[data-v-6acaad9a] {\n  width: 300px;\n  height: auto;\n  position: absolute;\n  right: 60px;\n  bottom: 90px;\n  z-index: 10;\n  box-shadow: 3px 3px #888888;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".collapse-edit[data-v-6acaad9a] {\n  width: 300px;\n  height: auto;\n  position: absolute;\n  right: 60px;\n  z-index: 10;\n  box-shadow: 3px 3px #888888;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -67710,11 +67704,11 @@ var render = function () {
                   }),
                 ]),
                 _vm._v(" "),
-                _vm._l(_vm.labels, function (label) {
+                _vm._l(_vm.labels, function (label, index) {
                   return _c(
                     "th",
                     {
-                      key: label,
+                      key: index,
                       staticStyle: {
                         "font-size": "13px",
                         "text-align": "center",
@@ -67731,10 +67725,10 @@ var render = function () {
           _vm._v(" "),
           _c(
             "tbody",
-            _vm._l(_vm.data, function (user) {
+            _vm._l(_vm.data, function (user, index) {
               return _c(
                 "tr",
-                { key: user },
+                { key: index },
                 [
                   _c(
                     "td",
@@ -67748,11 +67742,11 @@ var render = function () {
                     [_vm._v(_vm._s(user.fullname))]
                   ),
                   _vm._v(" "),
-                  _vm._l(user.time_keeping, function (time) {
+                  _vm._l(user.time_keeping, function (time, index) {
                     return _c(
                       "td",
                       {
-                        key: time,
+                        key: index,
                         class: time.class,
                         on: {
                           click: function ($event) {
@@ -68586,7 +68580,7 @@ var render = function () {
       _c(
         "tbody",
         _vm._l(_vm.data, function (time, index) {
-          return _c("tr", { key: time }, [
+          return _c("tr", { key: index }, [
             _c("th", { attrs: { scope: "row" } }, [_vm._v(_vm._s(index + 1))]),
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(time.time))]),
@@ -68768,11 +68762,11 @@ var render = function () {
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(user.totalUnpaidLeave))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(user.totalNocheckIn))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(user.totalNocheckOut))]),
-                  _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(user.totalTimeKeeping))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.totalNotCheckIn))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.totalNotCheckOut))]),
                   _vm._v(" "),
                   _c("td", [
                     _vm._v(_vm._s(_vm.formatNumber(user.totalHourEfforts))),
@@ -69020,13 +69014,21 @@ var staticRenderFns = [
         "tr",
         { staticStyle: { "font-size": "12px", "text-align": "center" } },
         [
-          _c("th", [_vm._v("Số lần")]),
+          _c("th", { staticStyle: { "vertical-align": "middle" } }, [
+            _vm._v("Số lần"),
+          ]),
           _vm._v(" "),
-          _c("th", [_vm._v("Thời gian")]),
+          _c("th", { staticStyle: { "vertical-align": "middle" } }, [
+            _vm._v("Thời gian"),
+          ]),
           _vm._v(" "),
-          _c("th", [_vm._v("Số lần")]),
+          _c("th", { staticStyle: { "vertical-align": "middle" } }, [
+            _vm._v("Số lần"),
+          ]),
           _vm._v(" "),
-          _c("th", [_vm._v("Thời gian")]),
+          _c("th", { staticStyle: { "vertical-align": "middle" } }, [
+            _vm._v("Thời gian"),
+          ]),
         ]
       ),
     ])
@@ -69152,7 +69154,7 @@ var render = function () {
               _c(
                 "tbody",
                 _vm._l(_vm.users, function (user, index) {
-                  return _c("tr", { key: user }, [
+                  return _c("tr", { key: index }, [
                     _c("td", [_vm._v(_vm._s(index + 1))]),
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(user.id))]),
@@ -69178,9 +69180,9 @@ var render = function () {
                           staticClass: "btn btn-outline-primary",
                           attrs: {
                             "data-toggle": "collapse",
-                            "data-target": "#collapseFace",
+                            "data-target": "#collapseFace" + index,
                             "aria-expanded": "false",
-                            "aria-controls": "collapseFace",
+                            "aria-controls": "collapseFace_" + index,
                           },
                           on: {
                             click: function ($event) {
@@ -69194,6 +69196,125 @@ var render = function () {
                           ),
                         ]
                       ),
+                      _vm._v(" "),
+                      _vm.showEditFace
+                        ? _c(
+                            "div",
+                            {
+                              staticClass: "collapse",
+                              attrs: { id: "collapseFace" + index },
+                            },
+                            [
+                              _c(
+                                "div",
+                                { staticClass: "card card-body collapse-edit" },
+                                [
+                                  _c("div", { staticClass: "form-group" }, [
+                                    _vm._m(1, true),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                      ref: "uploader",
+                                      refInFor: true,
+                                      attrs: {
+                                        type: "file",
+                                        accept: "image/*",
+                                      },
+                                      on: {
+                                        change: function ($event) {
+                                          return _vm.uploadFile($event)
+                                        },
+                                      },
+                                    }),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "form-group" }, [
+                                    _c("label", [_vm._v("Địa điểm đăng kí:")]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "select",
+                                      {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.place,
+                                            expression: "place",
+                                          },
+                                        ],
+                                        staticClass: "form-select",
+                                        attrs: { disabled: user.place_id },
+                                        on: {
+                                          change: function ($event) {
+                                            var $$selectedVal =
+                                              Array.prototype.filter
+                                                .call(
+                                                  $event.target.options,
+                                                  function (o) {
+                                                    return o.selected
+                                                  }
+                                                )
+                                                .map(function (o) {
+                                                  var val =
+                                                    "_value" in o
+                                                      ? o._value
+                                                      : o.value
+                                                  return val
+                                                })
+                                            _vm.place = $event.target.multiple
+                                              ? $$selectedVal
+                                              : $$selectedVal[0]
+                                          },
+                                        },
+                                      },
+                                      _vm._l(_vm.places, function (p, i) {
+                                        return _c(
+                                          "option",
+                                          {
+                                            key: i,
+                                            domProps: {
+                                              value: p,
+                                              selected: p.id == user.place_id,
+                                            },
+                                          },
+                                          [_vm._v(_vm._s(p.name))]
+                                        )
+                                      }),
+                                      0
+                                    ),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "row" }, [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass: "btn btn-primary col-6",
+                                        on: {
+                                          click: function ($event) {
+                                            return _vm.updateUser(user.id)
+                                          },
+                                        },
+                                      },
+                                      [_vm._v("Cập nhật")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass: "btn btn-default col-6",
+                                        on: {
+                                          click: function ($event) {
+                                            return _vm.closeCol()
+                                          },
+                                        },
+                                      },
+                                      [_vm._v("Đóng")]
+                                    ),
+                                  ]),
+                                ]
+                              ),
+                            ]
+                          )
+                        : _vm._e(),
                     ]),
                   ])
                 }),
@@ -69234,12 +69355,12 @@ var render = function () {
               ),
               _vm._v(" "),
               _c("table", { staticClass: "table" }, [
-                _vm._m(1),
+                _vm._m(2),
                 _vm._v(" "),
                 _c(
                   "tbody",
                   _vm._l(_vm.devices, function (device, index) {
-                    return _c("tr", { key: device }, [
+                    return _c("tr", { key: index }, [
                       _c("td", [_vm._v(_vm._s(index + 1))]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(device.device_name))]),
@@ -69287,7 +69408,7 @@ var render = function () {
           },
           [
             _c("div", { staticClass: "form-group" }, [
-              _vm._m(2),
+              _vm._m(3),
               _vm._v(" "),
               _c("input", {
                 directives: [
@@ -69313,7 +69434,7 @@ var render = function () {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "form-group" }, [
-              _vm._m(3),
+              _vm._m(4),
               _vm._v(" "),
               _c("input", {
                 directives: [
@@ -69465,103 +69586,6 @@ var render = function () {
           ]
         )
       : _vm._e(),
-    _vm._v(" "),
-    _vm.showEditFace
-      ? _c("div", { staticClass: "collapse", attrs: { id: "collapseFace" } }, [
-          _c("div", { staticClass: "card card-body collapse-edit" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _vm._m(4),
-              _vm._v(" "),
-              _c("input", {
-                ref: "uploader",
-                attrs: { type: "file", accept: "image/*" },
-                on: {
-                  change: function ($event) {
-                    return _vm.uploadFile($event)
-                  },
-                },
-              }),
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", [_vm._v("Địa điểm đăng kí:")]),
-              _vm._v(" "),
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.place,
-                      expression: "place",
-                    },
-                  ],
-                  staticClass: "form-select",
-                  attrs: { disabled: _vm.user.place_id },
-                  on: {
-                    change: function ($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function (o) {
-                          return o.selected
-                        })
-                        .map(function (o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.place = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                  },
-                },
-                _vm._l(_vm.places, function (p) {
-                  return _c(
-                    "option",
-                    {
-                      key: p,
-                      domProps: {
-                        value: p,
-                        selected: p.id == _vm.user.place_id,
-                      },
-                    },
-                    [_vm._v(_vm._s(p.name))]
-                  )
-                }),
-                0
-              ),
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary col-6",
-                  on: {
-                    click: function ($event) {
-                      return _vm.updateUser(_vm.user.id)
-                    },
-                  },
-                },
-                [_vm._v("Cập nhật")]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-default col-6",
-                  on: {
-                    click: function ($event) {
-                      return _vm.closeCol()
-                    },
-                  },
-                },
-                [_vm._v("Đóng")]
-              ),
-            ]),
-          ]),
-        ])
-      : _vm._e(),
   ])
 }
 var staticRenderFns = [
@@ -69583,6 +69607,15 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Thao tác")]),
       ]),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", [
+      _c("span", { staticStyle: { color: "red" } }, [_vm._v("*")]),
+      _vm._v("Upload ảnh đăng kí chấm công:"),
     ])
   },
   function () {
@@ -69617,15 +69650,6 @@ var staticRenderFns = [
     return _c("label", [
       _c("span", { staticStyle: { color: "red" } }, [_vm._v("*")]),
       _vm._v("Client Secret:"),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _c("span", { staticStyle: { color: "red" } }, [_vm._v("*")]),
-      _vm._v("Upload ảnh đăng kí chấm công:"),
     ])
   },
 ]

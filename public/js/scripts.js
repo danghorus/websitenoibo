@@ -57,6 +57,8 @@ $(".file-upload").click();
 });
 
 
+
+
 /***AVATAR SCRIPT***/
 
 

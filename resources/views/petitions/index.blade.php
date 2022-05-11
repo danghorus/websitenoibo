@@ -45,20 +45,61 @@
                                     </tr>
                                 </thead>
                                 <tbody style="text-align: center;">
+                                    <?php $i=0;?>
+                                    @foreach ($petitions as $petition)
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ ++$i }}</td>
+                                        <td>{{ $petition->id }}</td>
+                                        <td>{{ $petition->user_fullname }}</td>
                                         <td>
-                                            <button class="btn btn-success" style="font-size:12px;">Duyệt</button>
-                                            <button class="btn btn-danger" style="font-size:12px;">Từ chối</button>
+                                            <?php
+                                                if($petition->petition_type == 1){
+                                                    echo "Đi muộn về sớm";
+                                                }
+                                                if($petition->petition_type == 2){
+                                                    echo "Nghỉ phép";
+                                                } 
+                                                if($petition->petition_type == 3){
+                                                    echo "Nghỉ việc";
+                                                }
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            if ($petition->petition_type == 3) {
+                                                echo $petition->date_from;
+                                            } else{
+                                            echo $petition->time_from." - ".$petition->date_from;
+                                            }
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            $t= $petition->date_to;
+                                            if ($petition->petition_type == 3) {
+                                                echo $petition->date_from;
+                                            } else if($t != null){
+                                                    echo $petition->time_to." - ".$petition->date_to;
+                                                } else{
+                                                    echo $petition->time_to." - ".$petition->date_from;
+                                                }
+                                            ?>
+                                        </td>
+                                        <td>{{ $petition->petition_reason }}</td>
+                                        <td>{{ $petition->created_at }}</td>
+                                        <td>
+                                            <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
+   
+                                                <a class="btn btn-success" href="{{ route('petitions.show',$petition->id) }}" style="font-size:12px;">Duyệt</a>
+                                
+                                                <a class="btn btn-warning" href="{{ route('petitions.edit',$petition->id) }}" style="font-size:12px;">Từ chối</a>
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" onclick="return confirm('Bạn có chắc chắn xoá yêu cầu này?');" class="btn btn-danger" style="font-size:12px;">Xoá</button>
+                                            </form>
                                         </td>
                                     </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -79,8 +120,9 @@
                                     </tr>
                                 </thead>
                                 <tbody style="text-align: center;">
+                                   <?php $i=0;?>
                                     <tr>
-                                        <td></td>
+                                        <td>{{ ++$i }}</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -108,8 +150,9 @@
                                     </tr>
                                 </thead>
                                 <tbody style="text-align: center;">
+                                   <?php $i=0;?>
                                     <tr>
-                                        <td></td>
+                                        <td>{{ ++$i }}</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -122,7 +165,7 @@
                             </table>
                         </div>
                     </div>
-                    @extends('request.create')
+                    @extends('petitions.create')
                 </form>
             </div>
         </form>

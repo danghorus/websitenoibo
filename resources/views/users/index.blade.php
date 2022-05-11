@@ -57,9 +57,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $user)
+                        <?php $i=0;?>
+                        @foreach ($users as $key => $user)
                             <tr style="text-align:center;">
-                                <td></td>
+                                <td>{{++$i }}</td>
                                 <td scope="row">{{ $user->id }}</td>
                                 <td ><img src="{{asset('image/'.$user->avatar)}}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
                                 <td>{{ $user->fullname }}</td>
@@ -70,16 +71,14 @@
                                 <td scope="row">{{ $user->position }}</td>
                                 <td scope="row">{{ $user->permission==0?'Nhân viên':'Quản lý' }} </td>
                                 <td>
-                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#extraLargeModal_edit">Chỉnh sửa</button>
+                                    <a class="btn btn-success" href="{{route('users.edit', $user->id)}}">Chỉnh sửa</a>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-            @extends('users.create')
-            @extends('users.edit')
-
         </div>    
     </div>
+@extends('users.create')
 @endsection

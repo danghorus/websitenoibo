@@ -50,7 +50,7 @@
                             <a class="nav-link" href="{{ url('/users') }}" onclick="changeColor()" >Nhân sự</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Chấm công
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -65,7 +65,7 @@
                             <a class="nav-link" href="{{ url('/') }}">Dự án</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/request') }}">Yêu cầu</a>
+                            <a class="nav-link" href="{{ url('/petitions') }}">Yêu cầu</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">Báo cáo</a>

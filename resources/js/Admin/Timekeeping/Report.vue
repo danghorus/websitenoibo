@@ -62,10 +62,10 @@
                             <th rowspan="2" style="vertical-align: middle;">Tỷ lệ đi muộn</th>
                         </tr>
                         <tr style="font-size:12px; text-align:center;">
-                            <th>Số lần</th>
-                            <th>Thời gian</th>
-                            <th>Số lần</th>
-                            <th>Thời gian</th>
+                            <th style="vertical-align: middle;">Số lần</th>
+                            <th style="vertical-align: middle;">Thời gian</th>
+                            <th style="vertical-align: middle;">Số lần</th>
+                            <th style="vertical-align: middle;">Thời gian</th>
                         </tr>
                     </thead>
                     <tbody>
