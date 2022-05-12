@@ -68,6 +68,7 @@ class UserController extends Controller
 
         User::create([
             'fullname' => $request->fullname,
+            'date_offical' => $request->date_offical,
             'avatar' => $avatar_name,
             'phone' => $request->phone,
             'birthday' => $request->birthday,
@@ -107,6 +108,7 @@ class UserController extends Controller
         $user->update([
 
             'fullname' => $request->fullname,
+            'date_official' => $request->date_official,
             'phone' => $request->phone,
             'birthday' => $request->birthday,
             'email' => $request->email,

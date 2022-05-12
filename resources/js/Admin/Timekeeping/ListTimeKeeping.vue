@@ -1,8 +1,8 @@
 <template>
-    <div class="card">
-        <div class="card-header">
+    <div class="card" >
+        <div class="card-header" style="height:50px;" >
             <h4>Bảng chấm công</h4>
-            <div style="position: absolute; right: 20px; top: 15px">
+            <div style="position: absolute; right: 20px; top: 5px">
                 <button v-if="showCheckIn && currentUser.check_type == 2" class="btn btn-success" @click="checkIn()">Checkin</button>
                 <button  v-if="showCheckOut && currentUser.check_type == 2" class="btn btn-danger" @click="checkIn()">Checkout</button>
                 <button class="btn btn-primary" @click="exportData()">Xuất file excel</button>
@@ -11,15 +11,15 @@
 
         </div>
         <div class="card-body table-responsive">
-            <select class="form-select col-lg-2" style="position: absolute; right: 20px; top: 80px" v-model="option">
+            <select class="form-select col-lg-2" style="position: absolute; right: 20px; top: 65px; width:180px; height:34px;" v-model="option">
                 <option value="1">Theo tuần</option>
                 <option value="2">Theo tháng</option>
             </select>
             <date-picker v-if="option == 2" v-model="timeSelected" type="month" placeholder="Vui lòng chọn tháng để tìm kiếm"
-                         @change="changeOption()" style="position: absolute;right: 400px;top: 80px;">
+                         @change="changeOption()" style="position: absolute;right: 201px;top: 65px; width:300px; height:50px;">
             </date-picker>
             <date-picker v-if="option == 1" v-model="timeSelected" type="week" placeholder="Vui lòng chọn tuần để tìm kiếm"
-                         @change="changeOption()" style="position: absolute;right: 400px;top: 80px;">
+                         @change="changeOption()" style="position: absolute;right: 201px;top: 65px; width:300px; height:50px;">
             </date-picker>
             <table class="table table-bordered mt-5">
                 <thead class="table-active">
@@ -204,5 +204,40 @@ export default {
 </script>
 
 <style scoped>
+table table-bordered mt-5
+{
+    background: #fff;
+    border: 1px solid #999999;
+}
 
+table thead tr th {
+    padding: 5px;
+    border: 1px solid #9b9b9b;
+    color: #000;
+}
+
+table.table-striped tbody tr:nth-of-type(odd) {
+    background: #f9f9f9;
+}
+ 
+
+.text-left {
+    text-align: left!important;
+}
+
+table tr td {
+    padding: 0px 0px;
+    border: 1px solid #999999;
+}
+
+table.result-point tr td .fa {
+    font-size: 20px;
+    position: absolute;
+    right: 20px;
+}
+
+table tr td {
+    padding: 5px 5px;
+    border: 1px solid #999999;
+}
 </style>

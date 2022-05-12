@@ -30,53 +30,88 @@
 {{--    <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>--}}
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<style>
+
+.nav-item{
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 90px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.dropdown-content a {
+  color: rgb(90, 90, 90);
+  padding: 12px 10px;
+  text-decoration: none;
+  display: block;
+  font-size:14px;
+}
+
+.dropdown-content a:hover {background-color: #e4e4e4;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .nav-link{background-color: #eeeded;}
+.nav-item:hover {background-color: #eeeded;}
+</style>
 
 </head>
 <body>
-        <nav class="sb-topnav navbar navbar-expand navbar" style="background-color:#f4f5f7;">
+        <nav class="sb-topnav navbar navbar-expand navbar" style="background-color:#F8F9FA;">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="{{ url('/home') }}" style="color:#999da1; padding:6px 0px 0px 0px;"><h4>HORUS WORK</h4></a>
+            <a class="navbar-brand ps-3" href="{{ url('/home') }}" style="color:#999da1; padding:6px 0px 0px 0px;margin:0px -50px 0px -10px;"><h4>HORUS WORK</h4></a>
             <!-- Sidebar Toggle-->
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!" style=" margin-left:-48px;">
-                <!--<img style="width:35px; height:35px;" src="" />-->
-            </button> &ensp;&ensp;&ensp;
-            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px;">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto" style="font-size:16px;" id="">
                         <li class="nav-item">
                             <a class="nav-link" href="{{url('/home') }}">Trang chủ</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/users') }}" onclick="changeColor()" >Nhân sự</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link">Yêu cầu</a>
+                            <div class="dropdown-content">
+                                <a class="dropdown-item" href="{{ url('/petitions') }}" >Danh sách yêu cầu</a>
+                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_petition" style="float:right;">Tạo yêu cầu</a>
+                            </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Chấm công
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ url('/time-keeping') }}">Chấm công</a>
+                            <a class="nav-link">Nhân sự</a>
+                            <div class="dropdown-content">
+                                <a class="dropdown-item" href="{{ url('/users') }}" >Danh sách nhân sự</a>
+                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float:right;">Thêm nhân viên</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link">Chấm công</a>
+                            <div class="dropdown-content">
+                                <a class="dropdown-item" href="{{ url('/time-keeping') }}">Bảng chấm công</a>
                                 <a class="dropdown-item" href="{{ url('/time-keeping-report') }}">Thống kê</a>
                             </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">Việc của tôi</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link">Công việc</a>
+                            <div class="dropdown-content">
+                                <a class="dropdown-item" href="{{ url('/works') }}">Dự án</a>
+                                <a class="dropdown-item" href="{{ url('/my_works') }}">Việc của tôi</a>
+                            </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">Dự án</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/petitions') }}">Yêu cầu</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link">Lương thưởng</a>
+                            <div class="dropdown-content">
+                                <a class="dropdown-item" href="{{ url('/') }}">Lương công việc</a>
+                                <a class="dropdown-item" href="{{ url('/') }}">Thưởng dự án</a>
+                            </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">Báo cáo</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">Lương công việc</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">Thưởng dự án</a>
-                        </li>
                     </ul>
+                    @extends('users.create')
+                    @extends('petitions.create')
                     <script>
                     function changeColor() {
                         var result = document.getElementById("result");

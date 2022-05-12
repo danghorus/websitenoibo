@@ -1,34 +1,34 @@
 <template>
     <div class="card">
-        <div class="card-header">
+        <div class="card-header" style="height:50px;">
             <h4>Bảng thống kê chấm công</h4>
-            <div style="position: absolute; right: 20px; top: 15px">
+            <div style="position: absolute; right: 10px; top: 8px">
                 <date-picker v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian thống kê"></date-picker>
-                <button class="btn btn-primary" @click="getReport()">Thống kê</button>
+                <button class="btn btn-primary" @click="getReport()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê</button>
             </div>
         </div>
         <div class="card-body table-responsive">
-            <div style="margin: -50px 0px 0px 0px">
-                <table class="table table-bordered mt-5">
-                    <thead class="table-active">
+            <div>
+                <table class="table-striped table-responsive table-hover result-point">
+                    <thead class="point-table-head">
                         <tr style=" text-align:center;">
-                            <th>Thời gian thống kê</th>
-                            <th>Công chuẩn</th>
-                            <th>WARRIOR 1</th>
-                            <th>WARRIOR 2</th>
-                            <th>WARRIOR 3</th>
+                            <th width="600px">Thời gian thống kê</th>
+                            <th width="400px">Công chuẩn</th>
+                            <th width="16%">WARRIOR 1</th>
+                            <th width="16%">WARRIOR 2</th>
+                            <th width="16%">WARRIOR 3</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Dự kiến: {{ expected.start_date }} / {{ expected.end_date }}</td>
+                            <td><b>Dự kiến:</b>: Từ ngày {{ expected.start_date ? expected.start_date : ".........."}} đến ngày {{ expected.end_date ? expected.end_date : ".........."}}</td>
                             <td>{{ expected.total }}</td>
                             <td>{{ expected.warrior1 }}</td>
                             <td>{{ expected.warrior2 }}</td>
                             <td>{{ expected.warrior3 }}</td>
                         </tr>
                         <tr>
-                            <td>Thực tế: {{ current.start_date }} / {{ current.end_date }}</td>
+                            <td><b>Hiện tại:</b> Từ ngày {{ current.start_date ? current.start_date : ".........." }} đến ngày {{ current.end_date ? current.end_date: ".........."}}</td>
                             <td>{{ current.total }}</td>
                             <td>{{ current.warrior1 }}</td>
                             <td>{{ current.warrior2 }}</td>
@@ -37,9 +37,9 @@
                     </tbody>
                 </table>
             </div>
-            <div style="margin: -40px 0px 0px 0px">
-                <table class="table table-bordered mt-5" style="border:2px;" >
-                    <thead class="table-active">
+            <div>
+               <table class="table-striped table-responsive table-hover result-point">
+                    <thead class="point-table-head">
                         <tr style="vertical-align: middle; font-size:12px; text-align:center; ">
                             <th rowspan="2" style="vertical-align: middle;">MNV</th>
                             <th style="vertical-align: middle; width:200px;" rowspan="2">Nhân viên</th>
@@ -70,7 +70,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="(user, index) in data" :key="index">
-                            <td>{{ user.id }}</td>
+                            <td style="text-align:center;">{{ user.id }}</td>
                             <td>{{ user.fullname }}</td>
                             <td>{{ user.totalGoLate }}</td>
                             <td>{{ formatNumber(user.timeGoLate) }}</td>
@@ -143,5 +143,39 @@ export default {
 </script>
 
 <style scoped>
+table {
+    background: #fff;
+    border: 1px solid #999999;
+}
 
+table thead tr th {
+    padding: 5px;
+    border: 1px solid #9b9b9b;
+    color: #000;
+}
+
+table.table-striped tbody tr:nth-of-type(odd) {
+    background: #f9f9f9;
+}
+ 
+
+.text-left {
+    text-align: left!important;
+}
+
+table tr td {
+    padding: 0px 0px;
+    border: 1px solid #999999;
+}
+
+table.result-point tr td .fa {
+    font-size: 20px;
+    position: absolute;
+    right: 20px;
+}
+
+table tr td {
+    padding: 5px 5px;
+    border: 1px solid #999999;
+}
 </style>

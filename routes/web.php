@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Backend\PartnerController;
 use App\Http\Controllers\Backend\TimeKeepingController;
+use App\Http\Controllers\Backend\WorkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', UserController::class);
     Route::post('save', [UserController::class, 'save']);
     Route::resource('petitions', PetitionController::class);
+    Route::resource('works', WorkController::class);
 
     Route::post('users/{user}/change-password', [ChangePasswordController::class, 'change_password'])->name('users.change.password');
     Route::post('users/{user}/change-avatar', [ChangeAvatarController::class, 'change_avatar'])->name('users.change.avatar');

@@ -1,9 +1,9 @@
- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ <div class="modal fade" id="exampleModal_petition" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
      <div class="modal-dialog" role="document">
         <div class="modal-content" style="width:100%;">
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel">Tạo yêu cầu</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -147,11 +147,10 @@
                         });
                     </script>
 
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                        <a class="btn btn-secondary" href="{{ route('petitions.index') }}" style="float:left;"> Quay lại</a>
-                        <button type="submit" class="btn btn-primary" style="float:right;">Tạo yêu cầu</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" >Tạo yêu cầu</button>
                     </div>
-               
                 </form>
             </div>
         </div>
