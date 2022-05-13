@@ -100,6 +100,28 @@ class TimeKeepingService
                                     } elseif (($checkIn && $checkIn > $start) || ($checkOut && $checkOut < $end)) {
                                         $tmp[$key]['class'] = 'table-warning';
                                     }
+
+                                    if ($checkIn && $start) {
+                                        if ($checkIn < $start) {
+                                            $tmp[$key]['go_early'] = (int) (($start - $checkIn) / 60);
+                                            $tmp[$key]['go_late'] = 0;
+                                        } else {
+                                            $tmp[$key]['go_early'] = 0;
+                                            $tmp[$key]['go_late'] = (int) (($checkIn - $start) / 60);
+                                        }
+                                    }
+
+                                    if ($checkOut && $end) {
+                                        if ($checkOut < $end) {
+                                            $tmp[$key]['about_early'] = (int) (($end - $checkOut) / 60);
+                                            $tmp[$key]['about_late'] = 0;
+                                        } else {
+                                            $tmp[$key]['about_early'] = 0;
+                                            $tmp[$key]['about_late'] = (int) (($checkOut - $end) / 60);
+                                        }
+                                    }
+
+
                                 }
                             }
                         }

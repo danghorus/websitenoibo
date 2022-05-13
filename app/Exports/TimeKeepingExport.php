@@ -53,9 +53,9 @@ class TimeKeepingExport implements WithHeadings, FromArray
             $tmp[] = $value['id'] ?? 0;
             $tmp[] = $value['fullname'] ?? '';
             foreach ($value['time_keeping'] as $val) {
-                $timeCheckin = '';
+                $timeCheckin = "";
                 $timeCheckin .= $val['checkin'] ?? '--:--:--';
-                $timeCheckin .= ' / ';
+                $timeCheckin .= " / ";
                 $timeCheckin .= $val['checkout'] ?? '--:--:--';
                 $tmp[] = $timeCheckin;
             }

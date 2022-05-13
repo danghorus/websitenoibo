@@ -76,7 +76,7 @@
                             <td>{{ formatNumber(user.timeGoLate) }}</td>
                             <td>{{ user.totalAboutEarly }}</td>
                             <td>{{ formatNumber(user.timeAboutEarly) }}</td>
-                            <td>{{ user.totalGoLateAboutEarly }}</td>
+                            <td>{{ formatNumber(user.totalGoLateAboutEarly) }}</td>
                             <td>{{ formatNumber(user.timeGoEarly) }}</td>
                             <td>{{ formatNumber(user.timeAboutLate) }}</td>
                             <td>{{ user.totalUnpaidLeave }}</td>
@@ -90,7 +90,7 @@
                             <td>{{ user.nextWar }}</td>
                             <td>{{ formatNumber(user.timeIncreaseWar) }}</td>
                             <td>{{ formatNumber(user.avgTimeIncreaseWar) }}</td>
-                            <td>{{ user.rateGoLate }} %</td>
+                            <td>{{ formatNumber(user.rateGoLate) }} %</td>
                         </tr>
                     </tbody>
                 </table>
@@ -157,7 +157,7 @@ table thead tr th {
 table.table-striped tbody tr:nth-of-type(odd) {
     background: #f9f9f9;
 }
- 
+
 
 .text-left {
     text-align: left!important;

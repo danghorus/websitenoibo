@@ -286,7 +286,7 @@ export default {
             this.showEditFace = false;
         },
         showEditFaceId(user) {
-            this.showEditFace = true;
+            this.showEditFace = !this.showEditFace;
             this.user = user;
         }
     }
