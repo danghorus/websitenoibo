@@ -20,7 +20,7 @@ class HanetRepository
         return $this->url_auth. '/oauth2/authorize?'. http_build_query([
             'response_type' => 'code',
             'client_id' => $clientId,
-            'redirect_uri' => 'https://dccf-14-248-85-119.ngrok.io/api/partner/get_auth_code',
+            'redirect_uri' => 'https://b7d8-1-55-108-166.ap.ngrok.io/api/partner/get_auth_code',
             'scope' => 'full'
         ]);
     }
@@ -50,7 +50,7 @@ class HanetRepository
                 'code' => $code,
                 'grant_type' => 'authorization_code',
                 'client_id' => $setting->client_id,
-                'redirect_uri' => 'https://547e-113-22-125-183.ap.ngrok.io/api/partner/get_auth_code',
+                'redirect_uri' => 'https://b7d8-1-55-108-166.ap.ngrok.io/api/partner/get_auth_code',
                 'client_secret' => $setting->client_secret
             ]
         ]);
@@ -83,7 +83,7 @@ class HanetRepository
                 'placeID' => $user->place_id,
                 'date' => $date,
                 'type' => 0,
-                'aliasID' => $user->id,
+                'aliasID' => $user->user_code,
                 'devices' => implode(',', $devicesArr),
             ]
         ]);
@@ -136,6 +136,22 @@ class HanetRepository
 
         $data = json_decode($res->getBody()->getContents());
         dd($data);
+        return $data;
+    }
+
+    public function getAllUsers($accessToken, $placeId)
+    {
+        $client = new Client();
+        $res = $client->post($this->url. '/person/getListByPlace', [
+            'form_params' => [
+                'token' => $accessToken,
+                'placeID' => $placeId,
+                'type' => 0
+            ]
+        ]);
+
+        $data = json_decode($res->getBody()->getContents());
+
         return $data;
     }
 }

@@ -19,6 +19,7 @@
         </ul>
         <div class="tab-content mt-5" id="myTabContent">
             <div class="tab-pane fade show active" id="face" role="tabpanel" aria-labelledby="face-tab">
+                <button class="btn btn-primary" @click="syncUsers()" style="position: absolute; right: 20px; top: 155px">Đồng bộ người dùng</button>
                 <table class="table">
                     <thead>
                         <tr>
@@ -57,7 +58,7 @@
                                         </select>
                                     </div>
                                     <div class="row">
-                                        <button class="btn btn-primary col-6" @click="updateUser(user.id)">Cập nhật</button>
+                                        <button class="btn btn-primary col-6" @click="updateUser(user.user_code)">Cập nhật</button>
                                         <button class="btn btn-default col-6" @click="closeCol()">Đóng</button>
                                     </div>
 
@@ -106,6 +107,7 @@
                     <input type="text" class="form-control" v-model="clientSecret" :disabled="config.access_token">
                 </div>
                 <button v-if="!config.access_token" class="btn btn-primary" @click="connectHanet()">Kết nối</button>
+                <button v-if="config.access_token" class="btn btn-danger" @click="disconnectHanet()">Ngắt kết nối</button>
             </div>
         </div>
         <div class="collapse" id="collapseExample" v-if="showEdit">
@@ -189,6 +191,10 @@ export default {
                 this.config = res.data;
                 this.clientId = res.data.client_id;
                 this.clientSecret = res.data.client_secret;
+            } else {
+                this.config = '';
+                this.clientId = '';
+                this.clientSecret = '';
             }
         },
         async syncDevice() {
@@ -288,6 +294,20 @@ export default {
         showEditFaceId(user) {
             this.showEditFace = !this.showEditFace;
             this.user = user;
+        },
+        async disconnectHanet() {
+            const res = await $get('/partner/disconnect')
+            if (res.code === 200) {
+                toastr.success('Ngắt kết nối thành công');
+                this.getConfig();
+            }
+        },
+        async syncUsers() {
+            const res = await $get('/partner/sync_users')
+            if (res.code === 200) {
+                toastr.success('Đồng bộ thành công');
+                this.getUsers();
+            }
         }
     }
 }

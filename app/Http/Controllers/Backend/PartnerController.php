@@ -147,4 +147,18 @@ class PartnerController extends Controller
 
         return $settings;
     }
+
+    public function disconnect(Request $request)
+    {
+        $result = $this->partnerService->disconnect();
+
+        return $result;
+    }
+
+    public function syncUsers(Request $request)
+    {
+        $result = $this->partnerService->syncUsers();
+
+        return $result;
+    }
 }

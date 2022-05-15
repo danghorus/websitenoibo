@@ -4,10 +4,13 @@ namespace App\Services;
 
 use App\Models\ConfigTimeKeeping;
 use App\Models\DeviceTimeKeeping;
+use App\Models\PartnerConfig;
 use App\Models\User;
 use App\Repositories\DeviceTimeKeepingRepository;
 use App\Repositories\HanetRepository;
 use App\Repositories\PartnerRepository;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 class PartnerService
 {
@@ -208,5 +211,62 @@ class PartnerService
         return [
             'code' => 404
         ];
+    }
+
+    public function disconnect()
+    {
+        $result = PartnerConfig::query()->where('partner_code', '=', 'HANET')->delete();
+
+        return [
+            'code' => 200
+        ];
+    }
+
+    public function syncUsers()
+    {
+        $partnerConfig = $this->partnerRepository->getOne('HANET');
+        $setting = $partnerConfig? $partnerConfig->setting: '';
+        if ($setting && $setting->access_token) {
+            $accessToken = $setting->access_token;
+
+            $places = $this->hanetRepository->getPlaces($accessToken);
+            if ($places->returnCode == 1) {
+                foreach ($places->data as $value) {
+                    $users = $this->hanetRepository->getAllUsers($accessToken, $value->id);
+
+                    if ($users->returnCode == 1) {
+                        foreach ($users->data as $val) {
+                            $exist = User::query()->where('user_code', '=', $val->aliasID)->exists();
+                            if (!$exist) {
+                                $newUser = new User();
+                                $newUser->fullname = $val->name;
+//                            $newUser->date_official = date('Y-m-d', time());
+                                $newUser->user_code = $val->aliasID;
+                                $newUser->email = $val->aliasID.'@gmail.com';
+                                $newUser->password = Hash::make('12345678');
+                                $newUser->avatar = '';
+                                $newUser->phone = '0123456789';
+                                $newUser->birthday = date('Y-m-d', time());
+                                $newUser->department = 'Dev';
+                                $newUser->position = 'Nhân viên';
+                                $newUser->permission = 1;
+                                $newUser->check_type = 1;
+                                $newUser->place_id = $value->id;
+                                $newUser->place_name = $value->name;
+                                $newUser->face_image_url = $val->avatar;
+
+                                $newUser->save();
+                            }
+                        }
+                    }
+                }
+
+                return [
+                    'code' => 200
+                ];
+            }
+        }
+
+        return false;
     }
 }

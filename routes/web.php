@@ -46,6 +46,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/partner/get_users', [PartnerController::class, 'getUsers']);
     Route::get('/partner/get_config_time', [PartnerController::class, 'getConfigTime']);
     Route::post('/partner/update_config', [PartnerController::class, 'updateConfig']);
+    Route::get('/partner/disconnect', [PartnerController::class, 'disconnect']);
+    Route::get('/partner/sync_users', [PartnerController::class, 'syncUsers']);
 
     Route::get('time-keeping', [TimeKeepingController::class, 'index']);
     Route::get('/time-keeping/get', [TimeKeepingController::class, 'get']);

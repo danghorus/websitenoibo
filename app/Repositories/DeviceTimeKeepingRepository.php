@@ -30,7 +30,7 @@ class DeviceTimeKeepingRepository
         $data = DeviceTimeKeeping::all()->toArray();
 
         foreach ($data as $value) {
-            $result[] = $value->device_code;
+            $result[] = $value['device_code'];
         }
 
         return $result;

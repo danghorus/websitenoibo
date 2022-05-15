@@ -234,7 +234,7 @@ class TimeKeepingService
         if (isset($data['data_type']) && $data['data_type'] === 'log'
             && isset($data['personType']) && $data['personType'] == 0) {
 
-            $user = \App\Models\User::query()->where('id', '=', $data['aliasID'])->first();
+            $user = \App\Models\User::query()->where('user_code', '=', $data['aliasID'])->first();
 
             if ($user) {
                 $device = DeviceTimeKeeping::query()->where('device_code', '=', $data['deviceID'])->first();
