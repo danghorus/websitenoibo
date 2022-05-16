@@ -11,6 +11,7 @@ use App\Repositories\HanetRepository;
 use App\Repositories\PartnerRepository;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class PartnerService
 {
@@ -242,9 +243,9 @@ class PartnerService
                                 $newUser->fullname = $val->name;
 //                            $newUser->date_official = date('Y-m-d', time());
                                 $newUser->user_code = $val->aliasID;
-                                $newUser->email = $val->aliasID.'@gmail.com';
-                                $newUser->password = Hash::make('12345678');
-                                $newUser->avatar = '';
+                                $newUser->email = Str::random(10).'@gmail.com';
+                                $newUser->password = Hash::make('Chamchi123');
+                                $newUser->avatar = 'user.png';
                                 $newUser->phone = '0123456789';
                                 $newUser->birthday = date('Y-m-d', time());
                                 $newUser->department = 'Dev';

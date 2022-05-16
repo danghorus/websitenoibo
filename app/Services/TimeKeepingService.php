@@ -130,6 +130,7 @@ class TimeKeepingService
                 $result[] = [
                     'fullname' => $user->fullname,
                     'id' => $user->id,
+                    'date_official' => $user->date_official,
                     'time_keeping' => $tmp
                 ];
             }
@@ -348,12 +349,14 @@ class TimeKeepingService
 
             $timeExpected = $this->timeReport($start_date, $end_date);
 
+            $expectedWar1_3 = $timeExpected['total'] * 1;
             $expectedWar1 = $timeExpected['total'] * 2;
             $expectedWar2 = $timeExpected['total'] * 3;
             $expectedWar3 = $timeExpected['total'] * 4;
 
             $timeNow = $this->timeReport($start_date, date('Y-m-d', time()));
 
+            $nowWar1_3 = $timeNow['total'] * 1;
             $nowWar1 = $timeNow['total'] * 2;
             $nowWar2 = $timeNow['total'] * 3;
             $nowWar3 = $timeNow['total'] * 4;
@@ -375,7 +378,10 @@ class TimeKeepingService
             }
 
             foreach ($users as $user) {
+                
                 if ($user) {
+                    $totalWorkDate = 0;
+
                     $totalGoLate = 0;
                     $timeGoLate = 0;
                     $totalGoEarly = 0;
@@ -387,6 +393,7 @@ class TimeKeepingService
                     $timeAboutEarly = 0;
 
                     $totalTimeKeeping = 0;
+                    $totalWorkingDays = 0;
                     $totalNotCheckIn = 0;
                     $totalNotCheckOut = 0;
                     $totalUnpaidLeave = 0;
@@ -433,6 +440,16 @@ class TimeKeepingService
                                     $totalTimeKeeping = $totalTimeKeeping + 1/2;
                                     break;
                             }
+                            switch ($labelDay) {
+                                case 'monday':
+                                case 'tuesday':
+                                case 'wednesday':
+                                case 'thursday':
+                                case 'friday':
+                                case 'saturday':
+                                    $totalWorkingDays++;
+                                    break;
+                            }
                         }  elseif ($checkIn && !$checkOut) {
                             $totalNotCheckOut++;
                         } elseif (!$checkIn && $checkOut) {
@@ -441,52 +458,85 @@ class TimeKeepingService
                     }
 
                     $totalHourEfforts = (($timeGoEarly + $timeAboutLate) - ($timeGoLate + $timeAboutEarly))/3600;
+                    if ($user->date_official) {
+                        $totalWorkDate = $this ->timeTotal($user->date_official, date('Y-m-d', time()))['total'];
+                    }
+                    //$totalWorkDate = $this ->timeTotal($user->date_official, date('Y-m-d', time()))['total'];
                     $currentWar = '';
                     $nextWar = '';
                     $timeHoldWar = 0;
                     $timeIncreaseWar = 0;
                     $avgTimeHoldWar = 0;
                     $avgTimeIncreaseWar = 0;
+                    $EmployeeLongtime =1094;
 
-                    if ($totalHourEfforts < $nowWar1) {
-                        $currentWar = 'Solider';
-                        $nextWar = 'Warrior 1';
-                        $timeIncreaseWar = $nowWar1 - $totalHourEfforts;
-                    } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
-                        $currentWar = 'Warrior 1';
-                        $nextWar = 'Warrior 2';
-                        $timeHoldWar = $totalHourEfforts - $nowWar1;
-                        $timeIncreaseWar = $nowWar2 - $totalHourEfforts;
-                    } elseif ($totalHourEfforts > $nowWar2 && $totalHourEfforts< $nowWar3) {
-                        $currentWar = 'Warrior 2';
-                        $nextWar = 'Warrior 3';
-                        $timeHoldWar = $totalHourEfforts - $nowWar2;
-                        $timeIncreaseWar = $nowWar3 - $totalHourEfforts;
-                    } elseif ($totalHourEfforts > $nowWar3) {
-                        $currentWar = 'Warrior 3';
-                        $nextWar = 'Warrior 3';
-                        $timeHoldWar = $totalHourEfforts - $nowWar3;
-                        $timeIncreaseWar = $totalHourEfforts - $nowWar3;
+                    if($totalWorkDate > $EmployeeLongtime){
+                        if($totalHourEfforts < $nowWar1_3) {
+                            $currentWar = 'Soldier';
+                            $nextWar = 'Warrior 1';
+                            $timeIncreaseWar = $nowWar1_3 - $totalHourEfforts;
+                        } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar1) {
+                            $currentWar = 'Warrior 1';
+                            $nextWar = 'Warrior 2';
+                            $timeHoldWar = $totalHourEfforts - $nowWar1;
+                            $timeIncreaseWar = $nowWar1 - $totalHourEfforts;
+                        } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
+                            $currentWar = 'Warrior 2';
+                            $nextWar = 'Warrior 3';
+                            $timeHoldWar = $totalHourEfforts - $nowWar1;
+                            $timeIncreaseWar = $nowWar2 - $totalHourEfforts;
+                        } elseif ($totalHourEfforts > $nowWar2) {
+                            $currentWar = 'Warrior 3';
+                            $nextWar = 'Warrior 3';
+                            $timeHoldWar = $totalHourEfforts - $nowWar2;
+                            $timeIncreaseWar = $totalHourEfforts - $nowWar2;
+                        }
+                    } else{
+                        if($totalHourEfforts < $nowWar1) {
+                            $currentWar = 'Soldier';
+                            $nextWar = 'Warrior 1';
+                            $timeIncreaseWar = $nowWar1 - $totalHourEfforts;
+                        } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
+                            $currentWar = 'Warrior 1';
+                            $nextWar = 'Warrior 2';
+                            $timeHoldWar = $totalHourEfforts - $nowWar1;
+                            $timeIncreaseWar = $nowWar2 - $totalHourEfforts;
+                        } elseif ($totalHourEfforts > $nowWar2 && $totalHourEfforts< $nowWar3) {
+                            $currentWar = 'Warrior 2';
+                            $nextWar = 'Warrior 3';
+                            $timeHoldWar = $totalHourEfforts - $nowWar2;
+                            $timeIncreaseWar = $nowWar3 - $totalHourEfforts;
+                        } elseif ($totalHourEfforts > $nowWar3) {
+                            $currentWar = 'Warrior 3';
+                            $nextWar = 'Warrior 3';
+                            $timeHoldWar = $totalHourEfforts - $nowWar3;
+                            $timeIncreaseWar = $totalHourEfforts - $nowWar3;
+                        }
                     }
 
                     $totalUnpaidLeave = count($range) - count($user->timeKeeping);
 
                     $avgTimeHoldWar = $timeHoldWar/$timeRange;
-                    $avgTimeIncreaseWar = $timeIncreaseWar/$timeRange;
-                    $rateGoLate = $totalTimeKeeping? ($totalGoLate/$totalTimeKeeping) * 100 : 0;
+                    $avgTimeIncreaseWar = $timeIncreaseWar/( $timeExpected['total'] - $timeNow['total']);
+                    $rateGoLate = $totalWorkingDays? round(($totalGoLate/$totalWorkingDays), 4) * 100 : 0;
 
                     $result[] = [
                         'fullname' => $user->fullname,
                         'id' => $user->id,
+                        'date_official' => $user->date_official,
+                        'totalWorkDateY' => intval($totalWorkDate/365),
+                        'totalWorkDateM' => intval(($totalWorkDate-(intval($totalWorkDate/365)*365))/30),
+                        'totalWorkDateD' => intval(($totalWorkDate-(intval($totalWorkDate/365)*365))-intval(($totalWorkDate-(intval($totalWorkDate/365)*365))/30)*30),
                         'totalGoLate' => $totalGoLate,
-                        'timeGoLate' => $timeGoLate/3600,
+                        'timeGoLate' => round($timeGoLate/3600, 2),
                         'totalGoEarly' => $totalGoEarly,
                         'timeGoEarly' => $timeGoEarly/3600,
                         'totalAboutLate' => $totalAboutLate,
                         'timeAboutLate' => $timeAboutLate/3600,
                         'totalAboutEarly' => $totalAboutEarly,
-                        'timeAboutEarly' => $timeAboutEarly/3600,
+                        'timeAboutEarly' => round($timeAboutEarly/3600, 2),
                         'totalTimeKeeping' => $totalTimeKeeping,
+                        'totalWorkingDays' => $totalWorkingDays,
                         'totalUnpaidLeave' => $totalUnpaidLeave,
                         'totalHourEfforts' => $totalHourEfforts,
                         'currentWar' => $currentWar,
@@ -498,7 +548,7 @@ class TimeKeepingService
                         'rateGoLate' => $rateGoLate,
                         'totalNotCheckIn' => $totalNotCheckIn,
                         'totalNotCheckOut' => $totalNotCheckOut,
-                        'totalGoLateAboutEarly' => $timeGoLate/3600 + $timeAboutEarly/3600,
+                        'totalGoLateAboutEarly' => round(($timeGoLate/3600 + $timeAboutEarly/3600),2),
                     ];
                 }
             }
@@ -507,6 +557,7 @@ class TimeKeepingService
                 'start_date' => $filters['start_date'],
                 'end_date' => $filters['end_date'],
                 'total' => $timeExpected['total'] ?? '',
+                'warrior1_3' => $expectedWar1_3 ?? '',
                 'warrior1' => $expectedWar1 ?? '',
                 'warrior2' => $expectedWar2 ?? '',
                 'warrior3' => $expectedWar3 ?? '',
@@ -516,6 +567,7 @@ class TimeKeepingService
                 'start_date' => $filters['start_date'],
                 'end_date' => end($keyArr),
                 'total' => $timeNow['total'],
+                'warrior1_3' => $nowWar1_3,
                 'warrior1' => $nowWar1,
                 'warrior2' => $nowWar2,
                 'warrior3' => $nowWar3,
@@ -527,6 +579,7 @@ class TimeKeepingService
                 $result[] = [
                     'fullname' => $user->fullname,
                     'id' => $user->id,
+                    'date_official' => $user->date_official,
                     'totalGoLate' => 0,
                     'timeGoLate' => 0,
                     'totalGoEarly' => 0,
@@ -536,6 +589,7 @@ class TimeKeepingService
                     'totalAboutEarly' => 0,
                     'timeAboutEarly' => 0,
                     'totalTimeKeeping' => 0,
+                    'totalWorkingDays' => 0,
                     'totalUnpaidLeave' => 0,
                     'totalHourEfforts' => 0,
                     'currentWar' => 0,
@@ -630,6 +684,78 @@ class TimeKeepingService
                 case 'saturday':
                     $totalDate = $totalDate + 1/2;
                     break;
+            }
+        }
+
+        return [
+            'total' => $totalDate,
+            'range' => $dateRange
+        ];
+    }
+    private function timeReport2(string $start_date, string $end_date): array
+    {
+        $period = new DatePeriod(
+            new DateTime($start_date),
+            new DateInterval('P1D'),
+            new DateTime($end_date)
+        );
+
+        $totalDate = 0;
+        $dateRange = [];
+
+        foreach ($period as $key => $value) {
+
+            $day = $value->format('Y-m-d');
+            $dateRange[$day] = $day;
+            $dayLabel = lcfirst(date('l', strtotime($day)));
+            $dateRange[$day] = $dayLabel;
+
+            switch ($dayLabel) {
+                case 'monday':
+                case 'tuesday':
+                case 'wednesday':
+                case 'thursday':
+                case 'friday':
+                case 'saturday' :
+                    $totalDate++;
+                    break;
+            }
+        }
+
+        return [
+            'total' => $totalDate,
+            'range' => $dateRange
+        ];
+    }
+    private function timeTotal(string $start_date, string $end_date): array
+    {
+        $period = new DatePeriod(
+            new DateTime($start_date),
+            new DateInterval('P1D'),
+            new DateTime($end_date)
+        );
+
+        $totalDate = 0;
+        $dateRange = [];
+
+        foreach ($period as $key => $value) {
+
+            $day = $value->format('Y-m-d');
+            $dateRange[$day] = $day;
+            $dayLabel = lcfirst(date('l', strtotime($day)));
+            $dateRange[$day] = $dayLabel;
+
+            switch ($dayLabel) {
+                case 'monday':
+                case 'tuesday':
+                case 'wednesday':
+                case 'thursday':
+                case 'friday':
+                case 'saturday':
+                case 'sunday':
+                    $totalDate++;
+                    break;
+
             }
         }
 

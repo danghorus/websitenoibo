@@ -8,6 +8,7 @@ use App\Services\TimeKeepingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\User;
 
 class TimeKeepingController extends Controller
 {
@@ -25,12 +26,14 @@ class TimeKeepingController extends Controller
 
     public function index(Request $request)
     {
-        return view('timekeeping.index');
+        $users = User::all();
+        return view('timekeeping.index', compact('users'));
     }
 
     public function report(Request $request)
     {
-        return view('timekeeping.report');
+        $users = User::all();
+        return view('timekeeping.report', compact('users'));
     }
 
     public function get(Request $request) {
@@ -114,5 +117,13 @@ class TimeKeepingController extends Controller
             'code' => 200,
             'data' => $data
         ];
+    }
+    public function export_report(Request $request)
+    {
+        $filters = $request->all();
+
+        $data = $this->timeKeepingService->getAllTimeKeeping($filters);
+
+        return Excel::download(new TimeKeepingExport($data), 'timekeeping.xlsx');
     }
 }

@@ -5948,6 +5948,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -6223,6 +6227,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -6279,6 +6307,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     formatNumber: function formatNumber(val) {
       return (Math.round(val * 100) / 100).toFixed(2);
+    },
+    exportData: function exportData() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var option, search, time;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                option = _this2.option;
+                search = _this2.search;
+                time = _this2.timeSelected ? moment__WEBPACK_IMPORTED_MODULE_4___default()(_this2.timeSelected).format('YYYY-MM-DD') : ''; // const res = await $get('/time-keeping/export', {...params});
+
+                window.open("/time-keeping-report/export?option=" + option + "&search=" + search + "&time=" + time, '_blank');
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
     }
   }
 });
@@ -6311,6 +6362,8 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
 //
 //
 //
@@ -6554,6 +6607,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this3.config = res.data;
                   _this3.clientId = res.data.client_id;
                   _this3.clientSecret = res.data.client_secret;
+                } else {
+                  _this3.config = '';
+                  _this3.clientId = '';
+                  _this3.clientSecret = '';
                 }
 
               case 4:
@@ -6808,8 +6865,66 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.showEditFace = false;
     },
     showEditFaceId: function showEditFaceId(user) {
-      this.showEditFace = true;
+      this.showEditFace = !this.showEditFace;
       this.user = user;
+    },
+    disconnectHanet: function disconnectHanet() {
+      var _this9 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee9() {
+        var res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee9$(_context9) {
+          while (1) {
+            switch (_context9.prev = _context9.next) {
+              case 0:
+                _context9.next = 2;
+                return (0,_ultis__WEBPACK_IMPORTED_MODULE_1__.$get)('/partner/disconnect');
+
+              case 2:
+                res = _context9.sent;
+
+                if (res.code === 200) {
+                  toastr.success('Ngắt kết nối thành công');
+
+                  _this9.getConfig();
+                }
+
+              case 4:
+              case "end":
+                return _context9.stop();
+            }
+          }
+        }, _callee9);
+      }))();
+    },
+    syncUsers: function syncUsers() {
+      var _this10 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee10() {
+        var res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee10$(_context10) {
+          while (1) {
+            switch (_context10.prev = _context10.next) {
+              case 0:
+                _context10.next = 2;
+                return (0,_ultis__WEBPACK_IMPORTED_MODULE_1__.$get)('/partner/sync_users');
+
+              case 2:
+                res = _context10.sent;
+
+                if (res.code === 200) {
+                  toastr.success('Đồng bộ thành công');
+
+                  _this10.getUsers();
+                }
+
+              case 4:
+              case "end":
+                return _context10.stop();
+            }
+          }
+        }, _callee10);
+      }))();
     }
   }
 });
@@ -68735,7 +68850,30 @@ var render = function () {
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(time.personName))]),
             _vm._v(" "),
-            _c("td", [_c("img", { attrs: { src: time.avatar } })]),
+            _c("td", [_vm._v(_vm._s(time.deviceName))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(time.deviceType))]),
+            _vm._v(" "),
+            _c(
+              "td",
+              {
+                staticStyle: {
+                  width: "300px",
+                  height: "300px",
+                  "text-align": "center",
+                },
+              },
+              [
+                _c("img", {
+                  staticStyle: {
+                    width: "200px",
+                    height: "200px",
+                    border: "2px",
+                  },
+                  attrs: { src: time.avatar },
+                }),
+              ]
+            ),
           ])
         }),
         0
@@ -68756,7 +68894,15 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Người thực hiện")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Hình ảnh")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Tên Camera")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Loại ghi nhận")]),
+        _vm._v(" "),
+        _c(
+          "th",
+          { staticStyle: { "text-align": "center" }, attrs: { scope: "col" } },
+          [_vm._v("Hình ảnh")]
+        ),
       ]),
     ])
   },
@@ -68823,6 +68969,24 @@ var render = function () {
             },
             [_vm._v("Thống kê")]
           ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-success",
+              staticStyle: {
+                height: "33px",
+                "font-size": "14px",
+                margin: "-5px 0px 0px 0px",
+              },
+              on: {
+                click: function ($event) {
+                  return _vm.exportData()
+                },
+              },
+            },
+            [_vm._v("Xuất file Excel")]
+          ),
         ],
         1
       ),
@@ -68859,13 +69023,33 @@ var render = function () {
                   ),
                 ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.expected.total))]),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.expected.total)),
+                ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.expected.warrior1))]),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.expected.warrior1)),
+                ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.expected.warrior2))]),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.expected.warrior2)),
+                ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.expected.warrior3))]),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.expected.warrior3)),
+                ]),
+                _vm._v(" "),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.expected.warrior1_3)),
+                ]),
+                _vm._v(" "),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.expected.warrior1)),
+                ]),
+                _vm._v(" "),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.expected.warrior2)),
+                ]),
               ]),
               _vm._v(" "),
               _c("tr", [
@@ -68887,13 +69071,33 @@ var render = function () {
                   ),
                 ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.current.total))]),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.current.total)),
+                ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.current.warrior1))]),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.current.warrior1)),
+                ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.current.warrior2))]),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.current.warrior2)),
+                ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.current.warrior3))]),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.current.warrior3)),
+                ]),
+                _vm._v(" "),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.current.warrior1_3)),
+                ]),
+                _vm._v(" "),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.current.warrior1)),
+                ]),
+                _vm._v(" "),
+                _c("td", { staticStyle: { "text-align": "center" } }, [
+                  _vm._v(_vm._s(_vm.current.warrior2)),
+                ]),
               ]),
             ]),
           ]
@@ -68908,17 +69112,304 @@ var render = function () {
               "table-striped table-responsive table-hover result-point",
           },
           [
-            _vm._m(1),
+            _c("thead", { staticClass: "point-table-head" }, [
+              _c(
+                "tr",
+                {
+                  staticStyle: {
+                    "vertical-align": "middle",
+                    "font-size": "12px",
+                    "text-align": "center",
+                  },
+                },
+                [
+                  _c(
+                    "th",
+                    {
+                      staticStyle: {
+                        "vertical-align": "middle",
+                        width: "180px",
+                      },
+                      attrs: { rowspan: "2" },
+                    },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.search,
+                            expression: "search",
+                          },
+                        ],
+                        staticClass: "form-control mb-2 input-search",
+                        attrs: {
+                          type: "text",
+                          name: "search",
+                          placeholder: "Tìm kiếm",
+                        },
+                        domProps: { value: _vm.search },
+                        on: {
+                          keyup: function ($event) {
+                            if (
+                              !$event.type.indexOf("key") &&
+                              _vm._k(
+                                $event.keyCode,
+                                "enter",
+                                13,
+                                $event.key,
+                                "Enter"
+                              )
+                            ) {
+                              return null
+                            }
+                            return _vm.getReport()
+                          },
+                          input: function ($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.search = $event.target.value
+                          },
+                        },
+                      }),
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Mã Nhân viên")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: {
+                        "vertical-align": "middle",
+                        width: "100px",
+                      },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Ngày làm việc chính thức")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: {
+                        "vertical-align": "middle",
+                        width: "150px",
+                      },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Số ngày đã làm việc chính thức")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { colspan: "2" },
+                    },
+                    [_vm._v("Đi muộn")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { colspan: "2" },
+                    },
+                    [_vm._v("Về sớm")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Tổng giờ ĐMVS")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Số giờ đi sớm")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Số giờ về muộn")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Nghỉ không lương")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Số ngày chấm công")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Công thực tế")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Số ngày không checkin")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Số ngày không checkout")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Tổng giờ nỗ lực")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: {
+                        "vertical-align": "middle",
+                        width: "80px",
+                      },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Warrior hiện tại")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("TG để giữ Warrior")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("TGTB để giữ Warrior")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: {
+                        "vertical-align": "middle",
+                        width: "80px",
+                      },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Warrior tiếp theo")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("TG để lên Warrior")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("TGTB để lên Warrior")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticStyle: { "vertical-align": "middle" },
+                      attrs: { rowspan: "2" },
+                    },
+                    [_vm._v("Tỷ lệ đi muộn")]
+                  ),
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(1),
+            ]),
             _vm._v(" "),
             _c(
               "tbody",
+              { staticStyle: { "font-size": "14px" } },
               _vm._l(_vm.data, function (user, index) {
                 return _c("tr", { key: index }, [
+                  _c("td", [_vm._v(_vm._s(user.fullname))]),
+                  _vm._v(" "),
                   _c("td", { staticStyle: { "text-align": "center" } }, [
                     _vm._v(_vm._s(user.id)),
                   ]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(user.fullname))]),
+                  _c("td", { staticStyle: { "text-align": "center" } }, [
+                    _vm._v(_vm._s(user.date_official)),
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticStyle: { "text-align": "center" } }, [
+                    _vm._v(
+                      _vm._s(
+                        user.totalWorkDateY ? user.totalWorkDateY + " năm" : " "
+                      ) +
+                        " " +
+                        _vm._s(
+                          user.totalWorkDateM
+                            ? user.totalWorkDateM + " tháng"
+                            : " "
+                        )
+                    ),
+                  ]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(user.totalGoLate))]),
                   _vm._v(" "),
@@ -68941,6 +69432,8 @@ var render = function () {
                   ]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(user.totalUnpaidLeave))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.totalWorkingDays))]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(user.totalTimeKeeping))]),
                   _vm._v(" "),
@@ -68972,7 +69465,7 @@ var render = function () {
                     _vm._v(_vm._s(_vm.formatNumber(user.avgTimeIncreaseWar))),
                   ]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(user.rateGoLate) + " %")]),
+                  _c("td", [_vm._v(" " + _vm._s(user.rateGoLate) + " %")]),
                 ])
               }),
               0
@@ -68990,15 +69483,35 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", { staticClass: "point-table-head" }, [
       _c("tr", { staticStyle: { "text-align": "center" } }, [
-        _c("th", { attrs: { width: "600px" } }, [_vm._v("Thời gian thống kê")]),
+        _c("th", { attrs: { rowspan: "2", width: "500px" } }, [
+          _vm._v("Thời gian thống kê"),
+        ]),
         _vm._v(" "),
-        _c("th", { attrs: { width: "400px" } }, [_vm._v("Công chuẩn")]),
+        _c("th", { attrs: { rowspan: "2", width: "400px" } }, [
+          _vm._v("Công chuẩn"),
+        ]),
         _vm._v(" "),
-        _c("th", { attrs: { width: "16%" } }, [_vm._v("WARRIOR 1")]),
+        _c("th", { attrs: { colspan: "3", width: "30%" } }, [
+          _vm._v("Thời gian làm việc dưới 3 năm"),
+        ]),
         _vm._v(" "),
-        _c("th", { attrs: { width: "16%" } }, [_vm._v("WARRIOR 2")]),
+        _c("th", { attrs: { colspan: "3", width: "30%" } }, [
+          _vm._v("Thời gian làm việc trên 3 năm"),
+        ]),
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticStyle: { "text-align": "center" } }, [
+        _c("th", { attrs: { width: "10%" } }, [_vm._v("WARRIOR 1")]),
         _vm._v(" "),
-        _c("th", { attrs: { width: "16%" } }, [_vm._v("WARRIOR 3")]),
+        _c("th", { attrs: { width: "10%" } }, [_vm._v("WARRIOR 2")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "10%" } }, [_vm._v("WARRIOR 3")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "10%" } }, [_vm._v("WARRIOR 1")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "10%" } }, [_vm._v("WARRIOR 2")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "10%" } }, [_vm._v("WARRIOR 3")]),
       ]),
     ])
   },
@@ -69006,212 +69519,27 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", { staticClass: "point-table-head" }, [
-      _c(
-        "tr",
-        {
-          staticStyle: {
-            "vertical-align": "middle",
-            "font-size": "12px",
-            "text-align": "center",
-          },
-        },
-        [
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("MNV")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle", width: "200px" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("Nhân viên")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { colspan: "2" },
-            },
-            [_vm._v("Đi muộn")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { colspan: "2" },
-            },
-            [_vm._v("Về sớm")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("Tổng giờ ĐMVS")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("Số giờ đi sớm")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("Số giờ về muộn")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("Nghỉ không lương")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("Số ngày chấm công")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("Số ngày không checkin")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("Số ngày không checkout")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("Tổng giờ nỗ lực")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle", width: "120px" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("Warrior hiện tại")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("TG để giữ Warrior")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("TGTB để giữ Warrior")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle", width: "120px" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("Warrior tiếp theo")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("TG để lên Warrior")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("TGTB để lên Warrior")]
-          ),
-          _vm._v(" "),
-          _c(
-            "th",
-            {
-              staticStyle: { "vertical-align": "middle" },
-              attrs: { rowspan: "2" },
-            },
-            [_vm._v("Tỷ lệ đi muộn")]
-          ),
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "tr",
-        { staticStyle: { "font-size": "12px", "text-align": "center" } },
-        [
-          _c("th", { staticStyle: { "vertical-align": "middle" } }, [
-            _vm._v("Số lần"),
-          ]),
-          _vm._v(" "),
-          _c("th", { staticStyle: { "vertical-align": "middle" } }, [
-            _vm._v("Thời gian"),
-          ]),
-          _vm._v(" "),
-          _c("th", { staticStyle: { "vertical-align": "middle" } }, [
-            _vm._v("Số lần"),
-          ]),
-          _vm._v(" "),
-          _c("th", { staticStyle: { "vertical-align": "middle" } }, [
-            _vm._v("Thời gian"),
-          ]),
-        ]
-      ),
-    ])
+    return _c(
+      "tr",
+      { staticStyle: { "font-size": "12px", "text-align": "center" } },
+      [
+        _c("th", { staticStyle: { "vertical-align": "middle" } }, [
+          _vm._v("Số lần"),
+        ]),
+        _vm._v(" "),
+        _c("th", { staticStyle: { "vertical-align": "middle" } }, [
+          _vm._v("Thời gian"),
+        ]),
+        _vm._v(" "),
+        _c("th", { staticStyle: { "vertical-align": "middle" } }, [
+          _vm._v("Số lần"),
+        ]),
+        _vm._v(" "),
+        _c("th", { staticStyle: { "vertical-align": "middle" } }, [
+          _vm._v("Thời gian"),
+        ]),
+      ]
+    )
   },
 ]
 render._withStripped = true
@@ -69328,6 +69656,24 @@ var render = function () {
             },
           },
           [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                staticStyle: {
+                  position: "absolute",
+                  right: "20px",
+                  top: "155px",
+                },
+                on: {
+                  click: function ($event) {
+                    return _vm.syncUsers()
+                  },
+                },
+              },
+              [_vm._v("Đồng bộ người dùng")]
+            ),
+            _vm._v(" "),
             _c("table", { staticClass: "table" }, [
               _vm._m(0),
               _vm._v(" "),
@@ -69470,7 +69816,9 @@ var render = function () {
                                         staticClass: "btn btn-primary col-6",
                                         on: {
                                           click: function ($event) {
-                                            return _vm.updateUser(user.id)
+                                            return _vm.updateUser(
+                                              user.user_code
+                                            )
                                           },
                                         },
                                       },
@@ -69651,6 +69999,21 @@ var render = function () {
                     },
                   },
                   [_vm._v("Kết nối")]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.config.access_token
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger",
+                    on: {
+                      click: function ($event) {
+                        return _vm.disconnectHanet()
+                      },
+                    },
+                  },
+                  [_vm._v("Ngắt kết nối")]
                 )
               : _vm._e(),
           ]

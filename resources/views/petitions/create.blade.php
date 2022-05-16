@@ -25,7 +25,12 @@
                     @csrf
 
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="user_fullname" name="user_fullname" type="text" placeholder="..." />
+                        <select class="form-control" id="user_fullname" name="user_fullname">
+                            <option>Chọn nhân viên</option>
+                            @foreach($users as $user)
+                            <option>{{$user->fullname}}</option>
+                            @endforeach
+                        </select>
                         <label for="user_fullname">Họ và tên:</label>
                     </div>  
                     <div class="form-floating mb-3">

@@ -5,6 +5,7 @@
             <div style="position: absolute; right: 10px; top: 8px">
                 <date-picker v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian thống kê"></date-picker>
                 <button class="btn btn-primary" @click="getReport()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê</button>
+                <button class="btn btn-success" @click="exportData()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Xuất file Excel</button>
             </div>
         </div>
         <div class="card-body table-responsive">
@@ -12,27 +13,40 @@
                 <table class="table-striped table-responsive table-hover result-point">
                     <thead class="point-table-head">
                         <tr style=" text-align:center;">
-                            <th width="600px">Thời gian thống kê</th>
-                            <th width="400px">Công chuẩn</th>
-                            <th width="16%">WARRIOR 1</th>
-                            <th width="16%">WARRIOR 2</th>
-                            <th width="16%">WARRIOR 3</th>
+                            <th rowspan="2" width="500px">Thời gian thống kê</th>
+                            <th rowspan="2" width="400px">Công chuẩn</th>
+                            <th colspan="3" width="30%">Thời gian làm việc dưới 3 năm</th>
+                            <th colspan="3" width="30%">Thời gian làm việc trên 3 năm</th>
+                        </tr>
+                        <tr  style=" text-align:center;">
+                            <th width="10%">WARRIOR 1</th>
+                            <th width="10%">WARRIOR 2</th>
+                            <th width="10%">WARRIOR 3</th>
+                            <th width="10%">WARRIOR 1</th>
+                            <th width="10%">WARRIOR 2</th>
+                            <th width="10%">WARRIOR 3</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><b>Dự kiến:</b>: Từ ngày {{ expected.start_date ? expected.start_date : ".........."}} đến ngày {{ expected.end_date ? expected.end_date : ".........."}}</td>
-                            <td>{{ expected.total }}</td>
-                            <td>{{ expected.warrior1 }}</td>
-                            <td>{{ expected.warrior2 }}</td>
-                            <td>{{ expected.warrior3 }}</td>
+                            <td style=" text-align:center;">{{ expected.total }}</td>
+                            <td style=" text-align:center;">{{ expected.warrior1 }}</td>
+                            <td style=" text-align:center;">{{ expected.warrior2 }}</td>
+                            <td style=" text-align:center;">{{ expected.warrior3 }}</td>
+                            <td style=" text-align:center;">{{ expected.warrior1_3 }}</td>
+                            <td style=" text-align:center;">{{ expected.warrior1 }}</td>
+                            <td style=" text-align:center;">{{ expected.warrior2 }}</td>
                         </tr>
                         <tr>
                             <td><b>Hiện tại:</b> Từ ngày {{ current.start_date ? current.start_date : ".........." }} đến ngày {{ current.end_date ? current.end_date: ".........."}}</td>
-                            <td>{{ current.total }}</td>
-                            <td>{{ current.warrior1 }}</td>
-                            <td>{{ current.warrior2 }}</td>
-                            <td>{{ current.warrior3 }}</td>
+                            <td style=" text-align:center;">{{ current.total }}</td>
+                            <td style=" text-align:center;">{{ current.warrior1 }}</td>
+                            <td style=" text-align:center;">{{ current.warrior2 }}</td>
+                            <td style=" text-align:center;">{{ current.warrior3 }}</td>
+                            <td style=" text-align:center;">{{ current.warrior1_3 }}</td>
+                            <td style=" text-align:center;">{{ current.warrior1 }}</td>
+                            <td style=" text-align:center;">{{ current.warrior2 }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -41,8 +55,14 @@
                <table class="table-striped table-responsive table-hover result-point">
                     <thead class="point-table-head">
                         <tr style="vertical-align: middle; font-size:12px; text-align:center; ">
-                            <th rowspan="2" style="vertical-align: middle;">MNV</th>
-                            <th style="vertical-align: middle; width:200px;" rowspan="2">Nhân viên</th>
+                        
+                            <th style="vertical-align: middle; width:180px;" rowspan="2">
+                                <input type="text" name="search" class="form-control mb-2 input-search" v-model="search" 
+                                    placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
+                            </th>
+                            <th rowspan="2" style="vertical-align: middle;">Mã Nhân viên</th>
+                            <th style="vertical-align: middle; width:100px;" rowspan="2">Ngày làm việc chính thức</th>
+                            <th style="vertical-align: middle; width:150px" rowspan="2">Số ngày đã làm việc chính thức</th>
                             <th colspan="2" style="vertical-align: middle;">Đi muộn</th>
                             <th colspan="2" style="vertical-align: middle;">Về sớm</th>
                             <th rowspan="2" style="vertical-align: middle;">Tổng giờ ĐMVS</th>
@@ -50,13 +70,14 @@
                             <th rowspan="2" style="vertical-align: middle;">Số giờ về muộn</th>
                             <th rowspan="2" style="vertical-align: middle;">Nghỉ không lương</th>
                             <th rowspan="2" style="vertical-align: middle;">Số ngày chấm công</th>
+                            <th rowspan="2" style="vertical-align: middle;">Công thực tế</th>
                             <th rowspan="2" style="vertical-align: middle;">Số ngày không checkin</th>
                             <th rowspan="2" style="vertical-align: middle;">Số ngày không checkout</th>
                             <th rowspan="2" style="vertical-align: middle;">Tổng giờ nỗ lực</th>
-                            <th rowspan="2" style="vertical-align: middle; width:120px;">Warrior hiện tại</th>
+                            <th rowspan="2" style="vertical-align: middle; width:80px;">Warrior hiện tại</th>
                             <th rowspan="2" style="vertical-align: middle;">TG để giữ Warrior</th>
                             <th rowspan="2" style="vertical-align: middle;">TGTB để giữ Warrior</th>
-                            <th rowspan="2" style="vertical-align: middle; width:120px;">Warrior tiếp theo</th>
+                            <th rowspan="2" style="vertical-align: middle; width:80px;">Warrior tiếp theo</th>
                             <th rowspan="2" style="vertical-align: middle;">TG để lên Warrior</th>
                             <th rowspan="2" style="vertical-align: middle;">TGTB để lên Warrior</th>
                             <th rowspan="2" style="vertical-align: middle;">Tỷ lệ đi muộn</th>
@@ -68,18 +89,21 @@
                             <th style="vertical-align: middle;">Thời gian</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style="font-size:14px;">
                         <tr v-for="(user, index) in data" :key="index">
-                            <td style="text-align:center;">{{ user.id }}</td>
                             <td>{{ user.fullname }}</td>
+                            <td style="text-align:center;">{{ user.id }}</td>
+                            <td style=" text-align:center;">{{ user.date_official }}</td>
+                            <td style=" text-align:center;">{{ user.totalWorkDateY ? user.totalWorkDateY+" năm":" "}} {{ user.totalWorkDateM ? user.totalWorkDateM+" tháng" :" "}}</td>
                             <td>{{ user.totalGoLate }}</td>
                             <td>{{ formatNumber(user.timeGoLate) }}</td>
                             <td>{{ user.totalAboutEarly }}</td>
                             <td>{{ formatNumber(user.timeAboutEarly) }}</td>
-                            <td>{{ formatNumber(user.totalGoLateAboutEarly) }}</td>
+                            <td>{{ user.totalGoLateAboutEarly }}</td>
                             <td>{{ formatNumber(user.timeGoEarly) }}</td>
                             <td>{{ formatNumber(user.timeAboutLate) }}</td>
                             <td>{{ user.totalUnpaidLeave }}</td>
+                            <td>{{ user.totalWorkingDays }}</td>
                             <td>{{ user.totalTimeKeeping }}</td>
                             <td>{{ user.totalNotCheckIn }}</td>
                             <td>{{ user.totalNotCheckOut }}</td>
@@ -90,7 +114,7 @@
                             <td>{{ user.nextWar }}</td>
                             <td>{{ formatNumber(user.timeIncreaseWar) }}</td>
                             <td>{{ formatNumber(user.avgTimeIncreaseWar) }}</td>
-                            <td>{{ formatNumber(user.rateGoLate) }} %</td>
+                            <td> {{ user.rateGoLate }} %</td>
                         </tr>
                     </tbody>
                 </table>
@@ -137,6 +161,15 @@ export default {
         },
         formatNumber(val) {
             return (Math.round(val * 100) / 100).toFixed(2);
+        },
+        async exportData() {
+
+                let option = this.option;
+                let search = this.search;
+                let time = this.timeSelected? moment(this.timeSelected).format('YYYY-MM-DD'): '';
+            // const res = await $get('/time-keeping/export', {...params});
+
+            window.open("/time-keeping-report/export?option="+option+"&search="+search+"&time="+time,'_blank');
         }
     }
 }
@@ -157,7 +190,7 @@ table thead tr th {
 table.table-striped tbody tr:nth-of-type(odd) {
     background: #f9f9f9;
 }
-
+ 
 
 .text-left {
     text-align: left!important;

@@ -148,6 +148,22 @@
                                 </div>
 
                                 <div class="form-group row">
+                                    <label for="date_official" class="col-md-4 col-form-label text-md-right">{{ __('Ngày bắt đầu làm việc chính thức') }}</label>
+
+                                    <div class="col-md-6">
+                                        <input id="date_official" type="date"
+                                            class="form-control @error('name') is-invalid @enderror" name="date_official"
+                                            value="{{ old('date_official', $user->date_official) }}" required autocomplete="date_official" >
+
+                                        @error('date_official')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
                                     <label for="permission" class="col-md-4 col-form-label text-md-right">{{ __('Quyền truy cập') }}</label>
 
                                     <div class="col-md-6">

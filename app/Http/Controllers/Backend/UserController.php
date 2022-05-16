@@ -68,7 +68,7 @@ class UserController extends Controller
 
         User::create([
             'fullname' => $request->fullname,
-            'date_offical' => $request->date_offical,
+            'date_official' => $request->date_official,
             'avatar' => $avatar_name,
             'phone' => $request->phone,
             'birthday' => $request->birthday,
@@ -117,8 +117,7 @@ class UserController extends Controller
             'permission' => $request->permission,
             'check_type' => $request->check_type
         ]);
-
-        return redirect()->route('users.index')->with('message', 'User Updated Succesfully');
+        return redirect()->route('users.index', compact('user'))->with('message', 'User Updated Succesfully');
     }
 
     /**

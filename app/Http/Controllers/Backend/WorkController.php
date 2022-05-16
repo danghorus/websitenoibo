@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 
 use App\Models\Work;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class WorkController extends Controller
@@ -17,9 +18,9 @@ class WorkController extends Controller
     public function index()
     {
         $works = Work::latest()->paginate(50);
+        $users = User::all();
     
-        return view('works.index',compact('works'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('works.index',compact('works', 'users'));
     }
      
     /**

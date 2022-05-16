@@ -98,7 +98,7 @@ table tr td img {
                         <th scope="col" width="8%" >Ngày sinh</th>
                         <th scope="col" width="6%" >Bộ phận</th>
                         <th scope="col" width="7%" >Chức danh</th>
-                        <th scope="col" width="7%" >Ngày làm việc</th>
+                        <th scope="col" width="8%" >Ngày làm việc</th>
                         <th scope="col" width="8%" >Quyền truy cập</th>
                         <th scope="col" width="8%" >Thao tác</th>    
                     </tr>

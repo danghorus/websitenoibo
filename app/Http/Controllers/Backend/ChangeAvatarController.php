@@ -11,10 +11,10 @@ class ChangeAvatarController extends Controller
 {
 
 
-    public function change_avatar(Request $request, User $user)
+    public function change_avatar(Request $request, User $users)
     {
       $avatar_name = '';
-    if($request->hasFile('avatar')){
+      if($request->hasFile('avatar')){
       //Hàm kiểm tra dữ liệu
       $this->validate($request, 
         [
@@ -35,11 +35,12 @@ class ChangeAvatarController extends Controller
       $avatar->move($destinationPath, $avatar_name);
           
 
-        $user->update([
+        $users->update([
             'avatar' => $avatar_name,
       ]);
       }
+        $users = User::all();
 
-        return redirect()->route('users.index')->with('message', 'User Avatar Updated Succesfully');
-    }
+        return redirect()->route('users.index', compact('users'))->with('message', 'User Avatar Updated Succesfully');
+      }
 }

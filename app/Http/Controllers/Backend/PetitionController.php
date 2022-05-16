@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
    
 use App\Models\Petition;
+use App\Models\User;
 use Illuminate\Http\Request;
   
 class PetitionController extends Controller
@@ -17,9 +18,9 @@ class PetitionController extends Controller
     public function index()
     {
         $petitions = Petition::latest()->paginate(50);
+        $users = User::all();
     
-        return view('petitions.index',compact('petitions'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('petitions.index',compact('petitions','users'));
     }
      
     /**
@@ -29,7 +30,8 @@ class PetitionController extends Controller
      */
     public function create()
     {
-        return view('petitions.create');
+        $users = User::all();
+        return view('petitions.create',compact('users'));
     }
     
     /**
@@ -47,8 +49,10 @@ class PetitionController extends Controller
         ]);
     
         Petition::create($request->all());
+        $users = User::all();
+        
      
-        return redirect()->route('petitions.index')
+        return redirect()->route('petitions.index', compact('users'))
                         ->with('success','Petition created successfully.');
     }
      
@@ -60,7 +64,8 @@ class PetitionController extends Controller
      */
     public function show(Petition $petition)
     {
-        return view('petitions.show',compact('petition'));
+        $users = User::all();
+        return view('petitions.show',compact('petition', 'users'));
     } 
      
     /**
@@ -71,7 +76,8 @@ class PetitionController extends Controller
      */
     public function edit(Petition $petition)
     {
-        return view('petitions.edit',compact('petition'));
+        $users = User::all();
+        return view('petitions.edit',compact('petition', 'users'));
     }
     
     /**
@@ -88,9 +94,10 @@ class PetitionController extends Controller
 
             'petition_status' => $request->petition_status,
         ]);
+        $users = User::all();
 
     
-        return redirect()->route('petitions.index');
+        return redirect()->route('petitions.index', compact('users'));
                 
     }
     
@@ -103,8 +110,9 @@ class PetitionController extends Controller
     public function destroy(Petition $petition)
     {
         $petition->delete();
+        $users = User::all();
     
-        return redirect()->route('petitions.index')
+        return redirect()->route('petitions.index', compact('users'))
                         ->with('success','Petition deleted successfully');
     }
 }

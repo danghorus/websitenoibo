@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\User;
+use App\Models\Work;
+use App\Models\Petition;
 
 use Illuminate\Http\Request;
 
@@ -23,7 +26,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $users = User::all();
+        $works = Work::all();
+        $petitions = Petition::all();
+
+        return view('home', compact('users', 'works', 'petitions'));
     }
     
 }

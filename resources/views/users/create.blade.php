@@ -11,6 +11,9 @@
                                 <div class="container">
                                     <div class="row justify-content-center">
                                         <div class="col-md-8">
+                                            @if (session()->has('success'))
+                                                <h1>IT WORKS!</h1>
+                                            @endif
                                                 <div class="form-group row">
                                                     <label for="avatar" class="col-md-4 col-form-label text-md-right">{{ __('Ảnh đại diện') }}</label>
 
@@ -143,8 +146,8 @@
                                                         class="col-md-4 col-form-label text-md-right">{{ __('Ngày làm việc chính thức') }}</label>
 
                                                     <div class="col-md-6">
-                                                        <input id="date_official" type="date"
-                                                            class="form-control @error('date_official') is-invalid @enderror" name="date_official">
+                                                        <input id="date_official" name="date_official" type="date"
+                                                            class="form-control @error('date_official') is-invalid @enderror">
 
                                                         @error('date_official')
                                                             <span class="invalid-feedback" role="alert">
