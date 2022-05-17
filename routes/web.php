@@ -59,6 +59,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/time-keeping/get-report', [TimeKeepingController::class, 'getReport']);
 
     Route::get('time-keeping-report', [TimeKeepingController::class, 'report']);
+
+    Route::get('time-keeping-wage', [TimeKeepingController::class, 'wage']);
+    Route::get('time-keeping-bonus', [TimeKeepingController::class, 'bonus']);
+
     Route::get('time-keeping-report/export', [TimeKeepingController::class, 'export_report']);
 });
 
