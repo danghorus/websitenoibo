@@ -35,16 +35,6 @@ class TimeKeepingController extends Controller
         $users = User::all();
         return view('timekeeping.report', compact('users'));
     }
-    public function wage(Request $request)
-    {
-        $users = User::all();
-        return view('timekeeping.wage', compact('users'));
-    }
-    public function bonus(Request $request)
-    {
-        $users = User::all();
-        return view('timekeeping.bonus', compact('users'));
-    }
 
     public function get(Request $request) {
         $filters = $request->all();

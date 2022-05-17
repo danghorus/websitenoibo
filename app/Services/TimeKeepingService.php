@@ -131,7 +131,6 @@ class TimeKeepingService
                     'fullname' => $user->fullname,
                     'id' => $user->id,
                     'date_official' => $user->date_official,
-                    'wage_now' => $user->wage_now,
                     'time_keeping' => $tmp
                 ];
             }
@@ -525,7 +524,6 @@ class TimeKeepingService
                         'fullname' => $user->fullname,
                         'id' => $user->id,
                         'date_official' => $user->date_official,
-                        'wage_now' => $user->wage_now,
                         'totalWorkDateY' => intval($totalWorkDate/365),
                         'totalWorkDateM' => intval(($totalWorkDate-(intval($totalWorkDate/365)*365))/30),
                         'totalWorkDateD' => intval(($totalWorkDate-(intval($totalWorkDate/365)*365))-intval(($totalWorkDate-(intval($totalWorkDate/365)*365))/30)*30),
@@ -582,7 +580,6 @@ class TimeKeepingService
                     'fullname' => $user->fullname,
                     'id' => $user->id,
                     'date_official' => $user->date_official,
-                    'wage_now' => $user->wage_now,
                     'totalGoLate' => 0,
                     'timeGoLate' => 0,
                     'totalGoEarly' => 0,

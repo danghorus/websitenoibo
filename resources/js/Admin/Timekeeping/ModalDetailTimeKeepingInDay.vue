@@ -39,7 +39,7 @@
                 <th scope="col">Thời gian</th>
                 <th scope="col">Người thực hiện</th>
                 <th scope="col">Tên Camera</th>
-                <th scope="col">Chức danh</th>
+                <th scope="col">Loại ghi nhận</th>
                 <th scope="col" style="text-align: center;">Hình ảnh</th>
             </tr>
             </thead>
@@ -49,9 +49,9 @@
                     <td>{{ time.time }}</td>
                     <td>{{ time.personName }}</td>
                     <td>{{ time.deviceName }}</td>
-                    <td>{{ time.title }}</td>
+                    <td>{{ time.deviceType }}</td>
                     <td style="width:300px; height:300px; text-align:center;">
-                        <img :src="time.avatar" style="width:200px; height:200px; border: 2px; border-radius: 5px;"/>
+                        <img :src="time.avatar" style="width:200px; height:200px; border: 2px;"/>
                     </td>
                 </tr>
             </tbody>

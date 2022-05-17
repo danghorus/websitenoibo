@@ -102,8 +102,8 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link">Lương thưởng</a>
                             <div class="dropdown-content">
-                                <a class="dropdown-item" href="{{ url('/time-keeping-wage') }}">Lương công việc</a>
-                                <a class="dropdown-item" href="{{ url('/time-keeping-bonus') }}">Thưởng dự án</a>
+                                <a class="dropdown-item" href="{{ url('/') }}">Lương công việc</a>
+                                <a class="dropdown-item" href="{{ url('/') }}">Thưởng dự án</a>
                             </div>
                         </li>
                         <li class="nav-item">
