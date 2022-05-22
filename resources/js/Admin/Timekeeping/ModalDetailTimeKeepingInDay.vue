@@ -47,11 +47,11 @@
                 <tr v-for="(time, index) in data" :key="index">
                     <th scope="row">{{ index + 1 }}</th>
                     <td>{{ time.time }}</td>
-                    <td>{{ time.personName }}</td>
-                    <td>{{ time.deviceName }}</td>
-                    <td>{{ time.title }}</td>
+                    <td>{{ time.person_name }}</td>
+                    <td>{{ time.device_name }}</td>
+                    <td>{{ time.person_title }}</td>
                     <td style="width:300px; height:300px; text-align:center;">
-                        <img :src="time.avatar" style="width:200px; height:200px; border: 2px; border-radius: 5px;"/>
+                        <img :src="time.detected_image_url" style="width:200px; height:200px; border: 2px; border-radius: 5px;"/>
                     </td>
                 </tr>
             </tbody>
@@ -104,7 +104,10 @@ export default {
 
             const res = await $get('/time-keeping/detail', {...params});
             if (res.code == 200) {
-                this.data = res.data;
+                let user = res.data;
+                if (user.time_keeping_detail) {
+                    this.data = user.time_keeping_detail;
+                }
             }
         },
         async update() {

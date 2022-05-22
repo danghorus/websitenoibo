@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\ConfigTimeKeeping;
 use App\Models\DeviceTimeKeeping;
 use App\Models\TimeKeeping;
+use App\Models\TimeKeepingDetail;
 use App\Models\User;
 use App\Repositories\HanetRepository;
 use App\Repositories\PartnerRepository;
@@ -168,31 +169,11 @@ class TimeKeepingService
 
     public function getDetailTimeKeeping(array $filters)
     {
-        $partnerConfig = $this->partnerRepository->getOne('HANET');
-        $setting = $partnerConfig? $partnerConfig->setting: '';
-        if ($setting && $setting->access_token) {
-            $accessToken = $setting->access_token;
+        $user = User::query()->with(['timeKeepingDetail' => function ($q) use ($filters) {
+            $q->where('check_date', '=', $filters['date']);
+        }])->where('id', '=', $filters['user_id'])->first();
 
-            $user = User::query()->where('id', '=', $filters['user_id'])->first();
-
-            $devices = DeviceTimeKeeping::all();
-
-            foreach ($devices as $device) {
-                $devicesArr[] = $device->device_code;
-            }
-
-            $data = $this->hanetRepository->getCheckinByPlaceIdInDay($accessToken, $filters['date'], $devicesArr, $user);
-
-            if ($data->statusCode === 0) {
-                $result = $data->data;
-                foreach ($result as $key => $value) {
-                    $value->time = date('H:i:s', $value->checkinTime/1000);
-                }
-                return $result;
-            }
-        }
-
-        return false;
+        return $user;
     }
 
     /**
@@ -247,6 +228,20 @@ class TimeKeepingService
                     ->where('check_date', '=', date('Y-m-d', time()))
                     ->where('user_id', '=', $user->id)
                     ->first();
+
+                // Lưu vào DB
+                $detail = new TimeKeepingDetail();
+                $detail->user_code = $data['aliasID'];
+                $detail->detected_image_url = $data['detected_image_url'];
+                $detail->device_name = $data['deviceName'];
+                $detail->person_name = $data['personName'];
+                $detail->person_title = $data['personTitle'];
+                $detail->place_name = $data['placeName'];
+                $detail->time = date('H:i:s', strtotime($data['date']));
+                $detail->check_date = date('Y-m-d', time());
+                $detail->partner_id = $data['id'];
+
+                $detail->save();
 
                 if ($type == 0) {
                     if ($timeKeeping) {
@@ -379,7 +374,7 @@ class TimeKeepingService
             }
 
             foreach ($users as $user) {
-                
+
                 if ($user) {
                     $totalWorkDate = 0;
 

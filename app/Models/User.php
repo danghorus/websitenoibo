@@ -57,6 +57,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\TimeKeeping');
     }
 
+    public function timeKeepingDetail()
+    {
+        return $this->hasMany('App\Models\TimeKeepingDetail', 'user_code', 'user_code');
+    }
+
     public static function getAllUser(array $filters, array $range = []) {
          $builder = User::query();
 
