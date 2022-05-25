@@ -9,18 +9,17 @@ use Illuminate\Support\Facades\Hash;
 
 class ChangePasswordController extends Controller
 {
-    public function change_password(Request $request, User $users)
+    public function change_password(Request $request, User $user)
     {
         $request->validate([
           'password' => ['required', 'string', 'confirmed'],
       ]);
 
-        $users->update([
+        $user->update([
           'password' => Hash::make($request->password)
       ]);
-        $users = User::all();
 
-        return redirect()->route('users.index', compact('users'))->with('message', 'User Password Updated Succesfully');
+        return redirect()->route('users.index')->with('message', 'User Password Updated Succesfully');
 
     }
 }

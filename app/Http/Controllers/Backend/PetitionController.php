@@ -1,13 +1,13 @@
 <?php
-  
+
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-   
+
 use App\Models\Petition;
 use App\Models\User;
 use Illuminate\Http\Request;
-  
+
 class PetitionController extends Controller
 {
     /**
@@ -19,10 +19,10 @@ class PetitionController extends Controller
     {
         $petitions = Petition::latest()->paginate(50);
         $users = User::all();
-    
+
         return view('petitions.index',compact('petitions','users'));
     }
-     
+
     /**
      * Show the form for creating a new resource.
      *
@@ -33,7 +33,7 @@ class PetitionController extends Controller
         $users = User::all();
         return view('petitions.create',compact('users'));
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -47,15 +47,15 @@ class PetitionController extends Controller
             'petition_reason' => 'required',
 
         ]);
-    
+
         Petition::create($request->all());
         $users = User::all();
-        
-     
+
+
         return redirect()->route('petitions.index', compact('users'))
                         ->with('success','Petition created successfully.');
     }
-     
+
     /**
      * Display the specified resource.
      *
@@ -66,8 +66,8 @@ class PetitionController extends Controller
     {
         $users = User::all();
         return view('petitions.show',compact('petition', 'users'));
-    } 
-     
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -79,7 +79,7 @@ class PetitionController extends Controller
         $users = User::all();
         return view('petitions.edit',compact('petition', 'users'));
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -89,18 +89,17 @@ class PetitionController extends Controller
      */
     public function update(Request $request, Petition $petition)
     {
-        
-        $petition -> update([
 
+        $petition -> update([
             'petition_status' => $request->petition_status,
         ]);
         $users = User::all();
 
-    
+
         return redirect()->route('petitions.index', compact('users'));
-                
+
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -111,8 +110,9 @@ class PetitionController extends Controller
     {
         $petition->delete();
         $users = User::all();
-    
+
         return redirect()->route('petitions.index', compact('users'))
                         ->with('success','Petition deleted successfully');
     }
+
 }

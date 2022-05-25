@@ -12,7 +12,7 @@
                                         <b id="tc">NHÂN SỰ</b>
                                         <nav><i id="notetc">
                                                 Số lượng nhân viên: {{count($users)}}
-                                            </i></nav>  
+                                            </i></nav>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
                                         <a class="small text-white stretched-link" href="{{route('users.index')}}">Xem chi tiết</a>

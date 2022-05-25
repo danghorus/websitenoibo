@@ -106,11 +106,16 @@
                                                     <div class="col-md-6">
                                                         <select id="department" type="text" class="form-control @error('department') is-invalid @enderror"
                                                             name="department" value="{{ old('department') }}" required autocomplete="department">
-                                                                        <option >Lựa chọn</option>
+                                                                        <option value="Admin">Admin</option>
                                                                         <option value="Dev">Dev</option>
                                                                         <option value="Game design">Game design</option>
                                                                         <option value="Art">Art</option>
                                                                         <option value="Tester">Tester</option>
+                                                                        <option value="Điều hành">Điều hành</option>
+                                                                        <option value="Hành chính nhân sự">Hành chính nhân sự</option>
+                                                                        <option value="Kế toán">Kế toán</option>
+                                                                        <option value="Phân tích dữ liệu">Phân tích dữ liệu</option>
+                                                                        <option value="Support">Support</option>
                                                                     </select>
                                                         @error('department')
                                                             <span class="invalid-feedback" role="alert">
@@ -127,7 +132,6 @@
                                                     <div class="col-md-6">
                                                         <select id="position" type="text" class="form-control @error('position') is-invalid @enderror"
                                                             name="position" value="{{ old('position') }}" required autocomplete="position">
-                                                                        <option >Lựa chọn</option>
                                                                         <option value="Nhân viên">Nhân viên</option>
                                                                         <option value="Leader">Leader</option>
                                                                         <option value="Quản lý">Quản lý</option>
@@ -164,7 +168,6 @@
                                                     <div class="col-md-6">
                                                         <select id="permission" type="text" class="form-control @error('permission') is-invalid @enderror"
                                                             name="permission" value="{{ old('permission') }}" required autocomplete="permission">
-                                                                        <option >Lựa chọn</option>
                                                                         <option value="0">Nhân viên</option>
                                                                         <option value="1">Quản lý</option>
                                                                     </select>
@@ -190,6 +193,24 @@
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
                                                             </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row" hidden>
+                                                    <label for="user_status" class="col-md-4 col-form-label text-md-right">{{ __('Trạng thái hoạt động') }}</label>
+
+                                                    <div class="col-md-6">
+                                                        <select id="user_status" type="text" class="form-control @error('name') is-invalid @enderror" name="user_status"
+                                                                value="{{ old('user_status') }}" required autocomplete="user_status">
+                                                            <option value="1">Hoạt động</option>
+                                                            <option value="2">Nghỉ việc</option>
+                                                        </select>
+
+                                                        @error('permission')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
                                                         @enderror
                                                     </div>
                                                 </div>
@@ -220,5 +241,5 @@
                             </div>
                         </form>
                     </div>
-                </div>  
+                </div>
             </div>

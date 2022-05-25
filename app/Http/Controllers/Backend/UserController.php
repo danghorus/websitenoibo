@@ -32,7 +32,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $users = User::all();
+        return view('users.create',compact('users'));
     }
 
     /**
@@ -77,11 +78,13 @@ class UserController extends Controller
             'position' => $request->position,
             'permission' => $request->permission,
             'check_type' => $request->check_type,
+            'user_status' => $request->user_status,
             'password' => Hash::make($request->password),
         ]);
 
+        $users = User::all();
 
-        return redirect()->route('users.index')->with('message', 'User Register Succesfully');
+        return redirect()->route('users.index',compact('users'))->with('message', 'User Register Succesfully');
 
     }
 
@@ -93,7 +96,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('users.edit', compact('user'));
+        $users = User::all();
+        return view('users.edit', compact('user', 'users'));
     }
 
     /**
@@ -115,8 +119,10 @@ class UserController extends Controller
             'department' => $request->department,
             'position' => $request->position,
             'permission' => $request->permission,
-            'check_type' => $request->check_type
+            'check_type' => $request->check_type,
+            'user_status' => $request->user_status,
         ]);
+
         return redirect()->route('users.index', compact('user'))->with('message', 'User Updated Succesfully');
     }
 

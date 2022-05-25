@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('birthday');
             $table->string('position');
             $table->string('permission');
+            $table->integer('user_status')->default(1);
             $table->timestamp('email_verified_at')->nullable();
             $table->integer('place_id')->nullable();
             $table->string('place_name')->nullable();

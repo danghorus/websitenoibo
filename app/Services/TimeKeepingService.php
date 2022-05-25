@@ -74,7 +74,7 @@ class TimeKeepingService
         $result = [];
 
         foreach ($users as $user) {
-            if ($user) {
+            if ($user->user_status == 1) {
                 $tmp = [];
                 foreach ($range as $key => $day) {
                     $tmp[$key] = [];
@@ -375,7 +375,7 @@ class TimeKeepingService
 
             foreach ($users as $user) {
 
-                if ($user) {
+                if ($user->user_status == 1 ) {
                     $totalWorkDate = 0;
 
                     $totalGoLate = 0;
@@ -467,11 +467,11 @@ class TimeKeepingService
                     $EmployeeLongtime =1094;
 
                     if($totalWorkDate > $EmployeeLongtime){
-                        if($totalHourEfforts < $nowWar1_3) {
+                        if($totalWorkDate > $EmployeeLongtime && $totalHourEfforts < $nowWar1_3) {
                             $currentWar = 'Soldier';
                             $nextWar = 'Warrior 1';
                             $timeIncreaseWar = $nowWar1_3 - $totalHourEfforts;
-                        } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar1) {
+                        } elseif ( $totalHourEfforts > $nowWar1_3 && $totalHourEfforts< $nowWar1) {
                             $currentWar = 'Warrior 1';
                             $nextWar = 'Warrior 2';
                             $timeHoldWar = $totalHourEfforts - $nowWar1;
@@ -573,34 +573,36 @@ class TimeKeepingService
             $users = \App\Models\User::getAllUser($filters);
 
             foreach ($users as $user) {
-                $result[] = [
-                    'fullname' => $user->fullname,
-                    'id' => $user->id,
-                    'date_official' => $user->date_official,
-                    'wage_now' => $user->wage_now,
-                    'totalGoLate' => 0,
-                    'timeGoLate' => 0,
-                    'totalGoEarly' => 0,
-                    'timeGoEarly' => 0,
-                    'totalAboutLate' => 0,
-                    'timeAboutLate' => 0,
-                    'totalAboutEarly' => 0,
-                    'timeAboutEarly' => 0,
-                    'totalTimeKeeping' => 0,
-                    'totalWorkingDays' => 0,
-                    'totalUnpaidLeave' => 0,
-                    'totalHourEfforts' => 0,
-                    'currentWar' => 0,
-                    'nextWar' => 0,
-                    'timeHoldWar' => 0,
-                    'timeIncreaseWar' => 0,
-                    'avgTimeHoldWar' => 0,
-                    'avgTimeIncreaseWar' => 0,
-                    'rateGoLate' => 0,
-                    'totalNotCheckIn' => 0,
-                    'totalNotCheckOut' => 0,
-                    'totalGoLateAboutEarly' => 0,
-                ];
+                if($user->user_status == 1) {
+                    $result[] = [
+                        'fullname' => $user->fullname,
+                        'id' => $user->id,
+                        'date_official' => $user->date_official,
+                        'wage_now' => $user->wage_now,
+                        'totalGoLate' => 0,
+                        'timeGoLate' => 0,
+                        'totalGoEarly' => 0,
+                        'timeGoEarly' => 0,
+                        'totalAboutLate' => 0,
+                        'timeAboutLate' => 0,
+                        'totalAboutEarly' => 0,
+                        'timeAboutEarly' => 0,
+                        'totalTimeKeeping' => 0,
+                        'totalWorkingDays' => 0,
+                        'totalUnpaidLeave' => 0,
+                        'totalHourEfforts' => 0,
+                        'currentWar' => 0,
+                        'nextWar' => 0,
+                        'timeHoldWar' => 0,
+                        'timeIncreaseWar' => 0,
+                        'avgTimeHoldWar' => 0,
+                        'avgTimeIncreaseWar' => 0,
+                        'rateGoLate' => 0,
+                        'totalNotCheckIn' => 0,
+                        'totalNotCheckOut' => 0,
+                        'totalGoLateAboutEarly' => 0,
+                    ];
+                }
             }
         }
 

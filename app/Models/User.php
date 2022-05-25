@@ -28,6 +28,7 @@ class User extends Authenticatable
         'position',
         'permission' ,
         'check_type' ,
+        'user_status',
         'place_id' ,
         'place_name' ,
         'face_image_url' ,

@@ -219,7 +219,7 @@ table thead tr th {
 table.table-striped tbody tr:nth-of-type(odd) {
     background: #f9f9f9;
 }
- 
+
 
 .text-left {
     text-align: left!important;

@@ -1,35 +1,61 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    <style>
+        #loading {
+            position: fixed;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            text-align: center;
+            opacity: 1;
+            background-color: #ffffff;
+            z-index: 100;
+        }
+
+        #loading-image {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            top: 40%;
+            left: 45%;
+            z-index: 99;
+        }
+    </style>
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Scripts -->
-{{--    <script src="{{ asset('js/app.js') }}" defer></script>--}}
+    <link rel="shortcut icon" href="<?php echo asset('img/logo.png'); ?>">
 
 
-    <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{asset('css/styles.css')}}" rel="stylesheet">
-     <link href="{{ asset('css/sb-admin.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/sb-admin.min.css') }}" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="https://cdn01.jotfor.ms/themes/CSS/5e6b428acc8c4e222d1beb91.css?themeRevisionID=5f7ed99c2c2c7240ba580251" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet"/>-->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
-{{--    <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>--}}
+
+    {{--    <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>--}}
+
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
 <style>
 
 .nav-item{
@@ -57,10 +83,14 @@
 
 .dropdown:hover .nav-link{background-color: #eeeded;}
 .nav-item:hover {background-color: #eeeded;}
+
 </style>
 
 </head>
 <body>
+        <div id="loading">
+            <img id="loading-image" src="{{ asset('img/loading_4.gif') }}" alt="DEV còn non nên WEB còn chậm. Vui lòng không chê. DEV nghe thấy đấm vỡ mồm!" />
+        </div>
         <nav class="sb-topnav navbar navbar-expand navbar" style="background-color:#F8F9FA;">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="{{ url('/home') }}" style="color:#999da1; padding:6px 0px 0px 0px;margin:0px -50px 0px -10px;"><h4>HORUS WORK</h4></a>
@@ -71,20 +101,26 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{url('/home') }}">Trang chủ</a>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/petitions') }}">Yêu cầu</a>
+                        </li>
+                        <!--<li class="nav-item dropdown">
                             <a class="nav-link">Yêu cầu</a>
                             <div class="dropdown-content">
                                 <a class="dropdown-item" href="{{ url('/petitions') }}" >Danh sách yêu cầu</a>
                                 <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_petition" style="float:right;">Tạo yêu cầu</a>
                             </div>
+                        </li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/users') }}">Nhân sự</a>
                         </li>
-                        <li class="nav-item dropdown">
+                        <!--<li class="nav-item dropdown">
                             <a class="nav-link">Nhân sự</a>
                             <div class="dropdown-content">
                                 <a class="dropdown-item" href="{{ url('/users') }}" >Danh sách nhân sự</a>
                                 <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float:right;">Thêm nhân viên</a>
                             </div>
-                        </li>
+                        </li>-->
                         <li class="nav-item dropdown">
                             <a class="nav-link">Chấm công</a>
                             <div class="dropdown-content">
@@ -110,8 +146,7 @@
                             <a class="nav-link" href="{{ url('/') }}">Báo cáo</a>
                         </li>
                     </ul>
-                    @extends('users.create')
-                    @extends('petitions.create')
+                    <!--@extends('petitions.create')-->
                     <script>
                     function changeColor() {
                         var result = document.getElementById("result");
@@ -124,8 +159,8 @@
             </form>
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-                <li class="nav-item dropdown">
-                    <a href="#" data-bs-toggle="dropdown" aria-expanded="false" title="Thông báo" style="color:#999da1;">
+                <!--<li class="nav-item dropdown">
+                    <a href="#" data-toggle="dropdown" aria-expanded="false" title="Thông báo" style="color:#999da1;">
                         <center>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bell"
                             viewBox="0 0 16 16">
@@ -140,53 +175,55 @@
                         </center>
                         <hr style="height: 1px; ">
                     </ul>
-                </li>
+                </li>-->
             </ul>
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-                <li class="nav-item dropdown">
+                <!--<li class="nav-item dropdown">
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <form action="" method="post" enctype="multipart/form-data">
                         <center>
 
                     </form>
                     </ul>
-                </li>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                </li>-->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent" style="float:right;">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
+                    <ul class="navbar-nav me-auto" style="float:right;">
                         @guest
                         @else
-                        <center>
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>{{ Auth::user()->fullname }}</a>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <div class="avatar-wrapper">
-                                    <img class="profile-pic" src="{{asset('image/'.Auth::user()->avatar)}}" />
+                            <li class="dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>{{ Auth::user()->fullname }}</a>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <center>
+                                    <div class="avatar-wrapper">
+                                        <img class="profile-pic" src="{{asset('image/'.Auth::user()->avatar)}}" />
+                                    </div><br>
+                                        <a href="{{ route('change.password') }}" type="button" class="btn btn-default" style="text-align: center;">Đổi mật khẩu</a>
+                                    </center>
+                                    <hr class="dropdown-divider" />
+                                    <button class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();" style="text-align:center; color: red;font-size:20px;"><b>{{ __('Đăng xuất') }}</b></button>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
                                 </div>
-                                <hr class="dropdown-divider" />
-                                <button class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();" style="text-align:center;">{{ __('Đăng xuất') }}</button>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                        </center>
+                            </li>
                         @endguest
                     </ul>
                 </div>
-            </div>
+            </ul>
         </nav>
         <main class="py-4">
             @yield('content')
         </main>
-    </div>
-        <script src="style/js/datatables-simple-demo.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+
+        <script>
+            $(window).load(function() {
+                $('#loading').hide();
+            });
+        </script>
+
         <script src="{{asset('js/datatables-simple-demo.js')}}"></script>
         <script src="{{asset('js/app.js')}}" defer></script>
         <script src="{{asset('js/scripts.js')}}" defer></script>

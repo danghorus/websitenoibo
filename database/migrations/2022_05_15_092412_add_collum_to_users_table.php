@@ -11,22 +11,22 @@ class AddCollumToUsersTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('user_code')->unique();
-        });
-    }
+    //public function up()
+    //{
+      //  Schema::table('users', function (Blueprint $table) {
+      //      $table->string('user_code')->unique();
+       // });
+  //  }
 
     /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::table('users', function (Blueprint $table) {
+    //public function down()
+  //  {
+   //     Schema::table('users', function (Blueprint $table) {
             //
-        });
-    }
+  //      });
+  //  }
 }

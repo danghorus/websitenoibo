@@ -15,38 +15,38 @@
                         <tr style=" text-align:center;">
                             <th rowspan="2" width="500px">Thời gian thống kê</th>
                             <th rowspan="2" width="400px">Công chuẩn</th>
-                            <th colspan="3" width="30%">Thời gian làm việc dưới 3 năm</th>
-                            <th colspan="3" width="30%">Thời gian làm việc trên 3 năm</th>
+                            <th colspan="3" width="30%" style="background-color: #6cb2eb">Thời gian làm việc dưới 3 năm</th>
+                            <th colspan="3" width="30%" style="background-color: #26C1E0">Thời gian làm việc trên 3 năm</th>
                         </tr>
                         <tr  style=" text-align:center;">
-                            <th width="10%">WARRIOR 1</th>
-                            <th width="10%">WARRIOR 2</th>
-                            <th width="10%">WARRIOR 3</th>
-                            <th width="10%">WARRIOR 1</th>
-                            <th width="10%">WARRIOR 2</th>
-                            <th width="10%">WARRIOR 3</th>
+                            <th width="10%" style="background-color: #6cb2eb">WARRIOR 1</th>
+                            <th width="10%" style="background-color: #6cb2eb">WARRIOR 2</th>
+                            <th width="10%" style="background-color: #6cb2eb">WARRIOR 3</th>
+                            <th width="10%" style="background-color: #26C1E0">WARRIOR 1</th>
+                            <th width="10%" style="background-color: #26C1E0">WARRIOR 2</th>
+                            <th width="10%" style="background-color: #26C1E0">WARRIOR 3</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><b>Dự kiến:</b>: Từ ngày {{ expected.start_date ? expected.start_date : ".........."}} đến ngày {{ expected.end_date ? expected.end_date : ".........."}}</td>
                             <td style=" text-align:center;">{{ expected.total }}</td>
-                            <td style=" text-align:center;">{{ expected.warrior1 }}</td>
-                            <td style=" text-align:center;">{{ expected.warrior2 }}</td>
-                            <td style=" text-align:center;">{{ expected.warrior3 }}</td>
-                            <td style=" text-align:center;">{{ expected.warrior1_3 }}</td>
-                            <td style=" text-align:center;">{{ expected.warrior1 }}</td>
-                            <td style=" text-align:center;">{{ expected.warrior2 }}</td>
+                            <td style=" text-align:center; background-color: #6cb2eb">{{ expected.warrior1 }}</td>
+                            <td style=" text-align:center; background-color: #6cb2eb">{{ expected.warrior2 }}</td>
+                            <td style=" text-align:center; background-color: #6cb2eb">{{ expected.warrior3 }}</td>
+                            <td style=" text-align:center; background-color: #26C1E0">{{ expected.warrior1_3 }}</td>
+                            <td style=" text-align:center; background-color: #26C1E0">{{ expected.warrior1 }}</td>
+                            <td style=" text-align:center; background-color: #26C1E0">{{ expected.warrior2 }}</td>
                         </tr>
                         <tr>
                             <td><b>Hiện tại:</b> Từ ngày {{ current.start_date ? current.start_date : ".........." }} đến ngày {{ current.end_date ? current.end_date: ".........."}}</td>
                             <td style=" text-align:center;">{{ current.total }}</td>
-                            <td style=" text-align:center;">{{ current.warrior1 }}</td>
-                            <td style=" text-align:center;">{{ current.warrior2 }}</td>
-                            <td style=" text-align:center;">{{ current.warrior3 }}</td>
-                            <td style=" text-align:center;">{{ current.warrior1_3 }}</td>
-                            <td style=" text-align:center;">{{ current.warrior1 }}</td>
-                            <td style=" text-align:center;">{{ current.warrior2 }}</td>
+                            <td style=" text-align:center; background-color: #6cb2eb">{{ current.warrior1 }}</td>
+                            <td style=" text-align:center; background-color: #6cb2eb">{{ current.warrior2 }}</td>
+                            <td style=" text-align:center; background-color: #6cb2eb">{{ current.warrior3 }}</td>
+                            <td style=" text-align:center; background-color: #26C1E0">{{ current.warrior1_3 }}</td>
+                            <td style=" text-align:center; background-color: #26C1E0">{{ current.warrior1 }}</td>
+                            <td style=" text-align:center; background-color: #26C1E0">{{ current.warrior2 }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -55,14 +55,14 @@
                <table class="table-striped table-responsive table-hover result-point">
                     <thead class="point-table-head">
                         <tr style="vertical-align: middle; font-size:12px; text-align:center; ">
-                        
+
                             <th style="vertical-align: middle; width:180px;" rowspan="2">
-                                <input type="text" name="search" class="form-control mb-2 input-search" v-model="search" 
+                                <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
                                     placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
                             </th>
                             <th rowspan="2" style="vertical-align: middle;">Mã Nhân viên</th>
-                            <th style="vertical-align: middle; width:100px;" rowspan="2">Ngày làm việc chính thức</th>
-                            <th style="vertical-align: middle; width:150px" rowspan="2">Số ngày đã làm việc chính thức</th>
+                            <th style="vertical-align: middle;" rowspan="2">Ngày làm việc chính thức</th>
+                            <th style="vertical-align: middle;" rowspan="2">Số ngày đã làm việc chính thức</th>
                             <th colspan="2" style="vertical-align: middle;">Đi muộn</th>
                             <th colspan="2" style="vertical-align: middle;">Về sớm</th>
                             <th rowspan="2" style="vertical-align: middle;">Tổng giờ ĐMVS</th>
@@ -114,7 +114,7 @@
                             <td>{{ user.nextWar }}</td>
                             <td>{{ formatNumber(user.timeIncreaseWar) }}</td>
                             <td>{{ formatNumber(user.avgTimeIncreaseWar) }}</td>
-                            <td> {{ user.rateGoLate }} %</td>
+                            <td> {{ formatNumber(user.rateGoLate)}} %</td>
                         </tr>
                     </tbody>
                 </table>
@@ -190,7 +190,7 @@ table thead tr th {
 table.table-striped tbody tr:nth-of-type(odd) {
     background: #f9f9f9;
 }
- 
+
 
 .text-left {
     text-align: left!important;

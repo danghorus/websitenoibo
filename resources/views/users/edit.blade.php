@@ -116,6 +116,12 @@
                                             <option value="Game design">Game design</option>
                                             <option value="Art">Art</option>
                                             <option value="Tester">Tester</option>
+                                            <option value="Điều hành">Điều hành</option>
+                                            <option value="Hành chính nhân sự">Hành chính nhân sự</option>
+                                            <option value="Kế toán">Kế toán</option>
+                                            <option value="Phân tích dữ liệu">Phân tích dữ liệu</option>
+                                            <option value="Support">Support</option>
+                                            <option value="Admin">Admin</option>
                                         </select>
 
                                         @error('department')
@@ -151,9 +157,8 @@
                                     <label for="date_official" class="col-md-4 col-form-label text-md-right">{{ __('Ngày bắt đầu làm việc chính thức') }}</label>
 
                                     <div class="col-md-6">
-                                        <input id="date_official" type="date"
-                                            class="form-control @error('name') is-invalid @enderror" name="date_official"
-                                            value="{{ old('date_official', $user->date_official) }}" required autocomplete="date_official" >
+                                        <input id="date_official" type="date" name="date_official"
+                                            class="form-control" value="{{ old('date_official', $user->date_official) }}" >
 
                                         @error('date_official')
                                             <span class="invalid-feedback" role="alert">
@@ -199,17 +204,31 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group row">
+                                    <label for="user_status" class="col-md-4 col-form-label text-md-right">{{ __('Trạng thái hoạt động') }}</label>
+
+                                    <div class="col-md-6">
+                                        <select id="user_status" type="text" class="form-control @error('name') is-invalid @enderror" name="user_status"
+                                            value="" required autocomplete="user_status">
+                                            <option value="1" {{old('user_status')==1 || $user->user_status==1?'selected':false}}>Hoạt động</option>
+                                            <option value="2" {{old('user_status')==2 || $user->user_status==2?'selected':false}}>Nghỉ việc</option>
+                                        </select>
+
+                                        @error('permission')
+                                        <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+
                                 <div class="form-group row mb-0">
                                     <div class="col-md-6 offset-md-4">
                                         <button type="submit" class="btn btn-primary"> {{ __('Cập nhật thông tin') }} </button>
-                                        <form method="POST" action="{{ route('users.destroy', $user->id) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-danger" style="float:right; margin:0px 0px 0px 0px;" onclick="return confirm('Bạn có chắc chắn muốn xoá nhân viên này?');">Xoá {{ $user->fullname }}</button>
-                                        </form>
                                     </div>
                                 </div>
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -218,33 +237,39 @@
                         <div class="card-header">
                             <h4>{{ __('Thay đổi mật khẩu') }}</h4>
                         </div>
-                            <div class="card-body">
-                                <form method="POST" action="{{ route('users.change.password', $user->id) }}">
-                                    @csrf
-                                    <div class="form-group row">
-                                    <label for="password"class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-                                        <div class="col-md-6">
-                                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
-                                            @error('password')
-                                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                            @enderror
-                                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('users.change.password', $user->id) }}">
+                                @csrf
+                                <div class="form-group row">
+                                <label for="password"class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+                                    <div class="col-md-6">
+                                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
+                                        @error('password')
+                                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                        @enderror
                                     </div>
-                                    <div class="form-group row">
-                                        <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-                                        <div class="col-md-6">
-                                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
-                                        </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
+                                    <div class="col-md-6">
+                                        <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
                                     </div>
-                                    <div class="form-group row mb-0">
-                                        <div class="col-md-6 offset-md-4">
-                                            <button type="submit" class="btn btn-primary">{{ __('Cập nhật mật khẩu') }}</button>
-                                        </div>
+                                </div>
+                                <div class="form-group row mb-0">
+                                    <div class="col-md-6 offset-md-4">
+                                        <button type="submit" class="btn btn-primary">{{ __('Cập nhật mật khẩu') }}</button>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
+                            <form method="POST" action="{{ route('users.destroy', $user->id) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger" style="float:right; margin:0px 0px 0px 0px;"
+                                    onclick="return confirm('Bạn có chắc chắn muốn xoá nhân viên này?');">Xoá {{ $user->fullname }}</button>
+                            </form>
+                        </div>
                     </div>
-                </div>                              
+                </div>
             </div>
         </div>
 @endsection

@@ -3,7 +3,7 @@
         <div class="card-header" style="height:50px;">
             <h4>Bảng tính lương</h4>
             <div style="position: absolute; right: 10px; top: 8px">
-                <date-picker v-model="dateRange" type="month" range placeholder="Vui lòng chọn tháng tính lương"></date-picker>
+                <date-picker v-model="dateRange" type="date" range placeholder="Vui lòng chọn tháng tính lương"></date-picker>
                 <button class="btn btn-primary" @click="getReport()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê</button>
                 <button class="btn btn-success" @click="exportData()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Xuất file Excel</button>
             </div>
@@ -13,12 +13,12 @@
                 <table class="table-striped table-responsive table-hover result-point">
                     <thead class="point-table-head">
                         <tr style=" text-align:center;">
-                            <th rowspan="2" width="500px">Tính lương tháng</th>
-                            <th rowspan="2" width="400px">Công chuẩn</th>
-                            <th colspan="3" width="30%">Thời gian làm việc dưới 3 năm</th>
-                            <th colspan="3" width="30%">Thời gian làm việc trên 3 năm</th>
+                            <th rowspan="2" width="400px" >Tính lương tháng</th>
+                            <th rowspan="2">Công chuẩn</th>
+                            <th colspan="3">Thời gian làm việc dưới 3 năm</th>
+                            <th colspan="3">Thời gian làm việc trên 3 năm</th>
                         </tr>
-                        <tr  style=" text-align:center;">
+                        <tr>
                             <th width="10%">WARRIOR 1</th>
                             <th width="10%">WARRIOR 2</th>
                             <th width="10%">WARRIOR 3</th>
@@ -29,7 +29,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><b>Tháng:</b>{{ expected.end_date ? expected.end_date : " "}}</td>
+                            <td>{{ expected.start_date ? "Từ ngày: "+expected.start_date : " "}} {{ expected.end_date ?"dến ngày :"+expected.end_date : " "}}</td>
                             <td style=" text-align:center;">{{ expected.total }}</td>
                             <td style=" text-align:center;">{{ expected.warrior1 }}</td>
                             <td style=" text-align:center;">{{ expected.warrior2 }}</td>
@@ -45,9 +45,9 @@
                <table class="table-striped table-responsive table-hover result-point">
                     <thead class="point-table-head">
                         <tr style="vertical-align: middle; font-size:14px; text-align:center; ">
-                        
+
                             <th style="vertical-align: middle;" rowspan="2">
-                                <input type="text" name="search" class="form-control mb-2 input-search" v-model="search" 
+                                <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
                                     placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
                             </th>
                             <th rowspan="2" style="vertical-align: middle;">Mã Nhân viên</th>
@@ -160,7 +160,7 @@ table thead tr th {
 table.table-striped tbody tr:nth-of-type(odd) {
     background: #f9f9f9;
 }
- 
+
 
 .text-left {
     text-align: left!important;

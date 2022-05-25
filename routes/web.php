@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\ChangePasswordController;
+use App\Http\Controllers\Backend\PasswordController;
 use App\Http\Controllers\Backend\ChangeAvatarController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\PetitionController;
@@ -35,6 +36,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('users/{user}/change-password', [ChangePasswordController::class, 'change_password'])->name('users.change.password');
     Route::post('users/{user}/change-avatar', [ChangeAvatarController::class, 'change_avatar'])->name('users.change.avatar');
+
+    Route::get('change_password', [PasswordController::class, 'index']);
+    Route::post('change_password', [PasswordController::class, 'changePassword'])->name('change.password');
 
     Route::post('/partner/connect', [PartnerController::class, 'connect']);
     Route::get('/partner/get_devices', [PartnerController::class, 'getDevices']);

@@ -20,7 +20,7 @@ class HanetRepository
         return $this->url_auth. '/oauth2/authorize?'. http_build_query([
             'response_type' => 'code',
             'client_id' => $clientId,
-            'redirect_uri' => 'https://6715-14-248-85-119.ngrok.io/api/partner/get_auth_code',
+            'redirect_uri' => 'http://work.horusvn.com/api/partner/get_auth_code',
             'scope' => 'full'
         ]);
     }
@@ -50,7 +50,7 @@ class HanetRepository
                 'code' => $code,
                 'grant_type' => 'authorization_code',
                 'client_id' => $setting->client_id,
-                'redirect_uri' => 'https://6715-14-248-85-119.ngrok.io/api/partner/get_auth_code',
+                'redirect_uri' => 'http://work.horusvn.com/api/partner/get_auth_code',
                 'client_secret' => $setting->client_secret
             ]
         ]);
