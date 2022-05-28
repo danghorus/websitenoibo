@@ -24,15 +24,31 @@
                 <form action="{{ route('petitions.store') }}" method="POST">
                     @csrf
 
+                    <?php
+                    if(Auth::user()->permission == 0) {
+                    ?>
+
                     <div class="form-floating mb-3">
-                        <select class="form-control" id="user_fullname" name="user_fullname">
-                            <option>Chọn nhân viên</option>
-                            @foreach($users as $user)
-                            <option>{{$user->fullname}}</option>
-                            @endforeach
-                        </select>
-                        <label for="user_fullname">Họ và tên:</label>
-                    </div>  
+                        <input class="form-control" name="user_fullname" type="text" value="{{ Auth::user()->fullname }}" readonly/>
+                        <label for="">Họ và tên:</label>
+                    </div>
+                    <?php } else {?>
+
+                       <div class="form-floating mb-3">
+                            <select class="form-control" id="user_fullname" name="user_fullname">
+                                <option selected disabled value>Chọn nhân viên</option>
+                                @foreach($users as $user)
+                                    <?php
+                                    if ($user->user_status==1){
+                                    ?>
+                                    <option>{{$user->fullname}}</option>
+                                    <?php } ?>
+                                @endforeach
+                            </select>
+                            <label for="user_fullname">Họ và tên:</label>
+                        </div>
+                    <?php } ?>
+
                     <div class="form-floating mb-3">
                         <select class="form-control" name="petition_type" id="petition_type" >
                             <option selected disabled value>Lựa chọn</option>

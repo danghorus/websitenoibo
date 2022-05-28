@@ -4,9 +4,9 @@
             <h4>Bảng chấm công</h4>
             <div style="position: absolute; right: 20px; top: 5px">
                 <button v-if="showCheckIn && currentUser.check_type == 2" class="btn btn-success" @click="checkIn()">Checkin</button>
-                <button  v-if="showCheckOut && currentUser.check_type == 2" class="btn btn-danger" @click="checkIn()">Checkout</button>
-                <button class="btn btn-primary" @click="exportData()">Xuất file excel</button>
-                <button class="btn btn-primary" @click="showModalConfig()">Cấu hình</button>
+                <button v-if="showCheckOut && currentUser.check_type == 2" class="btn btn-danger" @click="checkIn()">Checkout</button>
+                <button v-if=" currentUser.permission == 1" class="btn btn-primary" @click="exportData()">Xuất file excel</button>
+                <button v-if=" currentUser.permission == 1" class="btn btn-primary" @click="showModalConfig()">Cấu hình</button>
             </div>
 
         </div>

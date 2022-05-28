@@ -13,6 +13,7 @@ use DateInterval;
 use DatePeriod;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\Echo_;
 
 class TimeKeepingService
 {
@@ -237,6 +238,7 @@ class TimeKeepingService
                 $detail->person_name = $data['personName'];
                 $detail->person_title = $data['personTitle'];
                 $detail->place_name = $data['placeName'];
+                $detail->time_int = strtotime($data['date']);
                 $detail->time = date('H:i:s', strtotime($data['date']));
                 $detail->check_date = date('Y-m-d', time());
                 $detail->partner_id = $data['id'];
@@ -339,18 +341,22 @@ class TimeKeepingService
         $expected = [];
         $current = [];
 
-        if ($filters['start_date'] != '' && $filters['end_date'] != '') {
+        if ($filters['start_date'] != '' && $filters['end_date'] != '' ) {
             $start_date = $filters['start_date'];
-            $end_date = date('Y-m-d',strtotime('+1 day', strtotime($filters['end_date'])));
+            //$end_date = $filters['end_date'];
+            $end_date =  date('Y-m-d',strtotime($filters['end_date']. ' +1 days'));
 
             $timeExpected = $this->timeReport($start_date, $end_date);
-
             $expectedWar1_3 = $timeExpected['total'] * 1;
             $expectedWar1 = $timeExpected['total'] * 2;
             $expectedWar2 = $timeExpected['total'] * 3;
             $expectedWar3 = $timeExpected['total'] * 4;
 
-            $timeNow = $this->timeReport($start_date, date('Y-m-d', time()));
+            if ( (strtotime($filters['end_date'])+ 864000 ) >= time() ) {
+               $timeNow = $this->timeReport($start_date, date('Y-m-d', time()));
+            } else {
+                $timeNow = $this->timeReport($start_date, $end_date);
+            }
 
             $nowWar1_3 = $timeNow['total'] * 1;
             $nowWar1 = $timeNow['total'] * 2;
@@ -457,7 +463,7 @@ class TimeKeepingService
                     if ($user->date_official) {
                         $totalWorkDate = $this ->timeTotal($user->date_official, date('Y-m-d', time()))['total'];
                     }
-                    //$totalWorkDate = $this ->timeTotal($user->date_official, date('Y-m-d', time()))['total'];
+
                     $currentWar = '';
                     $nextWar = '';
                     $timeHoldWar = 0;
@@ -466,55 +472,82 @@ class TimeKeepingService
                     $avgTimeIncreaseWar = 0;
                     $EmployeeLongtime =1094;
 
-                    if($totalWorkDate > $EmployeeLongtime){
-                        if($totalWorkDate > $EmployeeLongtime && $totalHourEfforts < $nowWar1_3) {
-                            $currentWar = 'Soldier';
-                            $nextWar = 'Warrior 1';
-                            $timeIncreaseWar = $nowWar1_3 - $totalHourEfforts;
-                        } elseif ( $totalHourEfforts > $nowWar1_3 && $totalHourEfforts< $nowWar1) {
-                            $currentWar = 'Warrior 1';
-                            $nextWar = 'Warrior 2';
-                            $timeHoldWar = $totalHourEfforts - $nowWar1;
-                            $timeIncreaseWar = $nowWar1 - $totalHourEfforts;
-                        } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
-                            $currentWar = 'Warrior 2';
-                            $nextWar = 'Warrior 3';
-                            $timeHoldWar = $totalHourEfforts - $nowWar1;
-                            $timeIncreaseWar = $nowWar2 - $totalHourEfforts;
-                        } elseif ($totalHourEfforts > $nowWar2) {
-                            $currentWar = 'Warrior 3';
-                            $nextWar = 'Warrior 3';
-                            $timeHoldWar = $totalHourEfforts - $nowWar2;
-                            $timeIncreaseWar = $totalHourEfforts - $nowWar2;
+                    if ($timeRange) {
+                        if($totalWorkDate > $EmployeeLongtime ){
+                            if($totalWorkDate > $EmployeeLongtime && $totalHourEfforts < $nowWar1_3) {
+                                $currentWar = 'Soldier';
+                                $nextWar = 'Warrior 1';
+                                $timeIncreaseWar = $expectedWar1_3 - $totalHourEfforts;
+                            } elseif ( $totalHourEfforts > $nowWar1_3 && $totalHourEfforts< $nowWar1) {
+                                $currentWar = 'Warrior 1';
+                                $nextWar = 'Warrior 2';
+                                $timeHoldWar = $expectedWar1_3- $totalHourEfforts;
+                                $timeIncreaseWar = $expectedWar1 - $totalHourEfforts;
+                            } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
+                                $currentWar = 'Warrior 2';
+                                $nextWar = 'Warrior 3';
+                                $timeHoldWar = $expectedWar1 - $totalHourEfforts;
+                                $timeIncreaseWar = $expectedWar2 - $totalHourEfforts;
+                            } elseif ($totalHourEfforts > $nowWar2) {
+                                $currentWar = 'Warrior 3';
+                                $nextWar = 'Warrior 3';
+                                $timeHoldWar = $expectedWar2 - $totalHourEfforts;
+                                $timeIncreaseWar =$expectedWar2 - $totalHourEfforts;
+                            }
+                        } else{
+                            if($totalHourEfforts < $nowWar1) {
+                                $currentWar = 'Soldier';
+                                $nextWar = 'Warrior 1';
+                                $timeIncreaseWar = $expectedWar1 - $totalHourEfforts;
+                            } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
+                                $currentWar = 'Warrior 1';
+                                $nextWar = 'Warrior 2';
+                                $timeHoldWar = $expectedWar1- $totalHourEfforts;
+                                $timeIncreaseWar = $expectedWar2 - $totalHourEfforts;
+                            } elseif ($totalHourEfforts > $nowWar2 && $totalHourEfforts< $nowWar3) {
+                                $currentWar = 'Warrior 2';
+                                $nextWar = 'Warrior 3';
+                                $timeHoldWar = $expectedWar2 - $totalHourEfforts;
+                                $timeIncreaseWar = $expectedWar3 - $totalHourEfforts;
+                            } elseif ($totalHourEfforts > $nowWar3) {
+                                $currentWar = 'Warrior 3';
+                                $nextWar = 'Warrior 3';
+                                $timeHoldWar = $expectedWar3 - $totalHourEfforts;
+                                $timeIncreaseWar = $expectedWar3 - $totalHourEfforts;
+                            }
                         }
+
+                        //$totalUnpaidLeave = count($range) - count($user->timeKeeping);
+                        //$avgTimeHoldWar = $timeHoldWar/$timeRange;
+                        $avgTimeHoldWar = $timeHoldWar/( $timeExpected['total'] - $timeNow['total']);
+                        $avgTimeIncreaseWar = $timeIncreaseWar/( $timeExpected['total'] - $timeNow['total']);
+
                     } else{
-                        if($totalHourEfforts < $nowWar1) {
-                            $currentWar = 'Soldier';
-                            $nextWar = 'Warrior 1';
-                            $timeIncreaseWar = $nowWar1 - $totalHourEfforts;
-                        } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
-                            $currentWar = 'Warrior 1';
-                            $nextWar = 'Warrior 2';
-                            $timeHoldWar = $totalHourEfforts - $nowWar1;
-                            $timeIncreaseWar = $nowWar2 - $totalHourEfforts;
-                        } elseif ($totalHourEfforts > $nowWar2 && $totalHourEfforts< $nowWar3) {
-                            $currentWar = 'Warrior 2';
-                            $nextWar = 'Warrior 3';
-                            $timeHoldWar = $totalHourEfforts - $nowWar2;
-                            $timeIncreaseWar = $nowWar3 - $totalHourEfforts;
-                        } elseif ($totalHourEfforts > $nowWar3) {
-                            $currentWar = 'Warrior 3';
-                            $nextWar = 'Warrior 3';
-                            $timeHoldWar = $totalHourEfforts - $nowWar3;
-                            $timeIncreaseWar = $totalHourEfforts - $nowWar3;
+                        if($totalWorkDate > $EmployeeLongtime ){
+                            if($totalWorkDate > $EmployeeLongtime && $totalHourEfforts < $nowWar1_3) {
+                                $currentWar = 'Soldier';
+                            } elseif ( $totalHourEfforts > $nowWar1_3 && $totalHourEfforts< $nowWar1) {
+                                $currentWar = 'Warrior 1';
+                            } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
+                                $currentWar = 'Warrior 2';
+                            } elseif ($totalHourEfforts > $nowWar2) {
+                                $currentWar = 'Warrior 3';
+                            }
+                        } else{
+                            if($totalHourEfforts < $nowWar1) {
+                                $currentWar = 'Soldier';
+                            } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
+                                $currentWar = 'Warrior 1';
+                            } elseif ($totalHourEfforts > $nowWar2 && $totalHourEfforts< $nowWar3) {
+                                $currentWar = 'Warrior 2';
+                            } elseif ($totalHourEfforts > $nowWar3) {
+                                $currentWar = 'Warrior 3';
+                            }
                         }
                     }
-
-                    $totalUnpaidLeave = count($range) - count($user->timeKeeping);
-
-                    $avgTimeHoldWar = $timeHoldWar/$timeRange;
-                    $avgTimeIncreaseWar = $timeIncreaseWar/( $timeExpected['total'] - $timeNow['total']);
+                    $totalUnpaidLeave = $timeNow['total'] - $totalTimeKeeping;
                     $rateGoLate = $totalWorkingDays? round(($totalGoLate/$totalWorkingDays), 4) * 100 : 0;
+
 
                     $result[] = [
                         'fullname' => $user->fullname,
@@ -542,7 +575,7 @@ class TimeKeepingService
                         'timeIncreaseWar' => $timeIncreaseWar,
                         'avgTimeHoldWar' => $avgTimeHoldWar,
                         'avgTimeIncreaseWar' => $avgTimeIncreaseWar,
-                        'rateGoLate' => $rateGoLate,
+                        'rateGoLate' => $rateGoLate ?? 0,
                         'totalNotCheckIn' => $totalNotCheckIn,
                         'totalNotCheckOut' => $totalNotCheckOut,
                         'totalGoLateAboutEarly' => round(($timeGoLate/3600 + $timeAboutEarly/3600),2),
@@ -562,6 +595,7 @@ class TimeKeepingService
 
             $current = [
                 'start_date' => $filters['start_date'],
+                //'end_date' => $filters['end_date'],
                 'end_date' => end($keyArr),
                 'total' => $timeNow['total'],
                 'warrior1_3' => $nowWar1_3,
@@ -578,6 +612,10 @@ class TimeKeepingService
                         'fullname' => $user->fullname,
                         'id' => $user->id,
                         'date_official' => $user->date_official,
+                        //'totalWorkDate' => $totalWorkDate = $this ->timeTotal($user->date_official, date('Y-m-d', time()))['total'],
+                        //'totalWorkDateY' => intval($totalWorkDate/365),
+                        //'totalWorkDateM' => intval(($totalWorkDate-(intval($totalWorkDate/365)*365))/30),
+                        //'totalWorkDateD' => intval(($totalWorkDate-(intval($totalWorkDate/365)*365))-intval(($totalWorkDate-(intval($totalWorkDate/365)*365))/30)*30),
                         'wage_now' => $user->wage_now,
                         'totalGoLate' => 0,
                         'timeGoLate' => 0,

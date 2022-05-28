@@ -79,9 +79,11 @@ table tr td img {
                                         <i class="fas fa-search" style="color:#ffffff; " ></i>
                                 </button>
                                 </div>
-                                <!--<a href= "{{ route('users.create') }}" class="btn btn-primary mb-2" style="float:right;">Thêm nhân viên</a>-->
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float:right;">Thêm nhân viên</button>
-                                @extends('users.create')
+                                <?php if(Auth::user()->permission == 1) { ?>
+                                <a href= "{{ route('users.create') }}" class="btn btn-primary mb-2" style="float:right;">Thêm nhân viên</a>
+                                <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                    style="float:right;">Thêm nhân viên</button>-->
+                                <?php } ?>
                             </div>
                         </form>
                     </div>
@@ -89,6 +91,7 @@ table tr td img {
             </div>
             <form style="margin: -20px 5px 5px 5px; ">
                 <ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #F7F7F7">
+                    <?php if(Auth::user()->permission == 1) { ?>
                     <li class="nav-item ">
                         <a class="nav-link active " id="tab-unapproved" data-toggle="tab"
                            href="#content-unapproved" role="tab" aria-controls="content-unapproved" aria-selected="false"> Đang làm việc</a>
@@ -97,6 +100,7 @@ table tr td img {
                         <a class="nav-link" id="tab-approved" data-toggle="tab"
                            href="#content-approved" role="tab" aria-controls="content-approved" aria-selected="false">Đã nghỉ việc</a>
                     </li>
+                    <?php } ?>
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="content-unapproved" role="tabpanel" aria-labelledby="tab-unapproved">
@@ -114,7 +118,9 @@ table tr td img {
                                     <th scope="col" width="7%" >Chức danh</th>
                                     <th scope="col" width="8%" >Ngày làm việc</th>
                                     <th scope="col" width="8%" >Quyền truy cập</th>
+                                    <?php if(Auth::user()->permission == 1) { ?>
                                     <th scope="col" width="7%" >Thao tác</th>
+                                    <?php } ?>
                                 </tr>
                             </thead>
                             <tbody>
@@ -135,6 +141,8 @@ table tr td img {
                                         <td scope="row">{{ $user->position }}</td>
                                         <td scope="row">{{ $user->date_official }} </td>
                                         <td scope="row">{{ $user->permission==0?'Nhân viên':'Quản lý' }} </td>
+                                        <?php if(Auth::user()->permission == 1) { ?>
+
                                         <td style="text-align:center; font-size:14px;">
                                             <form method="POST" action="{{ route('users.destroy', $user->id) }}">
                                                 <a class="btn btn-success" href="{{route('users.edit', $user->id)}}" style="font-size:12px;">Sửa</a>
@@ -143,6 +151,7 @@ table tr td img {
                                                 <button class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xoá nhân viên này?');" style="text-align:center; font-size:12px;">Xoá</button>
                                             </form>
                                         </td>
+                                        <?php } ?>
                                     </tr>
                                     <?php } ?>
                                 @endforeach

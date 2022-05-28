@@ -15,6 +15,7 @@ class TimeKeepingDetail extends Model
         'person_name',
         'person_title',
         'place_name',
+        'time_int',
         'time',
         'check_date',
         'partner_id',

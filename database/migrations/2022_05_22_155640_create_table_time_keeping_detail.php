@@ -21,6 +21,7 @@ class CreateTableTimeKeepingDetail extends Migration
             $table->string('person_name')->nullable();
             $table->string('person_title')->nullable();
             $table->string('place_name')->nullable();
+            $table->string('time_int')->nullable();
             $table->string('time')->nullable();
             $table->date('check_date')->nullable();
             $table->string('partner_id')->nullable();

@@ -5,7 +5,7 @@
             <div style="position: absolute; right: 10px; top: 8px">
                 <date-picker v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian thống kê"></date-picker>
                 <button class="btn btn-primary" @click="getReport()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê</button>
-                <button class="btn btn-success" @click="exportData()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Xuất file Excel</button>
+                <button v-if=" currentUser.permission == 1" class="btn btn-success" @click="exportData()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Xuất file Excel</button>
             </div>
         </div>
         <div class="card-body table-responsive">
@@ -15,8 +15,8 @@
                         <tr style=" text-align:center;">
                             <th rowspan="2" width="500px">Thời gian thống kê</th>
                             <th rowspan="2" width="400px">Công chuẩn</th>
-                            <th colspan="3" width="30%" style="background-color: #6cb2eb">Thời gian làm việc dưới 3 năm</th>
-                            <th colspan="3" width="30%" style="background-color: #26C1E0">Thời gian làm việc trên 3 năm</th>
+                            <th colspan="3" width="30%" style="background-color: #6cb2eb">Thời gian làm việc chính thức dưới 3 năm</th>
+                            <th colspan="3" width="30%" style="background-color: #26C1E0">Thời gian làm việc chính thức trên 3 năm</th>
                         </tr>
                         <tr  style=" text-align:center;">
                             <th width="10%" style="background-color: #6cb2eb">WARRIOR 1</th>
@@ -28,8 +28,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><b>Dự kiến:</b>: Từ ngày {{ expected.start_date ? expected.start_date : ".........."}} đến ngày {{ expected.end_date ? expected.end_date : ".........."}}</td>
+                        <tr v-if="expected.end_date >= current.end_date">
+                            <td><b>Dự kiến:</b>: Từ ngày {{ expected.start_date ? expected.start_date : ".........."}}
+                                đến ngày {{ expected.end_date ? expected.end_date : ".........."}}</td>
                             <td style=" text-align:center;">{{ expected.total }}</td>
                             <td style=" text-align:center; background-color: #6cb2eb">{{ expected.warrior1 }}</td>
                             <td style=" text-align:center; background-color: #6cb2eb">{{ expected.warrior2 }}</td>
@@ -39,7 +40,14 @@
                             <td style=" text-align:center; background-color: #26C1E0">{{ expected.warrior2 }}</td>
                         </tr>
                         <tr>
-                            <td><b>Hiện tại:</b> Từ ngày {{ current.start_date ? current.start_date : ".........." }} đến ngày {{ current.end_date ? current.end_date: ".........."}}</td>
+                            <td v-if="expected.end_date >= current.end_date">
+                                <b>Hiện tại:</b> Từ ngày {{ current.start_date ? current.start_date : ".........." }}
+                                đến ngày {{ current.end_date ? current.end_date: ".........."}}
+                            </td>
+                            <td v-if="expected.end_date < current.end_date">
+                                <b>Thống kê:</b> Từ ngày {{ current.start_date ? current.start_date : ".........." }}
+                                đến ngày {{ current.end_date ? current.end_date: ".........."}}
+                            </td>
                             <td style=" text-align:center;">{{ current.total }}</td>
                             <td style=" text-align:center; background-color: #6cb2eb">{{ current.warrior1 }}</td>
                             <td style=" text-align:center; background-color: #6cb2eb">{{ current.warrior2 }}</td>
@@ -56,9 +64,8 @@
                     <thead class="point-table-head">
                         <tr style="vertical-align: middle; font-size:12px; text-align:center; ">
 
-                            <th style="vertical-align: middle; width:180px;" rowspan="2">
-                                <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
-                                    placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
+                            <th style="vertical-align: middle; width:222px;" rowspan="2">
+                                <input type="text" name="search" class="form-control mb-2 input-search" v-model="search" placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
                             </th>
                             <th rowspan="2" style="vertical-align: middle;">Mã Nhân viên</th>
                             <th style="vertical-align: middle;" rowspan="2">Ngày làm việc chính thức</th>
@@ -68,18 +75,18 @@
                             <th rowspan="2" style="vertical-align: middle;">Tổng giờ ĐMVS</th>
                             <th rowspan="2" style="vertical-align: middle;">Số giờ đi sớm</th>
                             <th rowspan="2" style="vertical-align: middle;">Số giờ về muộn</th>
-                            <th rowspan="2" style="vertical-align: middle;">Nghỉ không lương</th>
+                            <th rowspan="2" style="vertical-align: middle;">Số công nghỉ</th>
                             <th rowspan="2" style="vertical-align: middle;">Số ngày chấm công</th>
                             <th rowspan="2" style="vertical-align: middle;">Công thực tế</th>
-                            <th rowspan="2" style="vertical-align: middle;">Số ngày không checkin</th>
+                            <!--<th rowspan="2" style="vertical-align: middle;">Số ngày không checkin</th>-->
                             <th rowspan="2" style="vertical-align: middle;">Số ngày không checkout</th>
                             <th rowspan="2" style="vertical-align: middle;">Tổng giờ nỗ lực</th>
                             <th rowspan="2" style="vertical-align: middle; width:80px;">Warrior hiện tại</th>
-                            <th rowspan="2" style="vertical-align: middle;">TG để giữ Warrior</th>
-                            <th rowspan="2" style="vertical-align: middle;">TGTB để giữ Warrior</th>
-                            <th rowspan="2" style="vertical-align: middle; width:80px;">Warrior tiếp theo</th>
-                            <th rowspan="2" style="vertical-align: middle;">TG để lên Warrior</th>
-                            <th rowspan="2" style="vertical-align: middle;">TGTB để lên Warrior</th>
+                            <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date" >TG để giữ Warrior</th>
+                            <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date">TGTB để giữ Warrior</th>
+                            <th rowspan="2" style="vertical-align: middle; width:80px;" v-if="expected.end_date > current.end_date">Warrior tiếp theo</th>
+                            <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date">TG để lên Warrior</th>
+                            <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date">TGTB để lên Warrior</th>
                             <th rowspan="2" style="vertical-align: middle;">Tỷ lệ đi muộn</th>
                         </tr>
                         <tr style="font-size:12px; text-align:center;">
@@ -94,7 +101,7 @@
                             <td>{{ user.fullname }}</td>
                             <td style="text-align:center;">{{ user.id }}</td>
                             <td style=" text-align:center;">{{ user.date_official }}</td>
-                            <td style=" text-align:center;">{{ user.totalWorkDateY ? user.totalWorkDateY+" năm":" "}} {{ user.totalWorkDateM ? user.totalWorkDateM+" tháng" :" "}}</td>
+                            <td style=" text-align:right;">{{ user.totalWorkDateY ? user.totalWorkDateY+" năm":" "}} {{ user.totalWorkDateM ? user.totalWorkDateM+" tháng" :" "}}</td>
                             <td>{{ user.totalGoLate }}</td>
                             <td>{{ formatNumber(user.timeGoLate) }}</td>
                             <td>{{ user.totalAboutEarly }}</td>
@@ -105,15 +112,15 @@
                             <td>{{ user.totalUnpaidLeave }}</td>
                             <td>{{ user.totalWorkingDays }}</td>
                             <td>{{ user.totalTimeKeeping }}</td>
-                            <td>{{ user.totalNotCheckIn }}</td>
+                            <!--<td>{{ user.totalNotCheckIn }}</td>-->
                             <td>{{ user.totalNotCheckOut }}</td>
                             <td>{{ formatNumber(user.totalHourEfforts) }}</td>
                             <td>{{ user.currentWar }}</td>
-                            <td>{{ formatNumber(user.timeHoldWar) }}</td>
-                            <td>{{ formatNumber(user.avgTimeHoldWar) }}</td>
-                            <td>{{ user.nextWar }}</td>
-                            <td>{{ formatNumber(user.timeIncreaseWar) }}</td>
-                            <td>{{ formatNumber(user.avgTimeIncreaseWar) }}</td>
+                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.timeHoldWar) }}</td>
+                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.avgTimeHoldWar) }}</td>
+                            <td v-if="expected.end_date > current.end_date">{{ user.nextWar }}</td>
+                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.timeIncreaseWar) }}</td>
+                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.avgTimeIncreaseWar) }}</td>
                             <td> {{ formatNumber(user.rateGoLate)}} %</td>
                         </tr>
                     </tbody>
@@ -140,6 +147,9 @@ export default {
             data: [],
             expected: {},
             current: {},
+            search: '',
+            currentUser: {},
+
         }
     },
     created() {
@@ -148,8 +158,9 @@ export default {
     methods: {
         async getReport() {
             let params = {
-                start_date: this.dateRange.length > 1? moment(this.dateRange[0]).format('YYYY-MM-DD'): '',
-                end_date: this.dateRange.length > 1? moment(this.dateRange[1]).format('YYYY-MM-DD'): ''
+                search: this.search ,
+                start_date: this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD'),
+                end_date: this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : moment().endOf('month').format('YYYY-MM-DD'),
             }
             const res = await $get('/time-keeping/get-report', {...params});
             if (res.code == 200) {

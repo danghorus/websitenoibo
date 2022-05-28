@@ -17,8 +17,8 @@
 
         #loading-image {
             position: absolute;
-            width: 200px;
-            height: 200px;
+            width: 300px;
+            height: 300px;
             top: 40%;
             left: 45%;
             z-index: 99;
