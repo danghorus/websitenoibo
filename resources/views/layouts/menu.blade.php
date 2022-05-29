@@ -131,7 +131,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link">Công việc</a>
                             <div class="dropdown-content">
-                                <a class="dropdown-item" href="{{ url('/works') }}">Dự án</a>
+                                <a class="dropdown-item" href="{{ url('/projects') }}">Dự án</a>
                                 <a class="dropdown-item" href="{{ url('/my_works') }}">Việc của tôi</a>
                             </div>
                         </li>

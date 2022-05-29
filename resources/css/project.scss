@@ -1,0 +1,36 @@
+.list-project {
+    min-height: 90vh;
+    border-right: 1px outset;
+
+    .dashboard {
+        font-size: 25px;
+        background-color: #808080;
+    }
+    li {
+        list-style-type: none;
+    }
+
+    .project-title {
+        font-size: 15px;
+    }
+
+    .project-title:hover {
+        color: #FF9900;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .div-create-project {
+        bottom: 0;
+        position: absolute;
+        width: 100%;
+
+        .btn-create {
+            display: block;
+            text-align: center;
+            width: 100%;
+        }
+    }
+}

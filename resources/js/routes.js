@@ -4,6 +4,7 @@ import Report from "./Admin/Timekeeping/Report";
 import Wage from "./Admin/Timekeeping/Wage";
 import Bonus from "./Admin/Timekeeping/Bonus";
 import ListRequest from "./Admin/Request/ListRequest";
+import Index from "./Admin/projects/Index";
 
 export const routes = [
     {
@@ -30,5 +31,10 @@ export const routes = [
         path: "/request",
         name: "ListRequest",
         component: ListRequest
+    },
+    {
+        path: "/projects",
+        name: "Index",
+        component: Index
     }
 ];

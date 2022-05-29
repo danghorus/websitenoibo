@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\ChangePasswordController;
 use App\Http\Controllers\Backend\PasswordController;
 use App\Http\Controllers\Backend\ChangeAvatarController;
+use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\PetitionController;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +69,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('time-keeping-bonus', [TimeKeepingController::class, 'bonus']);
 
     Route::get('time-keeping-report/export', [TimeKeepingController::class, 'export_report']);
+
+    // Projects
+    Route::get('projects', [ProjectController::class, 'index']);
 });
 
 
