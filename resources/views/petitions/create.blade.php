@@ -51,16 +51,11 @@
                             </select>
                             <label for="user_fullname">Họ và tên:</label>
                         </div>
-                        <div class="form-floating mb-3">
-                            <input class="form-control" name="user_id" type="text" value="{{$user->id }}" readonly/>
-                            <label for="">Họ và tên:</label>
-                        </div>
                     <?php } ?>
 
                     <div class="form-floating mb-3">
                         <select class="form-control" name="petition_type" id="petition_type" >
                             <option selected disabled value>Lựa chọn</option>
-                            <option value="4">Thay đổi giờ công</option>
                             <option value="1">Đi muộn về sớm</option>
                             <option value="2">Nghỉ phép</option>
                             <option value="3">Nghỉ việc</option>

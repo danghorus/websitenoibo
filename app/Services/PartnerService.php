@@ -77,6 +77,30 @@ class PartnerService
 
 //        }
     }
+    
+    public function getCheckinByPlaceIdInTimestamp()
+    {
+        $data = $this->deviceTimeKeepingRepository->getAll();
+
+        if (count($data)) {
+
+            foreach ($data as $key => $value) {
+                $type = DeviceTimeKeeping::TYPE;
+                $data[$key]['type_text'] = $type[$value['type']] ?? '';
+            }
+
+            return [
+                'data' => $data,
+                'code' => 200
+            ];
+        }
+
+        return [
+            'message' => 'Not found',
+            'code' => 404
+        ];
+
+    }
 
     public function getAccessToken($code)
     {
@@ -132,6 +156,7 @@ class PartnerService
 
         return false;
     }
+
 
     public function getDeviceInfo($code)
     {

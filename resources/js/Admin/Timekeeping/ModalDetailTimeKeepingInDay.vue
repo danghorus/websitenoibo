@@ -4,9 +4,8 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px;">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto" style="font-size:16px;" id="">
-                        <p style="padding-right: 110px">Checkin: {{ user && user.checkin? user.checkin: '--:--:--' }}</p>
-                        <p @click="updateCheckin()">Thay đổi Checkin:
-                            <span v-if="!showUpdateCheckIn" >{{ user && user.checkin? user.checkin: '--:--:--' }}</span>
+                        <p @click="updateCheckin()">Checkin:
+                            <span v-if="!showUpdateCheckIn" >{{ user && user.checkin? user.checkin: '--:--' }}</span>
                             <DatePicker
                                 v-else
                                 v-model="checkin"
@@ -22,9 +21,8 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px;">
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav mr-auto" style="font-size:16px;">
-                        <p style="padding-right: 100px">Checkout: {{ user && user.checkout? user.checkout: '--:--:--' }}</p>
-                        <p @click="updateCheckout()" >Thay đổi Checkout:
-                            <span v-if="!showUpdateCheckOut">{{ user && user.checkout? user.checkout: '--:--:--' }}</span>
+                        <p @click="updateCheckout()" >Checkout:
+                            <span v-if="!showUpdateCheckOut">{{ user && user.checkout? user.checkout: '--:--' }}</span>
                             <DatePicker
                                 v-else
                                 v-model="checkout"
@@ -41,8 +39,8 @@
                 <div class="collapse navbar-collapse" >
                     <ul class="navbar-nav mr-auto" style="font-size:16px;">
                         <li>
-                            <p>Lý do:
-                                <span v-if="!showUpdateReason"></span>
+                            <p>Lý do thay đổi giờ công:
+                                <span v-if="!showUpdateReason">{{ user && user.reason }}</span>
                                 <textarea v-else v-model="reason" style="width: 525px"></textarea>
                             </p>
                         </li>

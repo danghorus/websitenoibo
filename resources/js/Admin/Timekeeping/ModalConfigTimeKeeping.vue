@@ -11,6 +11,11 @@
                     <span class="nav-text">Kết nối Camera AI</span>
                 </a>
             </li>
+             <li class="nav-item">
+                <a class="nav-link" id="connect-tab" data-toggle="tab" href="#sync-timekeeping" aria-controls="sync-timekeeping">
+                    <span class="nav-text">Đồng bộ giờ công từ Hanet</span>
+                </a>
+            </li>
         </ul>
         <div class="tab-content mt-5" id="myTabContent">
             <div class="tab-pane fade show active" id="time-keeping" role="tabpanel" aria-labelledby="time-keeping-tab">
@@ -166,6 +171,12 @@
             <div class="tab-pane" id="connect" role="tabpanel" aria-labelledby="connect-tab">
                 <setting-config-partner />
             </div>
+            <div class="tab-pane" id="sync-timekeeping" role="tabpanel" aria-labelledby="sync-timekeeping-tab">
+                <date-picker style="width:495px" v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian để lấy dữ liệu từ Hanet"></date-picker>
+                <button class="btn btn-primary" @click="getSyncTimekeeping()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Đồng bộ</button>
+                <br>
+                <br>
+            </div>
         </div>
     </div>
 </template>
@@ -181,6 +192,7 @@ export default {
     components: {SettingConfigPartner, DatePicker},
     data() {
         return {
+            dateRange: '',
             value: null,
             open: false,
             settings: {
@@ -241,7 +253,14 @@ export default {
             if (res.code === 200) {
                 this.settings = res.settings;
             }
-        }
+        },
+        async getSyncTimekeeping() {
+            let params = {
+                start_date: this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : "",
+                end_date: this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : "",
+            }
+            const res = await $get('/time-keeping/get-sync-timekeeping', {...params});
+        },
     },
 }
 </script>

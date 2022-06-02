@@ -296,42 +296,6 @@ class TimeKeepingService
         ];
     }
 
-    public function save_old(array $data)
-    {
-        if (isset($data['data_type']) && $data['data_type'] === 'log' && isset($data['personType']) && $data['personType'] == 0)
-        {
-            $user = \App\Models\User::query()->where('user_code', '=', $data['aliasID'])->first();
-
-            if ($user)
-            {
-                $device = DeviceTimeKeeping::query()->where('device_code', '=', $data['deviceID'])->first();
-
-                $type = $device ? $device->type: 0;
-
-                $timeKeeping = TimeKeeping::query()
-                    ->where('check_date', '=', date('Y-m-d', time()))
-                    ->where('user_id', '=', $user->id)
-                    ->first();
-
-                // Lưu vào DB
-                $detail = new TimeKeepingDetail();
-                $detail->user_code = $data['aliasID'];
-                $detail->detected_image_url = $data['detected_image_url'];
-                $detail->device_name = $data['deviceName'];
-                $detail->person_name = $data['personName'];
-                $detail->person_title = $data['personTitle'];
-                $detail->place_name = $data['placeName'];
-                $detail->time_int = strtotime($data['date']);
-                $detail->time = date('H:i:s', strtotime($data['date']));
-                $detail->check_date = date('Y-m-d', time());
-                $detail->partner_id = $data['id'];
-
-                $detail->save();
-
-            }
-
-        }
-    }
 
     public function getDetailTimeKeepingUser(array $filters)
     {
@@ -430,14 +394,10 @@ class TimeKeepingService
             }
 
             $nowWar1_3 = $timeNow['total'] * 1;
-            //$nowWar1_3 = strtotime($filters['end_date']);
             $nowWar1 = $timeNow['total'] * 2;
-            //$nowWar1 = time();
             $nowWar2 = $timeNow['total'] * 3;
-            //$nowWar2 = date('d-m-Y', strtotime($filters['end_date']));
             $nowWar3 = $timeNow['total'] * 4;
-            //$nowWar3 = (time() - strtotime($filters['end_date']));
-
+           
             $range = $timeNow['range'];
 
             $keyArr = array_keys($range);
@@ -535,9 +495,6 @@ class TimeKeepingService
                     }
 
                     $totalHourEfforts = (($timeGoEarly + $timeAboutLate) - ($timeGoLate + $timeAboutEarly))/3600;
-                    //if ($user->date_official) {
-                    //    $totalWorkDate = $this ->timeTotal($user->date_official, date('Y-m-d', time()))['total'];
-                    //}
 
                     $currentWar = '';
                     $nextWar = '';
@@ -600,13 +557,8 @@ class TimeKeepingService
                                 $timeIncreaseWar = $expectedWar3 - $totalHourEfforts;
                             }
                         }
-
-                        //$totalUnpaidLeave = count($range) - count($user->timeKeeping);
                         $avgTimeHoldWar = $timeHoldWar/$timeRange;
                         $avgTimeIncreaseWar = $timeIncreaseWar/$timeRange;
-                        //$avgTimeHoldWar = $timeHoldWar/( $timeExpected['total'] - $timeNow['total']);
-                        //$avgTimeIncreaseWar = $timeIncreaseWar/( $timeExpected['total'] - $timeNow['total']);
-
                     } else{
                         if($totalWorkDate > $EmployeeLongtime ){
                             if($totalWorkDate > $EmployeeLongtime && $totalHourEfforts < $nowWar1_3) {
@@ -664,9 +616,6 @@ class TimeKeepingService
                         'totalWorkDateY' => $totalWorkDate->y,
                         'totalWorkDateM' => $totalWorkDate->m,
                         'totalWorkDateD' => $totalWorkDate->d,
-                        //'totalWorkDateY' => intval($totalWorkDate/365),
-                        //'totalWorkDateM' => intval(($totalWorkDate-(intval($totalWorkDate/365)*365))/30),
-                        //'totalWorkDateD' => intval(($totalWorkDate-(intval($totalWorkDate/365)*365))-intval(($totalWorkDate-(intval($totalWorkDate/365)*365))/30)*30),
                         'totalGoLate' => $totalGoLate,
                         'timeGoLate' => round($timeGoLate/3600, 2),
                         'totalGoEarly' => $totalGoEarly,
@@ -722,10 +671,6 @@ class TimeKeepingService
                         'fullname' => $user->fullname,
                         'id' => $user->id,
                         'date_official' => $user->date_official,
-                        //'totalWorkDate' => $totalWorkDate = $this ->timeTotal($user->date_official, date('Y-m-d', time()))['total'],
-                        //'totalWorkDateY' => intval($totalWorkDate/365),
-                        //'totalWorkDateM' => intval(($totalWorkDate-(intval($totalWorkDate/365)*365))/30),
-                        //'totalWorkDateD' => intval(($totalWorkDate-(intval($totalWorkDate/365)*365))-intval(($totalWorkDate-(intval($totalWorkDate/365)*365))/30)*30),
                         'wage_now' => $user->wage_now,
                         'totalGoLate' => 0,
                         'timeGoLate' => 0,
@@ -1444,42 +1389,7 @@ class TimeKeepingService
             'range' => $dateRange
         ];
     }
-    /**
-     * private function timeReport2(string $start_date, string $end_date): array
-    {
-        $period = new DatePeriod(
-            new DateTime($start_date),
-            new DateInterval('P1D'),
-            new DateTime($end_date)
-        );
-
-        $totalDate = 0;
-        $dateRange = [];
-
-        foreach ($period as $key => $value) {
-
-            $day = $value->format('Y-m-d');
-            $dateRange[$day] = $day;
-            $dayLabel = lcfirst(date('l', strtotime($day)));
-            $dateRange[$day] = $dayLabel;
-
-            switch ($dayLabel) {
-                case 'monday':
-                case 'tuesday':
-                case 'wednesday':
-                case 'thursday':
-                case 'friday':
-                case 'saturday' :
-                    $totalDate++;
-                    break;
-            }
-        }
-
-        return [
-            'total' => $totalDate,
-            'range' => $dateRange
-        ];
-    }*/
+   
     private function timeTotal(string $start_date, string $end_date): array
     {
         $period = new DatePeriod(

@@ -28,6 +28,6 @@ class Petition extends Model
 
     public function user()
     {
-        return $this->hasOne('App\Models\User', 'id', 'user_id', 'user_fullname');
+        return $this->hasOne('App\Models\User', 'id', 'user_id');
     }
 }
