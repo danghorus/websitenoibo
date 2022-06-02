@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Services\TimeKeepingService;
 
 use App\Models\Petition;
 use App\Models\User;
@@ -10,6 +11,17 @@ use Illuminate\Http\Request;
 
 class PetitionController extends Controller
 {
+     /**
+     * @var TimeKeepingService
+     */
+    private $timeKeepingService;
+
+    public function __construct(
+        TimeKeepingService $timeKeepingService
+    )
+    {
+        $this->timeKeepingService = $timeKeepingService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -43,8 +55,7 @@ class PetitionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_fullname' => 'required',
-            'petition_reason' => 'required',
+            'reason' => 'required',
 
         ]);
 
@@ -113,6 +124,18 @@ class PetitionController extends Controller
 
         return redirect()->route('petitions.index', compact('users'))
                         ->with('success','Petition deleted successfully');
+    }
+
+    public function petition(Request $request)
+    {
+        $data = $request->all();
+
+        $result = $this->timeKeepingService->petition($data);
+
+        return [
+            'code' => 200,
+        ];
+
     }
 
 }

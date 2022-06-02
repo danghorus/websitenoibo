@@ -3,7 +3,6 @@
 use App\Http\Controllers\Backend\ChangePasswordController;
 use App\Http\Controllers\Backend\PasswordController;
 use App\Http\Controllers\Backend\ChangeAvatarController;
-use App\Http\Controllers\Backend\ProjectController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\PetitionController;
 use Illuminate\Support\Facades\Route;
@@ -11,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\PartnerController;
 use App\Http\Controllers\Backend\TimeKeepingController;
 use App\Http\Controllers\Backend\WorkController;
+use App\Http\Controllers\Backend\ProjectController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -60,8 +61,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/time-keeping/detail', [TimeKeepingController::class, 'detail']);
     Route::post('/time-keeping/checkin', [TimeKeepingController::class, 'checkin']);
     Route::post('/time-keeping/update', [TimeKeepingController::class, 'update']);
+
+    Route::post('/time-keeping/petition', [TimeKeepingController::class, 'petition']);
+    Route::post('/petition/petition', [PetitionController::class, 'petition']);
+
     Route::get('/time-keeping/export', [TimeKeepingController::class, 'export']);
     Route::get('/time-keeping/get-report', [TimeKeepingController::class, 'getReport']);
+    Route::get('/time-keeping/get-wage', [TimeKeepingController::class, 'getWage']);
+    Route::get('/time-keeping/get-bonus', [TimeKeepingController::class, 'getBonus']);
 
     Route::get('time-keeping-report', [TimeKeepingController::class, 'report']);
 
@@ -70,7 +77,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('time-keeping-report/export', [TimeKeepingController::class, 'export_report']);
 
-    // Projects
+    //projects
     Route::get('projects', [ProjectController::class, 'index']);
 });
 

@@ -86,13 +86,13 @@
                                                 </tr>
                                                 </thead>
                                                 <?php $i=0;?>
-                                                @foreach ($petitions as $petition)
+                                                @foreach ($petitions as $petition )
                                                     <?php if( $petition->petition_status == 1) { ?>
                                                     <?php if( Auth::user()->permission == 0 && Auth::user()->fullname == $petition->user_fullname) { ?>
                                                 <tbody style="text-align: center;">
                                                     <tr>
                                                         <td>{{ ++$i }}</td>
-                                                        <td>{{ $petition->id }}</td>
+                                                        <td>{{ $user->id }}</td>
                                                         <td>{{ $petition->user_fullname }}</td>
                                                         <td>
                                                             <?php
@@ -113,28 +113,38 @@
                                                         </td>
                                                         <td>
                                                             <?php
+                                                            $check_date = date("d-m-Y", strtotime($petition->check_date));
+                                                            $checkin = date("H:i", strtotime($petition->checkin));
                                                             if ($petition->petition_type == 3) {
-                                                                echo $petition->date_from;
+                                                                echo $check_date;
                                                             } else{
-                                                                echo $petition->time_from." - ".$petition->date_from;
+                                                                echo $checkin." ngày ".$check_date;
                                                             }
                                                             ?>
                                                         </td>
                                                         <td>
                                                             <?php
-                                                            $t= $petition->date_to;
+                                                            $check_date = date("d-m-Y", strtotime($petition->check_date));
+                                                            $date_to = date("d-m-Y", strtotime($petition->date_to));
+                                                            $checkout = date("H:i", strtotime($petition->checkout));
                                                             if ($petition->petition_type == 3) {
-                                                                echo $petition->date_from;
-                                                            } else if($t != null){
-                                                                echo $petition->time_to." - ".$petition->date_to;
+                                                                echo $check_date;
+                                                            } else if($petition->date_to != null){
+                                                                echo $checkout." ngày ".$date_to;
                                                             }
                                                             else{
-                                                                echo $petition->time_to." - ".$petition->date_from;
+                                                                echo $checkout." ngày ".$check_date;
                                                             }
                                                             ?>
                                                         </td>
                                                         <td>{{ $petition->petition_reason }}</td>
-                                                        <td>{{ $petition->created_at }}</td>
+                                                        <td>
+                                                            <?php
+                                                            $date_created_at_d = date("d-m-Y", strtotime($petition->created_at ));
+                                                            $date_created_at_t = date("H:i:s", strtotime($petition->created_at ));
+                                                            echo  $date_created_at_t." ngày ".$date_created_at_d;
+                                                            ?>
+                                                        </td>
                                                         <td style="text-align: center;">
                                                             <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
                                                             </form>
@@ -152,7 +162,15 @@
                                                 <tr>
                                                     <td>{{ ++$i }}</td>
                                                     <td>{{ $petition->id }}</td>
-                                                    <td>{{ $petition->user_fullname }}</td>
+                                                    <td>
+                                                        @foreach($users as $user)
+                                                            <?php if($petition->user_id == $user->id){
+                                                                $petition->user_fullname == $user->fullname;
+                                                                echo $petition->user_fullname;
+                                                            } 
+                                                            ?>
+                                                        @endforeach
+                                                    </td>
                                                     <td>
                                                         <?php
                                                         if($petition->petition_type == 1){
@@ -172,28 +190,38 @@
                                                     </td>
                                                     <td>
                                                         <?php
+                                                        $check_date = date("d-m-Y", strtotime($petition->check_date));
+                                                        $checkin = date("H:i", strtotime($petition->checkin));
                                                         if ($petition->petition_type == 3) {
-                                                            echo $petition->date_from;
+                                                            echo $check_date;
                                                         } else{
-                                                            echo $petition->time_from." - ".$petition->date_from;
+                                                            echo $checkin." ngày ".$check_date;
                                                         }
                                                         ?>
                                                     </td>
                                                     <td>
                                                         <?php
-                                                        $t= $petition->date_to;
+                                                        $check_date = date("d-m-Y", strtotime($petition->check_date));
+                                                        $date_to = date("d-m-Y", strtotime($petition->date_to));
+                                                        $checkout = date("H:i", strtotime($petition->checkout));
                                                         if ($petition->petition_type == 3) {
-                                                            echo $petition->date_from;
-                                                        } else if($t != null){
-                                                            echo $petition->time_to." - ".$petition->date_to;
+                                                            echo $check_date;
+                                                        } else if($petition->date_to != null){
+                                                            echo $checkout." ngày ".$date_to;
                                                         }
                                                         else{
-                                                            echo $petition->time_to." - ".$petition->date_from;
+                                                            echo $checkout." ngày ".$check_date;
                                                         }
                                                         ?>
                                                     </td>
-                                                    <td>{{ $petition->petition_reason }}</td>
-                                                    <td>{{ $petition->created_at }}</td>
+                                                    <td>{{ $petition->reason }}</td>
+                                                    <td>
+                                                        <?php
+                                                        $date_created_at_d = date("d-m-Y", strtotime($petition->created_at ));
+                                                        $date_created_at_t = date("H:i:s", strtotime($petition->created_at ));
+                                                        echo  $date_created_at_t." ngày ".$date_created_at_d;
+                                                        ?>
+                                                    </td>
                                                     <td style="text-align: center;">
                                                         <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px;">
                                                             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -281,28 +309,38 @@
                                                     </td>
                                                     <td>
                                                         <?php
+                                                        $check_date = date("d-m-Y", strtotime($petition->check_date));
+                                                        $checkin = date("H:i", strtotime($petition->checkin));
                                                         if ($petition->petition_type == 3) {
-                                                            echo $petition->date_from;
+                                                            echo $check_date;
                                                         } else{
-                                                            echo $petition->time_from." - ".$petition->date_from;
+                                                            echo $checkin." ngày ".$check_date;
                                                         }
                                                         ?>
                                                     </td>
                                                     <td>
                                                         <?php
-                                                        $t= $petition->date_to;
+                                                        $check_date = date("d-m-Y", strtotime($petition->check_date));
+                                                        $date_to = date("d-m-Y", strtotime($petition->date_to));
+                                                        $checkout = date("H:i", strtotime($petition->checkout));
                                                         if ($petition->petition_type == 3) {
-                                                            echo $petition->date_from;
-                                                        } else if($t != null){
-                                                            echo $petition->time_to." - ".$petition->date_to;
+                                                            echo $check_date;
+                                                        } else if($petition->date_to != null){
+                                                            echo $checkout." ngày ".$date_to;
                                                         }
                                                         else{
-                                                            echo $petition->time_to." - ".$petition->date_from;
+                                                            echo $checkout." ngày ".$check_date;
                                                         }
                                                         ?>
                                                     </td>
                                                     <td>{{ $petition->petition_reason }}</td>
-                                                    <td>{{ $petition->created_at }}</td>
+                                                    <td>
+                                                        <?php
+                                                        $date_created_at_d = date("d-m-Y", strtotime($petition->created_at ));
+                                                        $date_created_at_t = date("H:i:s", strtotime($petition->created_at ));
+                                                        echo  $date_created_at_t." ngày ".$date_created_at_d;
+                                                        ?>
+                                                    </td>
                                                     <td style="text-align: center;">
                                                         <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
                                                         </form>
@@ -341,28 +379,38 @@
                                                     </td>
                                                     <td>
                                                         <?php
+                                                        $check_date = date("d-m-Y", strtotime($petition->check_date));
+                                                        $checkin = date("H:i", strtotime($petition->checkin));
                                                         if ($petition->petition_type == 3) {
-                                                            echo $petition->date_from;
+                                                            echo $check_date;
                                                         } else{
-                                                            echo $petition->time_from." - ".$petition->date_from;
+                                                            echo $checkin." ngày ".$check_date;
                                                         }
                                                         ?>
                                                     </td>
                                                     <td>
                                                         <?php
-                                                        $t= $petition->date_to;
+                                                        $check_date = date("d-m-Y", strtotime($petition->check_date));
+                                                        $date_to = date("d-m-Y", strtotime($petition->date_to));
+                                                        $checkout = date("H:i", strtotime($petition->checkout));
                                                         if ($petition->petition_type == 3) {
-                                                            echo $petition->date_from;
-                                                        } else if($t != null){
-                                                            echo $petition->time_to." - ".$petition->date_to;
+                                                            echo $check_date;
+                                                        } else if($petition->date_to != null){
+                                                            echo $checkout." ngày ".$date_to;
                                                         }
                                                         else{
-                                                            echo $petition->time_to." - ".$petition->date_from;
+                                                            echo $checkout." ngày ".$check_date;
                                                         }
                                                         ?>
                                                     </td>
                                                     <td>{{ $petition->petition_reason }}</td>
-                                                    <td>{{ $petition->created_at }}</td>
+                                                    <td>
+                                                        <?php
+                                                        $date_created_at_d = date("d-m-Y", strtotime($petition->created_at ));
+                                                        $date_created_at_t = date("H:i:s", strtotime($petition->created_at ));
+                                                        echo  $date_created_at_t." ngày ".$date_created_at_d;
+                                                        ?>
+                                                    </td>
                                                     <td style="text-align: center;">
                                                         <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
                                                         </form>
@@ -425,28 +473,38 @@
                                                     </td>
                                                     <td>
                                                         <?php
+                                                        $check_date = date("d-m-Y", strtotime($petition->check_date));
+                                                        $checkin = date("H:i", strtotime($petition->checkin));
                                                         if ($petition->petition_type == 3) {
-                                                            echo $petition->date_from;
+                                                            echo $check_date;
                                                         } else{
-                                                            echo $petition->time_from." - ".$petition->date_from;
+                                                            echo $checkin." ngày ".$check_date;
                                                         }
                                                         ?>
                                                     </td>
                                                     <td>
                                                         <?php
-                                                        $t= $petition->date_to;
+                                                        $check_date = date("d-m-Y", strtotime($petition->check_date));
+                                                        $date_to = date("d-m-Y", strtotime($petition->date_to));
+                                                        $checkout = date("H:i", strtotime($petition->checkout));
                                                         if ($petition->petition_type == 3) {
-                                                            echo $petition->date_from;
-                                                        } else if($t != null){
-                                                            echo $petition->time_to." - ".$petition->date_to;
+                                                            echo $check_date;
+                                                        } else if($petition->date_to != null){
+                                                            echo $checkout." ngày ".$date_to;
                                                         }
                                                         else{
-                                                            echo $petition->time_to." - ".$petition->date_from;
+                                                            echo $checkout." ngày ".$check_date;
                                                         }
                                                         ?>
                                                     </td>
                                                     <td>{{ $petition->petition_reason }}</td>
-                                                    <td>{{ $petition->created_at }}</td>
+                                                    <td>
+                                                        <?php
+                                                        $date_created_at_d = date("d-m-Y", strtotime($petition->created_at ));
+                                                        $date_created_at_t = date("H:i:s", strtotime($petition->created_at ));
+                                                        echo  $date_created_at_t." ngày ".$date_created_at_d;
+                                                        ?>
+                                                    </td>
                                                     <td style="text-align: center;">
                                                         <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
                                                         </form>
@@ -485,28 +543,38 @@
                                                     </td>
                                                     <td>
                                                         <?php
+                                                        $check_date = date("d-m-Y", strtotime($petition->check_date));
+                                                        $checkin = date("H:i", strtotime($petition->checkin));
                                                         if ($petition->petition_type == 3) {
-                                                            echo $petition->date_from;
+                                                            echo $check_date;
                                                         } else{
-                                                            echo $petition->time_from." - ".$petition->date_from;
+                                                            echo $checkin." ngày ".$check_date;
                                                         }
                                                         ?>
                                                     </td>
                                                     <td>
-                                                    <?php
-                                                            $t= $petition->date_to;
-                                                            if ($petition->petition_type == 3) {
-                                                                echo $petition->date_from;
-                                                            } else if($t != null){
-                                                                echo $petition->time_to." - ".$petition->date_to;
-                                                            }
-                                                            else{
-                                                                echo $petition->time_to." - ".$petition->date_from;
-                                                            }
-                                                            ?>
+                                                        <?php
+                                                        $check_date = date("d-m-Y", strtotime($petition->check_date));
+                                                        $date_to = date("d-m-Y", strtotime($petition->date_to));
+                                                        $checkout = date("H:i", strtotime($petition->checkout));
+                                                        if ($petition->petition_type == 3) {
+                                                            echo $check_date;
+                                                        } else if($petition->date_to != null){
+                                                            echo $checkout." ngày ".$date_to;
+                                                        }
+                                                        else{
+                                                            echo $checkout." ngày ".$check_date;
+                                                        }
+                                                        ?>
                                                     </td>
                                                     <td>{{ $petition->petition_reason }}</td>
-                                                    <td>{{ $petition->created_at }}</td>
+                                                    <td>
+                                                        <?php
+                                                        $date_created_at_d = date("d-m-Y", strtotime($petition->created_at ));
+                                                        $date_created_at_t = date("H:i:s", strtotime($petition->created_at ));
+                                                        echo  $date_created_at_t." ngày ".$date_created_at_d;
+                                                        ?>
+                                                    </td>
                                                     <td style="text-align: center;">
                                                         <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
                                                         </form>

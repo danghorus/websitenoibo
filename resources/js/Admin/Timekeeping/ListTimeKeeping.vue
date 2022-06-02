@@ -66,7 +66,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <ModalDetailTimeKeepingInDay v-if="showDetail" :userId="userId" :time="time" />
+                            <ModalDetailTimeKeepingInDay v-if="showDetail" :userId="userId" :time="time" :user_fullname="userFullname" />
                         </div>
 
                     </div>

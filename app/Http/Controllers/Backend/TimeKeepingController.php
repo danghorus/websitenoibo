@@ -93,7 +93,7 @@ class TimeKeepingController extends Controller
         $result = $this->timeKeepingService->update($data);
 
         return [
-            'code' => 200
+            'code' => 200,
         ];
 
     }
@@ -135,5 +135,29 @@ class TimeKeepingController extends Controller
         $data = $this->timeKeepingService->getAllTimeKeeping($filters);
 
         return Excel::download(new TimeKeepingExport($data), 'timekeeping.xlsx');
+    }
+
+    public function getWage(Request $request)
+    {
+        $filters = $request->all();
+
+        $data = $this->timeKeepingService->wage($filters);
+
+        return [
+            'code' => 200,
+            'data' => $data
+        ];
+    }
+
+    public function getBonus(Request $request)
+    {
+        $filters = $request->all();
+
+        $data = $this->timeKeepingService->bonus($filters);
+
+        return [
+            'code' => 200,
+            'data' => $data
+        ];
     }
 }

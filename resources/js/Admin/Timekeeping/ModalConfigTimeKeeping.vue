@@ -21,6 +21,7 @@
                             v-model="settings.monday.start_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -28,6 +29,7 @@
                             v-model="settings.monday.end_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -40,6 +42,7 @@
                             v-model="settings.tuesday.start_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -47,6 +50,7 @@
                             v-model="settings.tuesday.end_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -59,6 +63,7 @@
                             v-model="settings.wednesday.start_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -66,6 +71,7 @@
                             v-model="settings.wednesday.end_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -78,6 +84,7 @@
                             v-model="settings.thursday.start_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -85,6 +92,7 @@
                             v-model="settings.thursday.end_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -97,6 +105,7 @@
                             v-model="settings.friday.start_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -104,6 +113,7 @@
                             v-model="settings.friday.end_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -116,6 +126,7 @@
                             v-model="settings.saturday.start_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -123,6 +134,7 @@
                             v-model="settings.saturday.end_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -135,6 +147,7 @@
                             v-model="settings.sunday.start_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>
@@ -142,6 +155,7 @@
                             v-model="settings.sunday.end_time"
                             value-type="format"
                             type="time"
+                            format="HH:mm"
                             placeholder="Select time"
                             @change="handleChange"
                         ></DatePicker>

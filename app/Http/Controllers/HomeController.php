@@ -26,11 +26,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::where('user_status', 1)->get() ;
         $works = Work::all();
-        $petitions = Petition::all();
+        $petitions = Petition::where('petition_status', 1)->get();
 
         return view('home', compact('users', 'works', 'petitions'));
     }
-    
+
 }

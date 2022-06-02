@@ -13,18 +13,19 @@ class CreatePetitionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('petitions', function (Blueprint $table) { 
-            $table->id(); 
-            $table->string('user_fullname'); 
-            $table->string('petition_type'); 
-            $table->time('time_from'); 
-            $table->date('date_from'); 
-            $table->time('time_to'); 
-            $table->date('date_to'); 
-            $table->string('type_leave'); 
-            $table->string('petition_reason'); 
-            $table->string('petition_status'); 
-            $table->timestamps(); 
+        Schema::create('petitions', function (Blueprint $table) {
+            $table->id();
+            $table->string('user_fullname');
+             $table->string('user_id');
+            $table->string('petition_type');
+            $table->time('checkin');
+            $table->date('check_date');
+            $table->time('checkout');
+            $table->date('date_to');
+            $table->string('type_leave');
+            $table->string('reason');
+            $table->string('petition_status');
+            $table->timestamps();
         });
     }
 

@@ -1,36 +1,64 @@
 <template>
     <div>
         <div>
-            <div>
-                <p @click="updateCheckin()">Checkin:
-                    <span v-if="!showUpdateCheckIn">{{ user && user.checkin? user.checkin: '--:--:--' }}</span>
-                    <DatePicker
-                        v-else
-                        v-model="checkin"
-                        value-type="format"
-                        type="time"
-                        placeholder="Select time"
-                    ></DatePicker>
-                </p>
-                <p @click="updateCheckout()">Checkout:
-                    <span v-if="!showUpdateCheckOut">{{ user && user.checkout? user.checkout: '--:--:--' }}</span>
-                    <DatePicker
-                        v-else
-                        v-model="checkout"
-                        value-type="format"
-                        type="time"
-                        placeholder="Select time"
-                    ></DatePicker>
-                </p>
-                <p>Lý do:
-                    <span v-if="!showUpdateReason">{{ user && user.reason }}</span>
-                    <textarea v-else v-model="reason" ></textarea>
-                </p>
-                <div v-if="showUpdateCheckIn || showUpdateCheckOut" class="mb-3">
-                    <button class="btn btn-primary" @click="update()">Cập nhật</button>
-                    <button class="btn btn-default" @click="close()">Đóng</button>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px;">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto" style="font-size:16px;" id="">
+                        <p style="padding-right: 110px">Checkin: {{ user && user.checkin? user.checkin: '--:--:--' }}</p>
+                        <p @click="updateCheckin()">Thay đổi Checkin:
+                            <span v-if="!showUpdateCheckIn" >{{ user && user.checkin? user.checkin: '--:--:--' }}</span>
+                            <DatePicker
+                                v-else
+                                v-model="checkin"
+                                value-type="format"
+                                type="time"
+                                format="HH:mm"
+                                placeholder="Select time"
+                            ></DatePicker>
+                        </p>
+                    </ul>
                 </div>
-            </div>
+            </nav>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px;">
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav mr-auto" style="font-size:16px;">
+                        <p style="padding-right: 100px">Checkout: {{ user && user.checkout? user.checkout: '--:--:--' }}</p>
+                        <p @click="updateCheckout()" >Thay đổi Checkout:
+                            <span v-if="!showUpdateCheckOut">{{ user && user.checkout? user.checkout: '--:--:--' }}</span>
+                            <DatePicker
+                                v-else
+                                v-model="checkout"
+                                value-type="format"
+                                type="time"
+                                format="HH:mm"
+                                placeholder="Select time"
+                            ></DatePicker>
+                        </p>
+                    </ul>
+                </div>
+            </nav>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px;">
+                <div class="collapse navbar-collapse" >
+                    <ul class="navbar-nav mr-auto" style="font-size:16px;">
+                        <li>
+                            <p>Lý do:
+                                <span v-if="!showUpdateReason"></span>
+                                <textarea v-else v-model="reason" style="width: 525px"></textarea>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px;">
+                <div class="collapse navbar-collapse" >
+                    <ul class="navbar-nav mr-auto" style="font-size:16px;">
+                        <div v-if="showUpdateCheckIn || showUpdateCheckOut" class="mb-3">
+                            <button class="btn btn-primary" @click="petition()">Tạo yêu cầu</button>
+                            <button class="btn btn-default" @click="close()">Đóng</button>
+                        </div>
+                    </ul>
+                </div>
+            </nav>
         </div>
         <table class="table">
             <thead>
@@ -67,7 +95,7 @@ import {$get, $post} from "../../ultis";
 export default {
     name: "ModalDetailTimeKeepingInDay",
     components: {DatePicker},
-    props: ['userId', 'time'],
+    props: ['userId','userFullname', 'time'],
     data() {
         return {
             showUpdateCheckIn: false,
@@ -88,6 +116,7 @@ export default {
         async getTimeKeepingInfo() {
             let params = {
                 user_id: this.userId,
+                user_fullname: this.userFullname,
                 date: this.time.day
             };
 
@@ -99,6 +128,7 @@ export default {
         async getInfo() {
             let params = {
                 user_id: this.userId,
+                user_fullname: this.userFullname,
                 date: this.time.day
             };
 
@@ -110,18 +140,19 @@ export default {
                 }
             }
         },
-        async update() {
+        async petition() {
             let data = {
                 checkin: this.checkin,
                 checkout: this.checkout,
                 reason: this.reason,
                 user_id: this.userId,
+                user_fullname: this.userFullname,
                 date: this.time.day
             }
 
-            const res = await $post('/time-keeping/update', {...data});
+            const res = await $post('/petition/petition', {...data});
             if (res.code == 200) {
-                toastr.success('Cập nhật thành công');
+                toastr.success('Tạo yêu cầu thành công!');
                 this.getTimeKeepingInfo();
                 this.close();
             }

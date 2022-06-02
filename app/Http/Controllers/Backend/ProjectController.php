@@ -10,6 +10,7 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
-        return view('projects.index');
+        $users = User::all();
+        return view('projects.index', compact('users'));
     }
 }
