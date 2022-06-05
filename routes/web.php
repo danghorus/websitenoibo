@@ -38,9 +38,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('users/{user}/change-password', [ChangePasswordController::class, 'change_password'])->name('users.change.password');
     Route::post('users/{user}/change-avatar', [ChangeAvatarController::class, 'change_avatar'])->name('users.change.avatar');
+    Route::get('user/all_user', [UserController::class, 'all_user']);
 
     Route::get('change_password', [PasswordController::class, 'index']);
     Route::post('change_password', [PasswordController::class, 'changePassword'])->name('change.password');
+
+    //Petition
+    Route::post('/petition/create_petition_time_keeping', [PetitionController::class, 'create_petition_time_keeping']);
 
     Route::post('/partner/connect', [PartnerController::class, 'connect']);
     Route::get('/partner/get_devices', [PartnerController::class, 'getDevices']);
@@ -54,6 +58,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/partner/update_config', [PartnerController::class, 'updateConfig']);
     Route::get('/partner/disconnect', [PartnerController::class, 'disconnect']);
     Route::get('/partner/sync_users', [PartnerController::class, 'syncUsers']);
+    Route::get('/partner/get-sync-timekeeping', [PartnerController::class, 'getSyncTimekeeping']);
 
     Route::get('time-keeping', [TimeKeepingController::class, 'index']);
     Route::get('/time-keeping/get', [TimeKeepingController::class, 'get']);

@@ -143,7 +143,7 @@ class TimeKeepingService
         }
 
         $currentUser = Auth::user();
-       
+
 
         $showBtn = '';
 
@@ -245,6 +245,7 @@ class TimeKeepingService
                 $detail->time = date('H:i:s', strtotime($data['date']));
                 $detail->check_date = date('Y-m-d', time());
                 $detail->partner_id = $data['id'];
+                $detail->obj_data = json_encode($data);
 
                 $detail->save();
 
@@ -265,7 +266,7 @@ class TimeKeepingService
                         $timeKeeping = new TimeKeeping();
                         $timeKeeping->checkin = date('H:i:s', strtotime($data['date']));
                         $timeKeeping->user_id = $user->id;
-                        $timeKeeping->check_date = date('H:i:s', strtotime($data['date']));
+                        $timeKeeping->check_date = date('Y-m-d', strtotime($data['date']));
                         $timeKeeping->check_type = 1;
                     }
                 } else if ($type == 2) {
@@ -275,7 +276,7 @@ class TimeKeepingService
                         $timeKeeping = new TimeKeeping();
                         $timeKeeping->checkout = date('H:i:s', strtotime($data['date']));
                         $timeKeeping->user_id = $user->id;
-                        $timeKeeping->check_date = date('H:i:s', strtotime($data['date']));
+                        $timeKeeping->check_date = date('Y-m-d', strtotime($data['date']));
                         $timeKeeping->check_type = 1;
                     }
                 }
@@ -339,7 +340,7 @@ class TimeKeepingService
         return true;
     }
 
-    
+
     public function petition(array $data)
     {
         $timeKeeping = Petition::query()
@@ -397,7 +398,7 @@ class TimeKeepingService
             $nowWar1 = $timeNow['total'] * 2;
             $nowWar2 = $timeNow['total'] * 3;
             $nowWar3 = $timeNow['total'] * 4;
-           
+
             $range = $timeNow['range'];
 
             $keyArr = array_keys($range);
@@ -1389,7 +1390,7 @@ class TimeKeepingService
             'range' => $dateRange
         ];
     }
-   
+
     private function timeTotal(string $start_date, string $end_date): array
     {
         $period = new DatePeriod(

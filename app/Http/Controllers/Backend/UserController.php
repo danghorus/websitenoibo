@@ -140,4 +140,14 @@ class UserController extends Controller
         $user->delete();
         return redirect()->route('users.index')->with('message', 'User Deleted Succesfully');
     }
+
+    public function all_user()
+    {
+        $users = User::query()->select(['id', 'fullname', 'user_code', 'place_id'])->get();
+
+        return [
+            'code' => 200,
+            'data' => $users
+        ];
+    }
 }

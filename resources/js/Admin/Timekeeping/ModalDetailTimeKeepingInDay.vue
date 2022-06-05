@@ -52,6 +52,7 @@
                     <ul class="navbar-nav mr-auto" style="font-size:16px;">
                         <div v-if="showUpdateCheckIn || showUpdateCheckOut" class="mb-3">
                             <button class="btn btn-primary" @click="petition()">Tạo yêu cầu</button>
+                            <button class="btn btn-primary" v-if="currentUser && currentUser.permission == 1" @click="update()">Cập nhật</button>
                             <button class="btn btn-default" @click="close()">Đóng</button>
                         </div>
                     </ul>
@@ -93,17 +94,19 @@ import {$get, $post} from "../../ultis";
 export default {
     name: "ModalDetailTimeKeepingInDay",
     components: {DatePicker},
-    props: ['userId','userFullname', 'time'],
+    props: ['userId', 'time'],
     data() {
         return {
             showUpdateCheckIn: false,
             showUpdateCheckOut: false,
             showUpdateReason: false,
             data: [],
-            user: [],
+            user: {},
             checkin: '',
             checkout: '',
             reason: '',
+            fullname: '',
+            currentUser: {}
         };
     },
     created() {
@@ -114,7 +117,6 @@ export default {
         async getTimeKeepingInfo() {
             let params = {
                 user_id: this.userId,
-                user_fullname: this.userFullname,
                 date: this.time.day
             };
 
@@ -126,13 +128,14 @@ export default {
         async getInfo() {
             let params = {
                 user_id: this.userId,
-                user_fullname: this.userFullname,
                 date: this.time.day
             };
 
             const res = await $get('/time-keeping/detail', {...params});
             if (res.code == 200) {
                 let user = res.data;
+                this.currentUser = res.currentUser;
+                this.fullname = res.data.fullname;
                 if (user.time_keeping_detail) {
                     this.data = user.time_keeping_detail;
                 }
@@ -144,13 +147,29 @@ export default {
                 checkout: this.checkout,
                 reason: this.reason,
                 user_id: this.userId,
-                user_fullname: this.userFullname,
+                user_fullname: this.fullname,
                 date: this.time.day
             }
 
-            const res = await $post('/petition/petition', {...data});
+            const res = await $post('/petition/create_petition_time_keeping', {...data});
             if (res.code == 200) {
                 toastr.success('Tạo yêu cầu thành công!');
+                this.getTimeKeepingInfo();
+                this.close();
+            }
+        },
+        async update() {
+            let data = {
+                checkin: this.checkin,
+                checkout: this.checkout,
+                reason: this.reason,
+                user_id: this.userId,
+                date: this.time.day
+            }
+
+            const res = await $post('/time-keeping/update', {...data});
+            if (res.code == 200) {
+                toastr.success('Cập nhật thành công');
                 this.getTimeKeepingInfo();
                 this.close();
             }

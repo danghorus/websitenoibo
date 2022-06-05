@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Services\PetitionService;
 use App\Services\TimeKeepingService;
 
 use App\Models\Petition;
@@ -15,12 +16,15 @@ class PetitionController extends Controller
      * @var TimeKeepingService
      */
     private $timeKeepingService;
+    private PetitionService $petitionService;
 
     public function __construct(
-        TimeKeepingService $timeKeepingService
+        TimeKeepingService $timeKeepingService,
+        PetitionService $petitionService
     )
     {
         $this->timeKeepingService = $timeKeepingService;
+        $this->petitionService = $petitionService;
     }
     /**
      * Display a listing of the resource.
@@ -55,8 +59,8 @@ class PetitionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'reason' => 'required',
-
+            'user_fullname' => 'required',
+            'petition_reason' => 'required',
         ]);
 
         Petition::create($request->all());
@@ -100,10 +104,21 @@ class PetitionController extends Controller
      */
     public function update(Request $request, Petition $petition)
     {
-
         $petition -> update([
             'petition_status' => $request->petition_status,
         ]);
+
+        if ($petition->petition_type == 4 && $request->petition_status == 2) {
+            $dataUpdate = [];
+            $dataUpdate['user_id'] = $petition->user_id;
+            $dataUpdate['date'] = $petition->date_from;
+            $dataUpdate['reason'] = $petition->petition_reason;
+            $dataUpdate['checkin'] = $petition->time_from;
+            $dataUpdate['checkout'] = $petition->time_to;
+
+            $this->timeKeepingService->update($dataUpdate);
+        }
+
         $users = User::all();
 
 
@@ -136,6 +151,28 @@ class PetitionController extends Controller
             'code' => 200,
         ];
 
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function create_petition_time_keeping(Request $request) {
+        $request->validate([
+            'user_id' => 'required',
+            'user_fullname' => 'required|string',
+            'reason' => 'required'
+        ]);
+
+        $isCreated = $this->petitionService->createPetition($request->all());
+
+        if ($isCreated) {
+            return [
+                'code' => 200
+            ];
+        }
+        return [
+            'code' => 400
+        ];
     }
 
 }

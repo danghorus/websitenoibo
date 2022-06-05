@@ -19,6 +19,7 @@ class TimeKeepingDetail extends Model
         'time',
         'check_date',
         'partner_id',
+        'obj_data',
     ];
 
     public function user()

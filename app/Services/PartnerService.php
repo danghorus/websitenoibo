@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\ConfigTimeKeeping;
 use App\Models\DeviceTimeKeeping;
 use App\Models\PartnerConfig;
+use App\Models\TimeKeeping;
+use App\Models\TimeKeepingDetail;
 use App\Models\User;
 use App\Repositories\DeviceTimeKeepingRepository;
 use App\Repositories\HanetRepository;
@@ -77,7 +79,7 @@ class PartnerService
 
 //        }
     }
-    
+
     public function getCheckinByPlaceIdInTimestamp()
     {
         $data = $this->deviceTimeKeepingRepository->getAll();
@@ -294,5 +296,107 @@ class PartnerService
         }
 
         return false;
+    }
+
+    public function getSyncTimekeeping(array $filters)
+    {
+        $from = strtotime($filters['start_date']. ' 00:00:00') * 1000;
+        $to = strtotime($filters['end_date']. ' 23:59:59') * 1000;
+
+        $partnerConfig = $this->partnerRepository->getOne('HANET');
+        $setting = $partnerConfig? $partnerConfig->setting: '';
+
+        if ($setting && $setting->access_token) {
+            $accessToken = $setting->access_token;
+            $users = explode(',', $filters['users']);
+
+            $device = DeviceTimeKeeping::query()->where('device_code', '=', $filters['device'])->first();
+
+            $type = $device ? $device->type: 0;
+
+            foreach ($users as $userCode) {
+                $user = User::query()->where('user_code', '=', $userCode)->first();
+
+                if ($user) {
+                    $data = $this->hanetRepository->getCheckinByPlaceIdInTimestamp($accessToken, $user->place_id, [$filters['device']], $from, $to, $userCode);
+
+                    if($data->returnCode == 1) {
+                        $currentDate = '';
+                        foreach ($data->data as $value) {
+                            if ($value->date != $currentDate) {
+                                $currentDate = $value->date;
+                                TimeKeeping::query()->where([
+                                    'user_id' => $user->id,
+                                    'check_date' => $value->date
+                                ])->delete();
+                                TimeKeepingDetail::query()->where([
+                                    'user_code' => $userCode,
+                                    'check_date' => $value->date
+                                ])->delete();
+                            }
+
+                            $detail = new TimeKeepingDetail();
+                            $detail->user_code = $value->aliasID;
+                            $detail->detected_image_url = $value->avatar;
+                            $detail->device_name = $value->deviceName;
+                            $detail->person_name = $value->personName;
+                            $detail->person_title = $value->title;
+                            $detail->place_name = $value->place;
+                            $detail->time_int = $value->checkinTime/1000;
+                            $detail->time = date('H:i:s', $value->checkinTime/1000);
+                            $detail->check_date = date('Y-m-d', $value->checkinTime/1000);
+//                            $detail->partner_id = $data['id'];
+                            $detail->obj_data = json_encode($value);
+
+                            $detail->save();
+
+                            $timeKeeping = TimeKeeping::query()
+                                ->where('check_date', '=', $value->date)
+                                ->where('user_id', '=', $user->id)
+                                ->first();
+
+                            if ($type == 0) {
+                                if ($timeKeeping) {
+                                    $timeKeeping->checkout = date('H:i:s', $value->checkinTime/1000);
+                                } else {
+                                    $timeKeeping = new TimeKeeping();
+                                    $timeKeeping->checkin = date('H:i:s', $value->checkinTime/1000);
+                                    $timeKeeping->user_id = $user->id;
+                                    $timeKeeping->check_date = $value->date;
+                                    $timeKeeping->check_type = 1;
+                                }
+                            } else if ($type == 1) {
+                                if ($timeKeeping) {
+                                    $timeKeeping->checkin = date('H:i:s', $value->checkinTime/1000);
+                                } else {
+                                    $timeKeeping = new TimeKeeping();
+                                    $timeKeeping->checkin = date('H:i:s', $value->checkinTime/1000);
+                                    $timeKeeping->user_id = $user->id;
+                                    $timeKeeping->check_date = date('Y-m-d', $value->checkinTime/1000);
+                                    $timeKeeping->check_type = 1;
+                                }
+                            } else if ($type == 2) {
+                                if ($timeKeeping) {
+                                    $timeKeeping->checkout = date('H:i:s', $value->checkinTime/1000);
+                                } else {
+                                    $timeKeeping = new TimeKeeping();
+                                    $timeKeeping->checkout = date('H:i:s', $value->checkinTime/1000);
+                                    $timeKeeping->user_id = $user->id;
+                                    $timeKeeping->check_date = date('Y-m-d', $value->checkinTime/1000);
+                                    $timeKeeping->check_type = 1;
+                                }
+                            }
+
+                            $timeKeeping->save();
+                        }
+                    }
+                }
+            }
+
+            return [
+                'code' => '200',
+                'message' => 'Đồng bộ thành công'
+            ];
+        }
     }
 }

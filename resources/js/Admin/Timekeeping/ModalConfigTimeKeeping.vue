@@ -2,23 +2,23 @@
     <div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="time-keeping-tab" data-toggle="tab" href="#time-keeping">
+                <a class="nav-link active" id="time-keeping-tab" data-toggle="tab" href="#time-keeping" @click="showTabTimeKeepingConfig()">
                     <span class="nav-text">Thời gian chấm công</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="connect-tab" data-toggle="tab" href="#connect" aria-controls="connect">
+                <a class="nav-link" id="connect-tab" data-toggle="tab" href="#connect" aria-controls="connect" @click="showTabConnect()">
                     <span class="nav-text">Kết nối Camera AI</span>
                 </a>
             </li>
              <li class="nav-item">
-                <a class="nav-link" id="connect-tab" data-toggle="tab" href="#sync-timekeeping" aria-controls="sync-timekeeping">
+                <a class="nav-link" id="sync-tab" data-toggle="tab" href="#sync" aria-controls="sync" @click="showTabSync()">
                     <span class="nav-text">Đồng bộ giờ công từ Hanet</span>
                 </a>
             </li>
         </ul>
         <div class="tab-content mt-5" id="myTabContent">
-            <div class="tab-pane fade show active" id="time-keeping" role="tabpanel" aria-labelledby="time-keeping-tab">
+            <div v-if="isShowTabTimeKeepingConfig" class="tab-pane fade show active" id="time-keeping" role="tabpanel" aria-labelledby="time-keeping-tab">
                 <div class="form-group">
                     <label>Thứ 2:</label>
                     <div class="row">
@@ -168,14 +168,45 @@
                 </div>
                 <button class="btn btn-primary" @click="saveConfig()">Lưu</button>
             </div>
-            <div class="tab-pane" id="connect" role="tabpanel" aria-labelledby="connect-tab">
+            <div v-if="isShowTabConnect" class="tab-pane" id="connect" role="tabpanel" aria-labelledby="connect-tab">
                 <setting-config-partner />
             </div>
-            <div class="tab-pane" id="sync-timekeeping" role="tabpanel" aria-labelledby="sync-timekeeping-tab">
-                <date-picker style="width:495px" v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian để lấy dữ liệu từ Hanet"></date-picker>
+            <div v-if="isShowTabSync" class="tab-pane" id="sync" role="tabpanel" aria-labelledby="sync-tab">
+                <div class="row mb-2">
+                    <div class="col-lg-6">
+                        <date-picker
+                            style="width:100%"
+                            v-model="dateRange"
+                            type="date"
+                            range
+                            placeholder="Vui lòng chọn khoảng thời gian để lấy dữ liệu từ Hanet">
+                        </date-picker>
+                    </div>
+                    <div class="col-lg-6">
+                        <multiselect
+                            v-model="values"
+                            :options="users"
+                            :multiple="true"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :preserve-search="true"
+                            placeholder="Vui lòng chọn"
+                            label="fullname"
+                            track-by="id"
+                        >
+                            <template slot="selection" slot-scope="{ values, search, isOpen }">
+                                <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">Đã chọn {{ values.length }} nhân viên</span>
+                            </template>
+                        </multiselect>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-6">
+                        <multiselect v-model="device" :options="devices" value="device_code" label="device_name" :close-on-select="false" :show-labels="true" placeholder="Pick a value">
+                        </multiselect>
+                    </div>
+                </div>
                 <button class="btn btn-primary" @click="getSyncTimekeeping()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Đồng bộ</button>
-                <br>
-                <br>
             </div>
         </div>
     </div>
@@ -185,11 +216,13 @@
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import SettingConfigPartner from "./SettingConfigPartner";
+import Multiselect from 'vue-multiselect'
 import {$get, $post} from "../../ultis";
+import moment from "moment";
 
 export default {
     name: "ModalConfigTimeKeeping",
-    components: {SettingConfigPartner, DatePicker},
+    components: {SettingConfigPartner, DatePicker, Multiselect},
     data() {
         return {
             dateRange: '',
@@ -224,7 +257,14 @@ export default {
                     start_time: '',
                     end_time: ''
                 },
-            }
+            },
+            users: [],
+            values: [],
+            isShowTabTimeKeepingConfig: true,
+            isShowTabConnect: false,
+            isShowTabSync: false,
+            devices: [],
+            device: ''
         };
     },
     created() {
@@ -258,8 +298,45 @@ export default {
             let params = {
                 start_date: this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : "",
                 end_date: this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : "",
+                users: this.values.map(val => val.user_code),
+                device: this.device.device_code
             }
-            const res = await $get('/time-keeping/get-sync-timekeeping', {...params});
+
+            const res = await $get('/partner/get-sync-timekeeping', {...params});
+
+            if (res.code === 200) {
+                toastr.success('Đồng bộ thành công');
+            }
+        },
+        async getAllUser() {
+            const res = await $get('/user/all_user');
+            if (res.code == 200) {
+                this.users = res.data;
+            }
+        },
+
+        async getDevices() {
+            const res = await $get('/partner/get_devices')
+            if (res.code === 200) {
+                this.devices = res.data;
+            }
+        },
+        showTabTimeKeepingConfig() {
+            this.isShowTabTimeKeepingConfig = true;
+            this.isShowTabConnect = false;
+            this.isShowTabSync = false;
+        },
+        showTabConnect() {
+            this.isShowTabTimeKeepingConfig = false;
+            this.isShowTabConnect = true;
+            this.isShowTabSync = false;
+        },
+        showTabSync() {
+            this.isShowTabTimeKeepingConfig = false;
+            this.isShowTabConnect = false;
+            this.isShowTabSync = true;
+            this.getAllUser();
+            this.getDevices();
         },
     },
 }

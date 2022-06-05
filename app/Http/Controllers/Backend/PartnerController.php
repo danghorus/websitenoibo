@@ -161,4 +161,11 @@ class PartnerController extends Controller
 
         return $result;
     }
+
+    public function getSyncTimekeeping(Request $request)
+    {
+        $result = $this->partnerService->getSyncTimekeeping($request->all());
+
+        return $result;
+    }
 }

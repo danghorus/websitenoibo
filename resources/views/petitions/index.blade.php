@@ -109,6 +109,9 @@
                                                             if($petition->petition_type == 3){
                                                                 echo "Nghỉ việc";
                                                             }
+                                                            if($petition->petition_type == 4){
+                                                                echo "Thay đổi giờ chấm công";
+                                                            }
                                                             ?>
                                                         </td>
                                                         <td>
@@ -167,7 +170,7 @@
                                                             <?php if($petition->user_id == $user->id){
                                                                 $petition->user_fullname == $user->fullname;
                                                                 echo $petition->user_fullname;
-                                                            } 
+                                                            }
                                                             ?>
                                                         @endforeach
                                                     </td>
@@ -186,12 +189,15 @@
                                                         if($petition->petition_type == 3){
                                                             echo "Nghỉ việc";
                                                         }
+                                                        if($petition->petition_type == 4){
+                                                            echo "Thay đổi giờ chấm công";
+                                                        }
                                                         ?>
                                                     </td>
                                                     <td>
                                                         <?php
-                                                        $check_date = date("d-m-Y", strtotime($petition->check_date));
-                                                        $checkin = date("H:i", strtotime($petition->checkin));
+                                                        $check_date = date("d-m-Y", strtotime($petition->date_from));
+                                                        $checkin = $petition->time_from? date("H:i", strtotime($petition->time_from)): '';
                                                         if ($petition->petition_type == 3) {
                                                             echo $check_date;
                                                         } else{
@@ -203,7 +209,7 @@
                                                         <?php
                                                         $check_date = date("d-m-Y", strtotime($petition->check_date));
                                                         $date_to = date("d-m-Y", strtotime($petition->date_to));
-                                                        $checkout = date("H:i", strtotime($petition->checkout));
+                                                        $checkout = $petition->time_to ? date("H:i", strtotime($petition->time_to)) : '';
                                                         if ($petition->petition_type == 3) {
                                                             echo $check_date;
                                                         } else if($petition->date_to != null){
@@ -214,7 +220,7 @@
                                                         }
                                                         ?>
                                                     </td>
-                                                    <td>{{ $petition->reason }}</td>
+                                                    <td>{{ $petition->petition_reason }}</td>
                                                     <td>
                                                         <?php
                                                         $date_created_at_d = date("d-m-Y", strtotime($petition->created_at ));

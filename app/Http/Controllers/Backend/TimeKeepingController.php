@@ -62,6 +62,7 @@ class TimeKeepingController extends Controller
         return [
             'code' => 200,
             'data' => $data,
+            'currentUser' => Auth::user()
         ];
     }
 

@@ -93,7 +93,7 @@ class HanetRepository
         return $data;
     }
 
-    public function getCheckinByPlaceIdInTimestamp($accessToken, $placeId, $devicesArr)
+    public function getCheckinByPlaceIdInTimestamp($accessToken, $placeId, $devicesArr, $from, $to, $aliasID)
     {
         $client = new Client();
         $res = $client->post($this->url. '/person/getCheckinByPlaceIdInTimestamp', [
@@ -102,8 +102,9 @@ class HanetRepository
                 'placeID' => $placeId,
                 'type' => 0,
                 'devices'=> implode(',', $devicesArr),
-                'from'=> "1617235200000",
-                'to'=> "1619740800000",
+                'from'=> $from,
+                'to'=> $to,
+                'aliasID'=> $aliasID,
             ]
         ]);
 
@@ -174,5 +175,5 @@ class HanetRepository
         return $data;
     }
 
-    
+
 }
