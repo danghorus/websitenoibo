@@ -106,7 +106,8 @@ export default {
             checkout: '',
             reason: '',
             fullname: '',
-            currentUser: {}
+            currentUser: {},
+            type: 4
         };
     },
     created() {
@@ -144,16 +145,22 @@ export default {
         async petition() {
             let data = {
                 checkin: this.checkin,
+                old_checkin: this.user && this.user.checkin ? this.user.checkin: '',
+                old_checkout: this.user && this.user.checkout ? this.user.checkout: '',
                 checkout: this.checkout,
                 reason: this.reason,
                 user_id: this.userId,
                 user_fullname: this.fullname,
-                date: this.time.day
+                date: this.time.day,
+                type: this.type
             }
 
             const res = await $post('/petition/create_petition_time_keeping', {...data});
             if (res.code == 200) {
                 toastr.success('Tạo yêu cầu thành công!');
+                this.checkin = '';
+                this.checkout = '';
+                this.reason = '';
                 this.getTimeKeepingInfo();
                 this.close();
             }
@@ -175,10 +182,12 @@ export default {
             }
         },
         updateCheckin() {
+            this.type = 4;
             this.showUpdateCheckIn = true;
             this.showUpdateReason = true;
         },
         updateCheckout() {
+            this.type = 5;
             this.showUpdateCheckOut = true;
             this.showUpdateReason = true;
         },
