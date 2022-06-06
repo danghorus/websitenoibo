@@ -172,41 +172,51 @@
                 <setting-config-partner />
             </div>
             <div v-if="isShowTabSync" class="tab-pane" id="sync" role="tabpanel" aria-labelledby="sync-tab">
-                <div class="row mb-2">
-                    <div class="col-lg-6">
-                        <date-picker
-                            style="width:100%"
-                            v-model="dateRange"
-                            type="date"
-                            range
-                            placeholder="Vui lòng chọn khoảng thời gian để lấy dữ liệu từ Hanet">
-                        </date-picker>
+                <div class="col-lg-6">
+                    <date-picker
+                        style="width:100%"
+                        v-model="dateRange"
+                        type="date"
+                        range
+                        placeholder="Vui lòng chọn khoảng thời gian để lấy dữ liệu từ Hanet">
+                    </date-picker>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-check">
+                        <input class="form-check-input" v-model="option" value="1" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Cả công ty
+                        </label>
                     </div>
-                    <div class="col-lg-6">
-                        <multiselect
-                            v-model="values"
-                            :options="users"
-                            :multiple="true"
-                            :close-on-select="true"
-                            :clear-on-select="true"
-                            :preserve-search="true"
-                            placeholder="Vui lòng chọn"
-                            label="fullname"
-                            track-by="id"
-                        >
-                            <template slot="selection" slot-scope="{ values, search, isOpen }">
-                                <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">Đã chọn {{ values.length }} nhân viên</span>
-                            </template>
-                        </multiselect>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" v-model="option" value="2" name="flexRadioDefault" id="flexRadioDefault2">
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            Chọn nhân viên
+                        </label>
                     </div>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-lg-6">
-                        <multiselect v-model="device" :options="devices" value="device_code" label="device_name" :close-on-select="false" :show-labels="true" placeholder="Pick a value">
-                        </multiselect>
-                    </div>
+                <div class="col-lg-6 mt-2" v-if="option == 2">
+                    <multiselect
+                        v-model="values"
+                        :options="users"
+                        :multiple="true"
+                        :close-on-select="true"
+                        :clear-on-select="true"
+                        :preserve-search="true"
+                        placeholder="Vui lòng chọn"
+                        label="fullname"
+                        track-by="id"
+                    >
+                        <template slot="selection" slot-scope="{ values, search, isOpen }">
+                            <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">Đã chọn {{ values.length }} nhân viên</span>
+                        </template>
+                    </multiselect>
                 </div>
-                <button class="btn btn-primary" @click="getSyncTimekeeping()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Đồng bộ</button>
+                <div class="col-lg-6 mt-2">
+                    <multiselect v-model="device" :options="devices" value="device_code" label="device_name" :close-on-select="false" :show-labels="true" placeholder="Pick a value">
+                    </multiselect>
+                </div>
+                <button class="btn btn-primary mt-2" @click="getSyncTimekeeping()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Đồng bộ</button>
             </div>
         </div>
     </div>
@@ -264,7 +274,8 @@ export default {
             isShowTabConnect: false,
             isShowTabSync: false,
             devices: [],
-            device: ''
+            device: '',
+            option: 1
         };
     },
     created() {
@@ -295,16 +306,23 @@ export default {
             }
         },
         async getSyncTimekeeping() {
+            let usersData = [];
+            if (this.option == 1) {
+                usersData = this.users.map(val => val.user_code)
+            } else {
+                usersData = this.values.map(val => val.user_code)
+            }
+
             let params = {
                 start_date: this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : "",
                 end_date: this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : "",
-                users: this.values.map(val => val.user_code),
-                device: this.device.device_code
+                users: usersData,
+                device: this.device.device_code,
             }
 
             const res = await $get('/partner/get-sync-timekeeping', {...params});
 
-            if (res.code === 200) {
+            if (res.code == 200) {
                 toastr.success('Đồng bộ thành công');
             }
         },
