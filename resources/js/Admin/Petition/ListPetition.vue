@@ -32,10 +32,10 @@
                                                 <tr style="text-align: center;">
                                                     <th style="width:50px">STT</th>
                                                     <th style="width:50px">ID</th>
-                                                    <th width=15%>Người yêu cầu</th>
-                                                    <th width=20%>Thông tin</th>
-                                                    <th width=10%>Ngày giờ bắt đầu</th>
-                                                    <th width=10%>Ngày giờ kết thúc</th>
+                                                    <th width=10%>Người yêu cầu</th>
+                                                    <th width=15%>Thông tin</th>
+                                                    <th width=12%>Ngày giờ bắt đầu</th>
+                                                    <th width=12%>Ngày giờ kết thúc</th>
                                                     <th width=20%>Lý do</th>
                                                     <th width=10%>Ngày gửi</th>
                                                     <th width=15%>Thao tác</th>

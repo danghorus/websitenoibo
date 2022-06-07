@@ -108,13 +108,16 @@ class PetitionController extends Controller
             'petition_status' => $request->petition_status,
         ]);
 
-        if (($petition->petition_type == 4 || $petition->petition_type == 5) && $request->petition_status == 2) {
+        //if (($petition->petition_type == 4 || $petition->petition_type == 5) && $request->petition_status == 2) {
+        if ($petition->petition_type == 4 && $request->petition_status == 2) {
             $dataUpdate = [];
             $dataUpdate['user_id'] = $petition->user_id;
             $dataUpdate['date'] = $petition->date_from;
             $dataUpdate['reason'] = $petition->petition_reason;
-            $dataUpdate['checkin'] = $petition->petition_type == 4? $petition->time_to: '';
-            $dataUpdate['checkout'] = $petition->petition_type == 5? $petition->time_to: '';
+            $dataUpdate['checkin'] = $petition->time_from;
+            $dataUpdate['checkout'] =$petition->time_to;
+            //$dataUpdate['checkin'] = $petition->petition_type == 4? $petition->time_to: '';
+            //$dataUpdate['checkout'] = $petition->petition_type == 5? $petition->time_to: '';
 
             $this->timeKeepingService->update($dataUpdate);
         }
@@ -160,7 +163,6 @@ class PetitionController extends Controller
         $request->validate([
             'user_id' => 'required',
             'user_fullname' => 'required|string',
-            'reason' => 'required'
         ]);
 
         $isCreated = $this->petitionService->createPetition($request->all());

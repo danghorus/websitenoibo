@@ -16,12 +16,14 @@ class Petition extends Model
         'user_id',
         'user_fullname',
         'petition_type',
-        'checkin',
-        'check_date',
-        'checkout',
+        'time_from_old',
+        'time_from',
+        'date_from',
+        'time_to_old',
+        'time_to',
         'date_to',
         'type_leave',
-        'reason',
+        'petition_reason',
         'petition_status',
         'check_type'
     ];

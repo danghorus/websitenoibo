@@ -59,6 +59,11 @@
     <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
     <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+    
+
 <style>
 
 .nav-item{
@@ -92,7 +97,7 @@
 </head>
 <body>
         <div id="loading">
-            <img id="loading-image" src="{{ asset('img/loading_4.gif') }}" alt="DEV còn non nên WEB còn chậm. Vui lòng không chê. DEV nghe thấy đấm vỡ mồm!" />
+            <img id="loading-image" src="{{ asset('img/loading_4.gif') }}" alt="" />
         </div>
         <nav class="sb-topnav navbar navbar-expand navbar" style="background-color:#F8F9FA;">
             <!-- Navbar Brand-->
@@ -107,23 +112,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/petitions') }}">Yêu cầu</a>
                         </li>
-                        <!--<li class="nav-item dropdown">
-                            <a class="nav-link">Yêu cầu</a>
-                            <div class="dropdown-content">
-                                <a class="dropdown-item" href="{{ url('/petitions') }}" >Danh sách yêu cầu</a>
-                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_petition" style="float:right;">Tạo yêu cầu</a>
-                            </div>
-                        </li>-->
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/users') }}">Nhân sự</a>
                         </li>
-                        <!--<li class="nav-item dropdown">
-                            <a class="nav-link">Nhân sự</a>
-                            <div class="dropdown-content">
-                                <a class="dropdown-item" href="{{ url('/users') }}" >Danh sách nhân sự</a>
-                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float:right;">Thêm nhân viên</a>
-                            </div>
-                        </li>-->
                         <li class="nav-item dropdown">
                             <a class="nav-link">Chấm công</a>
                             <div class="dropdown-content">
@@ -149,7 +140,13 @@
                             <a class="nav-link" href="{{ url('/') }}">Báo cáo</a>
                         </li>
                     </ul>
-                    <!--@extends('petitions.create')-->
+                    @extends('petitions.create')
+                    @extends('petitions.go_late')
+                    @extends('petitions.quit')
+                    @extends('petitions.in_day_am')
+                    @extends('petitions.in_day_pm')
+                    @extends('petitions.in_day')
+                    @extends('petitions.multi_day')
                     <script>
                     function changeColor() {
                         var result = document.getElementById("result");
@@ -162,33 +159,6 @@
             </form>
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-                <!--<li class="nav-item dropdown">
-                    <a href="#" data-toggle="dropdown" aria-expanded="false" title="Thông báo" style="color:#999da1;">
-                        <center>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bell"
-                            viewBox="0 0 16 16">
-                            <path
-                                d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                        </svg>
-                        </center>
-                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown" style="width: 400px; height:900px; border-radius: 5px; border-width: 2px;">
-                        <center>
-                            <h4>Thông báo</h4>
-                        </center>
-                        <hr style="height: 1px; ">
-                    </ul>
-                </li>-->
-            </ul>
-            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-                <!--<li class="nav-item dropdown">
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <form action="" method="post" enctype="multipart/form-data">
-                        <center>
-
-                    </form>
-                    </ul>
-                </li>-->
                 <div class="collapse navbar-collapse" id="navbarSupportedContent" style="float:right;">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto" style="float:right;">

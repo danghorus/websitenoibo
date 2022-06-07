@@ -7,19 +7,22 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="camera-tab" data-toggle="tab" href="#camera" aria-controls="camera" @click="getDevices()">
+                <a class="nav-link" id="camera-tab" data-toggle="tab" href="#camera" aria-controls="camera"
+                    @click="getDevices()">
                     <span class="nav-text">Quản lý Camera</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="hanet-tab" data-toggle="tab" href="#hanet" aria-controls="hanet"  @click="getConfig()">
+                <a class="nav-link" id="hanet-tab" data-toggle="tab" href="#hanet" aria-controls="hanet"
+                    @click="getConfig()">
                     <span class="nav-text">Kết nối Camera AI</span>
                 </a>
             </li>
         </ul>
         <div class="tab-content mt-5" id="myTabContent">
             <div class="tab-pane fade show active" id="face" role="tabpanel" aria-labelledby="face-tab">
-                <button class="btn btn-primary" @click="syncUsers()" style="position: absolute; right: 20px; top: 155px">Đồng bộ người dùng</button>
+                <button class="btn btn-primary" @click="syncUsers()"
+                    style="position: absolute; right: 20px; top: 155px">Đồng bộ người dùng</button>
                 <table class="table">
                     <thead>
                         <tr>
@@ -32,46 +35,52 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(user, index) in users" :key="index">
-                        <td>{{ index+1 }}</td>
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.fullname }}</td>
-                        <td>{{ user.place_name }}</td>
-                        <td>
-                            <img :src="user.face_image_url" width="150" height="150" />
-                        </td>
-                        <td>
-                            <button class="btn btn-outline-primary" data-toggle="collapse" :data-target="'#collapseFace' + index"
-                                    aria-expanded="false" :aria-controls="'collapseFace_' + index" @click="showEditFaceId(user)">
-                                Sửa
-                            </button>
-                            <div class="collapse" :id="'collapseFace' + index" v-if="showEditFace">
-                                <div class="card card-body collapse-edit">
-                                    <div class="form-group">
-                                        <label><span style="color: red">*</span>Upload ảnh đăng kí chấm công:</label>
-                                        <input type="file" ref="uploader" accept="image/*" @change="uploadFile($event)">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Địa điểm đăng kí:</label>
-                                        <select class="form-select" v-model="place" :disabled="user.place_id">
-                                            <option v-for="(p, i) in places" :key="i" :value="p" :selected="p.id == user.place_id">{{ p.name }}</option>
-                                        </select>
-                                    </div>
-                                    <div class="row">
-                                        <button class="btn btn-primary col-6" @click="updateUser(user.user_code)">Cập nhật</button>
-                                        <button class="btn btn-default col-6" @click="closeCol()">Đóng</button>
-                                    </div>
+                        <tr v-for="(user, index) in users" :key="index">
+                            <td>{{ index+1 }}</td>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.fullname }}</td>
+                            <td>{{ user.place_name }}</td>
+                            <td>
+                                <img :src="user.face_image_url" width="150" height="150" />
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-primary" data-toggle="collapse"
+                                    :data-target="'#collapseFace' + index" aria-expanded="false"
+                                    :aria-controls="'collapseFace_' + index" @click="showEditFaceId(user)">
+                                    Sửa
+                                </button>
+                                <div class="collapse" :id="'collapseFace' + index" v-if="showEditFace">
+                                    <div class="card card-body collapse-edit">
+                                        <div class="form-group">
+                                            <label><span style="color: red">*</span>Upload ảnh đăng kí chấm
+                                                công:</label>
+                                            <input type="file" ref="uploader" accept="image/*"
+                                                @change="uploadFile($event)">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Địa điểm đăng kí:</label>
+                                            <select class="form-select" v-model="place" :disabled="user.place_id">
+                                                <option v-for="(p, i) in places" :key="i" :value="p"
+                                                    :selected="p.id == user.place_id">{{ p.name }}</option>
+                                            </select>
+                                        </div>
+                                        <div class="row">
+                                            <button class="btn btn-primary col-6"
+                                                @click="updateUser(user.user_code)">Cập nhật</button>
+                                            <button class="btn btn-default col-6" @click="closeCol()">Đóng</button>
+                                        </div>
 
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             <div class="tab-pane" id="camera" role="tabpanel" aria-labelledby="camera-tab">
                 <div>
-                    <button class="btn btn-primary" @click="syncDevice()" style="position: absolute; right: 20px; top: 155px">Đồng bộ thiết bị</button>
+                    <button class="btn btn-primary" @click="syncDevice()"
+                        style="position: absolute; right: 20px; top: 155px">Đồng bộ thiết bị</button>
                     <table class="table">
                         <thead>
                             <tr>
@@ -85,10 +94,12 @@
                             <tr v-for="(device, index) in devices" :key="index">
                                 <td>{{ index+1 }}</td>
                                 <td>{{ device.device_name }}</td>
+                                <td>{{ device.device_code }}</td>
                                 <td>{{ device.type_text }}</td>
                                 <td>
-                                    <button class="btn btn-outline-primary" data-toggle="collapse" data-target="#collapseExample"
-                                            aria-expanded="false" aria-controls="collapseExample" @click="getDeviceInfo(device.device_code)">
+                                    <button class="btn btn-outline-primary" data-toggle="collapse"
+                                        data-target="#collapseExample" aria-expanded="false"
+                                        aria-controls="collapseExample" @click="getDeviceInfo(device.device_code)">
                                         <i class="fa fa-pencil"></i>
                                     </button>
                                 </td>
@@ -107,7 +118,8 @@
                     <input type="text" class="form-control" v-model="clientSecret" :disabled="config.access_token">
                 </div>
                 <button v-if="!config.access_token" class="btn btn-primary" @click="connectHanet()">Kết nối</button>
-                <button v-if="config.access_token" class="btn btn-danger" @click="disconnectHanet()">Ngắt kết nối</button>
+                <button v-if="config.access_token" class="btn btn-danger" @click="disconnectHanet()">Ngắt kết
+                    nối</button>
             </div>
         </div>
         <div class="collapse" id="collapseExample" v-if="showEdit">

@@ -114,7 +114,7 @@ export default {
             showOtherTime: false,
             showCheckOut: false,
             showCheckIn: false,
-            option: 1,
+            option: 2,
             labels: [],
             start_date: '',
             end_date: '',

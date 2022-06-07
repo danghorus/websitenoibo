@@ -18,12 +18,12 @@ class CreatePetitionsTable extends Migration
             $table->string('user_fullname');
              $table->string('user_id');
             $table->string('petition_type');
-            $table->time('checkin');
-            $table->date('check_date');
-            $table->time('checkout');
+            $table->time('time_from');
+            $table->date('date_from');
+            $table->time('time_to');
             $table->date('date_to');
             $table->string('type_leave');
-            $table->string('reason');
+            $table->string('petition_reason');
             $table->string('petition_status');
             $table->timestamps();
         });
