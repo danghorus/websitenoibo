@@ -39,13 +39,13 @@
                     <?php } else {?>
 
                        <div class="form-floating mb-3">
-                            <select class="form-control" id="user_fullname" name="user_fullname">
+                            <select class="form-control" id="user_fullname" name="user_id">
                                 <option selected disabled value>Chọn nhân viên</option>
                                 @foreach($users as $user)
                                     <?php
-                                    if ($user->user_status==1 && $user->id){
+                                    if ($user->user_status==1){
                                     ?>
-                                    <option>{{$user->fullname}}</option>
+                                    <option value="{{$user->id}}"> {{$user->fullname}}</option>
                                     <?php } ?>
                                 @endforeach
                             </select>
@@ -58,7 +58,7 @@
                         <label for="">loại yêu cầu</label>
                     </div>
                      <div class="form-floating mb-3">
-                        <input class="form-control" name="type_leave" type="text" value="in_day_PM" hidden/>
+                        <input class="form-control" name="type_leave" type="text" value="2" hidden/> <!-- 2 =in_day_PM -->
                         <label for="">Loại nghỉ phép</label>
                     </div>
                     <div class="form-floating mb-3">

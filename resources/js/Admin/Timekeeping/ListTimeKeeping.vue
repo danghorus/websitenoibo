@@ -1,58 +1,127 @@
 <template>
-    <div class="card" >
-        <div class="card-header" style="height:50px;" >
+    <div class="card">
+        <div class="card-header" style="height:50px;">
             <h4>Bảng chấm công</h4>
             <div style="position: absolute; right: 20px; top: 5px">
-                <button v-if="showCheckIn && currentUser.check_type == 2" class="btn btn-success" @click="checkIn()">Checkin</button>
-                <button v-if="showCheckOut && currentUser.check_type == 2" class="btn btn-danger" @click="checkIn()">Checkout</button>
-                <button v-if=" currentUser.permission == 1" class="btn btn-primary" @click="exportData()">Xuất file excel</button>
-                <button v-if=" currentUser.permission == 1" class="btn btn-primary" @click="showModalConfig()">Cấu hình</button>
+                <button v-if="showCheckIn && currentUser.check_type == 2" class="btn btn-success"
+                    @click="checkIn()">Checkin</button>
+                <button v-if="showCheckOut && currentUser.check_type == 2" class="btn btn-danger"
+                    @click="checkIn()">Checkout</button>
+                <button v-if=" currentUser.permission == 1" class="btn btn-primary" @click="exportData()">Xuất file
+                    excel</button>
+                <button v-if=" currentUser.permission == 1" class="btn btn-primary" @click="showModalConfig()">Cấu
+                    hình</button>
             </div>
 
         </div>
         <div class="card-body table-responsive">
-            <select class="form-select col-lg-2" style="position: absolute; right: 20px; top: 65px; width:180px; height:34px;" v-model="option">
+            <select class="form-select col-lg-2"
+                style="position: absolute; right: 20px; top: 65px; width:180px; height:34px;" v-model="option">
                 <option value="1">Theo tuần</option>
                 <option value="2">Theo tháng</option>
             </select>
-            <date-picker v-if="option == 2" v-model="timeSelected" type="month" placeholder="Vui lòng chọn tháng để tìm kiếm"
-                         @change="changeOption()" style="position: absolute;right: 201px;top: 65px; width:300px; height:50px;">
+            <date-picker v-if="option == 2" v-model="timeSelected" type="month"
+                placeholder="Vui lòng chọn tháng để tìm kiếm" @change="changeOption()"
+                style="position: absolute;right: 201px;top: 65px; width:300px; height:50px;">
             </date-picker>
-            <date-picker v-if="option == 1" v-model="timeSelected" type="week" placeholder="Vui lòng chọn tuần để tìm kiếm"
-                         @change="changeOption()" style="position: absolute;right: 201px;top: 65px; width:300px; height:50px;">
+            <date-picker v-if="option == 1" v-model="timeSelected" type="week"
+                placeholder="Vui lòng chọn tuần để tìm kiếm" @change="changeOption()"
+                style="position: absolute;right: 201px;top: 65px; width:300px; height:50px;">
             </date-picker>
-            <table class="table table-bordered mt-5">
+            <table v-if="option == 1" class="table table-bordered mt-5">
                 <thead class="table-active">
                     <tr>
-                        <th>
-                            <input type="text" name="search" class="form-control mb-2 input-search" v-model="search" placeholder="Tìm kiếm" v-on:keyup.enter="getTimeKeepings()">
+                        <th style="width:200px">
+                            <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
+                                placeholder="Tìm kiếm" v-on:keyup.enter="getTimeKeepings()">
                         </th>
-                        <th v-for="(label, index) in labels" :key="index" style="font-size:13px; text-align:center; vertical-align: middle;">{{ label }}</th>
+                        <th v-for="(label, index) in labels" :key="index"
+                            style="font-size:13px; text-align:center; vertical-align: middle; width:180px">{{ label }}
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(user, index) in data" :key="index">
-                        <td style="width:200px; font-size:14px; vertical-align: middle;">{{ user.fullname }}</td>
-                        <td v-for="(time, index) in user.time_keeping" :key="index" :class="time.class" @click="showModal(user.id, user.fullname, time)">
-                            <template v-if="option == 1">
-                                <span v-if="option == 1">Check in: </span>{{ time.checkin ? time.checkin: '--:--:--'}} <br>
-                                <span v-if="option == 1">Check out: </span>{{ time.checkout ? time.checkout: '--:--:--' }}
-                            </template>
+                        <td style="width:200px; font-size:14px; vertical-align: middle; height: 60px">{{ user.fullname
+                            }}</td>
+                        <td v-for="(time, index) in user.time_keeping" :key="index" :class="time.class"
+                            @click="showModal(user.id, user.fullname, time)"
+                            style="text-align:center;vertical-align: middle">
+                            <template v-if="time.petition_type == 0">
+                                <b>Ca hành chính</b>
+                                <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
+                                    time.checkout:'-:-' }}</div>
 
+                            </template>
+                            <template v-else-if="time.petition_type == 4">
+                                <b>Thay đổi giờ công</b>
+                                <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
+                                    time.checkout:'-:-' }}</div>
+
+                            </template>
+                            <template v-else-if="time.petition_type == 1">
+                                <b>Đi muộn/về sớm</b>
+                                <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
+                                    time.checkout:'-:-' }}</div>
+                            </template>
+                            <template v-else-if="time.petition_type == 2 && time.type_leave == 1">
+                                <b>Nghỉ buổi sáng</b>
+                                <div v-if="time.checkin == ''"></div>
+                                <div v-else>{{time.checkin}} - {{time.checkout }}</div>
+                            </template>
+                            <template v-else-if="time.petition_type == 2 && time.type_leave == 2">
+                                <b>Nghỉ buổi chiều</b>
+                                <div v-if="time.checkin == ''"></div>
+                                <div v-else>{{time.checkin}} - {{time.checkout }}</div>
+                            </template>
+                            <template
+                                v-else-if="time.petition_type == 2 && (time.type_leave == 3 || time.type_leave == 4)">
+                                <b>Nghỉ cả ngày</b>
+                                <div v-if="time.checkin == ''"></div>
+                                <div v-else>{{time.checkin}} - {{time.checkout }}</div>
+                            </template>
+                            <template v-else-if="time.day == 'Sun'">
+                                <div></div>
+                            </template>
                             <template v-else>
-                                <div style="font-size:13px; text-align: center;">
-                                    {{ time.checkin ? time.checkin: '--:--'}} <br>
-                                    {{ time.checkout ? time.checkout: '--:--' }}
-                                </div>
+                                <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
+                                    time.checkout:'-:-' }}</div>
                             </template>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <table v-else class="table table-bordered mt-5">
+                <thead class="table-active">
+                    <tr>
+                        <th style="width:200px">
+                            <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
+                                placeholder="Tìm kiếm" v-on:keyup.enter="getTimeKeepings()">
+                        </th>
+                        <th v-for="(label, index) in labels" :key="index"
+                            style="font-size:13px; text-align:center; vertical-align: middle;">{{ label
+                            }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(user, index) in data" :key="index">
+                        <td style="width:200px; font-size:14px; vertical-align: middle;">{{ user.fullname }}</td>
+                        <td v-for="(time, index) in user.time_keeping" :key="index" :class="time.class"
+                            @click="showModal(user.id, user.fullname, time)"
+                            style="text-align:center;vertical-align: middle">
+                            <div style=" font-size:13px; text-align: center;">
+                                {{ time.checkin ? time.checkin: '--:--'}} <br>
+                                {{ time.checkout ? time.checkout: '--:--' }}
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <div>
-                <p><i class="fa fa-circle" style="color: red"></i>  Chưa checkin (checkout)</p>
-                <p><i class="fa fa-circle" style="color: green"></i>  Chấm công đầy đủ</p>
-                <p><i class="fa fa-circle" style="color: yellow"></i>  Chấm công muộn (Về sớm)</p>
+                <p><i class="fa fa-circle" style="color: red"></i> Chưa checkin (checkout)</p>
+                <p><i class="fa fa-circle" style="color: green"></i> Chấm công đầy đủ</p>
+                <p><i class="fa fa-circle" style="color: yellow"></i> Chấm công muộn (Về sớm)</p>
             </div>
         </div>
         <div>
@@ -61,7 +130,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Chi tiết chấm công: {{userName}} - Ngày {{ time.day }}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal()">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                @click="closeModal()">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -79,12 +149,13 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Cấu hình chấm công</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModalConfig()">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                @click="closeModalConfig()">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <ModalConfigTimeKeeping v-if="modalConfig" @closeModalConfig="closeModalConfig()"/>
+                            <ModalConfigTimeKeeping v-if="modalConfig" @closeModalConfig="closeModalConfig()" />
                         </div>
 
                     </div>
@@ -114,7 +185,7 @@ export default {
             showOtherTime: false,
             showCheckOut: false,
             showCheckIn: false,
-            option: 2,
+            option: 1,
             labels: [],
             start_date: '',
             end_date: '',

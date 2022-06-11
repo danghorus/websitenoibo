@@ -139,7 +139,15 @@ table tr td img {
                                         <td scope="row">{{ $user->birthday }}</td>
                                         <td scope="row">{{ $user->department }}</td>
                                         <td scope="row">{{ $user->position }}</td>
-                                        <td scope="row">{{ $user->date_official }} </td>
+                                        <td scope="row">
+                                        <?php 
+                                            if($user->date_official != ""){
+                                                echo $user->date_official;
+                                            }else{
+                                                echo "Thử việc";
+                                            } 
+                                        ?>
+                                    </td>
                                         <td scope="row">{{ $user->permission==0?'Nhân viên':'Quản lý' }} </td>
                                         <?php if(Auth::user()->permission == 1) { ?>
 
@@ -192,7 +200,7 @@ table tr td img {
                                     <td scope="row">{{ $user->birthday }}</td>
                                     <td scope="row">{{ $user->department }}</td>
                                     <td scope="row">{{ $user->position }}</td>
-                                    <td scope="row">{{ $user->date_official }} </td>
+                                    <td scope="row">{{ $user->date_official}}</td>
                                     <td scope="row">{{ $user->permission==0?'Nhân viên':'Quản lý' }} </td>
                                     <td style="text-align:center; font-size:14px;">
                                         <form method="POST" action="{{ route('users.destroy', $user->id) }}">

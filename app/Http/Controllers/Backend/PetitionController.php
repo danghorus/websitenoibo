@@ -59,7 +59,7 @@ class PetitionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_fullname' => 'required',
+            'user_id' => 'required',
             'petition_reason' => 'required',
         ]);
 
@@ -116,6 +116,22 @@ class PetitionController extends Controller
             $dataUpdate['reason'] = $petition->petition_reason;
             $dataUpdate['checkin'] = $petition->time_from;
             $dataUpdate['checkout'] =$petition->time_to;
+            $dataUpdate['petition_type'] = 4;
+            //$dataUpdate['checkin'] = $petition->petition_type == 4? $petition->time_to: '';
+            //$dataUpdate['checkout'] = $petition->petition_type == 5? $petition->time_to: '';
+
+            $this->timeKeepingService->update($dataUpdate);
+        }
+        if ($petition->petition_type != 4 && $request->petition_status == 2) {
+            $dataUpdate = [];
+            $dataUpdate['user_id'] = $petition->user_id;
+            $dataUpdate['date'] = $petition->date_from;
+            $dataUpdate['date_to'] = $petition->date_to;
+            $dataUpdate['reason'] = $petition->petition_reason;
+            $dataUpdate['time_from'] = $petition->time_from;
+            $dataUpdate['time_to'] =$petition->time_to;
+            $dataUpdate['petition_type'] =$petition->petition_type;
+            $dataUpdate['type_leave'] =$petition->type_leave;
             //$dataUpdate['checkin'] = $petition->petition_type == 4? $petition->time_to: '';
             //$dataUpdate['checkout'] = $petition->petition_type == 5? $petition->time_to: '';
 

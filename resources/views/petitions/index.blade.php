@@ -127,7 +127,7 @@
                                         <tbody>
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            <td>{{  $petition->id }}</td>
+                                            <td>{{ $petition->id }}</td>
                                             <td>{{ $petition->user_fullname }}</td>
                                             <td>
                                                 <?php
@@ -137,11 +137,11 @@
                                                     echo "Đi muộn về sớm";
                                                 }
                                                 if($type == 2){
-                                                    if($leave == "in_day_AM"){
+                                                    if($leave == 1){
                                                         echo "Nghỉ phép nửa ngày(sáng)";
-                                                    }else if($leave == "in_day_PM"){
+                                                    }else if($leave == 2){
                                                         echo "Nghỉ phép nửa ngày(chiều)";
-                                                    } else if($leave == "in_day") {
+                                                    } else if($leave == 3) {
                                                         echo "Nghỉ phép một ngày";
                                                     } else {
                                                         echo "Nghỉ phép nhiều ngày";
@@ -176,13 +176,13 @@
                                                 } else if($type == 1){
                                                     echo "Ngày <b>".$date_from."</b> từ <b>".$time_from."</b> đến <b>".$time_to."</b>.";
                                                 } else if($type == 2){
-                                                    if($leave == "in_day_AM"){
+                                                    if($leave == 1){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "in_day_PM"){
+                                                    } else if($leave == 2){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "in_day"){
+                                                    } else if($leave == 3){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "multi_day"){
+                                                    } else if($leave == 4){
                                                         echo "Ngày <b>".$date_from."</b> đến hết ngày <b>".$date_to."</b>.";
                                                     }
                                                 } else if($type == 3){
@@ -216,16 +216,16 @@
                                         <tr>
                                             <td style="text-align: center;">{{ ++$i }}</td>
                                             <td style="text-align: center;">{{ $petition->id }}</td>
-                                            <td>{{ $petition->user_fullname }}</td>
-                                        <!--<td>
-                                                            @foreach($users as $user)
-                                            <?php if($petition->user_id == $user->id){
-                                                $petition->user_fullname == $user->fullname;
-                                                echo $petition->user_fullname;
-                                            }
-                                            ?>
-                                        @endforeach
-                                            </td>-->
+                                            <!--<td>{{ $petition->user_fullname }}</td>-->
+                                            <td>
+                                                @foreach($users as $user)
+                                                    <?php if($petition->user_id == $user->id){
+                                                        $petition->user_fullname = $user->fullname;
+                                                        echo $user->fullname;
+                                                    }
+                                                    ?>
+                                                @endforeach
+                                            </td>
                                             <td>
                                                 <?php
                                                 $type = $petition->petition_type;
@@ -234,11 +234,11 @@
                                                     echo "Đi muộn về sớm";
                                                 }
                                                 if($type == 2){
-                                                    if($leave == "in_day_AM"){
+                                                    if($leave == 1){
                                                         echo "Nghỉ phép nửa ngày(sáng)";
-                                                    }else if($leave == "in_day_PM"){
+                                                    }else if($leave == 2){
                                                         echo "Nghỉ phép nửa ngày(chiều)";
-                                                    } else if($leave == "in_day") {
+                                                    } else if($leave == 3) {
                                                         echo "Nghỉ phép một ngày";
                                                     } else {
                                                         echo "Nghỉ phép nhiều ngày";
@@ -273,13 +273,13 @@
                                                 } else if($type == 1){
                                                     echo "Ngày <b>".$date_from."</b> từ <b>".$time_from."</b> đến <b>".$time_to."</b>.";
                                                 } else if($type == 2){
-                                                    if($leave == "in_day_AM"){
+                                                    if($leave == 1){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "in_day_PM"){
+                                                    } else if($leave == 2){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "in_day"){
+                                                    } else if($leave == 3){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "multi_day"){
+                                                    } else if($leave == 4){
                                                         echo "Ngày <b>".$date_from."</b> đến hết ngày <b>".$date_to."</b>.";
                                                     }
                                                 } else if($type == 3){
@@ -364,7 +364,15 @@
                                         <tr>
                                             <td style="text-align: center;">{{ ++$i }}</td>
                                             <td style="text-align: center;">{{ $petition->id }}</td>
-                                            <td>{{ $petition->user_fullname }}</td>
+                                            <td>
+                                                @foreach($users as $user)
+                                                    <?php if($petition->user_id == $user->id){
+                                                        $petition->user_fullname = $user->fullname;
+                                                        echo $user->fullname;
+                                                    }
+                                                    ?>
+                                                @endforeach
+                                            </td>
                                             <td>
                                                 <?php
                                                 $type = $petition->petition_type;
@@ -373,11 +381,11 @@
                                                     echo "Đi muộn về sớm";
                                                 }
                                                 if($type == 2){
-                                                    if($leave == "in_day_AM"){
+                                                    if($leave == 1){
                                                         echo "Nghỉ phép nửa ngày(sáng)";
-                                                    }else if($leave == "in_day_PM"){
+                                                    }else if($leave == 2){
                                                         echo "Nghỉ phép nửa ngày(chiều)";
-                                                    } else if($leave == "in_day") {
+                                                    } else if($leave == 3) {
                                                         echo "Nghỉ phép một ngày";
                                                     } else {
                                                         echo "Nghỉ phép nhiều ngày";
@@ -412,13 +420,13 @@
                                                 } else if($type == 1){
                                                     echo "Ngày <b>".$date_from."</b> từ <b>".$time_from."</b> đến <b>".$time_to."</b>.";
                                                 } else if($type == 2){
-                                                    if($leave == "in_day_AM"){
+                                                    if($leave == 1){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "in_day_PM"){
+                                                    } else if($leave == 2){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "in_day"){
+                                                    } else if($leave == 3){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "multi_day"){
+                                                    } else if($leave == 4){
                                                         echo "Ngày <b>".$date_from."</b> đến hết ngày <b>".$date_to."</b>.";
                                                     }
                                                 } else if($type == 3){
@@ -453,7 +461,15 @@
                                         <tr>
                                             <td style="text-align: center;">{{ ++$i }}</td>
                                             <td style="text-align: center;">{{ $petition->id }}</td>
-                                            <td>{{ $petition->user_fullname }}</td>
+                                            <td>
+                                                @foreach($users as $user)
+                                                    <?php if($petition->user_id == $user->id){
+                                                        $petition->user_fullname = $user->fullname;
+                                                        echo $user->fullname;
+                                                    }
+                                                    ?>
+                                                @endforeach
+                                            </td>
                                             <td>
                                                 <?php
                                                 $type = $petition->petition_type;
@@ -462,11 +478,11 @@
                                                     echo "Đi muộn về sớm";
                                                 }
                                                 if($type == 2){
-                                                    if($leave == "in_day_AM"){
+                                                    if($leave == 1){
                                                         echo "Nghỉ phép nửa ngày(sáng)";
-                                                    }else if($leave == "in_day_PM"){
+                                                    }else if($leave == 2){
                                                         echo "Nghỉ phép nửa ngày(chiều)";
-                                                    } else if($leave == "in_day") {
+                                                    } else if($leave == 3) {
                                                         echo "Nghỉ phép một ngày";
                                                     } else {
                                                         echo "Nghỉ phép nhiều ngày";
@@ -501,13 +517,13 @@
                                                 } else if($type == 1){
                                                     echo "Ngày <b>".$date_from."</b> từ <b>".$time_from."</b> đến <b>".$time_to."</b>.";
                                                 } else if($type == 2){
-                                                    if($leave == "in_day_AM"){
+                                                    if($leave == 1){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "in_day_PM"){
+                                                    } else if($leave == 2){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "in_day"){
+                                                    } else if($leave == 3){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "multi_day"){
+                                                    } else if($leave == 4){
                                                         echo "Ngày <b>".$date_from."</b> đến hết ngày <b>".$date_to."</b>.";
                                                     }
                                                 } else if($type == 3){
@@ -567,7 +583,15 @@
                                         <tr>
                                             <td style="text-align: center;">{{ ++$i }}</td>
                                             <td style="text-align: center;">{{ $petition->id }}</td>
-                                            <td>{{ $petition->user_fullname }}</td>
+                                            <td>
+                                                @foreach($users as $user)
+                                                    <?php if($petition->user_id == $user->id){
+                                                        $petition->user_fullname = $user->fullname;
+                                                        echo $user->fullname;
+                                                    }
+                                                    ?>
+                                                @endforeach
+                                            </td>
                                             <td>
                                                 <?php
                                                 $type = $petition->petition_type;
@@ -576,11 +600,11 @@
                                                     echo "Đi muộn về sớm";
                                                 }
                                                 if($type == 2){
-                                                    if($leave == "in_day_AM"){
+                                                    if($leave == 1){
                                                         echo "Nghỉ phép nửa ngày(sáng)";
-                                                    }else if($leave == "in_day_PM"){
+                                                    }else if($leave == 2){
                                                         echo "Nghỉ phép nửa ngày(chiều)";
-                                                    } else if($leave == "in_day") {
+                                                    } else if($leave == 3) {
                                                         echo "Nghỉ phép một ngày";
                                                     } else {
                                                         echo "Nghỉ phép nhiều ngày";
@@ -615,13 +639,13 @@
                                                 } else if($type == 1){
                                                     echo "Ngày <b>".$date_from."</b> từ <b>".$time_from."</b> đến <b>".$time_to."</b>.";
                                                 } else if($type == 2){
-                                                    if($leave == "in_day_AM"){
+                                                    if($leave == 1){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "in_day_PM"){
+                                                    } else if($leave == 2){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "in_day"){
+                                                    } else if($leave == 3){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "multi_day"){
+                                                    } else if($leave == 4){
                                                         echo "Ngày <b>".$date_from."</b> đến hết ngày <b>".$date_to."</b>.";
                                                     }
                                                 } else if($type == 3){
@@ -656,7 +680,15 @@
                                         <tr>
                                             <td style="text-align: center;">{{ ++$i }}</td>
                                             <td style="text-align: center;">{{ $petition->id }}</td>
-                                            <td >{{ $petition->user_fullname }}</td>
+                                            <td>
+                                                @foreach($users as $user)
+                                                    <?php if($petition->user_id == $user->id){
+                                                        $petition->user_fullname = $user->fullname;
+                                                        echo $user->fullname;
+                                                    }
+                                                    ?>
+                                                @endforeach
+                                            </td>
                                             <td>
                                                 <?php
                                                 $type = $petition->petition_type;
@@ -665,11 +697,11 @@
                                                     echo "Đi muộn về sớm";
                                                 }
                                                 if($type == 2){
-                                                    if($leave == "in_day_AM"){
+                                                    if($leave == 1){
                                                         echo "Nghỉ phép nửa ngày(sáng)";
-                                                    }else if($leave == "in_day_PM"){
+                                                    }else if($leave == 2){
                                                         echo "Nghỉ phép nửa ngày(chiều)";
-                                                    } else if($leave == "in_day") {
+                                                    } else if($leave == 3) {
                                                         echo "Nghỉ phép một ngày";
                                                     } else {
                                                         echo "Nghỉ phép nhiều ngày";
@@ -704,13 +736,13 @@
                                                 } else if($type == 1){
                                                     echo "Ngày <b>".$date_from."</b> từ <b>".$time_from."</b> đến <b>".$time_to."</b>.";
                                                 } else if($type == 2){
-                                                    if($leave == "in_day_AM"){
+                                                    if($leave == 1){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "in_day_PM"){
+                                                    } else if($leave == 2){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "in_day"){
+                                                    } else if($leave == 3){
                                                         echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == "multi_day"){
+                                                    } else if($leave == 4){
                                                         echo "Ngày <b>".$date_from."</b> đến hết ngày <b>".$date_to."</b>.";
                                                     }
                                                 } else if($type == 3){
@@ -724,7 +756,7 @@
                                                 <?php
                                                 $date_created_at_d = date("d-m-Y", strtotime($petition->created_at ));
                                                 $date_created_at_t = date("H:i", strtotime($petition->created_at ));
-                                                echo  $date_created_at_t." ngày ".$date_created_at_d;
+                                                echo $date_created_at_t." ngày ".$date_created_at_d;
                                                 ?>
                                             </td>
                                             <td style="text-align: center;">

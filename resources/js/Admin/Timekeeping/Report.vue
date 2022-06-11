@@ -3,9 +3,12 @@
         <div class="card-header" style="height:50px;">
             <h4>Bảng thống kê chấm công</h4>
             <div style="position: absolute; right: 10px; top: 8px">
-                <date-picker v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian thống kê"></date-picker>
-                <button class="btn btn-primary" @click="getReport()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê</button>
-                <button v-if=" currentUser.permission == 1" class="btn btn-success" @click="exportData()" style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Xuất file Excel</button>
+                <date-picker v-model="dateRange" type="date" range
+                    placeholder="Vui lòng chọn khoảng thời gian thống kê"></date-picker>
+                <button class="btn btn-primary" @click="getReport()"
+                    style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê</button>
+                <button v-if=" currentUser.permission == 1" class="btn btn-success" @click="exportData()"
+                    style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Xuất file Excel</button>
             </div>
         </div>
         <div class="card-body table-responsive">
@@ -15,10 +18,12 @@
                         <tr style=" text-align:center;">
                             <th rowspan="2" width="500px">Thời gian thống kê</th>
                             <th rowspan="2" width="400px">Công chuẩn</th>
-                            <th colspan="3" width="30%" style="background-color: #6cb2eb">Thời gian làm việc chính thức dưới 3 năm</th>
-                            <th colspan="3" width="30%" style="background-color: #26C1E0">Thời gian làm việc chính thức trên 3 năm</th>
+                            <th colspan="3" width="30%" style="background-color: #6cb2eb">Thời gian làm việc chính thức
+                                dưới 3 năm</th>
+                            <th colspan="3" width="30%" style="background-color: #26C1E0">Thời gian làm việc chính thức
+                                trên 3 năm</th>
                         </tr>
-                        <tr  style=" text-align:center;">
+                        <tr style=" text-align:center;">
                             <th width="10%" style="background-color: #6cb2eb">WARRIOR 1</th>
                             <th width="10%" style="background-color: #6cb2eb">WARRIOR 2</th>
                             <th width="10%" style="background-color: #6cb2eb">WARRIOR 3</th>
@@ -60,16 +65,19 @@
                 </table>
             </div>
             <div>
-               <table class="table-striped table-responsive table-hover result-point">
+                <table class="table-striped table-responsive table-hover result-point">
                     <thead class="point-table-head">
                         <tr style="vertical-align: middle; font-size:12px; text-align:center; ">
 
                             <th style="vertical-align: middle; width:180px;" rowspan="2">
-                                <input type="text" name="search" class="form-control mb-2 input-search" v-model="search" placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
+                                <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
+                                    placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
                             </th>
                             <th rowspan="2" style="vertical-align: middle;">Mã Nhân viên</th>
-                            <th style="vertical-align: middle;" rowspan="2" @click="sort('date_official')">Ngày làm việc chính thức</th>
-                            <th style="vertical-align: middle; width:170px;" rowspan="2">Số ngày đã làm việc chính thức</th>
+                            <th style="vertical-align: middle;" rowspan="2" @click="sort('date_official')">Ngày làm việc
+                                chính thức</th>
+                            <th style="vertical-align: middle; width:170px;" rowspan="2">Số ngày đã làm việc chính thức
+                            </th>
                             <th colspan="2" style="vertical-align: middle;">Đi muộn</th>
                             <th colspan="2" style="vertical-align: middle;">Về sớm</th>
                             <th rowspan="2" style="vertical-align: middle;">Tổng giờ ĐMVS</th>
@@ -82,11 +90,16 @@
                             <th rowspan="2" style="vertical-align: middle;">Không checkout</th>
                             <th rowspan="2" style="vertical-align: middle;">Tổng giờ nỗ lực</th>
                             <th rowspan="2" style="vertical-align: middle; width:80px;">Warrior hiện tại</th>
-                            <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date" >TG để giữ Warrior</th>
-                            <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date">TGTB để giữ Warrior</th>
-                            <th rowspan="2" style="vertical-align: middle; width:80px;" v-if="expected.end_date > current.end_date">Warrior tiếp theo</th>
-                            <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date">TG để lên Warrior</th>
-                            <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date">TGTB để lên Warrior</th>
+                            <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date">
+                                TG để giữ Warrior</th>
+                            <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date">
+                                TGTB để giữ Warrior</th>
+                            <th rowspan="2" style="vertical-align: middle; width:80px;"
+                                v-if="expected.end_date > current.end_date">Warrior tiếp theo</th>
+                            <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date">
+                                TG để lên Warrior</th>
+                            <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date">
+                                TGTB để lên Warrior</th>
                             <th rowspan="2" style="vertical-align: middle;">Tỷ lệ đi muộn</th>
                         </tr>
                         <tr style="font-size:12px; text-align:center;">
@@ -96,16 +109,18 @@
                             <th style="vertical-align: middle;">Thời gian</th>
                         </tr>
                     </thead>
-                    <tbody style="font-size:14px;" >
+                    <tbody style="font-size:14px;">
                         <tr v-for="(user, index) in data" :key="index">
                             <td>{{ user.fullname }}</td>
                             <td style="text-align:center;">{{ user.id }}</td>
-                            <td style=" text-align:center;">{{ user.date_official_new }}</td>
-                            <td style=" text-align:right;">
+                            <td style=" text-align:center;" v-if="user.date_official_new != 0">{{ user.date_official_new}}</td>
+                            <td style=" text-align:center;" v-else><b>Thử việc</b></td>
+                            <td style=" text-align:right;" v-if="user.date_official_new != 0">
                                 {{ user.totalWorkDateY ? user.totalWorkDateY+" năm":" "}}
                                 {{ user.totalWorkDateM ? user.totalWorkDateM+" tháng" :" "}}
                                 {{ user.totalWorkDateD ? user.totalWorkDateD+" ngày" :" "}}
                             </td>
+                            <td v-else></td>
                             <td>{{ user.totalGoLate }}</td>
                             <td>{{ formatNumber(user.timeGoLate) }}</td>
                             <td>{{ user.totalAboutEarly }}</td>
@@ -116,15 +131,16 @@
                             <td>{{ user.totalUnpaidLeave }}</td>
                             <td>{{ user.totalWorkingDays }}</td>
                             <td>{{ user.totalTimeKeeping }}</td>
-                            <!--<td>{{ user.totalNotCheckIn }}</td>-->
                             <td>{{ user.totalNotCheckOut }}</td>
                             <td>{{ formatNumber(user.totalHourEfforts) }}</td>
                             <td>{{ user.currentWar }}</td>
                             <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.timeHoldWar) }}</td>
                             <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.avgTimeHoldWar) }}</td>
                             <td v-if="expected.end_date > current.end_date">{{ user.nextWar }}</td>
-                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.timeIncreaseWar) }}</td>
-                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.avgTimeIncreaseWar) }}</td>
+                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.timeIncreaseWar) }}
+                            </td>
+                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.avgTimeIncreaseWar) }}
+                            </td>
                             <td> {{ formatNumber(user.rateGoLate)}} %</td>
                         </tr>
                     </tbody>

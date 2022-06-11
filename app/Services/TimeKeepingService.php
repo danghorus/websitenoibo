@@ -84,9 +84,66 @@ class TimeKeepingService
                     $tmp[$key]['day'] = $key;
                     if ($user->timeKeeping) {
                         foreach ($user->timeKeeping as $time) {
-                            if ($time->check_date == $key) {
-                                $tmp[$key]['checkin'] = $filters['option'] ==1? $time->checkin: date('H:i', strtotime($key. ' '. $time->checkin));
-                                $tmp[$key]['checkout'] = $filters['option'] ==1? $time->checkout: date('H:i', strtotime($key. ' '. $time->checkout));
+                            if ($time->check_date == $key && ($time->petition_type == 0 || $time->petition_type == 1 || $time->petition_type == 4 )) {
+                                $tmp[$key]['petition_type'] = $time->petition_type;
+                                $tmp[$key]['type_leave'] = $time->type_leave;
+                                $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
+                                $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
+                                $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
+                                $tmp[$key]['checkout'] = $time->checkout? date('H:i', strtotime($key. ' '. $time->checkout)) : '-:-';
+
+                                $configTimeKeepingDay = $settings[$day]?? [];
+
+                                if ($configTimeKeepingDay && $configTimeKeepingDay['start_time'] && $configTimeKeepingDay['end_time']) {
+                                    $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
+                                    $checkOut = $time->checkout? strtotime($key. ' '. $time->checkout): '';
+
+                                    $start = $configTimeKeepingDay['start_time'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_time']): '';
+                                    $end = $configTimeKeepingDay['end_time'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_time']): '';
+
+                                    if (($checkIn && !$checkOut) || (!$checkIn && $checkOut)) {
+                                        $tmp[$key]['class'] = 'table-danger';
+                                    } elseif ($checkIn && $checkOut && $checkIn <= $start && $checkOut >= $end) {
+                                        $tmp[$key]['class'] = 'table-success';
+                                    } elseif (($checkIn && $checkIn > $start) || ($checkOut && $checkOut < $end)) {
+                                        $tmp[$key]['class'] = 'table-warning';
+                                    }
+
+                                    if ($checkIn && $start) {
+                                        if ($checkIn < $start) {
+                                            $tmp[$key]['go_early'] = (int) (($start - $checkIn) / 60);
+                                            $tmp[$key]['go_late'] = 0;
+                                        } else {
+                                            $tmp[$key]['go_early'] = 0;
+                                            $tmp[$key]['go_late'] = (int) (($checkIn - $start) / 60);
+                                        }
+                                    }
+
+                                    if ($checkOut && $end) {
+                                        if ($checkOut < $end) {
+                                            $tmp[$key]['about_early'] = (int) (($end - $checkOut) / 60);
+                                            $tmp[$key]['about_late'] = 0;
+                                        } else {
+                                            $tmp[$key]['about_early'] = 0;
+                                            $tmp[$key]['about_late'] = (int) (($checkOut - $end) / 60);
+                                        }
+                                    }
+
+
+                                }
+                            } else if (($time->check_date <= $key && $key <= $time->date_to) && $time->petition_type == 2 
+                                    || ($time->check_date == $key && $time->petition_type == 2 )) {
+                                $tmp[$key]['petition_type'] = $time->petition_type;
+                                $tmp[$key]['type_leave'] = $time->type_leave;
+                                if($time->type_leave == 3 || $time->type_leave == 4){
+                                    $tmp[$key]['class'] = 'table-dark';
+                                } else {
+                                    $tmp[$key]['class'] = 'table-secondary';
+                                }
+                                
+                                $tmp[$key]['time_from'] = date('H:i', strtotime($key. ' '. $time->time_from));
+                                $tmp[$key]['checkin'] =  $time->checkin ? date('H:i', strtotime($key. ' '. $time->checkin)): '-:-';
+                                $tmp[$key]['checkout'] = $time->checkout ? date('H:i', strtotime($key. ' '. $time->checkout)): '-:-';
 
                                 $configTimeKeepingDay = $settings[$day]?? [];
 
@@ -333,6 +390,21 @@ class TimeKeepingService
 
         if (isset($data['reason']) && $data['reason'] != '') {
             $timeKeeping->reason = $data['reason'];
+        }
+        if (isset($data['petition_type']) && $data['petition_type'] != '') {
+            $timeKeeping->petition_type = $data['petition_type'];
+        }
+        if (isset($data['type_leave']) && $data['type_leave'] != '') {
+            $timeKeeping->type_leave = $data['type_leave'];
+        }
+        if (isset($data['time_from']) && $data['time_from'] != '') {
+            $timeKeeping->time_from = $data['time_from'];
+        }
+        if (isset($data['time_to']) && $data['time_to'] != '') {
+            $timeKeeping->time_to = $data['time_to'];
+        }
+        if (isset($data['date_to']) && $data['date_to'] != '') {
+            $timeKeeping->date_to = $data['date_to'];
         }
 
         $timeKeeping->save();
@@ -593,9 +665,12 @@ class TimeKeepingService
                     }
                     $totalUnpaidLeave = $timeNow['total'] - $totalTimeKeeping;
                     $rateGoLate = $totalWorkingDays? round(($totalGoLate/$totalWorkingDays), 4) * 100 : 0;
-
-                    $date_official = new Datetime($user->date_official);
-                    $date_official_new = date('d-m-Y', strtotime($user->date_official));
+                    if($user->date_official != ""){
+                        $date_official = new Datetime($user->date_official);
+                        $date_official_new = date('d-m-Y', strtotime($user->date_official));
+                    } else {
+                        $date_official_new = 0;
+                    }
 
                     $date_now = new Datetime(date('Y-m-d', time()));
                     $totalWorkDate = ($date_official)->diff($date_now);
