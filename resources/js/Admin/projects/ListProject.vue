@@ -2,17 +2,8 @@
     <div class="col-lg-2 list-project">
         <p class="dashboard pl-3"><i class="fa fa-project-diagram" /> Danh sách dự án</p>
         <div class="pl-3">
-            <li class="pointer project-title" @click="chooseProject()">
-                <p>Dự án 1 (01-01-2022 -> 12-12-2022)</p>
-            </li>
-            <li class="pointer project-title">
-                <p>Dự án 2 (01-01-2022 -> 12-12-2022)</p>
-            </li>
-            <li class="pointer project-title">
-                <p>Dự án 3 (01-01-2022 -> 12-12-2022)</p>
-            </li>
-            <li class="pointer project-title">
-                <p>Dự án 4 (01-01-2022 -> 12-12-2022)</p>
+            <li class="pointer project-title" v-for="(project, index) in projects" :key="index" @click="chooseProject(project.id)">
+                <p>{{ project.project_name }} ( {{ project.project_start_date }} -> {{ project.project_end_date }} )</p>
             </li>
         </div>
         <div class="div-create-project">
@@ -29,7 +20,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <create-project />
+                            <create-project @updateProject="updateProject" />
                         </div>
                     </div>
                 </div>
@@ -40,15 +31,25 @@
 
 <script>
 import CreateProject from "./CreateProject";
+import {$get} from "../../ultis";
 export default {
     name: "ListProject",
     components: {CreateProject},
     data() {
         return {
-            showModal: false
+            showModal: false,
+            projects: []
         }
     },
+    created() {
+        this.getProjects();
+    },
     methods: {
+        async getProjects() {
+            const res = await $get('/projects/get_all');
+
+            this.projects = res.projects
+        },
         showModalCreate() {
             this.showModal = true;
             $(this.$refs.modalCreate).modal('show');
@@ -57,8 +58,11 @@ export default {
             $(this.$refs.modalCreate).modal('hide');
             this.showModal = false;
         },
-        chooseProject() {
-            this.$emit('chooseProject');
+        chooseProject(project_id) {
+            this.$emit('chooseProject', project_id);
+        },
+        updateProject() {
+            this.getProjects();
         }
     }
 }

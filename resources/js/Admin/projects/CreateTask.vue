@@ -33,7 +33,7 @@
         <div class="form-group">
             <label for="project_description">Thông tin công việc</label>
             <editor
-                api-key="no-api-key"
+                api-key="0pn43qeafddiqh81a9ba9c5abtfey57b1m07tfsa05gir4s3"
                 :init="{
                     height: 500,
                     menubar: false,

@@ -84,6 +84,11 @@ Route::middleware(['auth'])->group(function () {
 
     //projects
     Route::get('projects', [ProjectController::class, 'index']);
+    Route::post('projects/create', [ProjectController::class, 'create']);
+    Route::post('projects/{id}/update', [ProjectController::class, 'update']);
+    Route::get('projects/get_all', [ProjectController::class, 'getAll']);
+    Route::get('projects/{id}', [ProjectController::class, 'getInfo']);
+    Route::get('projects/{id}/get_detail', [ProjectController::class, 'getDetail']);
 });
 
 

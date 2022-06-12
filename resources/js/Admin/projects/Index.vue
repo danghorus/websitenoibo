@@ -1,11 +1,15 @@
 <template>
     <div class="col-lg-12">
         <div class="row">
-            <list-project @chooseProject="chooseProject()" />
+            <list-project @chooseProject="chooseProject" />
             <div class="col-lg-10">
                 <div class="row">
-                    <div class="col-lg-6">
-                        <h4>{{ showTimeline? 'Timeline công việc': 'Dự án 1' }}</h4>
+                    <div class="col-lg-6"
+                         @click="showModalEditProject()"
+                    >
+                        <h4>{{ showTimeline? 'Timeline công việc': project.project_name }}
+                            <i v-if="projectId" class="fas fa-pencil-alt" style="font-size: 25px; cursor: pointer"/>
+                        </h4>
                     </div>
                     <div class="col-lg-4">
                         <div class="input-seach float-right">
@@ -98,6 +102,23 @@
                 </div>
             </div>
         </div>
+        <div>
+            <div ref="modalCreate" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document" style=" max-width: 60%;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sửa dự án</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModalEditProject()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <CreateProject v-if="isShowModalEditProject" :projectId="projectId" @updateProject="updateProject" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -105,343 +126,23 @@
 import ListProject from "./ListProject";
 import draggable from 'vuedraggable';
 import CreateTask from "./CreateTask";
+import CreateProject from "./CreateProject";
 import TimelineTask from "./TimelineTask";
 import ListTask from "./ListTask";
+import {$get, $post} from "../../ultis";
 
 export default {
     name: "Index",
-    components: {ListTask, TimelineTask, CreateTask, ListProject, draggable},
+    components: {ListTask, TimelineTask, CreateTask, ListProject, draggable, CreateProject},
     data() {
         return {
-            list: [
-                {
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },{
-                    "id": 1,
-                    "name": "Abby",
-                    "sport": "basket"
-                },
-                {
-                    "id": 2,
-                    "name": "Brooke",
-                    "sport": "foot"
-                },
-                {
-                    "id": 3,
-                    "name": "Courtenay",
-                    "sport": "volley"
-                },
-                {
-                    "id": 4,
-                    "name": "David",
-                    "sport": "rugby"
-                },
-            ],
+            projectId: 0,
+            list: [],
             showModal: false,
             showFilter: false,
-            showTimeline: true
+            showTimeline: true,
+            project: {},
+            isShowModalEditProject: false
         }
     },
     methods: {
@@ -453,11 +154,36 @@ export default {
             $(this.$refs.modalCreateTask).modal('hide');
             this.showModal = false;
         },
-        chooseProject() {
+        chooseProject(project_id) {
             this.showTimeline = false;
+            this.isShowModalEditProject = false;
+            this.projectId = project_id;
         },
         handleShowFilter() {
             this.showFilter = !this.showFilter
+        },
+        async getInfoProject() {
+            const res = await $get(`/projects/${this.projectId}`);
+            if (res.code == 200) {
+                this.project = res.project;
+            }
+        },
+        showModalEditProject() {
+            $(this.$refs.modalCreate).modal('show');
+            this.isShowModalEditProject = true;
+        },
+        closeModalEditProject() {
+            $(this.$refs.modalCreate).modal('hide');
+            this.isShowModalEditProject = false;
+        },
+        updateProject() {
+            this.getInfoProject();
+            this.closeModalEditProject();
+        }
+    },
+    watch: {
+        'projectId': function (newVal) {
+            this.getInfoProject();
         }
     }
 }
