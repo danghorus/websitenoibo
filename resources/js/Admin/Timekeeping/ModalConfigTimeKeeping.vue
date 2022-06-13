@@ -26,10 +26,6 @@
                 <div class="form-group">
                     <label>Thứ 2:</label>
                     <div class="row">
-                        <DatePicker v-model="settings.monday.start_time" value-type="format" type="time" format="HH:mm"
-                            placeholder="Select time" @change="handleChange"></DatePicker>
-                        <DatePicker v-model="settings.monday.end_time" value-type="format" type="time" format="HH:mm"
-                            placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.monday.start_timeAM" value-type="format" type="time"
                             format="HH:mm" placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.monday.end_timeAM" value-type="format" type="time" format="HH:mm"
@@ -43,10 +39,6 @@
                 <div class="form-group">
                     <label>Thứ 3:</label>
                     <div class="row">
-                        <DatePicker v-model="settings.tuesday.start_time" value-type="format" type="time" format="HH:mm"
-                            placeholder="Select time" @change="handleChange"></DatePicker>
-                        <DatePicker v-model="settings.tuesday.end_time" value-type="format" type="time" format="HH:mm"
-                            placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.tuesday.start_timeAM" value-type="format" type="time"
                             format="HH:mm" placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.tuesday.end_timeAM" value-type="format" type="time" format="HH:mm"
@@ -60,10 +52,6 @@
                 <div class="form-group">
                     <label>Thứ 4:</label>
                     <div class="row">
-                        <DatePicker v-model="settings.wednesday.start_time" value-type="format" type="time"
-                            format="HH:mm" placeholder="Select time" @change="handleChange"></DatePicker>
-                        <DatePicker v-model="settings.wednesday.end_time" value-type="format" type="time" format="HH:mm"
-                            placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.wednesday.start_timeAM" value-type="format" type="time"
                             format="HH:mm" placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.wednesday.end_timeAM" value-type="format" type="time"
@@ -77,10 +65,6 @@
                 <div class="form-group">
                     <label>Thứ 5:</label>
                     <div class="row">
-                        <DatePicker v-model="settings.thursday.start_time" value-type="format" type="time"
-                            format="HH:mm" placeholder="Select time" @change="handleChange"></DatePicker>
-                        <DatePicker v-model="settings.thursday.end_time" value-type="format" type="time" format="HH:mm"
-                            placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.thursday.start_timeAM" value-type="format" type="time"
                             format="HH:mm" placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.thursday.end_timeAM" value-type="format" type="time"
@@ -94,10 +78,6 @@
                 <div class="form-group">
                     <label>Thứ 6:</label>
                     <div class="row">
-                        <DatePicker v-model="settings.friday.start_time" value-type="format" type="time" format="HH:mm"
-                            placeholder="Select time" @change="handleChange"></DatePicker>
-                        <DatePicker v-model="settings.friday.end_time" value-type="format" type="time" format="HH:mm"
-                            placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.friday.start_timeAM" value-type="format" type="time"
                             format="HH:mm" placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.friday.end_timeAM" value-type="format" type="time" format="HH:mm"
@@ -111,10 +91,6 @@
                 <div class="form-group">
                     <label>Thứ 7:</label>
                     <div class="row">
-                        <DatePicker v-model="settings.saturday.start_time" value-type="format" type="time"
-                            format="HH:mm" placeholder="Select time" @change="handleChange"></DatePicker>
-                        <DatePicker v-model="settings.saturday.end_time" value-type="format" type="time" format="HH:mm"
-                            placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.saturday.start_timeAM" value-type="format" type="time"
                             format="HH:mm" placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.saturday.end_timeAM" value-type="format" type="time"
@@ -128,10 +104,6 @@
                 <div class="form-group">
                     <label>Chủ nhật:</label>
                     <div class="row">
-                        <DatePicker v-model="settings.sunday.start_time" value-type="format" type="time" format="HH:mm"
-                            placeholder="Select time" @change="handleChange"></DatePicker>
-                        <DatePicker v-model="settings.sunday.end_time" value-type="format" type="time" format="HH:mm"
-                            placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.sunday.start_timeAM" value-type="format" type="time"
                             format="HH:mm" placeholder="Select time" @change="handleChange"></DatePicker>
                         <DatePicker v-model="settings.sunday.end_timeAM" value-type="format" type="time" format="HH:mm"
@@ -155,28 +127,16 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="form-check">
-                        <input class="form-check-input" v-model="option" value="1" type="radio" name="flexRadioDefault"
-                            id="flexRadioDefault1">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                            Cả công ty
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" v-model="option" value="2" name="flexRadioDefault"
-                            id="flexRadioDefault2">
-                        <label class="form-check-label" for="flexRadioDefault2">
-                            Chọn nhân viên
-                        </label>
+                        <input class="form-check-input" v-model="option" value="1" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                        <label class="form-check-label" for="flexRadioDefault1"> Cả công ty</label> &emsp;&emsp;&emsp;
+                        <input class="form-check-input" type="radio" v-model="option" value="2" name="flexRadioDefault" id="flexRadioDefault2">
+                        <label class="form-check-label" for="flexRadioDefault2">Chọn nhân viên</label>
                     </div>
                 </div>
                 <div class="col-lg-6 mt-2" v-if="option == 2">
                     <multiselect v-model="values" :options="users" :multiple="true" :close-on-select="false"
                         :clear-on-select="true" :preserve-search="true" placeholder="Vui lòng chọn" label="fullname"
                         track-by="id">
-                        <template slot="selection" slot-scope="{ values, search, isOpen }">
-                            <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">Đã chọn {{
-                                values.length }} nhân viên</span>
-                        </template>
                     </multiselect>
                 </div>
                 <div class="col-lg-6 mt-2">
@@ -209,56 +169,42 @@ export default {
             open: false,
             settings: {
                 monday: {
-                    start_time: '',
-                    end_time: '',
                     start_timeAM: '',
                     end_timeAM: '',
                     start_timePM: '',
                     end_timePM: ''
                 },
                 tuesday: {
-                    start_time: '',
-                    end_time: '',
                     start_timeAM: '',
                     end_timeAM: '',
                     start_timePM: '',
                     end_timePM: ''
                 },
                 wednesday: {
-                    start_time: '',
-                    end_time: '',
                     start_timeAM: '',
                     end_timeAM: '',
                     start_timePM: '',
                     end_timePM: ''
                 },
                 thursday: {
-                    start_time: '',
-                    end_time: '',
                     start_timeAM: '',
                     end_timeAM: '',
                     start_timePM: '',
                     end_timePM: ''
                 },
                 friday: {
-                    start_time: '',
-                    end_time: '',
                     start_timeAM: '',
                     end_timeAM: '',
                     start_timePM: '',
                     end_timePM: ''
                 },
                 saturday: {
-                    start_time: '',
-                    end_time: '',
                     start_timeAM: '',
                     end_timeAM: '',
                     start_timePM: '',
                     end_timePM: ''
                 },
                 sunday: {
-                    start_time: '',
-                    end_time: '',
                     start_timeAM: '',
                     end_timeAM: '',
                     start_timePM: '',

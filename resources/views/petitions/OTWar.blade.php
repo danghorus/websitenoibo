@@ -1,8 +1,8 @@
- <div class="modal fade" id="exampleModal_multiDay" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ <div class="modal fade" id="exampleModal_OTWar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
      <div class="modal-dialog" role="document">
         <div class="modal-content" style="width:100%;">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">Nghỉ phép nhiều ngày</h3>
+                <h3 class="modal-title" id="exampleModalLabel">Đăng ký làm thêm</h3>
                 <button type="button" class="close" data-bs-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -54,26 +54,15 @@
                     <?php } ?>
 
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="petition_type" type="text" value="2" hidden/>
-                        <label for="">loại yêu cầu</label>
-                    </div>
-                     <div class="form-floating mb-3">
-                        <input class="form-control" name="type_leave" type="text" value="4" hidden/>
-                        <label for="">Loại nghỉ phép</label>
+                        <input class="form-control" name="petition_type" type="text" value="6" hidden/>
+                        <label for="">Loại yêu cầu</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="multidayfrom" name="date_from" type="date" />
+                        <input class="form-control" id="OTfrom" name="date_from" type="date" />
                         <script>
-                            document.getElementById('multidayfrom').value = new Date().toISOString().substring(0, 10);
+                            document.getElementById('OTfrom').value = new Date().toISOString().substring(0, 10);
                         </script>
-                        <label for="">Từ ngày:</label>
-                    </div>
-                     <div class="form-floating mb-3">
-                        <input class="form-control" id="multidayto" name="date_to" type="date" />
-                        <script>
-                            document.getElementById('multidayto').value = new Date().toISOString().substring(0, 10);
-                        </script>
-                        <label for="">Đến ngày:</label>
+                        <label for="">Ngày:</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" name="time_from" type="time" value="08:00" hidden/>
@@ -85,7 +74,7 @@
                     </div>
                     <div class="form-floating mb-3">
                         <textarea class="form-control" name="petition_reason" type="text" style="height:100px;"></textarea>
-                        <label for="">Lý do:</label>
+                        <label for="">Nội dung công việc triển khai:</label>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

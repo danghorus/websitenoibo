@@ -42,7 +42,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(user, index) in data" :key="index">
-                        <td style="width:200px; font-size:14px; vertical-align: middle; height: 60px">{{ user.fullname
+                        <td style="width:200px; font-size:14px; vertical-align: middle; height: 88px">{{ user.fullname
                             }}</td>
                         <td v-for="(time, index) in user.time_keeping" :key="index" :class="time.class"
                             @click="showModal(user.id, user.fullname, time)"
@@ -62,7 +62,8 @@
                                 <div v-if="time.go_late_0  > 0 && time.about_late_0 > 0">(<b style="color:red;">Đi muộn:
                                         {{ time.go_late }}</b> - Về muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_late_0  > 0 && time.about_early_0 > 0">(<b style="color:red;">Đi
-                                        muộn: {{ time.go_late }}</b> - <b style="color:red;">Về sớm: {{ time.about_early }}</b>)</div>
+                                        muộn: {{ time.go_late }}</b> - <b style="color:red;">Về sớm: {{ time.about_early
+                                        }}</b>)</div>
                             </template>
                             <template v-else-if="time.petition_type == 4">
                                 <b>Thay đổi giờ công</b>
@@ -76,6 +77,25 @@
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
                                     sớm: {{ time.about_early }})</div>
+                            </template>
+                            <template v-else-if="time.petition_type == 5">
+                                <b>Đăng ký làm tính công</b>
+                                <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
+                                    time.checkout:'-:-' }}</div>
+                                <div v-if="time.go_early > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
+                                    muộn: {{ time.about_late }})</div>
+                                <div v-if="time.go_early > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
+                                    sớm: {{ time.about_early }})</div>
+                                <div v-if="time.go_late  > 0 && time.about_late > 0">(Đi muộn: {{ time.go_late }} - Về
+                                    muộn: {{ time.about_late }})</div>
+                                <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
+                                    sớm: {{ time.about_early }})</div>
+                            </template>
+                            <template v-else-if="time.petition_type == 6">
+                                <b>Đăng ký làm nỗ lực</b>
+                                <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
+                                    time.checkout:'-:-' }}</div>
+                                <div>(Tổng giờ nỗ lực {{ time.go_early }})</div>
                             </template>
                             <template v-else-if="time.petition_type == 1">
                                 <b>Đi muộn/về sớm</b>
