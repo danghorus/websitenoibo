@@ -148,6 +148,8 @@
                     @extends('petitions.in_day_pm')
                     @extends('petitions.in_day')
                     @extends('petitions.multi_day')
+                    @extends('petitions.OT')
+                    @extends('petitions.OTWar')
                     <script>
                     function changeColor() {
                         var result = document.getElementById("result");
