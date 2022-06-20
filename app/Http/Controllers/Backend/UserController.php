@@ -150,4 +150,27 @@ class UserController extends Controller
             'data' => $users
         ];
     }
+
+    public function all_user_by_group()
+    {
+        $users = User::query()->select(['id', 'fullname', 'user_code', 'place_id', 'department'])->get();
+
+        $newUsers = [];
+
+        foreach ($users as $user) {
+            if (isset($newUsers[$user->department])) {
+                $newUsers[$user->department]['values'][] = $user;
+            } else {
+                $newUsers[$user->department] = [
+                    'department' => $user->department,
+                    'values' => []
+                ];
+            }
+        }
+
+        return [
+            'code' => 200,
+            'data' => array_values($newUsers)
+        ];
+    }
 }

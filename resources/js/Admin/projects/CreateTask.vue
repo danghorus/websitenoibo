@@ -1,13 +1,13 @@
 <template>
-    <form>
+    <div>
         <div class="row">
             <div class="form-group col-lg-9">
                 <label for="project_name">Tên công việc</label>
-                <input type="text" class="form-control" id="project_name" placeholder="Nhập tên công việc">
+                <input type="text" v-model="task.task_name" class="form-control" id="project_name" placeholder="Nhập tên công việc">
             </div>
             <div class="form-group col-lg-3">
                 <label for="project_code">Mã công việc</label>
-                <input type="text" class="form-control" id="project_code" placeholder="Nhập mã công việc">
+                <input type="text" v-model="task.task_code" class="form-control" id="project_code" placeholder="Nhập mã công việc">
             </div>
         </div>
         <div class="row">
@@ -15,7 +15,7 @@
                 <label for="project_start_date">Thời gian thực hiện</label>
                 <DatePicker
                     style="width: 100%"
-                    v-model="start_time"
+                    v-model="task.start_time"
                     value-type="format"
                     type="datetime"
                     placeholder="Select time"
@@ -23,111 +23,188 @@
             </div>
             <div class="form-group col-lg-4">
                 <label for="project_end_date">Thời lượng</label>
-                <input type="text" class="form-control" id="project_end_date" placeholder="Nhập thời gian">
+                <input type="number" class="form-control" v-model="task.time" id="project_end_date" placeholder="Nhập thời gian (Giờ)">
             </div>
             <div class="form-group col-lg-4">
                 <label for="project_day">Thời gian kết thúc</label>
-                <input type="text" class="form-control" id="project_day" disabled>
+                <DatePicker
+                    style="width: 100%"
+                    v-model="task.end_time"
+                    value-type="format"
+                    type="datetime"
+                    disabled
+                ></DatePicker>
             </div>
         </div>
         <div class="form-group">
             <label for="project_description">Thông tin công việc</label>
             <editor
                 api-key="0pn43qeafddiqh81a9ba9c5abtfey57b1m07tfsa05gir4s3"
+                v-model="task.description"
                 :init="{
-                    height: 500,
-                    menubar: false,
-                    plugins: [
-                       'advlist autolink lists link image charmap print preview anchor',
-                       'searchreplace visualblocks code fullscreen',
-                       'insertdatetime media table paste code help wordcount'
-                    ],
-                     toolbar:
-                       'undo redo | formatselect | bold italic backcolor | \
-                       alignleft aligncenter alignright alignjustify | \
-                       bullist numlist outdent indent | removeformat | help'
-                }"
+                height: 500,
+                menubar: false,
+                plugins: [
+                   'advlist autolink lists link image charmap print preview anchor',
+                   'searchreplace visualblocks code fullscreen',
+                   'insertdatetime media table paste code help wordcount'
+                ],
+                 toolbar:
+                   'undo redo | formatselect | bold italic backcolor | \
+                   alignleft aligncenter alignright alignjustify | \
+                   bullist numlist outdent indent | removeformat | help'
+            }"
             />
         </div>
         <div class="row">
             <div class="form-group col-lg-6">
-                <label for="project_description">Dộ ưu tiên</label>
-                <select class="form-select">
-                    <option>Lê Duy1</option>
-                    <option>Lê Duy2</option>
-                    <option>Lê Duy3</option>
-                </select>
+                <label for="project_description">Độ ưu tiên</label>
+                <multiselect v-model="task.task_priority" :options="priorities" value="id" label="priority_label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                </multiselect>
             </div>
             <div class="form-group col-lg-6">
                 <label for="project_description">Nhãn dán</label>
-                <select class="form-select">
-                    <option>Lê Duy1</option>
-                    <option>Lê Duy2</option>
-                    <option>Lê Duy3</option>
-                </select>
+                <multiselect v-model="task.task_sticker" :options="stickers" value="id" label="sticker_name" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                </multiselect>
             </div>
         </div>
         <div class="row">
             <div class="form-group col-lg-6">
                 <label for="project_description">Bộ phận</label>
-                <select class="form-select">
-                    <option>Lê Duy1</option>
-                    <option>Lê Duy2</option>
-                    <option>Lê Duy3</option>
-                </select>
+                <multiselect v-model="task.task_department" :options="departments" value="value" label="label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                </multiselect>
             </div>
             <div class="form-group col-lg-6">
-                <label for="project_description">Trọng số</label>
-                <input type="text" class="form-control" id="project_end_date" placeholder="Nhập trọng số">
+                <label for="project_weight">Trọng số</label>
+                <input type="text" v-model="task.weight" class="form-control" id="project_weight" placeholder="Nhập trọng số">
             </div>
+        </div>
+        <div class="form-group">
+            <label for="project_description">Dự án</label>
+            <multiselect v-model="task.project_id" :options="projects" value="id" label="project_name" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+            </multiselect>
         </div>
         <div class="form-group">
             <label for="project_description">Công việc tiền nhiệm</label>
-            <select class="form-select">
-                <option>Lê Duy1</option>
-                <option>Lê Duy2</option>
-                <option>Lê Duy3</option>
-            </select>
+            <multiselect v-model="task.task_predecessor" :disabled="task.project_id == 0" :options="projects" value="id" label="project_name" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+            </multiselect>
         </div>
         <div class="form-group">
             <label for="project_description">Công việc cha</label>
-            <select class="form-select">
-                <option>Lê Duy1</option>
-                <option>Lê Duy2</option>
-                <option>Lê Duy3</option>
-            </select>
+            <multiselect v-model="task.task_parent" :disabled="task.project_id == 0" :options="projects" value="id" label="project_name" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+            </multiselect>
         </div>
         <div class="form-group">
-            <label for="project_description">Người thực hiện</label>
-            <select class="form-select">
-                <option>Lê Duy1 > Duylv 1> Duy 2 (Lê Duy -.....)</option>
-                <option>Lê Duy1 > Duylv 1> Duy 2 (Lê Duy -.....)</option>
-                <option>Lê Duy1 > Duylv 1> Duy 2 (Lê Duy -.....)</option>
-            </select>
+            <label>Người thực hiện</label>
+            <multiselect v-model="task.task_performer" :options="users" value="id" label="fullname" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+            </multiselect>
         </div>
         <div class="form-group">
-            <label for="project_description">Người giám sát</label>
-            <select class="form-select">
-                <option>Lê Duy1</option>
-                <option>Lê Duy2</option>
-                <option>Lê Duy3</option>
-            </select>
+            <label>Người giám sát</label>
+            <multiselect
+                v-model="values"
+                :options="groupUsers"
+                :multiple="true"
+                group-values="values"
+                group-label="department"
+                :group-select="true"
+                placeholder="Vui lòng chọn"
+                track-by="id"
+                label="fullname"
+            >
+                <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
+            </multiselect>
         </div>
-        <button type="submit" class="btn btn-primary">Tạo mới</button>
-    </form>
+        <button @click="saveTask()" class="btn btn-primary">Tạo mới</button>
+    </div>
 </template>
 
 <script>
 import Editor from '@tinymce/tinymce-vue'
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+import moment from "moment";
+import {$get, $post} from "../../ultis";
+import Multiselect from 'vue-multiselect';
 
 export default {
     name: "CreateTask",
-    components: { Editor, DatePicker },
+    components: { Editor, DatePicker, Multiselect },
+    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects'],
     data() {
         return {
-            start_time: ''
+            task: {
+                project_id: 0
+            },
+            users: [],
+            values: [],
+            departments: [
+                { value: 1, label: 'Admin' },
+                { value: 2, label: 'Dev' },
+                { value: 3, label: 'Game design' },
+                { value: 4, label: 'Art' },
+                { value: 5, label: 'Tester' },
+                { value: 6, label: 'Điều hành' },
+                { value: 7, label: 'Hành chính nhân sự' },
+                { value: 8, label: 'Kế toán' },
+                { value: 9, label: 'Phân tích dữ liệu' },
+                { value: 10, label: 'Support' },
+            ],
+            tasks: []
+        }
+    },
+    created() {
+
+    },
+    methods: {
+        async saveTask() {
+            if (!this.task.task_name) {
+                toastr.error('Vui lòng nhập tên công việc');
+                return false;
+            }
+            if (!this.task.start_time) {
+                toastr.error('Vui lòng nhập thời gian thực hiện');
+                return false;
+            }
+            if (!this.task.time) {
+                toastr.error('Vui lòng nhập thời lượng');
+                return false;
+            }
+            if (this.task.project_id == 0 || !this.task.project_id) {
+                toastr.error('Vui lòng chọn dự án');
+                return false;
+            }
+            if (!this.task.task_performer) {
+                toastr.error('Vui lòng chọn người thực hiện');
+                return false;
+            }
+
+            let data = {
+                task: this.task,
+                user_related: this.values.map(item => item.id)
+            };
+
+            const res = await $post('/tasks/create', data);
+            if (res.code == 200) {
+                toastr.success(res.message);
+            }
+        }
+    },
+    watch: {
+        'task.time': function (newVal) {
+            if (newVal > 0 && this.task.start_time) {
+                let dateTime = moment(this.task.start_time).add(newVal, 'h').toDate();
+                this.task.end_time = moment(dateTime).format('YYYY-MM-DD hh:mm:ss');
+            }
+        },
+        'task.start_time': function (newVal) {
+            if (newVal > 0 && this.task.time) {
+                let dateTime = moment(newVal).add(this.task.time, 'h').toDate();
+                this.task.end_time = moment(dateTime).format('YYYY-MM-DD hh:mm:ss');
+            }
+        },
+        'task.project_id': function (newVal) {
+            // this.getTaskByProject();
         }
     }
 }

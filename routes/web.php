@@ -3,6 +3,9 @@
 use App\Http\Controllers\Backend\ChangePasswordController;
 use App\Http\Controllers\Backend\PasswordController;
 use App\Http\Controllers\Backend\ChangeAvatarController;
+use App\Http\Controllers\Backend\PriorityController;
+use App\Http\Controllers\Backend\StickerController;
+use App\Http\Controllers\Backend\TaskController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\PetitionController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('users/{user}/change-password', [ChangePasswordController::class, 'change_password'])->name('users.change.password');
     Route::post('users/{user}/change-avatar', [ChangeAvatarController::class, 'change_avatar'])->name('users.change.avatar');
     Route::get('user/all_user', [UserController::class, 'all_user']);
+    Route::get('user/all_user_by_group', [UserController::class, 'all_user_by_group']);
 
     Route::get('change_password', [PasswordController::class, 'index']);
     Route::post('change_password', [PasswordController::class, 'changePassword'])->name('change.password');
@@ -89,6 +93,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('projects/get_all', [ProjectController::class, 'getAll']);
     Route::get('projects/{id}', [ProjectController::class, 'getInfo']);
     Route::get('projects/{id}/get_detail', [ProjectController::class, 'getDetail']);
+
+    //Priority
+    Route::post('priorities/create', [PriorityController::class, 'create']);
+    Route::post('priorities/update/{id}', [PriorityController::class, 'update']);
+    Route::post('priorities/delete/{id}', [PriorityController::class, 'delete']);
+    Route::get('/priorities/get_all', [PriorityController::class, 'index']);
+
+    //Sticker
+    Route::post('stickers/create', [StickerController::class, 'create']);
+    Route::post('stickers/update/{id}', [StickerController::class, 'update']);
+    Route::post('stickers/delete/{id}', [StickerController::class, 'delete']);
+    Route::get('/stickers/get_all', [StickerController::class, 'index']);
+
+
+    //Task
+    Route::post('tasks/create', [TaskController::class, 'create']);
 });
 
 

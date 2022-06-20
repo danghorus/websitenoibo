@@ -1,7 +1,7 @@
 <template>
     <div class="col-lg-12">
         <div class="row">
-            <list-project @chooseProject="chooseProject" />
+            <list-project @chooseProject="chooseProject" :users="users" :groupUsers="groupUsers" :projects="projects" />
             <div class="col-lg-10">
                 <div class="row">
                     <div class="col-lg-6"
@@ -31,6 +31,7 @@
                         </div>
                     </div>
                     <div class="col-lg-2">
+                        <button class="btn btn-primary float-right ml-2" @click="showModalConfigTask()">Cấu hình</button>
                         <button class="btn btn-primary float-right" @click="showModalCreateTask()">Thêm mới</button>
                     </div>
                 </div>
@@ -96,7 +97,8 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <create-task />
+                            <create-task :users="users" :groupUsers="groupUsers" :priorities="priorities"
+                                         :stickers="stickers" :projects="projects" />
                         </div>
                     </div>
                 </div>
@@ -113,7 +115,24 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <CreateProject v-if="isShowModalEditProject" :projectId="projectId" @updateProject="updateProject" />
+                            <CreateProject v-if="isShowModalEditProject" :projectId="projectId" :users="users" :groupUsers="groupUsers" @updateProject="updateProject" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div ref="modalConfigTask" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document" style=" max-width: 60%;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Cấu hình</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModalConfigTask()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <Config />
                         </div>
                     </div>
                 </div>
@@ -129,11 +148,12 @@ import CreateTask from "./CreateTask";
 import CreateProject from "./CreateProject";
 import TimelineTask from "./TimelineTask";
 import ListTask from "./ListTask";
+import Config from "./Config";
 import {$get, $post} from "../../ultis";
 
 export default {
     name: "Index",
-    components: {ListTask, TimelineTask, CreateTask, ListProject, draggable, CreateProject},
+    components: {ListTask, TimelineTask, CreateTask, ListProject, draggable, CreateProject, Config},
     data() {
         return {
             projectId: 0,
@@ -142,17 +162,50 @@ export default {
             showFilter: false,
             showTimeline: true,
             project: {},
-            isShowModalEditProject: false
+            isShowModalEditProject: false,
+            showModalConfig: false,
+            users: [],
+            groupUsers: [],
+            priorities: [],
+            stickers: [],
+            projects: []
         }
     },
+    created() {
+        this.getAllUser();
+        this.getGroupUsers();
+        this.getAllPriority();
+        this.getAllSticker();
+        this.getProjects();
+    },
     methods: {
+        async getAllUser() {
+            const res = await $get('/user/all_user');
+            if (res.code == 200) {
+                this.users = res.data;
+            }
+        },
+        async getGroupUsers() {
+            const res = await $get('/user/all_user_by_group');
+            if (res.code == 200) {
+                this.groupUsers = res.data;
+            }
+        },
         showModalCreateTask() {
             this.showModal = true;
             $(this.$refs.modalCreateTask).modal('show');
         },
+        showModalConfigTask() {
+            this.showModalConfig = true;
+            $(this.$refs.modalConfigTask).modal('show');
+        },
         closeModalCreateTask() {
             $(this.$refs.modalCreateTask).modal('hide');
             this.showModal = false;
+        },
+        closeModalConfigTask() {
+            $(this.$refs.modalConfigTask).modal('hide');
+            this.showModalConfig = false;
         },
         chooseProject(project_id) {
             this.showTimeline = false;
@@ -179,7 +232,24 @@ export default {
         updateProject() {
             this.getInfoProject();
             this.closeModalEditProject();
-        }
+        },
+        async getAllPriority() {
+            const res = await $get('/priorities/get_all');
+            if (res.code == 200) {
+                this.priorities = res.data;
+            }
+        },
+        async getAllSticker() {
+            const res = await $get('/stickers/get_all');
+            if (res.code == 200) {
+                this.stickers = res.data;
+            }
+        },
+        async getProjects() {
+            const res = await $get('/projects/get_all');
+
+            this.projects = res.projects
+        },
     },
     watch: {
         'projectId': function (newVal) {

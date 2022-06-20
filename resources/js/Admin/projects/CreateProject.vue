@@ -60,18 +60,16 @@
             <label for="project_description">Người tham gia</label>
             <multiselect
                 v-model="values"
-                :options="users"
+                :options="groupUsers"
                 :multiple="true"
-                :close-on-select="true"
-                :clear-on-select="true"
-                :preserve-search="true"
+                group-values="values"
+                group-label="department"
+                :group-select="true"
                 placeholder="Vui lòng chọn"
-                label="fullname"
                 track-by="id"
+                label="fullname"
             >
-                <template slot="selection" slot-scope="{ values, search, isOpen }">
-                    <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">Đã chọn {{ values.length }} nhân viên</span>
-                </template>
+                <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
             </multiselect>
         </div>
         <div class="form-group">
@@ -94,27 +92,19 @@ import moment from "moment";
 export default {
     name: "CreateProject",
     components: { Editor, DatePicker, Multiselect },
-    props: ['projectId'],
+    props: ['projectId', 'users', 'groupUsers'],
     data() {
         return {
             project: {},
-            users: [],
             values: [],
         }
     },
     created() {
-        this.getAllUser();
         if (this.projectId) {
             this.getDetailProject();
         }
     },
     methods: {
-        async getAllUser() {
-            const res = await $get('/user/all_user');
-            if (res.code == 200) {
-                this.users = res.data;
-            }
-        },
         async getDetailProject() {
             const res = await $get(`/projects/${this.projectId}/get_detail`);
             if (res.code == 200) {

@@ -20,7 +20,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <create-project @updateProject="updateProject" />
+                            <create-project @updateProject="updateProject" :users="users" :groupUsers="groupUsers"  />
                         </div>
                     </div>
                 </div>
@@ -35,14 +35,13 @@ import {$get} from "../../ultis";
 export default {
     name: "ListProject",
     components: {CreateProject},
+    props: ['users', 'groupUsers', 'projects'],
     data() {
         return {
-            showModal: false,
-            projects: []
+            showModal: false
         }
     },
     created() {
-        this.getProjects();
     },
     methods: {
         async getProjects() {
