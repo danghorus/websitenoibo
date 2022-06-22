@@ -156,7 +156,10 @@
                                                     echo "Thay đổi giờ chấm công";
                                                 }
                                                 if($type == 5){
-                                                    echo "Đăng ký làm";
+                                                    echo "Đăng ký làm thêm";
+                                                }
+                                                if($type == 6){
+                                                    echo "Đăng ký làm nỗ lực";
                                                 }
                                                 ?>
                                             </td>
@@ -193,11 +196,9 @@
                                                 } else if($type == 3){
                                                     echo "Ngày bắt đầu nghỉ việc <b>".$date_from."</b>.";
                                                 } else if($type == 5){
-                                                    if($date_from  == $date_to){
-                                                        echo "Đăng ký làm ngày <b>".$date_from."</b>.";
-                                                    } else{
-                                                        echo "Đăng ký làm từ ngày <b>".$date_from."</b> đến ngày <b>".$date_to."</b>.";
-                                                    }
+                                                    echo "Đăng ký làm ngày <b>".$date_from."</b>.";
+                                                } else if($type == 6){
+                                                    echo "Đăng ký làm nỗ lực ngày <b>".$date_from."</b>.";
                                                 }
                                                 ?>
                                             </td>
@@ -261,7 +262,10 @@
                                                     echo "Thay đổi giờ chấm công";
                                                 }
                                                 if($type == 5){
-                                                    echo "Đăng ký làm";
+                                                    echo "Đăng ký làm thêm";
+                                                }
+                                                if($type == 6){
+                                                    echo "Đăng ký làm nỗ lực";
                                                 }
                                                 ?>
                                             </td>
@@ -298,11 +302,9 @@
                                                 } else if($type == 3){
                                                     echo "Ngày bắt đầu nghỉ việc <b>".$date_from."</b>.";
                                                 } else if($type == 5){
-                                                    if($date_from == $date_to){
-                                                        echo "Đăng ký làm ngày <b>".$date_from."</b>.";
-                                                    } else{
-                                                        echo "Đăng ký làm từ ngày <b>".$date_from."</b> đến ngày <b>".$date_to."</b>.";
-                                                    }
+                                                    echo "Đăng ký làm ngày <b>".$date_from."</b>.";
+                                                } else if($type == 6){
+                                                    echo "Đăng ký làm nỗ lực ngày <b>".$date_from."</b>.";
                                                 }
                                                 ?>
                                             </td>
@@ -415,6 +417,12 @@
                                                 if($type == 4){
                                                     echo "Thay đổi giờ chấm công";
                                                 }
+                                                if($type == 5){
+                                                    echo "Đăng ký làm thêm";
+                                                }
+                                                if($type == 6){
+                                                    echo "Đăng ký làm nỗ lực";
+                                                }
                                                 ?>
                                             </td>
                                             <td>
@@ -448,8 +456,11 @@
                                                         echo "Ngày <b>".$date_from."</b> đến hết ngày <b>".$date_to."</b>.";
                                                     }
                                                 } else if($type == 3){
-                                                    echo "Ngày bắt đầu nghỉ việc ".$date_from.".";
-
+                                                    echo "Ngày bắt đầu nghỉ việc <b>".$date_from."</b>.";
+                                                } else if($type == 5){
+                                                    echo "Đăng ký làm ngày <b>".$date_from."</b>.";
+                                                } else if($type == 6){
+                                                    echo "Đăng ký làm nỗ lực ngày <b>".$date_from."</b>.";
                                                 }
                                                 ?>
                                             </td>
@@ -512,6 +523,12 @@
                                                 if($type == 4){
                                                     echo "Thay đổi giờ chấm công";
                                                 }
+                                                if($type == 5){
+                                                    echo "Đăng ký làm thêm";
+                                                }
+                                                if($type == 6){
+                                                    echo "Đăng ký làm nỗ lực";
+                                                }
                                                 ?>
                                             </td>
                                             <td>
@@ -545,8 +562,11 @@
                                                         echo "Ngày <b>".$date_from."</b> đến hết ngày <b>".$date_to."</b>.";
                                                     }
                                                 } else if($type == 3){
-                                                    echo "Ngày bắt đầu nghỉ việc ".$date_from.".";
-
+                                                    echo "Ngày bắt đầu nghỉ việc <b>".$date_from."</b>.";
+                                                } else if($type == 5){
+                                                    echo "Đăng ký làm ngày <b>".$date_from."</b>.";
+                                                } else if($type == 6){
+                                                    echo "Đăng ký làm nỗ lực ngày <b>".$date_from."</b>.";
                                                 }
                                                 ?>
                                             </td>
@@ -634,6 +654,12 @@
                                                 if($type == 4){
                                                     echo "Thay đổi giờ chấm công";
                                                 }
+                                                if($type == 5){
+                                                    echo "Đăng ký làm thêm";
+                                                }
+                                                if($type == 6){
+                                                    echo "Đăng ký làm nỗ lực";
+                                                }
                                                 ?>
                                             </td>
                                             <td>
@@ -667,8 +693,11 @@
                                                         echo "Ngày <b>".$date_from."</b> đến hết ngày <b>".$date_to."</b>.";
                                                     }
                                                 } else if($type == 3){
-                                                    echo "Ngày bắt đầu nghỉ việc ".$date_from.".";
-
+                                                    echo "Ngày bắt đầu nghỉ việc <b>".$date_from."</b>.";
+                                                } else if($type == 5){
+                                                    echo "Đăng ký làm ngày <b>".$date_from."</b>.";
+                                                } else if($type == 6){
+                                                    echo "Đăng ký làm nỗ lực ngày <b>".$date_from."</b>.";
                                                 }
                                                 ?>
                                             </td>
@@ -731,6 +760,12 @@
                                                 if($type == 4){
                                                     echo "Thay đổi giờ chấm công";
                                                 }
+                                                if($type == 5){
+                                                    echo "Đăng ký làm thêm";
+                                                }
+                                                if($type == 6){
+                                                    echo "Đăng ký làm nỗ lực";
+                                                }
                                                 ?>
                                             </td>
                                             <td>
@@ -764,8 +799,11 @@
                                                         echo "Ngày <b>".$date_from."</b> đến hết ngày <b>".$date_to."</b>.";
                                                     }
                                                 } else if($type == 3){
-                                                    echo "Ngày bắt đầu nghỉ việc ".$date_from.".";
-
+                                                    echo "Ngày bắt đầu nghỉ việc <b>".$date_from."</b>.";
+                                                } else if($type == 5){
+                                                    echo "Đăng ký làm ngày <b>".$date_from."</b>.";
+                                                } else if($type == 6){
+                                                    echo "Đăng ký làm nỗ lực ngày <b>".$date_from."</b>.";
                                                 }
                                                 ?>
                                             </td>
