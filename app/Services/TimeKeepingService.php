@@ -322,6 +322,15 @@ class TimeKeepingService
                                         $tmp[$key]['go_late'] = 0;
                                     }
                                 }
+                            }else if ($time->check_date == $key  && $time->petition_type == 7) {
+                                $tmp[$key]['petition_type'] = $time->petition_type;
+                                $tmp[$key]['type_leave'] = $time->type_leave;
+                                $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
+                                $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
+                                $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
+                                $tmp[$key]['checkout'] = $time->checkout? date('H:i', strtotime($key. ' '. $time->checkout)) : '-:-';
+
+                                $tmp[$key]['class'] = 'table-light';
                             }
                         }
                     }
@@ -636,6 +645,10 @@ class TimeKeepingService
                 if ($user->user_status == 1 && $user->position != "Giám đốc" ) {
                     $totalWorkDate = 0;
 
+                    $timeWar = 0;
+                    $totalOT = 0;
+                    $totalWar  = 0;
+
                     $totalGoLate = 0;
                     $timeGoLate = 0;
                     $totalGoEarly = 0;
@@ -654,34 +667,116 @@ class TimeKeepingService
                     $totalHourEfforts = 0;
 
                     foreach ($user->timeKeeping as $value) {
+
                         $labelDay = $range[$value->check_date];
                         $configDay = $settings[$labelDay] ?? [];
 
                         $checkIn = $value->checkin? strtotime($value->check_date. ' '. $value->checkin): '';
                         $checkOut = $value->checkout? strtotime($value->check_date. ' '. $value->checkout): '';
 
-                        if ($configDay) {
-                            $start = $configDay['start_time'] != ''? strtotime($value->check_date. ' '. $configDay['start_time']): '';
-                            $end = $configDay['end_time'] != ''? strtotime($value->check_date. ' '. $configDay['end_time']): '';
+                            if ($configDay && ($value->petition_type == 0 || $value->petition_type == 1 || $value->petition_type == 4 )) {
+                                $start = $configDay['start_timeAM'] != ''? strtotime($value->check_date. ' '. $configDay['start_timeAM']): '';
+                                $end = $configDay['end_timePM'] != ''? strtotime($value->check_date. ' '. $configDay['end_timePM']): '';
 
-                            if ($checkIn && $start && $checkIn > $start) {
-                                $totalGoLate++;
-                                $timeGoLate += $checkIn - $start;
-                            } else if ($checkIn && $start && $checkIn < $start) {
-                                $totalGoEarly++;
-                                $timeGoEarly += $start - $checkIn;
+                                if ($checkIn && $start && $checkIn > $start) {
+                                    $totalGoLate++;
+                                    $timeGoLate += $checkIn - $start;
+                                } else if ($checkIn && $start && $checkIn < $start) {
+                                    $totalGoEarly++;
+                                    $timeGoEarly += $start - $checkIn;
+                                }
+                                if ($checkOut && $end && $checkOut > $end) {
+                                    $totalAboutLate++;
+                                    $timeAboutLate += $checkOut - $end;
+                                } else if ($checkOut && $end && $checkOut < $end) {
+                                    $totalAboutEarly++;
+                                    $timeAboutEarly += $end - $checkOut;
+                                }
+                            }else if ($configDay && $value->petition_type == 5 ) {
+                                $start = $configDay['start_timeAM'] != ''? strtotime($value->check_date. ' '. $configDay['start_timeAM']): '';
+                                $end = $configDay['end_timePM'] != ''? strtotime($value->check_date. ' '. $configDay['end_timePM']): '';
+                                if ($checkIn  && $checkOut ) {
+                                   $totalOT ++;
+                                }
+                                if ($checkIn && $start && $checkIn > $start) {
+                                    $totalGoLate++;
+                                    $timeGoLate += $checkIn - $start;
+                                } else if ($checkIn && $start && $checkIn < $start) {
+                                    $totalGoEarly++;
+                                    $timeGoEarly += $start - $checkIn;
+                                }
+                                if ($checkOut && $end && $checkOut > $end) {
+                                    $totalAboutLate++;
+                                    $timeAboutLate += $checkOut - $end;
+                                } else if ($checkOut && $end && $checkOut < $end) {
+                                    $totalAboutEarly++;
+                                    $timeAboutEarly += $end - $checkOut;
+                                }
+                            } else if ($configDay && $value->petition_type == 6 && $checkIn  && $checkOut ) {
+                                    $totalWar ++;
+                                    $timeWar += $checkOut - $checkIn;
+                            } else if($configDay && $value->petition_type == 2 && $value->type_leave == 1){
+                                $start = $configDay['start_timePM'] != ''? strtotime($value->check_date. ' '. $configDay['start_timePM']): '';
+                                $end = $configDay['end_timePM'] != ''? strtotime($value->check_date. ' '. $configDay['end_timePM']): '';
+
+                                 if ($checkIn && $start && $checkIn > $start) {
+                                    $totalGoLate++;
+                                    $timeGoLate += $checkIn - $start;
+                                } else if ($checkIn && $start && $checkIn < $start) {
+                                    $totalGoEarly++;
+                                    $timeGoEarly += $start - $checkIn;
+                                }
+                                if ($checkOut && $end && $checkOut > $end) {
+                                    $totalAboutLate++;
+                                    $timeAboutLate += $checkOut - $end;
+                                } else if ($checkOut && $end && $checkOut < $end) {
+                                    $totalAboutEarly++;
+                                    $timeAboutEarly += $end - $checkOut;
+                                }
+
+                            } else if($configDay && $value->petition_type == 2 && $value->type_leave == 2){
+                                $start = $configDay['start_timeAM'] != ''? strtotime($value->check_date. ' '. $configDay['start_timeAM']): '';
+                                $end = $configDay['end_timeAM'] != ''? strtotime($value->check_date. ' '. $configDay['end_timeAM']): '';
+
+                                 if ($checkIn && $start && $checkIn > $start) {
+                                    $totalGoLate++;
+                                    $timeGoLate += $checkIn - $start;
+                                } else if ($checkIn && $start && $checkIn < $start) {
+                                    $totalGoEarly++;
+                                    $timeGoEarly += $start - $checkIn;
+                                }
+                                if ($checkOut && $end && $checkOut > $end) {
+                                    $totalAboutLate++;
+                                    $timeAboutLate += $checkOut - $end;
+                                } else if ($checkOut && $end && $checkOut < $end) {
+                                    $totalAboutEarly++;
+                                    $timeAboutEarly += $end - $checkOut;
+                                }
+
+                            }else if($configDay && $value->petition_type == 2 && $value->type_leave == 3){
+                                $start = $configDay['start_timeAM'] != ''? strtotime($value->check_date. ' '. $configDay['start_timeAM']): '';
+                                $end = $configDay['end_timeAM'] != ''? strtotime($value->check_date. ' '. $configDay['end_timeAM']): '';
+                                
+                                 if ($checkIn && $start && $checkIn > $start) {
+                                    $totalGoLate++;
+                                    $timeGoLate += $checkIn - $start;
+                                } else if ($checkIn && $start && $checkIn < $start) {
+                                    $totalGoEarly++;
+                                    $timeGoEarly += $start - $checkIn;
+                                }
+                                if ($checkOut && $end && $checkOut > $end) {
+                                    $totalAboutLate++;
+                                    $timeAboutLate += $checkOut - $end;
+                                } else if ($checkOut && $end && $checkOut < $end) {
+                                    $totalAboutEarly++;
+                                    $timeAboutEarly += $end - $checkOut;
+                                }
+
                             }
 
-                            if ($checkOut && $end && $checkOut > $end) {
-                                $totalAboutLate++;
-                                $timeAboutLate += $checkOut - $end;
-                            } else if ($checkOut && $end && $checkOut < $end) {
-                                $totalAboutEarly++;
-                                $timeAboutEarly += $end - $checkOut;
-                            }
-                        }
+                            
 
-                        if ($checkIn && $checkOut) {
+                        /*if ($checkIn && $checkOut && ($value->petition_type == 0 || $value->petition_type == 1 || $value->petition_type == 4)) {
                             switch ($labelDay) {
                                 case 'monday':
                                 case 'tuesday':
@@ -703,15 +798,125 @@ class TimeKeepingService
                                 case 'saturday':
                                     $totalWorkingDays++;
                                     break;
+                            }*/
+                        if ($checkIn && $checkOut) { 
+                            if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' || $labelDay == 'thursday' || $labelDay == 'friday'){
+                                if($value->petition_type == 0 || $value->petition_type == 1 || $value->petition_type == 4){
+                                    $totalTimeKeeping++;
+                                    $totalWorkingDays++;
+                                }else if($value->petition_type == 2 && $value->type_leave == 1 ){
+                                    $totalTimeKeeping = $totalTimeKeeping + 1/2;
+                                    $totalWorkingDays++;
+                                }else if($value->petition_type == 2 && $value->type_leave == 2 ){
+                                    $totalTimeKeeping = $totalTimeKeeping + 1/2;
+                                    $totalWorkingDays++;
+                                }else if($value->petition_type == 2 && $value->type_leave == 3 || $value->type_leave == 4 ){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays = $totalWorkingDays;
+                                }else if($value->petition_type == 5){
+                                    $totalTimeKeeping++;
+                                    $totalWorkingDays++;
+                                }else if($value->petition_type == 6){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays++;
+                                }else if($value->petition_type == 7){
+                                    $totalTimeKeeping++;
+                                    $totalWorkingDays++;
+                                }
+                            }else if($labelDay == 'saturday'){
+                                if($value->petition_type == 0 || $value->petition_type == 1 || $value->petition_type == 4){
+                                    $totalTimeKeeping = $totalTimeKeeping + 1/2;
+                                    $totalWorkingDays++;
+                                }else if($value->petition_type == 2 && $value->type_leave == 1 ){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays++;
+                                }else if($value->petition_type == 2 && $value->type_leave == 2 ){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays++;
+                                }else if($value->petition_type == 2 && ($value->type_leave == 3 || $value->type_leave == 4 )){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays = $totalWorkingDays;
+                                }else if($value->petition_type == 5){
+                                     $totalTimeKeeping = $totalTimeKeeping + 1/2;
+                                    $totalWorkingDays++;
+                                }else if($value->petition_type == 6){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays++;
+                                }else if($value->petition_type == 7){
+                                    $totalTimeKeeping = $totalTimeKeeping + 1/2;
+                                    $totalWorkingDays++;
+                                }
+                            }else if($labelDay == 'sunday'){
+                                if($value->petition_type == 0 || $value->petition_type == 1 || $value->petition_type == 4){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays = $totalWorkingDays;
+                                }else if($value->petition_type == 2 && $value->type_leave == 1 ){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays = $totalWorkingDays;
+                                }else if($value->petition_type == 2 && $value->type_leave == 2 ){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays = $totalWorkingDays;
+                                }else if($value->petition_type == 2 && ($value->type_leave == 3 || $value->type_leave == 4 )){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays = $totalWorkingDays;
+                                }else if($value->petition_type == 5){
+                                    $totalTimeKeeping++;
+                                    $totalWorkingDays++;
+                                }else if($value->petition_type == 6){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays++;
+                                }else if($value->petition_type == 7){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays = $totalWorkingDays;
+                                }
+                            }           
+                        }else if($checkIn && !$checkOut) {
+                            if($value->petition_type == 7){
+                                if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' || $labelDay == 'thursday' || $labelDay == 'friday'){
+                                    $totalTimeKeeping++;
+                                    $totalWorkingDays++;
+                                }else if($labelDay == 'saturday'){
+                                    $totalTimeKeeping = $totalTimeKeeping +1/2;
+                                    $totalWorkingDays++;
+                                }else if($labelDay == 'sunday'){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays = $totalWorkingDays;
+                                }
+                            } else {
+                                $totalNotCheckOut++;
                             }
-                        }  elseif ($checkIn && !$checkOut) {
-                            $totalNotCheckOut++;
-                        } elseif (!$checkIn && $checkOut) {
-                            $totalNotCheckIn++;
+                        }else if(!$checkIn && $checkOut) {
+                            if($value->petition_type == 7){
+                                if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' || $labelDay == 'thursday' || $labelDay == 'friday'){
+                                    $totalTimeKeeping++;
+                                    $totalWorkingDays++;
+                                }else if($labelDay == 'saturday'){
+                                    $totalTimeKeeping = $totalTimeKeeping +1/2;
+                                    $totalWorkingDays++;
+                                }else if($labelDay == 'sunday'){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays = $totalWorkingDays;
+                                }
+                            } else {
+                                $totalNotCheckIn++;
+                            }
+                        }else {
+                            if($value->petition_type == 7){
+                                if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' || $labelDay == 'thursday' || $labelDay == 'friday'){
+                                    $totalTimeKeeping++;
+                                    $totalWorkingDays++;
+                                }else if($labelDay == 'saturday'){
+                                    $totalTimeKeeping = $totalTimeKeeping +1/2;
+                                    $totalWorkingDays++;
+                                }else if($labelDay == 'sunday'){
+                                    $totalTimeKeeping = $totalTimeKeeping;
+                                    $totalWorkingDays = $totalWorkingDays;
+                                }
+                            }
                         }
                     }
 
-                    $totalHourEfforts = (($timeGoEarly + $timeAboutLate) - ($timeGoLate + $timeAboutEarly))/3600;
+                    $totalHourEfforts = (($timeWar + $timeGoEarly + $timeAboutLate) - ($timeGoLate + $timeAboutEarly))/3600;
 
                     $currentWar = '';
                     $nextWar = '';
@@ -858,6 +1063,9 @@ class TimeKeepingService
                         'totalNotCheckIn' => $totalNotCheckIn,
                         'totalNotCheckOut' => $totalNotCheckOut,
                         'totalGoLateAboutEarly' => round(($timeGoLate/3600 + $timeAboutEarly/3600),2),
+
+                        'totalOT' => $totalOT,
+                        'totalWar' => $totalWar,
                     ];
                 }
             }
@@ -914,6 +1122,8 @@ class TimeKeepingService
                         'totalNotCheckIn' => 0,
                         'totalNotCheckOut' => 0,
                         'totalGoLateAboutEarly' => 0,
+                        'totalOT' => 0,
+                        'totalWar' => 0,
                     ];
                 }
             }

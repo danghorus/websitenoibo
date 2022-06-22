@@ -97,6 +97,11 @@
                                     time.checkout:'-:-' }}</div>
                                 <div>(Tổng giờ nỗ lực {{ time.go_early }})</div>
                             </template>
+                            <template v-else-if="time.petition_type == 7">
+                                <b>Lịch nghỉ công ty</b>
+                                <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
+                                    time.checkout:'-:-' }}</div>
+                            </template>
                             <template v-else-if="time.petition_type == 1">
                                 <b>Đi muộn/về sớm</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?

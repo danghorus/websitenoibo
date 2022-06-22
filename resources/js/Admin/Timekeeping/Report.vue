@@ -74,9 +74,9 @@
                                     placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
                             </th>
                             <th rowspan="2" style="vertical-align: middle;">Mã Nhân viên</th>
-                            <th style="vertical-align: middle;" rowspan="2" @click="sort('date_official')">Ngày làm việc
+                            <th style="vertical-align: middle; width: 100px;" rowspan="2" @click="sort('date_official')">Ngày làm việc
                                 chính thức</th>
-                            <th style="vertical-align: middle; width:170px;" rowspan="2">Số ngày đã làm việc chính thức
+                            <th style="vertical-align: middle; width:160px;" rowspan="2">Số ngày đã làm việc chính thức
                             </th>
                             <th colspan="2" style="vertical-align: middle;">Đi muộn</th>
                             <th colspan="2" style="vertical-align: middle;">Về sớm</th>
@@ -84,9 +84,10 @@
                             <th rowspan="2" style="vertical-align: middle;">Số giờ đi sớm</th>
                             <th rowspan="2" style="vertical-align: middle;">Số giờ về muộn</th>
                             <th rowspan="2" style="vertical-align: middle;">Số ngày chấm công</th>
-                            <th rowspan="2" style="vertical-align: middle;">Công nghỉ</th>
                             <th rowspan="2" style="vertical-align: middle;">Công thực tế</th>
-                            <!--<th rowspan="2" style="vertical-align: middle;">Số ngày không checkin</th>-->
+                            <th rowspan="2" style="vertical-align: middle;">Công đăng ký làm thêm</th>
+                            <th rowspan="2" style="vertical-align: middle;">Công đăng ký nỗ lực</th>
+                            <th rowspan="2" style="vertical-align: middle;">Công nghỉ</th>
                             <th rowspan="2" style="vertical-align: middle;">Không checkout</th>
                             <th rowspan="2" style="vertical-align: middle;">Tổng giờ nỗ lực</th>
                             <th rowspan="2" style="vertical-align: middle; width:80px;">Warrior hiện tại</th>
@@ -100,7 +101,7 @@
                                 TG để lên Warrior</th>
                             <th rowspan="2" style="vertical-align: middle;" v-if="expected.end_date > current.end_date">
                                 TGTB để lên Warrior</th>
-                            <th rowspan="2" style="vertical-align: middle;">Tỷ lệ đi muộn</th>
+                            <th rowspan="2" style="vertical-align: middle; width:70px; +">Tỷ lệ đi muộn</th>
                         </tr>
                         <tr style="font-size:12px; text-align:center;">
                             <th style="vertical-align: middle;">Số lần</th>
@@ -113,7 +114,8 @@
                         <tr v-for="(user, index) in data" :key="index">
                             <td>{{ user.fullname }}</td>
                             <td style="text-align:center;">{{ user.id }}</td>
-                            <td style=" text-align:center;" v-if="user.date_official_new != 0">{{ user.date_official_new}}</td>
+                            <td style=" text-align:center;" v-if="user.date_official_new != 0">{{
+                                user.date_official_new}}</td>
                             <td style=" text-align:center;" v-else><b>Thử việc</b></td>
                             <td style=" text-align:right;" v-if="user.date_official_new != 0">
                                 {{ user.totalWorkDateY ? user.totalWorkDateY+" năm":" "}}
@@ -128,9 +130,11 @@
                             <td>{{ user.totalGoLateAboutEarly }}</td>
                             <td>{{ formatNumber(user.timeGoEarly) }}</td>
                             <td>{{ formatNumber(user.timeAboutLate) }}</td>
-                            <td>{{ user.totalUnpaidLeave }}</td>
                             <td>{{ user.totalWorkingDays }}</td>
                             <td>{{ user.totalTimeKeeping }}</td>
+                            <td>{{user.totalOT}}</td>
+                            <td>{{user.totalWar}}</td>
+                            <td>{{ user.totalUnpaidLeave }}</td>
                             <td>{{ user.totalNotCheckOut }}</td>
                             <td>{{ formatNumber(user.totalHourEfforts) }}</td>
                             <td>{{ user.currentWar }}</td>
