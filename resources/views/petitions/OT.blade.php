@@ -58,18 +58,11 @@
                         <label for="">Loại yêu cầu</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="OTfrom" name="date_from" type="date" />
+                        <input class="form-control" id="OT_from" name="date_from" type="date" />
                         <script>
-                            document.getElementById('OTfrom').value = new Date().toISOString().substring(0, 10);
+                            document.getElementById('OT_from').value = new Date().toISOString().substring(0, 10);
                         </script>
                         <label for="">Từ ngày:</label>
-                    </div>
-                     <div class="form-floating mb-3">
-                        <input class="form-control" id="OTto" name="date_to" type="date" />
-                        <script>
-                            document.getElementById('OTto').value = new Date().toISOString().substring(0, 10);
-                        </script>
-                        <label for="">Đến ngày:</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" name="time_from" type="time" value="08:00" hidden/>
