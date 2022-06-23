@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 <timeline-task v-if="showTimeline" />
-                <list-task v-else />
+                <list-task v-else :project-id="projectId" />
             </div>
 
         </div>

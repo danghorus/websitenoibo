@@ -25,4 +25,14 @@ class Task extends Model
         'task_parent',
         'task_performer',
     ];
+
+    public function children()
+    {
+        return $this->hasMany('App\Models\Task', 'task_parent', 'id');
+    }
+
+    public function parent()
+    {
+        return $this->hasOne('App\Models\Task', 'id', 'task_parent')->with(['parent']);
+    }
 }

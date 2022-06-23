@@ -109,6 +109,8 @@ Route::middleware(['auth'])->group(function () {
 
     //Task
     Route::post('tasks/create', [TaskController::class, 'create']);
+    Route::get('tasks/get_all', [TaskController::class, 'getAll']);
+    Route::get('tasks/index', [TaskController::class, 'index']);
 });
 
 

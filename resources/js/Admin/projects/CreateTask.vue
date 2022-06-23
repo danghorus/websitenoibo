@@ -86,12 +86,12 @@
         </div>
         <div class="form-group">
             <label for="project_description">Công việc tiền nhiệm</label>
-            <multiselect v-model="task.task_predecessor" :disabled="task.project_id == 0" :options="projects" value="id" label="project_name" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+            <multiselect v-model="task.task_predecessor" :disabled="task.project_id == 0" :options="tasks" value="id" label="label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
             </multiselect>
         </div>
         <div class="form-group">
             <label for="project_description">Công việc cha</label>
-            <multiselect v-model="task.task_parent" :disabled="task.project_id == 0" :options="projects" value="id" label="project_name" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+            <multiselect v-model="task.task_parent" :disabled="task.project_id == 0" :options="tasks" value="id" label="label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
             </multiselect>
         </div>
         <div class="form-group">
@@ -188,6 +188,13 @@ export default {
             if (res.code == 200) {
                 toastr.success(res.message);
             }
+        },
+        async getTaskByProject(projectId) {
+            const res = await $get('/tasks/get_all', {project_id: projectId})
+
+            if (res.code == 200) {
+                this.tasks = res.data;
+            }
         }
     },
     watch: {
@@ -204,7 +211,7 @@ export default {
             }
         },
         'task.project_id': function (newVal) {
-            // this.getTaskByProject();
+            if (newVal) this.getTaskByProject(newVal.id);
         }
     }
 }

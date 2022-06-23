@@ -9,6 +9,14 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
+    public function index(Request $request) {
+        $projectId = $request->input('project_id');
+
+        $tasks = Task::query()->where('project_id', '=',$projectId)->get();
+
+        dd($tasks);
+    }
+
     public function create(Request $request) {
         $data = $request->all();
 
@@ -47,6 +55,29 @@ class TaskController extends Controller
         return [
             'code' => 200,
             'message' => 'Thêm mới thành công',
+        ];
+    }
+
+    public function getAll(Request $request) {
+        $projectId = $request->input('project_id');
+
+        $tasks = Task::query()->with(['parent'])->where('project_id', '=', $projectId)->get();
+
+        foreach ($tasks as $task) {
+            $label = '';
+            if ($task->parent) {
+                $item = $task->parent;
+                while ($item) {
+                    $label .= $item->task_name . ' > ';
+                    $item = $item->parent;
+                }
+            }
+            $task->label = $label. $task->task_name;
+        }
+
+        return [
+            'code' => 200,
+            'data' => $tasks
         ];
     }
 }

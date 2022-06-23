@@ -33,10 +33,12 @@
 
 <script>
 import draggable from 'vuedraggable';
+import {$get} from "../../ultis";
 
 export default {
     name: "ListTask",
     components: { draggable },
+    props: ['projectId'],
     data() {
         return {
             list: [],
@@ -44,8 +46,16 @@ export default {
             showTimeline: true
         }
     },
+    created() {
+        this.getAllTasks();
+    },
     methods: {
-
+        async getAllTasks() {
+            let filters = {
+                project_id: this.projectId
+            }
+            const res = await $get('/tasks/index', filters);
+        }
     }
 }
 </script>
