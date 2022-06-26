@@ -13,8 +13,8 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="input-seach float-right">
-                            <input class="input-elevated" type="text" placeholder="Search">
-                            <button class="btn btn-outline-secondary border-btn-search">
+                            <input class="input-elevated" type="text" placeholder="Search" v-model="search">
+                            <button class="btn btn-outline-secondary border-btn-search" @click="getTaskTimeLine()">
                                 Tìm kiếm
                             </button>
                             <button
@@ -38,35 +38,28 @@
                 <div class="collapse search-collapse" id="collapseExample" v-if="showFilter">
                     <div class="form-group p-2">
                         <label for="project_description">Theo ngày bắt đầu</label>
-                        <select class="form-select">
-                            <option>Lê Duy1</option>
-                            <option>Lê Duy2</option>
-                            <option>Lê Duy3</option>
-                        </select>
+                        <DatePicker
+                            style="width: 100%"
+                            v-model="startTime"
+                            value-type="format"
+                            type="date"
+                            placeholder="Select time"
+                        ></DatePicker>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo dự án</label>
-                        <select class="form-select">
-                            <option>Lê Duy1</option>
-                            <option>Lê Duy2</option>
-                            <option>Lê Duy3</option>
-                        </select>
+                        <multiselect v-model="searchProjectId" :disabled="!showTimeline" :options="projects" value="id" label="project_name" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                        </multiselect>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo bộ phận</label>
-                        <select class="form-select">
-                            <option>Lê Duy1</option>
-                            <option>Lê Duy2</option>
-                            <option>Lê Duy3</option>
-                        </select>
+                        <multiselect v-model="taskDepartment" :options="departments" value="value" label="label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                        </multiselect>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo người thực hiện</label>
-                        <select class="form-select">
-                            <option>Lê Duy1</option>
-                            <option>Lê Duy2</option>
-                            <option>Lê Duy3</option>
-                        </select>
+                        <multiselect v-model="taskPerformer" :options="users" value="id" label="fullname" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                        </multiselect>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo trạng thái</label>
@@ -78,10 +71,11 @@
                     </div>
                     <div class="float-right p-2">
                         <button type="submit" class="btn btn-secondary p-2" @click="handleShowFilter()">Đóng</button>
-                        <button type="submit" class="btn btn-primary p-2">Áp dụng</button>
+                        <button type="submit" class="btn btn-primary p-2" @click="getTaskTimeLine()">Áp dụng</button>
                     </div>
                 </div>
-                <timeline-task v-if="showTimeline" />
+                <timeline-task v-if="showTimeline" :listTaskTimeLine="listTaskTimeLine" :users="users" :groupUsers="groupUsers" :priorities="priorities"
+                               :stickers="stickers" :projects="projects" />
                 <list-task v-else :project-id="projectId" />
             </div>
 
@@ -150,13 +144,17 @@ import TimelineTask from "./TimelineTask";
 import ListTask from "./ListTask";
 import Config from "./Config";
 import {$get, $post} from "../../ultis";
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
+import Multiselect from 'vue-multiselect';
 
 export default {
     name: "Index",
-    components: {ListTask, TimelineTask, CreateTask, ListProject, draggable, CreateProject, Config},
+    components: {ListTask, TimelineTask, CreateTask, ListProject, draggable, CreateProject, Config, DatePicker, Multiselect},
     data() {
         return {
             projectId: 0,
+            searchProjectId: 0,
             list: [],
             showModal: false,
             showFilter: false,
@@ -168,7 +166,24 @@ export default {
             groupUsers: [],
             priorities: [],
             stickers: [],
-            projects: []
+            projects: [],
+            listTaskTimeLine: [],
+            startTime: '',
+            taskPerformer: '',
+            taskDepartment: 0,
+            search: '',
+            departments: [
+                { value: 1, label: 'Admin' },
+                { value: 2, label: 'Dev' },
+                { value: 3, label: 'Game design' },
+                { value: 4, label: 'Art' },
+                { value: 5, label: 'Tester' },
+                { value: 6, label: 'Điều hành' },
+                { value: 7, label: 'Hành chính nhân sự' },
+                { value: 8, label: 'Kế toán' },
+                { value: 9, label: 'Phân tích dữ liệu' },
+                { value: 10, label: 'Support' },
+            ],
         }
     },
     created() {
@@ -177,6 +192,7 @@ export default {
         this.getAllPriority();
         this.getAllSticker();
         this.getProjects();
+        this.getTaskTimeLine();
     },
     methods: {
         async getAllUser() {
@@ -250,6 +266,20 @@ export default {
 
             this.projects = res.projects
         },
+        async getTaskTimeLine() {
+            let filters = {
+                project_id: this.searchProjectId? this.searchProjectId.id : 0,
+                search: this.search || '',
+                start_time: this.startTime || '',
+                task_performer: this.taskPerformer || 0,
+                task_department: this.taskDepartment? this.taskDepartment.value : 0,
+            }
+            const res = await $get('/tasks/timeline', filters);
+
+            if (res.code == 200) {
+                this.listTaskTimeLine = res.data;
+            }
+        }
     },
     watch: {
         'projectId': function (newVal) {

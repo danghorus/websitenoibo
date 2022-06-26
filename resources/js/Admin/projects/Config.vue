@@ -38,7 +38,7 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ priority.priority_label }}</td>
                             <td>
-                                <div class="row">
+                                <div style="display: flex">
                                     <p @click="handleUpdatePriority(priority)">
                                         <i class="fas fa-pencil-alt" style="cursor: pointer" />
                                     </p>
@@ -76,7 +76,7 @@
                         <td>{{ index + 1 }}</td>
                         <td>{{ sticker.sticker_name }}</td>
                         <td>
-                            <div class="row">
+                            <div style="display: flex">
                                 <p @click="handleUpdateSticker(sticker)">
                                     <i class="fas fa-pencil-alt" style="cursor: pointer" />
                                 </p>

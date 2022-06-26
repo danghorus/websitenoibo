@@ -130,7 +130,7 @@ import Multiselect from 'vue-multiselect';
 export default {
     name: "CreateTask",
     components: { Editor, DatePicker, Multiselect },
-    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects'],
+    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'taskId'],
     data() {
         return {
             task: {
@@ -154,9 +154,19 @@ export default {
         }
     },
     created() {
-
+        if (this.taskId) {
+            this.getInfoTask();
+        }
     },
     methods: {
+        async getInfoTask() {
+            const res = await $get(`/tasks/detail/${this.taskId}`);
+
+            if(res.code == 200) {
+                this.task = res.data;
+                this.values = res.user_related;
+            }
+        },
         async saveTask() {
             if (!this.task.task_name) {
                 toastr.error('Vui lòng nhập tên công việc');
@@ -184,10 +194,18 @@ export default {
                 user_related: this.values.map(item => item.id)
             };
 
-            const res = await $post('/tasks/create', data);
-            if (res.code == 200) {
-                toastr.success(res.message);
+            if (this.taskId) {
+                const res = await $post(`/tasks/update/${this.taskId}`, data);
+                if (res.code == 200) {
+                    toastr.success(res.message);
+                }
+            } else {
+                const res = await $post('/tasks/create', data);
+                if (res.code == 200) {
+                    toastr.success(res.message);
+                }
             }
+
         },
         async getTaskByProject(projectId) {
             const res = await $get('/tasks/get_all', {project_id: projectId})

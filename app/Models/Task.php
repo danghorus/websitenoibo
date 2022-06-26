@@ -6,6 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
+    public const DEPARTMENTS = [
+        1 => 'Admin',
+        2 => 'Dev',
+        3 => 'Game design',
+        4 => 'Art',
+        5 => 'Tester',
+        6 => 'Điều hành',
+        7 => 'Hành chính nhân sự',
+        8 => 'Kế toán',
+        9 => 'Phân tích dữ liệu',
+        10 => 'Support',
+    ];
+
     protected $table = 'tasks';
 
     protected $fillable = [
@@ -24,6 +37,8 @@ class Task extends Model
         'task_predecessor',
         'task_parent',
         'task_performer',
+        'level',
+        'status'
     ];
 
     public function children()
