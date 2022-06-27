@@ -72,11 +72,11 @@
                 <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
             </multiselect>
         </div>
-        <div class="form-group">
-            <label for="project_manager">Người thực hiện</label>
-            <multiselect v-model="project.project_manager" :options="users" value="id" label="fullname" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
-            </multiselect>
-        </div>
+<!--        <div class="form-group">-->
+<!--            <label for="project_manager">Người thực hiện</label>-->
+<!--            <multiselect v-model="project.project_manager" :options="users" value="id" label="fullname" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">-->
+<!--            </multiselect>-->
+<!--        </div>-->
         <button class="btn btn-primary" @click="saveProject()">{{ projectId? 'Cập nhật': 'Tạo mới' }}</button>
     </div>
 </template>
@@ -126,10 +126,10 @@ export default {
                 return false;
             }
 
-            if (!this.project.project_manager) {
-                toastr.error('Vui lòng chọn người thực hiện');
-                return false;
-            }
+            // if (!this.project.project_manager) {
+            //     toastr.error('Vui lòng chọn người thực hiện');
+            //     return false;
+            // }
 
             let data = {
                 project: this.project,
@@ -150,6 +150,24 @@ export default {
 
             this.$emit('updateProject');
         }
+    },
+    watch: {
+        'project.project_start_date': function (newVal) {
+            if (this.project.project_end_date && newVal) {
+                let startDate = new Date(newVal);
+                let endDate = new Date(this.project.project_end_date);
+                let diffTime = Math.abs(endDate - startDate);
+                this.project.project_day = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            }
+        },
+        'project.project_end_date': function (newVal) {
+            if (this.project.project_start_date && newVal) {
+                let endDate = new Date(newVal);
+                let startDate = new Date(this.project.project_start_date);
+                let diffTime = Math.abs(endDate - startDate);
+                this.project.project_day = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            }
+        },
     }
 }
 </script>

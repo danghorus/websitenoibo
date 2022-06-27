@@ -61,14 +61,16 @@ class ProjectController extends Controller
         $project->project_end_date = $data['project_end_date'] ?? date('Y-m-d', time());
         $project->project_day = $data['project_day'] ?? '';
         $project->description = $data['description'] ?? '';
-        $project->project_manager = $data['project_manager'] ? $data['project_manager']['id']: '';
+        $project->project_manager = isset($data['project_manager']) && $data['project_manager'] ? $data['project_manager']['id']: null;
         $isUpdated = $project->save();
 
         if ($isUpdated) {
             ProjectUser::query()->where('project_id', '=', $projectId)->delete();
 
             $userIds = $info['user_related'];
-            $userIds[] = $project->project_manager;
+            if ($project->project_manager) {
+                $userIds[] = $project->project_manager;
+            }
             $userIds = array_unique($userIds);
 
             foreach ($userIds as $userId) {
@@ -99,11 +101,13 @@ class ProjectController extends Controller
         $project->project_end_date = $data['project_end_date'] ?? date('Y-m-d', time());
         $project->project_day = $data['project_day'] ?? '';
         $project->description = $data['description'] ?? '';
-        $project->project_manager = $data['project_manager'] ? $data['project_manager']['id']: '';
+        $project->project_manager = isset($data['project_manager']) && $data['project_manager'] ? $data['project_manager']['id']: null;
         $isCreated = $project->save();
 
         $userIds = $info['user_related'];
-        $userIds[] = $project->project_manager;
+        if ($project->project_manager) {
+            $userIds[] = $project->project_manager;
+        }
         $userIds = array_unique($userIds);
         if ($isCreated) {
             foreach ($userIds as $userId) {
