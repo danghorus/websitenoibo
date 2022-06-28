@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\StickerController;
 use App\Http\Controllers\Backend\TaskController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\PetitionController;
+use App\Http\Controllers\Backend\WarriorController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Backend\PartnerController;
@@ -37,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', UserController::class);
     Route::post('save', [UserController::class, 'save']);
     Route::resource('petitions', PetitionController::class);
+    Route::resource('warriors', WarriorController::class);
     Route::resource('works', WorkController::class);
 
     Route::post('users/{user}/change-password', [ChangePasswordController::class, 'change_password'])->name('users.change.password');
@@ -49,6 +51,8 @@ Route::middleware(['auth'])->group(function () {
 
     //Petition
     Route::post('/petition/create_petition_time_keeping', [PetitionController::class, 'create_petition_time_keeping']);
+    Route::post('/petition/create_holiday', [PetitionController::class, 'create_holiday']);
+    Route::post('/petition/warrior', [PetitionController::class, 'warrior']);
 
     Route::post('/partner/connect', [PartnerController::class, 'connect']);
     Route::get('/partner/get_devices', [PartnerController::class, 'getDevices']);
@@ -109,12 +113,12 @@ Route::middleware(['auth'])->group(function () {
 
     //Task
     Route::post('tasks/create', [TaskController::class, 'create']);
-    Route::post('tasks/update/{id}', [TaskController::class, 'update']);
     Route::get('tasks/get_all', [TaskController::class, 'getAll']);
     Route::get('tasks/index', [TaskController::class, 'index']);
-    Route::get('tasks/timeline', [TaskController::class, 'timeline']);
-    Route::get('tasks/detail/{id}', [TaskController::class, 'detail']);
-    Route::post('tasks/delete/{id}', [TaskController::class, 'delete']);
+
+    //My Work
+    Route::get('my_work', [ProjectController::class, 'my_work']);
+
 });
 
 

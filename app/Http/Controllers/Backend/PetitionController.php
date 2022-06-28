@@ -192,5 +192,4 @@ class PetitionController extends Controller
             'code' => 400
         ];
     }
-
 }

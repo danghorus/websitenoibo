@@ -75,10 +75,11 @@
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_goLate">Đi muộn/về sớm</a></li>
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_OT">Đăng ký làm công</a></li>
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_OTWar">Đăng ký làm nỗ lực</a></li>
+                                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_warrior">Đăng ký Warrior</a></li>
                                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_quit">Nghỉ việc</a></li>
                                             <li class="dropdown-submenu">
                                                 <a class="dropdown-item dropdown-toggle" href="#" data-bs-auto-close="true">Nghỉ phép</a>
-                                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"">
+                                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_inDayAM">Nửa ngày(sáng)</a></li>
                                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_inDayPM">Nửa ngày(chiều)</a></li>
                                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_inDay">Một ngày</a></li>
@@ -368,12 +369,14 @@
                                     <tr style="text-align: center;">
                                         <th style="width:50px">STT</th>
                                         <th style="width:50px">ID</th>
-                                        <th width=12%>Người yêu cầu</th>
-                                        <th width=13%>Loại yêu cầu</th>
+                                        <th width=15%>Người yêu cầu</th>
+                                        <th width=15%>Loại yêu cầu</th>
                                         <th width=25%>Thông tin yêu cầu</th>
-                                        <th width=25%>Lý do</th>
+                                        <th width=30%>Lý do</th>
                                         <th width=12%>Ngày gửi</th>
-                                        <th width=8%>Thao tác</th>
+                                        <?php if(Auth::user()->permission == 1){ ?>
+                                            <th width=8% >Thao tác</th>
+                                        <?php } ?>
                                     </tr>
                                     </thead>
                                     <?php $i=0;?>
@@ -605,12 +608,14 @@
                                     <tr style="text-align: center;">
                                         <th style="width:50px">STT</th>
                                         <th style="width:50px">ID</th>
-                                        <th width=12%>Người yêu cầu</th>
-                                        <th width=13%>Loại yêu cầu</th>
+                                        <th width=15%>Người yêu cầu</th>
+                                        <th width=15%>Loại yêu cầu</th>
                                         <th width=25%>Thông tin yêu cầu</th>
-                                        <th width=25%>Lý do</th>
+                                        <th width=30%>Lý do</th>
                                         <th width=12%>Ngày gửi</th>
-                                        <th width=8%>Thao tác</th>
+                                        <?php if(Auth::user()->permission == 1){ ?>
+                                            <th width=8% >Thao tác</th>
+                                        <?php } ?>
                                     </tr>
                                     </thead>
                                     <?php $i=0;?>
@@ -709,16 +714,18 @@
                                                 echo  $date_created_at_t." ngày ".$date_created_at_d;
                                                 ?>
                                             </td>
-                                            <td style="text-align: center;">
-                                                <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
-                                                </form>
-                                                <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" onclick="return confirm('Bạn có chắc chắn xoá yêu cầu này?');"
-                                                            class="btn btn-danger" style="font-size:12px;">Xoá</button>
-                                                </form>
-                                            </td>
+                                            <?php if(Auth::user()->permission == 1){ ?>
+                                                <td style="text-align: center;">
+                                                    <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
+                                                    </form>
+                                                    <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" onclick="return confirm('Bạn có chắc chắn xoá yêu cầu này?');"
+                                                                class="btn btn-danger" style="font-size:12px;">Xoá</button>
+                                                    </form>
+                                                </td>
+                                            <?php } ?>
                                         </tr>
                                         </tbody>
                                         <?php } ?>

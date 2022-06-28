@@ -33,7 +33,7 @@
                         <label for="">Họ và tên:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="user_id" type="text" value="{{ Auth::user()->id }}" readonly/>
+                        <input class="form-control" name="user_id" type="text" value="{{ Auth::user()->id }}" hidden/>
                         <label for="">Mã nhân viên:</label>
                     </div>
                     <?php } else {?>

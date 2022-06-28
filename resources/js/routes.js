@@ -5,6 +5,7 @@ import Wage from "./Admin/Timekeeping/Wage";
 import Bonus from "./Admin/Timekeeping/Bonus";
 import ListRequest from "./Admin/Request/ListRequest";
 import Index from "./Admin/projects/Index";
+import MyWork from "./Admin/projects/MyWork";
 
 export const routes = [
     {
@@ -36,5 +37,10 @@ export const routes = [
         path: "/projects",
         name: "Index",
         component: Index
+    },
+    {
+        path: "/my_work",
+        name: "MyWork",
+        component: MyWork
     }
 ];

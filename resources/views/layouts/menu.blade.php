@@ -127,7 +127,7 @@
                             <a class="nav-link">Công việc</a>
                             <div class="dropdown-content">
                                 <a class="dropdown-item" href="{{ url('/projects') }}">Dự án</a>
-                                <a class="dropdown-item" href="{{ url('/my_works') }}">Việc của tôi</a>
+                                <a class="dropdown-item" href="{{ url('/my_work') }}">Việc của tôi</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
@@ -150,6 +150,7 @@
                     @extends('petitions.multi_day')
                     @extends('petitions.OT')
                     @extends('petitions.OTWar')
+                    @extends('petitions.warrior')
                     <script>
                     function changeColor() {
                         var result = document.getElementById("result");

@@ -73,11 +73,12 @@
                                 <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
                                     placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
                             </th>
-                            <th rowspan="2" style="vertical-align: middle;">Mã Nhân viên</th>
-                            <th style="vertical-align: middle; width: 100px;" rowspan="2" @click="sort('date_official')">Ngày làm việc
+                            <!--<th rowspan="2" style="vertical-align: middle;">Mã Nhân viên</th>-->
+                            <th style="vertical-align: middle; width: 100px;" rowspan="2"
+                                @click="sort('date_official')">Ngày làm việc
                                 chính thức</th>
-                            <th style="vertical-align: middle; width:160px;" rowspan="2">Số ngày đã làm việc chính thức
-                            </th>
+                            <!--<th style="vertical-align: middle; width:160px;" rowspan="2">Số ngày đã làm việc chính thức
+                            </th>-->
                             <th colspan="2" style="vertical-align: middle;">Đi muộn</th>
                             <th colspan="2" style="vertical-align: middle;">Về sớm</th>
                             <th rowspan="2" style="vertical-align: middle;">Tổng giờ ĐMVS</th>
@@ -113,16 +114,16 @@
                     <tbody style="font-size:14px;">
                         <tr v-for="(user, index) in data" :key="index">
                             <td>{{ user.fullname }}</td>
-                            <td style="text-align:center;">{{ user.id }}</td>
+                            <!--<td style="text-align:center;">{{ user.id }}</td>-->
                             <td style=" text-align:center;" v-if="user.date_official_new != 0">{{
                                 user.date_official_new}}</td>
                             <td style=" text-align:center;" v-else><b>Thử việc</b></td>
-                            <td style=" text-align:right;" v-if="user.date_official_new != 0">
+                            <!--<td style=" text-align:right;" v-if="user.date_official_new != 0">
                                 {{ user.totalWorkDateY ? user.totalWorkDateY+" năm":" "}}
                                 {{ user.totalWorkDateM ? user.totalWorkDateM+" tháng" :" "}}
                                 {{ user.totalWorkDateD ? user.totalWorkDateD+" ngày" :" "}}
                             </td>
-                            <td v-else></td>
+                            <td v-else></td>-->
                             <td>{{ user.totalGoLate }}</td>
                             <td>{{ formatNumber(user.timeGoLate) }}</td>
                             <td>{{ user.totalAboutEarly }}</td>
@@ -132,8 +133,8 @@
                             <td>{{ formatNumber(user.timeAboutLate) }}</td>
                             <td>{{ user.totalWorkingDays }}</td>
                             <td>{{ user.totalTimeKeeping }}</td>
-                            <td>{{user.totalOT}}</td>
-                            <td>{{user.totalWar}}</td>
+                            <td>{{ user.totalOT}}</td>
+                            <td>{{ user.totalWar}}</td>
                             <td>{{ user.totalUnpaidLeave }}</td>
                             <td>{{ user.totalNotCheckOut }}</td>
                             <td>{{ formatNumber(user.totalHourEfforts) }}</td>

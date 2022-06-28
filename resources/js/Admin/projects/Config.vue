@@ -2,95 +2,122 @@
     <div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="priority-tab" data-toggle="tab" href="#priority" @click="getAllPriority()">
+                <a class="nav-link active" id="priority-tab" data-toggle="tab" href="#priority"
+                    @click="getAllPriority()">
                     <span class="nav-text">Quản lý mức độ ưu tiên</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="sticker-tab" data-toggle="tab" href="#sticker" aria-controls="sticker" @click="getAllSticker()">
+                <a class="nav-link" id="sticker-tab" data-toggle="tab" href="#sticker" aria-controls="sticker"
+                    @click="getAllSticker()">
                     <span class="nav-text">Quản lý nhãn dán</span>
                 </a>
             </li>
         </ul>
         <div class="tab-content mt-5" id="myTabContent">
             <div class="tab-pane fade show active" id="priority" role="tabpanel" aria-labelledby="priority-tab">
-                <button class="btn btn-primary float-right mb-2" v-if="!isShowCreatePriority" @click="handleCreatePriority()">
+                <button class="btn btn-primary float-right mb-2" v-if="!isShowCreatePriority"
+                    @click="handleCreatePriority()">
                     Thêm mới
                 </button>
                 <div v-else class="mb-2">
                     <div class="form-group col-lg-9">
-                        <label for="priority_label">Tên mức độ ưu tiên</label>
-                        <input type="text" v-model="priority_label" class="form-control" id="priority_label" placeholder="Nhập tên mức độ ưu tiên">
+                        <input type="text" v-model="priority_label" class="form-control" id="priority_label"
+                            placeholder="Nhập tên mức độ ưu tiên">
                     </div>
-                    <button class="btn btn-secondary" @click="closeCreatePriority()">Hủy</button>
-                    <button class="btn btn-primary" @click="savePriority()">Lưu</button>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Tên mức độ ưu tiên</th>
-                            <th scope="col">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(priority, index) in priorities" :key="index">
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ priority.priority_label }}</td>
-                            <td>
-                                <div style="display: flex">
-                                    <p @click="handleUpdatePriority(priority)">
-                                        <i class="fas fa-pencil-alt" style="cursor: pointer" />
-                                    </p>
-                                    <p @click="deletePriority(priority.id)">
-                                        <i class="fas fa-trash" style="cursor: pointer" />
-                                    </p>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="tab-pane" id="sticker" role="tabpanel" aria-labelledby="sticker-tab">
-                <button class="btn btn-primary float-right mb-2" v-if="!isShowCreateSticker" @click="handleCreateSticker()">
-                    Thêm mới
-                </button>
-                <div v-else class="mb-2">
-                    <div class="form-group col-lg-9">
-                        <label for="sticker_name">Tên nhãn dán</label>
-                        <input type="text" v-model="sticker_name" class="form-control" id="sticker_name" placeholder="Nhập tên nhãn dán">
+                    <div style="float: right; margin-top: -55px;">
+                        <button class="btn btn-secondary" @click="closeCreatePriority()"
+                            style="width: 100px;">Hủy</button>
+                        <button class="btn btn-primary" @click="savePriority()" style="width: 100px;">Lưu</button>
                     </div>
-                    <button class="btn btn-secondary" @click="closeCreateSticker()">Hủy</button>
-                    <button class="btn btn-primary" @click="saveSticker()">Lưu</button>
                 </div>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Tên nhãn dán</th>
-                        <th scope="col">Thao tác</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(sticker, index) in stickers" :key="index">
-                        <td>{{ index + 1 }}</td>
-                        <td>{{ sticker.sticker_name }}</td>
-                        <td>
-                            <div style="display: flex">
-                                <p @click="handleUpdateSticker(sticker)">
-                                    <i class="fas fa-pencil-alt" style="cursor: pointer" />
-                                </p>
-                                <p @click="deleteSticker(sticker.id)">
-                                    <i class="fas fa-trash" style="cursor: pointer" />
-                                </p>
+                <table class=" table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" width="250px">STT</th>
+                                    <th scope="col">Tên mức độ ưu tiên</th>
+                                    <th scope="col" width="200px">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(priority, index) in priorities" :key="index">
+                                    <td>{{ index + 1 }}</td>
+                                    <td>{{ priority.priority_label }}</td>
+                                    <td>
+                                        <nav class="navbar navbar-expand">
+                                            <div class="collapse navbar-collapse">
+                                                <ul class="navbar-nav">
+                                                    <li>
+                                                        <p @click="handleUpdatePriority(priority)">
+                                                            <i class="fas fa-pencil-alt" style="cursor: pointer" />
+                                                        </p>
+                                                    </li> &emsp; &emsp;
+                                                    <li>
+                                                        <p @click="deletePriority(priority.id)">
+                                                            <i class="fas fa-trash" style="cursor: pointer" />
+                                                        </p>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </nav>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            </table>
+                    </div>
+                    <div class="tab-pane" id="sticker" role="tabpanel" aria-labelledby="sticker-tab">
+                        <button class="btn btn-primary float-right mb-2" v-if="!isShowCreateSticker"
+                            @click="handleCreateSticker()">
+                            Thêm mới
+                        </button>
+                        <div v-else class="mb-3">
+                            <div class="form-group col-lg-9">
+                                <input type="text" v-model="sticker_name" class="form-control" id="sticker_name"
+                                    placeholder="Nhập tên nhãn dán">
                             </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                            <div style="float: right; margin-top: -55px;">
+                                <button class="btn btn-secondary" @click="closeCreateSticker()"
+                                    style="width:100px; ">Hủy</button>
+                                <button class="btn btn-primary" @click="saveSticker()"
+                                    style="width:100px; ">Lưu</button>
+                            </div>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" width="250px">STT</th>
+                                    <th scope="col">Tên nhãn dán</th>
+                                    <th scope="col" width="200px">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(sticker, index) in stickers" :key="index">
+                                    <td>{{ index + 1 }}</td>
+                                    <td>{{ sticker.sticker_name }}</td>
+                                    <td>
+                                        <nav class="navbar navbar-expand">
+                                            <div class="collapse navbar-collapse">
+                                                <ul class="navbar-nav">
+                                                    <li>
+                                                        <p @click="handleUpdateSticker(sticker)">
+                                                            <i class="fas fa-pencil-alt" style="cursor: pointer" />
+                                                        </p>
+                                                    </li> &emsp; &emsp;
+                                                    <li>
+                                                        <p @click="deleteSticker(sticker.id)">
+                                                            <i class="fas fa-trash" style="cursor: pointer" />
+                                                        </p>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </nav>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 </template>
 
 <script>

@@ -18,6 +18,7 @@
                     v-model="task.start_time"
                     value-type="format"
                     type="datetime"
+                    format="DD-MM-YYYY HH:mm"
                     placeholder="Select time"
                 ></DatePicker>
             </div>
@@ -42,7 +43,7 @@
                 api-key="0pn43qeafddiqh81a9ba9c5abtfey57b1m07tfsa05gir4s3"
                 v-model="task.description"
                 :init="{
-                height: 500,
+                height: 200,
                 menubar: false,
                 plugins: [
                    'advlist autolink lists link image charmap print preview anchor',
@@ -59,19 +60,19 @@
         <div class="row">
             <div class="form-group col-lg-6">
                 <label for="project_description">Độ ưu tiên</label>
-                <multiselect v-model="task.task_priority" :options="priorities" value="id" label="priority_label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                <multiselect v-model="task.task_priority" :options="priorities" value="id" label="priority_label" :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
                 </multiselect>
             </div>
             <div class="form-group col-lg-6">
                 <label for="project_description">Nhãn dán</label>
-                <multiselect v-model="task.task_sticker" :options="stickers" value="id" label="sticker_name" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                <multiselect v-model="task.task_sticker" :options="stickers" value="id" label="sticker_name" :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
                 </multiselect>
             </div>
         </div>
         <div class="row">
             <div class="form-group col-lg-6">
                 <label for="project_description">Bộ phận</label>
-                <multiselect v-model="task.task_department" :options="departments" value="value" label="label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                <multiselect v-model="task.task_department" :options="departments" value="value" label="label" :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
                 </multiselect>
             </div>
             <div class="form-group col-lg-6">
@@ -81,22 +82,22 @@
         </div>
         <div class="form-group">
             <label for="project_description">Dự án</label>
-            <multiselect v-model="task.project_id" :options="projects" value="id" label="project_name" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+            <multiselect v-model="task.project_id" :options="projects" value="id" label="project_name" :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
             </multiselect>
         </div>
         <div class="form-group">
             <label for="project_description">Công việc tiền nhiệm</label>
-            <multiselect v-model="task.task_predecessor" :disabled="task.project_id == 0" :options="tasks" value="id" label="label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+            <multiselect v-model="task.task_predecessor" :disabled="task.project_id == 0" :options="tasks" value="id" label="label" :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
             </multiselect>
         </div>
         <div class="form-group">
             <label for="project_description">Công việc cha</label>
-            <multiselect v-model="task.task_parent" :disabled="task.project_id == 0" :options="tasks" value="id" label="label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+            <multiselect v-model="task.task_parent" :disabled="task.project_id == 0" :options="tasks" value="id" label="label" :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
             </multiselect>
         </div>
         <div class="form-group">
             <label>Người thực hiện</label>
-            <multiselect v-model="task.task_performer" :options="users" value="id" label="fullname" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+            <multiselect v-model="task.task_performer" :options="users" value="id" label="fullname" :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
             </multiselect>
         </div>
         <div class="form-group">
@@ -130,7 +131,7 @@ import Multiselect from 'vue-multiselect';
 export default {
     name: "CreateTask",
     components: { Editor, DatePicker, Multiselect },
-    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'taskId'],
+    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects'],
     data() {
         return {
             task: {
@@ -154,19 +155,9 @@ export default {
         }
     },
     created() {
-        if (this.taskId) {
-            this.getInfoTask();
-        }
+
     },
     methods: {
-        async getInfoTask() {
-            const res = await $get(`/tasks/detail/${this.taskId}`);
-
-            if(res.code == 200) {
-                this.task = res.data;
-                this.values = res.user_related;
-            }
-        },
         async saveTask() {
             if (!this.task.task_name) {
                 toastr.error('Vui lòng nhập tên công việc');
@@ -194,18 +185,10 @@ export default {
                 user_related: this.values.map(item => item.id)
             };
 
-            if (this.taskId) {
-                const res = await $post(`/tasks/update/${this.taskId}`, data);
-                if (res.code == 200) {
-                    toastr.success(res.message);
-                }
-            } else {
-                const res = await $post('/tasks/create', data);
-                if (res.code == 200) {
-                    toastr.success(res.message);
-                }
+            const res = await $post('/tasks/create', data);
+            if (res.code == 200) {
+                toastr.success(res.message);
             }
-
         },
         async getTaskByProject(projectId) {
             const res = await $get('/tasks/get_all', {project_id: projectId})

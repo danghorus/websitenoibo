@@ -19,6 +19,12 @@
                     <span class="nav-text">Đồng bộ giờ công từ Hanet</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="sync-tab" data-toggle="tab" href="#holiday" aria-controls="holiday"
+                    @click="showTabHoliday()">
+                    <span class="nav-text">Lịch nghỉ trong năm</span>
+                </a>
+            </li>
         </ul>
         <div class="tab-content mt-5" id="myTabContent">
             <div v-if="isShowTabTimeKeepingConfig" class="tab-pane fade show active" id="time-keeping" role="tabpanel"
@@ -127,9 +133,11 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="form-check">
-                        <input class="form-check-input" v-model="option" value="1" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                        <input class="form-check-input" v-model="option" value="1" type="radio" name="flexRadioDefault"
+                            id="flexRadioDefault1">
                         <label class="form-check-label" for="flexRadioDefault1"> Cả công ty</label> &emsp;&emsp;&emsp;
-                        <input class="form-check-input" type="radio" v-model="option" value="2" name="flexRadioDefault" id="flexRadioDefault2">
+                        <input class="form-check-input" type="radio" v-model="option" value="2" name="flexRadioDefault"
+                            id="flexRadioDefault2">
                         <label class="form-check-label" for="flexRadioDefault2">Chọn nhân viên</label>
                     </div>
                 </div>
@@ -145,7 +153,84 @@
                     </multiselect>
                 </div>
                 <button class="btn btn-primary mt-2" @click="getSyncTimekeeping()"
-                    style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Đồng bộ</button>
+                    style="height:33px; font-size:14px; padding: -50px 0px 0px 0px">Đồng bộ</button>
+            </div>
+            <div v-if="isShowTabHoliday" class="tab-pane" id="holiday" role="tabpanel" aria-labelledby="holiday-tab">
+                <div class="col-lg-6">
+                    <input class="form-check-input" v-model="option" value="1" type="radio" name="flexRadioDefault"
+                        id="flexRadioDefault">
+                    <label class="form-check-label" for="flexRadioDefault"> Cả công ty</label>
+                    <DatePicker style="width: 100%" v-model="date_holiday" value-type="format" type="date"
+                        placeholder="Vui lòng chọn">
+                    </DatePicker>
+
+                    <p>Not before than 12:00 Today</p>
+                    <date-picker v-model="value4" type="datetime" :default-value="new Date().setHours(12, 0, 0, 0)"
+                        :disabled-date="notBeforeToday" :disabled-time="notBeforeTodayTwelveOClock" value-type="format">
+                    </date-picker>
+                </div>
+                <button class="btn btn-primary mt-2" @click="getHoliday()"
+                    style="height:33px; font-size:14px; float:right;">Thêm
+                    ngày
+                </button>
+                <table class="table-striped table-responsive table-hover result-point">
+                    <thead class="point-table-head">
+                        <tr>
+                            <th style="width:150px; text-align:center;">Tháng</th>
+                            <th style="width:94%; text-align:center;">Ngày được nghỉ theo lịch công ty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tháng 01</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tháng 02</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tháng 03</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tháng 04</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tháng 05</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tháng 06</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tháng 07</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tháng 08</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tháng 09</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tháng 10</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tháng 11</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tháng 12</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -165,6 +250,8 @@ export default {
     data() {
         return {
             dateRange: '',
+            date_holiday: '',
+            value4: '',
             value: null,
             open: false,
             settings: {
@@ -216,6 +303,7 @@ export default {
             isShowTabTimeKeepingConfig: true,
             isShowTabConnect: false,
             isShowTabSync: false,
+            isShowTabHoliday: false,
             devices: [],
             device: '',
             option: 1
@@ -223,11 +311,41 @@ export default {
     },
     created() {
         this.getConfigTime();
+        this.getHoliday();
     },
     methods: {
+        disabledBeforeTodayAndAfterAWeek(date) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            return date < today || date > new Date(today.getTime() + 7 * 24 * 3600 * 1000);
+        },
+        notBeforeNineOClock(date) {
+            return date.getHours() < 9;
+        },
+        notBeforeToday(date) {
+            return date < new Date(new Date().setHours(0, 0, 0, 0));
+        },
+        notBeforeTodayTwelveOClock(date) {
+            return date < new Date(new Date().setHours(12, 0, 0, 0));
+        },
+
+
         handleChange(value, type) {
             if (type === 'second') {
                 this.open = false;
+            }
+        },
+        async saveConfig() {
+            const res = await $post('/partner/update_config', {
+                code: 'TIME',
+                name: 'time config',
+                settings: this.settings
+            })
+
+            if (res.code === 200) {
+                toastr.success('Lưu thành công');
+                this.$emit('closeModalConfig')
             }
         },
         async saveConfig() {
@@ -286,18 +404,28 @@ export default {
             this.isShowTabTimeKeepingConfig = true;
             this.isShowTabConnect = false;
             this.isShowTabSync = false;
+            this.isShowTabHoliday = false;
         },
         showTabConnect() {
             this.isShowTabTimeKeepingConfig = false;
             this.isShowTabConnect = true;
             this.isShowTabSync = false;
+            this.isShowTabHoliday = false;
         },
         showTabSync() {
             this.isShowTabTimeKeepingConfig = false;
             this.isShowTabConnect = false;
             this.isShowTabSync = true;
+            this.isShowTabHoliday = false;
             this.getAllUser();
             this.getDevices();
+        },
+        showTabHoliday() {
+            this.isShowTabTimeKeepingConfig = false;
+            this.isShowTabConnect = false;
+            this.isShowTabSync = false;
+            this.isShowTabHoliday = true;
+            this.getAllUser();
         },
     },
 }
@@ -305,4 +433,54 @@ export default {
 
 <style scoped>
 
+
+table {
+    background: #fff;
+    border: 1px solid #dedede;
+}
+
+table thead tr th {
+    padding: 20px;
+    border: 1px solid #dedede;
+    color: #000;
+}
+
+table.table-striped tbody tr:nth-of-type(odd) {
+    background: #f9f9f9;
+}
+
+table.result-point tr td.number {
+    width: 100px;
+    position: relative;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+table tr td {
+    padding: 0px 0px;
+    border: 1px solid #dedede;
+}
+
+table.result-point tr td .fa.fa-caret-up {
+    color: green;
+}
+
+table.result-point tr td .fa {
+    font-size: 20px;
+    position: absolute;
+    right: 20px;
+}
+
+table tr td {
+    padding: 5px 5px;
+    border: 1px solid #dedede;
+}
+
+table tr td img {
+    margin-right: 12px;
+    margin-top: 1px;
+    border: 1px solid #dedede;
+}
 </style>
