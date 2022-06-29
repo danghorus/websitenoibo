@@ -1,5 +1,5 @@
 @extends('layouts.side')
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -30,7 +30,20 @@
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                <i class="bi bi-eye-slash" id="togglePassword" onclick="myFunction()" style="font-size:20px; float:right; margin:-27px 10px 0px 0px;"></i>
+                                <script>
+                                    const togglePassword = document.querySelector("#togglePassword");
+                                    const password = document.querySelector("#password");
 
+                                    togglePassword.addEventListener("click", function () {
+                                        // toggle the type attribute
+                                        const type = password.getAttribute("type") === "password" ? "text" : "password";
+                                        password.setAttribute("type", type);
+                                        
+                                        // toggle the icon
+                                        this.classList.toggle("bi-eye");
+                                    });
+                                </script>
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

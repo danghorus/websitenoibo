@@ -18,7 +18,6 @@
                     v-model="task.start_time"
                     value-type="format"
                     type="datetime"
-                    format="DD-MM-YYYY HH:mm"
                     placeholder="Select time"
                 ></DatePicker>
             </div>
