@@ -461,7 +461,7 @@ class TimeKeepingService
 
                 if ($type == 0) {
                     if ($timeKeeping && $timeKeeping->checkin == '') {
-                        $timeKeeping->checkout = date('H:i:s', strtotime($data['date']));
+                        $timeKeeping->checkin = date('H:i:s', strtotime($data['date']));
                     } else if($timeKeeping && $timeKeeping->checkin != '') {
                         $timeKeeping->checkout = date('H:i:s', strtotime($data['date']));
                     } else {
@@ -473,7 +473,7 @@ class TimeKeepingService
                     }
                 } else if ($type == 1) {
                     if ($timeKeeping && $timeKeeping->checkin == '') {
-                        $timeKeeping->checkout = date('H:i:s', strtotime($data['date']));
+                        $timeKeeping->checkin = date('H:i:s', strtotime($data['date']));
                     } else if($timeKeeping && $timeKeeping->checkin != '') {
                         $timeKeeping->checkout = date('H:i:s', strtotime($data['date']));
                     } else {
@@ -485,7 +485,7 @@ class TimeKeepingService
                     }
                 } else if ($type == 2) {
                     if ($timeKeeping && $timeKeeping->checkin == '') {
-                        $timeKeeping->checkout = date('H:i:s', strtotime($data['date']));
+                        $timeKeeping->checkin = date('H:i:s', strtotime($data['date']));
                     } else if($timeKeeping && $timeKeeping->checkin != '') {
                         $timeKeeping->checkout = date('H:i:s', strtotime($data['date']));
                     } else {
