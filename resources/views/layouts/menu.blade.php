@@ -128,6 +128,7 @@
                             <div class="dropdown-content">
                                 <a class="dropdown-item" href="{{ url('/projects') }}">Dự án</a>
                                 <a class="dropdown-item" href="{{ url('/my_work') }}">Việc của tôi</a>
+                                <a class="dropdown-item" href="{{ url('/project-report') }}">Thống kê</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">

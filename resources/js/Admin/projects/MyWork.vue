@@ -42,16 +42,15 @@
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
-                        <th scope="col" width="350px">Tên công việc</th>
+                        <th scope="col" width="450px">Tên công việc</th>
                         <th scope="col" width="250px">Dự án</th>
                         <th scope="col" width="200px">Bắt đầu</th>
-                        <th scope="col">Thời lượng</th>
+                        <th scope="col">Thời lượng (Giờ)</th>
                         <th scope="col" width="200px">Kết thúc</th>
-                        <th scope="col" width="120px">Trạng thái</th>
                         <th scope="col" width="200px">Bắt đầu thực tế</th>
-                        <th scope="col">Thời lượng thực tế</th>
+                        <th scope="col">Thời lượng thực tế (Giờ)</th>
                         <th scope="col" width="200px">Kết thúc thực tế</th>
-                        <th scope="col" width="120px">Thao tác</th>
+                        <th scope="col" width="120px">Trạng thái</th>
                     </tr>
                 </thead>
                 <tr v-for="item in list" :key="item.name_task" style="text-align:center;">
@@ -61,7 +60,6 @@
                     <td>{{ item.time_start_expected }}</td>
                     <td>{{ item.time_expected }}</td>
                     <td>{{ item.time_end_expected }}</td>
-                    <td>{{ item.task_status }}</td>
                     <td>{{ item.time_start_real }}</td>
                     <td>{{ item.time_real }}</td>
                     <td>{{ item.time_end_real }}</td>
@@ -82,26 +80,24 @@
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
-                        <th scope="col" width="350px">Tên công việc</th>
-                        <th scope="col" width="200px">Bắt đầu</th>
-                        <th scope="col">Thời lượng</th>
-                        <th scope="col" width="200px">Kết thúc</th>
+                        <th scope="col" width="450px">Tên công việc</th>
                         <th scope="col" width="250px">Dự án</th>
-                        <th scope="col" width="120px">Trạng thái</th>
+                        <th scope="col" width="200px">Bắt đầu</th>
+                        <th scope="col">Thời lượng (Giờ)</th>
+                        <th scope="col" width="200px">Kết thúc</th>
                         <th scope="col" width="200px">Bắt đầu thực tế</th>
-                        <th scope="col">Thời lượng thực tế</th>
+                        <th scope="col">Thời lượng thực tế (Giờ)</th>
                         <th scope="col" width="200px">Kết thúc thực tế</th>
-                        <th scope="col" width="120px">Thao tác</th>
+                        <th scope="col" width="120px">Trạng thái</th>
                     </tr>
                 </thead>
                 <tr v-for="item in list" :key="item.name_task" style="text-align:center;">
                     <td>1</td>
                     <td scope="row" style="text-align:left;">{{ item.name_task }}</td>
+                    <td style="text-align:left;">{{ item.project_name }}</td>
                     <td>{{ item.time_start_expected }}</td>
                     <td>{{ item.time_expected }}</td>
                     <td>{{ item.time_end_expected }}</td>
-                    <td style="text-align:left;">{{ item.project_name }}</td>
-                    <td>{{ item.task_status }}</td>
                     <td>{{ item.time_start_real }}</td>
                     <td>{{ item.time_real }}</td>
                     <td>{{ item.time_end_real }}</td>
@@ -122,26 +118,24 @@
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
-                        <th scope="col" width="350px">Tên công việc</th>
-                        <th scope="col" width="200px">Bắt đầu</th>
-                        <th scope="col">Thời lượng</th>
-                        <th scope="col" width="200px">Kết thúc</th>
+                        <th scope="col" width="450px">Tên công việc</th>
                         <th scope="col" width="250px">Dự án</th>
-                        <th scope="col" width="120px">Trạng thái</th>
+                        <th scope="col" width="200px">Bắt đầu</th>
+                        <th scope="col">Thời lượng (Giờ)</th>
+                        <th scope="col" width="200px">Kết thúc</th>
                         <th scope="col" width="200px">Bắt đầu thực tế</th>
-                        <th scope="col">Thời lượng thực tế</th>
+                        <th scope="col">Thời lượng thực tế (Giờ)</th>
                         <th scope="col" width="200px">Kết thúc thực tế</th>
-                        <th scope="col" width="120px">Thao tác</th>
+                        <th scope="col" width="120px">Trạng thái</th>
                     </tr>
                 </thead>
                 <tr v-for="item in list" :key="item.name_task" style="text-align:center;">
                     <td>1</td>
                     <td scope="row" style="text-align:left;">{{ item.name_task }}</td>
+                    <td style="text-align:left;">{{ item.project_name }}</td>
                     <td>{{ item.time_start_expected }}</td>
                     <td>{{ item.time_expected }}</td>
                     <td>{{ item.time_end_expected }}</td>
-                    <td style="text-align:left;">{{ item.project_name }}</td>
-                    <td>{{ item.task_status }}</td>
                     <td>{{ item.time_start_real }}</td>
                     <td>{{ item.time_real }}</td>
                     <td>{{ item.time_end_real }}</td>
@@ -162,32 +156,30 @@
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
-                        <th scope="col" width="350px">Tên công việc</th>
-                        <th scope="col" width="200px">Bắt đầu</th>
-                        <th scope="col">Thời lượng</th>
-                        <th scope="col" width="200px">Kết thúc</th>
+                        <th scope="col" width="450px">Tên công việc</th>
                         <th scope="col" width="250px">Dự án</th>
-                        <th scope="col" width="120px">Trạng thái</th>
+                        <th scope="col" width="200px">Bắt đầu</th>
+                        <th scope="col">Thời lượng (Giờ)</th>
+                        <th scope="col" width="200px">Kết thúc</th>
                         <th scope="col" width="200px">Bắt đầu thực tế</th>
-                        <th scope="col">Thời lượng thực tế</th>
+                        <th scope="col">Thời lượng thực tế (Giờ)</th>
                         <th scope="col" width="200px">Kết thúc thực tế</th>
-                        <th scope="col" width="120px">Thao tác</th>
+                        <th scope="col" width="120px">Trạng thái</th>
                     </tr>
                 </thead>
                 <tr v-for="item in list" :key="item.name_task" style="text-align:center;">
                     <td>1</td>
                     <td scope="row" style="text-align:left;">{{ item.name_task }}</td>
+                    <td style="text-align:left;">{{ item.project_name }}</td>
                     <td>{{ item.time_start_expected }}</td>
                     <td>{{ item.time_expected }}</td>
                     <td>{{ item.time_end_expected }}</td>
-                    <td style="text-align:left;">{{ item.project_name }}</td>
-                    <td>{{ item.task_status }}</td>
                     <td>{{ item.time_start_real }}</td>
                     <td>{{ item.time_real }}</td>
                     <td>{{ item.time_end_real }}</td>
                     <td>
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option value="1" style="background-color:#008040;">Bắt đầu</option>
+                            <option value="1">Bắt đầu</option>
                             <option value="2">Tạm dừng</option>
                             <option value="3">Kết thúc</option>
                         </select>
@@ -202,26 +194,24 @@
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
-                        <th scope="col" width="350px">Tên công việc</th>
-                        <th scope="col" width="200px">Bắt đầu</th>
-                        <th scope="col">Thời lượng</th>
-                        <th scope="col" width="200px">Kết thúc</th>
+                        <th scope="col" width="450px">Tên công việc</th>
                         <th scope="col" width="250px">Dự án</th>
-                        <th scope="col" width="120px">Trạng thái</th>
+                        <th scope="col" width="200px">Bắt đầu</th>
+                        <th scope="col">Thời lượng (Giờ)</th>
+                        <th scope="col" width="200px">Kết thúc</th>
                         <th scope="col" width="200px">Bắt đầu thực tế</th>
-                        <th scope="col">Thời lượng thực tế</th>
+                        <th scope="col">Thời lượng thực tế (Giờ)</th>
                         <th scope="col" width="200px">Kết thúc thực tế</th>
-                        <th scope="col" width="120px">Thao tác</th>
+                        <th scope="col" width="120px">Trạng thái</th>
                     </tr>
                 </thead>
                 <tr v-for="item in list" :key="item.name_task" style="text-align:center;">
                     <td>1</td>
                     <td scope="row" style="text-align:left;">{{ item.name_task }}</td>
+                    <td style="text-align:left;">{{ item.project_name }}</td>
                     <td>{{ item.time_start_expected }}</td>
                     <td>{{ item.time_expected }}</td>
                     <td>{{ item.time_end_expected }}</td>
-                    <td style="text-align:left;">{{ item.project_name }}</td>
-                    <td>{{ item.task_status }}</td>
                     <td>{{ item.time_start_real }}</td>
                     <td>{{ item.time_real }}</td>
                     <td>{{ item.time_end_real }}</td>
@@ -252,7 +242,6 @@ export default {
                     "time_expected": "1",
                     "time_end_expected": "01-06-2022",
                     "project_name": "Beach War Version 0.1.3",
-                    "task_status": "Đang làm",
                     "time_start_real": "01-06-2022",
                     "time_real": "0.6",
                     "time_end_real": "01-06-2022"
@@ -264,7 +253,6 @@ export default {
                     "time_expected": "1",
                     "time_end_expected": "01-06-2022",
                     "project_name": "Beach War Version 0.1.3",
-                    "task_status": "Đang làm",
                     "time_start_real": "01-06-2022",
                     "time_real": "0.6",
                     "time_end_real": "01-06-2022"
@@ -276,7 +264,6 @@ export default {
                     "time_expected": "1",
                     "time_end_expected": "01-06-2022",
                     "project_name": "Beach War Version 0.1.3",
-                    "task_status": "Đang làm",
                     "time_start_real": "01-06-2022",
                     "time_real": "0.6",
                     "time_end_real": "01-06-2022"
@@ -288,7 +275,6 @@ export default {
                     "time_expected": "1",
                     "time_end_expected": "01-06-2022",
                     "project_name": "Beach War Version 0.1.3",
-                    "task_status": "Đang làm",
                     "time_start_real": "01-06-2022",
                     "time_real": "0.6",
                     "time_end_real": "01-06-2022"

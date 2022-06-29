@@ -97,6 +97,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('projects/get_all', [ProjectController::class, 'getAll']);
     Route::get('projects/{id}', [ProjectController::class, 'getInfo']);
     Route::get('projects/{id}/get_detail', [ProjectController::class, 'getDetail']);
+    Route::get('project-report', [ProjectController::class, 'report']);
 
     //Priority
     Route::post('priorities/create', [PriorityController::class, 'create']);

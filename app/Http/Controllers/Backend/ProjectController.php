@@ -21,6 +21,11 @@ class ProjectController extends Controller
         $users = User::all();
         return view('projects.my_work', compact('users'));
     }
+    public function report(Request $request)
+    {
+        $users = User::all();
+        return view('projects.report', compact('users'));
+    }
 
     public function getAll(Request $request) {
         $projects = Project::query() ->select(['id', 'project_name', 'project_start_date', 'project_end_date'])->get();
