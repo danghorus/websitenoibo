@@ -1,47 +1,5 @@
 <template>
-    <div style="margin: 0px 0px 0px 0px;">
-        <div class="mt-4">
-            <h4 style="margin: 0px 0px 10px 10px;">Thời gian trong ngày</h4>
-            <table style="width:600px ;margin: 0px 0px 10px 10px;">
-                <tr>
-                    <td>Warrior hiện tại</td>
-                    <td>Warrior 1</td>
-                </tr>
-                <tr>
-                    <td>Thời gian làm việc/ngày</td>
-                    <td>10 tiếng</td>
-                </tr>
-                <tr>
-                    <td>Giờ vào ca</td>
-                    <td>06:30:00</td>
-                </tr>
-                <tr>
-                    <td>Giờ ra ca dự kiến</td>
-                    <td>19:30:00</td>
-                </tr>
-            </table>
-        </div>
-        <div style=" margin: -190px 10px 10px 1285px">
-            <h4 style="margin: 0px 0px 10px 10px;">Thống kê công việc</h4>
-            <table style="width:600px ;margin: 0px 0px 10px 10px;">
-                <tr>
-                    <td>Tổng việc</td>
-                    <td>120</td>
-                </tr>
-                <tr>
-                    <td>Hoàn thành</td>
-                    <td>65</td>
-                </tr>
-                <tr>
-                    <td>Đang làm</td>
-                    <td>20</td>
-                </tr>
-                <tr>
-                    <td>Quá hạn</td>
-                    <td>35</td>
-                </tr>
-            </table>
-        </div>
+    <div>
         <div class="col-lg">
             <div class="collapse search-collapse" id="collapseExample" v-if="showFilter">
                 <div class="form-group p-2">
@@ -68,9 +26,56 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg">
+            <div class="collapse info-my-work" id="collapseExample_1" v-if="showInfoMyWork">
+                <div>
+                    <table style="width:100%; border: 0px" class="my-work">
+                        <h4 style="margin: 20px 0px 20px 130px;">Thông tin làm việc</h4>
+                        <tr>
+                            <td><b>Warrior đăng ký</b></td>
+                            <td>:</td>
+                            <td>Warrior 3</td>
+                        </tr>
+                        <tr>
+                            <td><b>Warrior hiện tại</b></td>
+                            <td>:</td>
+                            <td>Warrior 3</td>
+                        </tr>
+                        <tr>
+                            <td><b>Thời gian làm việc trong ngày</b></td>
+                            <td>:</td>
+                            <td>12 tiếng</td>
+                        </tr>
+                        <tr>
+                            <td><b>Tổng số công việc của bạn</b></td>
+                            <td>:</td>
+                            <td>120</td>
+                        </tr>
+                        <tr>
+                            <td><b>Đang làm</b></td>
+                            <td>:</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td><b>Hoàn thành</b></td>
+                            <td>:</td>
+                            <td>80</td>
+                        </tr>
+                        <tr>
+                            <td><b>Quá hạn</b></td>
+                            <td>:</td>
+                            <td>20</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="float-right p-2">
+                    <button type="submit" class="btn btn-secondary p-2" @click="ShowInfoMyWork()">Đóng</button>
+                </div>
+            </div>
+        </div>
         <div class="mt-4">
             <h4 style="margin-left: 10px;">Danh sách công việc</h4>
-            <div style="width:120px; margin:-35px 0px 0px 240px;">
+            <div style="width:120px; margin: -35px 0px 0px 240px;">
                 <select class="form-select form-select-sm" aria-label=".form-select-sm example" v-model="option">
                     <option value="1">Đang làm</option>
                     <option value="2">Hoàn thành</option>
@@ -78,13 +83,17 @@
                 </select>
             </div> &emsp;
             <button class="btn btn-outline-secondary" @click="handleShowFilter()" type="button" data-toggle="collapse"
-                data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample1"
                 style="float:right; margin:  -35px 10px 0px 0px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-funnel"
                     viewBox="0 0 16 16">
                     <path
                         d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z" />
                 </svg> Tạo bộ lọc
+            </button>
+            <button class="btn btn-outline-info" @click="ShowInfoMyWork()" type="button" data-toggle="collapse"
+                data-target="#collapseExample_1" aria-expanded="false" aria-controls="collapseExample"
+                style="margin:  -140px 10px 0px 0px;"> Thông tin thời gian
             </button><br>
             <table v-if="option == 1" class="table-striped table-responsive table-hover result-point"
                 style="width:99%; margin: 0px 0px 0px 10px">
@@ -199,9 +208,12 @@
 
 export default {
     name: "MyWork",
+    el: '#infoMyWork',
     data() {
         return {
             option: 1,
+            toggle: false,
+            show: false,
             list: [
                 {
                     "id": 1,
@@ -251,6 +263,7 @@ export default {
             showModal: false,
             showMyWork: true,
             showFilter: false,
+            showInfoMyWork: false,
         }
     },
     methods: {
@@ -258,12 +271,18 @@ export default {
         handleShowFilter() {
             this.showFilter = !this.showFilter
         },
+        ShowInfoMyWork() {
+            this.showInfoMyWork = !this.showInfoMyWork
+        },
 
     }
 }
 </script>
 
 <style scoped lang="scss">
+
+
+
 
 
 
@@ -305,15 +324,31 @@ table tr td {
     border: 1px solid #999999;
 }
 
+table.my-work td {
+    border:0px;
+    padding: 10px 20px 10px 20px;
+}
+
 .search-collapse {
     width: 400px;
     box-shadow: 2px 5px 5px #d0d0d0;
     position: absolute;
     right: 10px;
-    top: 250px;
+    top: 40px;
     z-index: 9;
     background: #FFFFFF;
     border: 2px;
 }
+.info-my-work {
+    width: 500px;
+    box-shadow: 2px 5px 5px #d0d0d0;
+    position: absolute;
+    left: 15px;
+    top: 5px;
+    z-index: 9;
+    background: #c5c5c5;
+    border: 2px;
+}
+
 
 </style>
