@@ -157,7 +157,7 @@ export default {
                 let startDate = new Date(newVal);
                 let endDate = new Date(this.project.project_end_date);
                 let diffTime = Math.abs(endDate - startDate);
-                this.project.project_day = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                this.project.project_day = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
             }
         },
         'project.project_end_date': function (newVal) {
@@ -165,7 +165,7 @@ export default {
                 let endDate = new Date(newVal);
                 let startDate = new Date(this.project.project_start_date);
                 let diffTime = Math.abs(endDate - startDate);
-                this.project.project_day = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                this.project.project_day = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
             }
         },
     }
