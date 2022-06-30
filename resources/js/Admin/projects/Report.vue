@@ -1,48 +1,40 @@
 <template>
-    <div class="card">
-        <div class="card-header" style="height:50px;">
-            <h4>Bảng thống kê công việc</h4>
-            <div style="position: absolute; right: 10px; top: 8px">
-                <date-picker v-model="dateRange" type="date" range
-                    placeholder="Vui lòng chọn khoảng thời gian thống kê"></date-picker>
-                <button class="btn btn-primary" @click="getReport()"
-                    style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê</button>
-                <button v-if="currentUser.permission == 1" class="btn btn-success" @click="exportData()"
-                    style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Xuất file Excel</button>
-            </div>
+    <div>
+        <h1 style="margin: 0px 0px 0px 20px">BẢNG THỐNG KÊ CÔNG VIỆC</h1>
+        <div style="width:400px; margin: -40px 0px 0px 650px;">
+            <span>Thống kê theo dự án</span>
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" style="height:35px;">
+                <option selected="selected">Tất cả</option>
+                <option>Beach War version 0.1.3</option>
+                <option>Beach War version 0.1.4</option>
+                <option>Beach War version 0.1.5</option>
+            </select>
         </div>
+        <div style="width:400px; margin: -59px 0px 0px 1060px;">
+            <span>Thống kê theo bộ phận</span>
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" style="height:35px;">
+                <option selected="selected">Tất cả</option>
+                <option>Dev</option>
+                <option>Art</option>
+                <option>Game Design</option>
+                <option>Tester</option>
+            </select>
+        </div>
+        <div style="width:400px; margin: -59px 0px 0px 1470px;">
+            <span>Thời gian thống kê</span>
+            <date-picker v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian thống kê">
+            </date-picker>
+        </div>
+        <div style="width:320px; margin: -29px 0px 0px 1800px;">
+            <button class="btn btn-primary" @click="getReport()"
+                style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê
+            </button>
+        </div><br>
         <div class="card-body table-responsive">
-            <table class="project" style=" width:450px;">
+            <table class="project" style=" width:600px;">
                 <tr>
                     <td colspan="3">
-                        <h4 style="text-align:center;">Dự án</h4>
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>Tên dự án</b></td>
-                    <td>:</td>
-                    <td>Beach War 0.1.3</td>
-                </tr>
-                <tr>
-                    <td><b>Mã dự án</b></td>
-                    <td>:</td>
-                    <td>BW0.1.3</td>
-                </tr>
-                <tr>
-                    <td><b>Thời gian phát triển</b></td>
-                    <td>:</td>
-                    <td>Từ 01/02/2022 đến 01/07/2022</td>
-                </tr>
-                <tr>
-                    <td><b>Thời gian phát triển</b></td>
-                    <td>:</td>
-                    <td>120 ngày</td>
-                </tr>
-            </table>
-            <table class="work" style="margin: -189px 0px 0px 472px; width:450px;">
-                <tr>
-                    <td colspan="3">
-                        <h4 style="text-align:center;">Công việc dự án</h4>
+                        <h4 style="text-align:center;">Công việc</h4>
                     </td>
                 </tr>
                 <tr>
@@ -66,7 +58,7 @@
                     <td>20 công việc</td>
                 </tr>
             </table>
-            <table class="work-department" style="margin: -189px 0px 0px 944px; width:450px;">
+            <table class="work-department" style="margin: -189px 0px 0px 635px; width:600px;">
                 <tr>
                     <td colspan="3">
                         <h4 style="text-align:center;">Công việc bộ phận</h4>
@@ -93,7 +85,7 @@
                     <td>20 công việc</td>
                 </tr>
             </table>
-            <table class="weight" style="margin: -189px 0px 0px 1416px; width:450px;">
+            <table class="weight" style="margin: -189px 0px 0px 1270px; width:600px;">
                 <tr>
                     <td colspan="3">
                         <h4 style="text-align:center;">Trọng số</h4>
@@ -130,18 +122,24 @@
                                 <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
                                     placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
                             </th>
-                            <th style="vertical-align: middle; width: 12.5%;">Tổng số công việc</th>
-                            <th style="vertical-align: middle; width: 12.5%;">Hoàn thành</th>
-                            <th style="vertical-align: middle; width: 12.5%;">Đang làm</th>
-                            <th style="vertical-align: middle; width: 12.5%;">Chưa làm</th>
-                            <th style="vertical-align: middle; width: 12.5%;">Hoàn thành muộn</th>
-                            <th style="vertical-align: middle; width: 12.5%;">Quá hạn</th>
-                            <th style="vertical-align: middle; width: 12%;">Trọng số</th>
+                            <th style="vertical-align: middle; width: 8.7%;">Warrior đăng ký</th>
+                            <th style="vertical-align: middle; width: 8.7%;">Bộ phận</th>
+                            <th style="vertical-align: middle; width: 8.7%;">Tổng số công việc</th>
+                            <th style="vertical-align: middle; width: 8.7%;">Hoàn thành</th>
+                            <th style="vertical-align: middle; width: 8.7%;">Đang làm</th>
+                            <th style="vertical-align: middle; width: 8.7%;">Chưa làm</th>
+                            <th style="vertical-align: middle; width: 8.7%;">Hoàn thành muộn</th>
+                            <th style="vertical-align: middle; width: 8.7%;">Quá hạn</th>
+                            <th style="vertical-align: middle; width: 8.7%;">Trọng số</th>
+                            <th style="vertical-align: middle; width: 8.7%;">Trọng số/Bộ phận</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(user, index) in data" :key="index">
                             <td>{{ user.fullname }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>

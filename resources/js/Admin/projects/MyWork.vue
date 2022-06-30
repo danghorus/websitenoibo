@@ -100,15 +100,16 @@
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
                         <th scope="col">STT1</th>
-                        <th scope="col" width="450px">Tên công việc</th>
+                        <th scope="col" width="400px">Tên công việc</th>
                         <th scope="col" width="250px">Dự án</th>
-                        <th scope="col" width="200px">Bắt đầu</th>
+                        <th scope="col" width="180px">Bắt đầu</th>
                         <th scope="col">Thời lượng (Giờ)</th>
-                        <th scope="col" width="200px">Kết thúc</th>
-                        <th scope="col" width="200px">Bắt đầu thực tế</th>
+                        <th scope="col" width="180px">Kết thúc</th>
+                        <th scope="col" width="180px">Bắt đầu thực tế</th>
                         <th scope="col">Thời lượng thực tế (Giờ)</th>
-                        <th scope="col" width="200px">Kết thúc thực tế</th>
+                        <th scope="col" width="180px">Kết thúc thực tế</th>
                         <th scope="col" width="120px">Trạng thái</th>
+                        <th scope="col" width="120px">Thao tác</th>
                     </tr>
                 </thead>
                 <tr v-for="item in list" :key="item.name_task" style="text-align:center;">
@@ -121,6 +122,7 @@
                     <td>{{ item.time_start_real }}</td>
                     <td>{{ item.time_real }}</td>
                     <td>{{ item.time_end_real }}</td>
+                    <td></td>
                     <td>
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example">
                             <option value="1">Bắt đầu</option>
@@ -135,15 +137,16 @@
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
                         <th scope="col">STT2</th>
-                        <th scope="col" width="450px">Tên công việc</th>
+                        <th scope="col" width="400px">Tên công việc</th>
                         <th scope="col" width="250px">Dự án</th>
-                        <th scope="col" width="200px">Bắt đầu</th>
+                        <th scope="col" width="180px">Bắt đầu</th>
                         <th scope="col">Thời lượng (Giờ)</th>
-                        <th scope="col" width="200px">Kết thúc</th>
-                        <th scope="col" width="200px">Bắt đầu thực tế</th>
+                        <th scope="col" width="180px">Kết thúc</th>
+                        <th scope="col" width="180px">Bắt đầu thực tế</th>
                         <th scope="col">Thời lượng thực tế (Giờ)</th>
-                        <th scope="col" width="200px">Kết thúc thực tế</th>
+                        <th scope="col" width="180px">Kết thúc thực tế</th>
                         <th scope="col" width="120px">Trạng thái</th>
+                        <th scope="col" width="120px">Thao tác</th>
                     </tr>
                 </thead>
                 <tr v-for="item in list" :key="item.name_task" style="text-align:center;">
@@ -156,6 +159,7 @@
                     <td>{{ item.time_start_real }}</td>
                     <td>{{ item.time_real }}</td>
                     <td>{{ item.time_end_real }}</td>
+                    <td></td>
                     <td>
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example">
                             <option value="1">Bắt đầu</option>
@@ -170,15 +174,16 @@
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
                         <th scope="col">STT3</th>
-                        <th scope="col" width="450px">Tên công việc</th>
+                        <th scope="col" width="400px">Tên công việc</th>
                         <th scope="col" width="250px">Dự án</th>
-                        <th scope="col" width="200px">Bắt đầu</th>
+                        <th scope="col" width="180px">Bắt đầu</th>
                         <th scope="col">Thời lượng (Giờ)</th>
-                        <th scope="col" width="200px">Kết thúc</th>
-                        <th scope="col" width="200px">Bắt đầu thực tế</th>
+                        <th scope="col" width="180px">Kết thúc</th>
+                        <th scope="col" width="180px">Bắt đầu thực tế</th>
                         <th scope="col">Thời lượng thực tế (Giờ)</th>
-                        <th scope="col" width="200px">Kết thúc thực tế</th>
+                        <th scope="col" width="180px">Kết thúc thực tế</th>
                         <th scope="col" width="120px">Trạng thái</th>
+                        <th scope="col" width="120px">Thao tác</th>
                     </tr>
                 </thead>
                 <tr v-for="item in list" :key="item.name_task" style="text-align:center;">
@@ -191,6 +196,7 @@
                     <td>{{ item.time_start_real }}</td>
                     <td>{{ item.time_real }}</td>
                     <td>{{ item.time_end_real }}</td>
+                    <td></td>
                     <td>
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example">
                             <option value="1">Bắt đầu</option>
