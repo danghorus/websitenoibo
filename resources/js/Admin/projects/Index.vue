@@ -30,9 +30,9 @@
                             >
                                 <i class="fas fa-filter"></i>
                                 Tạo bộ lọc
-                            </button>
+                            </button> &ensp;
                             <button class="btn btn-primary float-right" style="width: 110px" @click="showModalCreateTask()">Thêm mới</button>
-                            <button class="btn btn-primary float-right ml-2" style="width: 150px" @click="showModalConfigTask()">Cấu hình</button>
+                            <button class="btn btn-primary float-right ml-2" style="width: 110px" @click="showModalConfigTask()">Cấu hình</button>
                         </div>
                     </div>
                 </div>

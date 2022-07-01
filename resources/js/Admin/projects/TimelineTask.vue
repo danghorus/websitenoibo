@@ -3,18 +3,20 @@
         <div class="mt-4">
             <table class="table">
                 <thead>
-                <tr>
-                    <th scope="col">Công việc</th>
-                    <th scope="col">Thời gian bắt đầu</th>
-                    <th scope="col">Thời lượng</th>
-                    <th scope="col">Dự án</th>
-                    <th scope="col">Bộ phận</th>
-                    <th scope="col">Người thực hiện</th>
-                    <th scope="col">Trạng thái</th>
-                    <th scope="col">Thao tác</th>
-                </tr>
+                    <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">Công việc</th>
+                        <th scope="col">Thời gian bắt đầu</th>
+                        <th scope="col">Thời lượng</th>
+                        <th scope="col">Dự án</th>
+                        <th scope="col">Bộ phận</th>
+                        <th scope="col">Người thực hiện</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Thao tác</th>
+                    </tr>
                 </thead>
                 <tr v-for="item in listTaskTimeLine" :key="item.id">
+                    <td scope="row">{{ item.id + 1 }}</td>
                     <td scope="row">{{ item.task_name }}</td>
                     <td>{{ item.start_time }}</td>
                     <td>{{ item.time }}</td>
@@ -40,7 +42,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Xác nhận xóa công việc</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModalConfirm()">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            @click="closeModalConfirm()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -59,13 +62,14 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Sửa Công việc</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModalEditTask()">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            @click="closeModalEditTask()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <create-task v-if="showModalEdit" :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                                     :stickers="stickers" :projects="projects" :taskId="taskEditId" />
+                        <create-task v-if="showModalEdit" :users="users" :groupUsers="groupUsers"
+                            :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId" />
                     </div>
                 </div>
             </div>

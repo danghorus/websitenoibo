@@ -4,6 +4,7 @@ use App\Http\Controllers\Backend\ChangePasswordController;
 use App\Http\Controllers\Backend\PasswordController;
 use App\Http\Controllers\Backend\ChangeAvatarController;
 use App\Http\Controllers\Backend\PriorityController;
+use App\Http\Controllers\Backend\HolidayController;
 use App\Http\Controllers\Backend\StickerController;
 use App\Http\Controllers\Backend\TaskController;
 use App\Http\Controllers\Backend\UserController;
@@ -104,6 +105,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('priorities/update/{id}', [PriorityController::class, 'update']);
     Route::post('priorities/delete/{id}', [PriorityController::class, 'delete']);
     Route::get('/priorities/get_all', [PriorityController::class, 'index']);
+
+    //Holiday
+    Route::post('holiday/create', [HolidayController::class, 'create']);
+    Route::post('holiday/update/{id}', [HolidayController::class, 'update']);
+    Route::post('holiday/delete/{id}', [HolidayController::class, 'delete']);
+    Route::get('/holiday/get_all', [HolidayController::class, 'index']);
 
     //Sticker
     Route::post('stickers/create', [StickerController::class, 'create']);

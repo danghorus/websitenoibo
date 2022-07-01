@@ -3,16 +3,17 @@
         <div class="mt-4">
             <table class="table">
                 <thead>
-                <tr>
-                    <th scope="col" style="width: 25%">Công việc</th>
-                    <th scope="col" style="width: 10%">Thời gian bắt đầu</th>
-                    <th scope="col" style="width: 10%">Thời lượng (Giờ)</th>
-                    <th scope="col" style="width: 15%">Dự án</th>
-                    <th scope="col" style="width: 10%">Bộ phận</th>
-                    <th scope="col" style="width: 15%">Người thực hiện</th>
-                    <th scope="col" style="width: 10%">Trạng thái</th>
-                    <th scope="col" style="width: 5%">Hành động</th>
-                </tr>
+                    <tr>
+                        <th scope="col" style="width: 25%">STT</th>
+                        <th scope="col" style="width: 25%">Công việc</th>
+                        <th scope="col" style="width: 10%">Thời gian bắt đầu</th>
+                        <th scope="col" style="width: 10%">Thời lượng (Giờ)</th>
+                        <th scope="col" style="width: 15%">Dự án</th>
+                        <th scope="col" style="width: 10%">Bộ phận</th>
+                        <th scope="col" style="width: 15%">Người thực hiện</th>
+                        <th scope="col" style="width: 10%">Trạng thái</th>
+                        <th scope="col" style="width: 5%">Hành động</th>
+                    </tr>
                 </thead>
                 <!--                <draggable v-model="list" tag="tbody">-->
                 <!--                    <tr v-for="item in list" :key="item.name" style="cursor: all-scroll">-->

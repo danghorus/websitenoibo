@@ -37,7 +37,7 @@ class Task extends Model
         'task_predecessor',
         'task_parent',
         'task_performer',
-        'level',
+        //'level',
         'status'
     ];
 
