@@ -7,7 +7,7 @@
             </div>
             <div class="form-group col-lg-3">
                 <label for="project_code">Mã dự án</label>
-                <input type="text" v-model="project.project_code" class="form-control" id="project_code" placeholder="Nhập mã dự án">
+                <input type="text" disabled v-model="project.project_code" class="form-control" id="project_code">
             </div>
         </div>
         <div class="row">
@@ -33,7 +33,7 @@
             </div>
             <div class="form-group col-lg-4">
                 <label for="project_day">Số ngày</label>
-                <input type="text" v-model="project.project_day" class="form-control" id="project_day" placeholder="Nhập số ngày">
+                <input type="text" disabled v-model="project.project_day" class="form-control" id="project_day">
             </div>
         </div>
         <div class="form-group">
@@ -168,6 +168,19 @@ export default {
                 this.project.project_day = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
             }
         },
+        'project.project_name': function (newVal) {
+            if (newVal) {
+                let arrProjectName = newVal.split(' ');
+                let projectCode = '';
+                arrProjectName.forEach(item => {
+                    projectCode = projectCode + item.charAt(0);
+                })
+
+                this.project.project_code = projectCode.toUpperCase();
+            } else {
+                this.project.project_code = '';
+            }
+        }
     }
 }
 </script>

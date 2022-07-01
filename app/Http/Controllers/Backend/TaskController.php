@@ -21,7 +21,7 @@ class TaskController extends Controller
             ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child")
             ->selectRaw('p.project_name, u.fullname');
         $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
-        $builder->join('users as u', 'tt.task_performer', '=', 'u.id');
+        $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
         $builder->where('tt.project_id', '=',$projectId);
 
         if ($taskParent) {
@@ -128,7 +128,11 @@ class TaskController extends Controller
         $isCreated = $task->save();
 
         $userIds = $data['user_related'];
-        $userIds[] = $task->task_performer;
+
+        if ($task->task_performer) {
+            $userIds[] = $task->task_performer;
+        }
+
         $userIds = array_unique($userIds);
         if ($isCreated) {
             foreach ($userIds as $userId) {
@@ -170,9 +174,14 @@ class TaskController extends Controller
         $isCreated = $task->save();
 
         $userIds = $data['user_related'];
-        $userIds[] = $task->task_performer;
+
+        if ($task->task_performer) {
+            $userIds[] = $task->task_performer;
+        }
+
         $userIds = array_unique($userIds);
         if ($isCreated) {
+            TaskUser::query()->where('task_id', '=', $taskId)->delete();
             foreach ($userIds as $userId) {
                 $taskUser = new TaskUser();
                 $taskUser->user_id = $userId;

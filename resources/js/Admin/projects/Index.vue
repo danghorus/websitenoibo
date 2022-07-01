@@ -93,7 +93,7 @@
                         </div>
                         <div class="modal-body">
                             <create-task :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                                         :stickers="stickers" :projects="projects" />
+                                         :stickers="stickers" :projects="projects" :projectId="projectId" />
                         </div>
                     </div>
                 </div>

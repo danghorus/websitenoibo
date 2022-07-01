@@ -8,8 +8,7 @@
             </div>
             <div class="form-group col-lg-3">
                 <label for="project_code">Mã công việc</label>
-                <input type="text" v-model="task.task_code" class="form-control" id="project_code"
-                    placeholder="Nhập mã công việc">
+                <input type="text" v-model="task.task_code" class="form-control" id="project_code" disabled>
             </div>
         </div>
         <div class="row">
@@ -115,15 +114,16 @@ import 'vue2-datepicker/index.css';
 import moment from "moment";
 import {$get, $post} from "../../ultis";
 import Multiselect from 'vue-multiselect';
+import _ from "lodash";
 
 export default {
     name: "CreateTask",
     components: { Editor, DatePicker, Multiselect },
-    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'taskId'],
+    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'taskId', 'projectId'],
     data() {
         return {
             task: {
-                project_id: 0
+                project_id: ''
             },
             users: [],
             values: [],
@@ -173,10 +173,6 @@ export default {
                 toastr.error('Vui lòng chọn dự án');
                 return false;
             }
-            if (!this.task.task_performer) {
-                toastr.error('Vui lòng chọn người thực hiện');
-                return false;
-            }
 
             let data = {
                 task: this.task,
@@ -205,6 +201,14 @@ export default {
         }
     },
     watch: {
+        'projectId': function (newVal) {
+            if (newVal) {
+                let project = _.find(this.projects, {id: newVal});
+                this.task.project_id = project;
+            } else {
+                this.task.project_id = '';
+            }
+        },
         'task.time': function (newVal) {
             if (newVal > 0 && this.task.start_time) {
                 let dateTime = moment(this.task.start_time).add(newVal, 'h').toDate();
@@ -219,6 +223,19 @@ export default {
         },
         'task.project_id': function (newVal) {
             if (newVal) this.getTaskByProject(newVal.id);
+        },
+        'task.task_name': function (newVal) {
+            if (newVal) {
+                let arrTaskName = newVal.split(' ');
+                let taskCode = '';
+                arrTaskName.forEach(item => {
+                    taskCode = taskCode + item.charAt(0);
+                })
+
+                this.task.task_code = taskCode.toUpperCase();
+            } else {
+                this.task.task_code = '';
+            }
         }
     }
 }
