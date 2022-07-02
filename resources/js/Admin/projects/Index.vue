@@ -1,7 +1,7 @@
 <template>
     <div class="col-lg-12">
         <div class="row">
-            <list-project @chooseProject="chooseProject" :users="users" :groupUsers="groupUsers" :projects="projects" />
+            <list-project @chooseProject="chooseProject" :users="users" :groupUsers="groupUsers" :projects="projects" @handleShowTimeline="handleShowTimeline()" />
             <div class="col-lg-10">
                 <div class="row">
                     <div
@@ -280,6 +280,9 @@ export default {
             if (res.code == 200) {
                 this.listTaskTimeLine = res.data;
             }
+        },
+        handleShowTimeline() {
+            this.showTimeline = true;
         }
     },
     watch: {

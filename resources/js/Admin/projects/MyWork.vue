@@ -287,13 +287,6 @@ export default {
 
 <style scoped lang="scss">
 
-
-
-
-
-
-
-
 table table-bordered mt-5 {
     background: #fff;
     border: 1px solid #999999;

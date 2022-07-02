@@ -46,8 +46,7 @@ export default {
     props: ['users', 'groupUsers', 'projects'],
     data() {
         return {
-            showModal: false,
-            showTimeline: false,
+            showModal: false
         }
     },
     created() {
@@ -73,7 +72,7 @@ export default {
             this.getProjects();
         },
         showTimeline(){
-            this.showTimeline = true;
+            this.$emit('handleShowTimeline');
         }
     }
 }

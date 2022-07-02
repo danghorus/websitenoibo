@@ -21,6 +21,7 @@ class ProjectController extends Controller
         $users = User::all();
         return view('projects.my_work', compact('users'));
     }
+
     public function report(Request $request)
     {
         $users = User::all();
@@ -68,8 +69,8 @@ class ProjectController extends Controller
         $project = Project::find($projectId);
         $project->project_name = $data['project_name'] ?? '';
         $project->project_code = $data['project_code'] ?? '';
-        $project->project_start_date = $data['project_start_date'] ?? date('Y-m-d', time());
-        $project->project_end_date = $data['project_end_date'] ?? date('Y-m-d', time());
+        $project->project_start_date = $data['project_start_date'] ?? null;
+        $project->project_end_date = $data['project_end_date'] ?? null;
         $project->project_day = $data['project_day'] ?? '';
         $project->description = $data['description'] ?? '';
         $project->project_manager = isset($data['project_manager']) && $data['project_manager'] ? $data['project_manager']['id']: null;
@@ -108,8 +109,8 @@ class ProjectController extends Controller
 
         $project->project_name = $data['project_name'] ?? '';
         $project->project_code = $data['project_code'] ?? '';
-        $project->project_start_date = $data['project_start_date'] ?? date('Y-m-d', time());
-        $project->project_end_date = $data['project_end_date'] ?? date('Y-m-d', time());
+        $project->project_start_date = $data['project_start_date'] ?? null;
+        $project->project_end_date = $data['project_end_date'] ?? null;
         $project->project_day = $data['project_day'] ?? '';
         $project->description = $data['description'] ?? '';
         $project->project_manager = isset($data['project_manager']) && $data['project_manager'] ? $data['project_manager']['id']: null;

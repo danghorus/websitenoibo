@@ -34,7 +34,7 @@ class TaskController extends Controller
 
         foreach ($tasks as $task) {
             $task->children = [];
-            $task->department_label = Task::DEPARTMENTS[$task->task_department];
+            $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
 //            $tmp = '';
 //            if ($task->level && $task->level > 1) {
 //                for ($i = 1; $i < $task->level; $i++){
@@ -66,7 +66,7 @@ class TaskController extends Controller
             ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child")
             ->selectRaw('p.project_name, u.fullname');
         $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
-        $builder->join('users as u', 'tt.task_performer', '=', 'u.id');
+        $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
 
         if ($projectId > 0) {
             $builder->where('tt.project_id', '=',$projectId);
@@ -94,7 +94,7 @@ class TaskController extends Controller
         $tasks = $builder->get();
 
         foreach ($tasks as $task) {
-            $task->department_label = Task::DEPARTMENTS[$task->task_department];
+            $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
         }
 
         return [
@@ -143,6 +143,20 @@ class TaskController extends Controller
             }
         }
 
+        if ($task->project_id) {
+            $project = Project::find($task->project_id);
+            if ($task->start_time
+                && (! $project->project_start_date || strtotime($project->project_start_date. ' 23:59:59') > strtotime($task->start_time))) {
+                $project->project_start_date = date('Y-m-d', strtotime($task->start_time));
+            }
+            if ($task->end_time
+                && (! $project->project_end_date || strtotime($project->project_end_date. ' 23:59:59') > strtotime($task->end_time))) {
+                $project->project_end_date = date('Y-m-d', strtotime($task->end_time));
+            }
+
+            $project->save();
+        }
+
         return [
             'code' => 200,
             'message' => 'Thêm mới thành công',
@@ -188,6 +202,20 @@ class TaskController extends Controller
                 $taskUser->task_id = $task->id;
                 $taskUser->save();
             }
+        }
+
+        if ($task->project_id) {
+            $project = Project::find($task->project_id);
+            if ($task->start_time
+                && (! $project->project_start_date || strtotime($project->project_start_date. ' 23:59:59') > strtotime($task->start_time))) {
+                $project->project_start_date = date('Y-m-d', strtotime($task->start_time));
+            }
+            if ($task->end_time
+                && (! $project->project_end_date || strtotime($project->project_end_date. ' 23:59:59') > strtotime($task->end_time))) {
+                $project->project_end_date = date('Y-m-d', strtotime($task->end_time));
+            }
+
+            $project->save();
         }
 
         return [
