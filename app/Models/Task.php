@@ -19,6 +19,20 @@ class Task extends Model
         10 => 'Support',
     ];
 
+    public const ARR_STATUS = [
+      0 => 'Mới tạo',
+      1 => 'Đang chờ',
+      2 => 'Đang tiến hành',
+      3 => 'Tạm dừng',
+      4 => 'Hoàn thành'
+    ];
+
+    public const TASK_NEW = 0;
+    public const TASK_WAITING = 1;
+    public const TASK_PROCESSING = 2;
+    public const TASK_PAUSE = 3;
+    public const TASK_COMPLETED = 4;
+
     protected $table = 'tasks';
 
     protected $fillable = [
@@ -38,7 +52,10 @@ class Task extends Model
         'task_parent',
         'task_performer',
         //'level',
-        'status'
+        'status',
+        'real_start_time',
+        'real_end_time',
+        'time_pause'
     ];
 
     public function children()

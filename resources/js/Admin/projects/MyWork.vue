@@ -4,25 +4,22 @@
             <div class="collapse search-collapse" id="collapseExample" v-if="showFilter">
                 <div class="form-group p-2">
                     <label for="project_description">Theo dự án</label>
-                    <select class="form-select">
-                        <option>Tất cả</option>
-                        <option>Beach War version 0.1.2</option>
-                        <option>Beach War version 0.1.3</option>
-                        <option>Beach War version 0.1.4</option>
-                    </select>
+                    <multiselect v-model="project" :options="projects" value="id" label="project_name"
+                                 :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+                    </multiselect>
                 </div>
                 <div class="form-group p-2">
                     <label for="project_description">Theo trạng thái</label>
-                    <select class="form-select">
-                        <option>Tất cả</option>
-                        <option>Đang làm</option>
-                        <option>Tạm dừng</option>
-                        <option>Kết thúc</option>
+                    <select class="form-select" v-model="option">
+                        <option value="1">Tất cả</option>
+                        <option value="2">Đang tiến hành </option>
+                        <option value="3">Tạm dừng</option>
+                        <option value="4">Hoàn thành</option>
                     </select>
                 </div>
                 <div class="float-right p-2">
                     <button type="submit" class="btn btn-secondary p-2" @click="handleShowFilter()">Đóng</button>
-                    <button type="submit" class="btn btn-primary p-2" style="width:70px;">Lọc</button>
+                    <button type="submit" class="btn btn-primary p-2" style="width:70px;" @click="filterTask()">Lọc</button>
                 </div>
             </div>
         </div>
@@ -49,22 +46,22 @@
                         <tr>
                             <td><b>Tổng số công việc của bạn</b></td>
                             <td>:</td>
-                            <td>120</td>
+                            <td>{{ summary.total }}</td>
                         </tr>
                         <tr>
                             <td><b>Đang làm</b></td>
                             <td>:</td>
-                            <td>20</td>
+                            <td>{{ summary.total_processing }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Tạm dừng</b></td>
+                            <td>:</td>
+                            <td>{{ summary.total_pause }}</td>
                         </tr>
                         <tr>
                             <td><b>Hoàn thành</b></td>
                             <td>:</td>
-                            <td>80</td>
-                        </tr>
-                        <tr>
-                            <td><b>Quá hạn</b></td>
-                            <td>:</td>
-                            <td>20</td>
+                            <td>{{ summary.total_complete }}</td>
                         </tr>
                     </table>
                 </div>
@@ -74,14 +71,7 @@
             </div>
         </div>
         <div class="mt-4">
-            <h4 style="margin-left: 10px;">Danh sách công việc</h4>
-            <div style="width:120px; margin: -35px 0px 0px 240px;">
-                <select class="form-select form-select-sm" aria-label=".form-select-sm example" v-model="option">
-                    <option value="1">Đang làm</option>
-                    <option value="2">Hoàn thành</option>
-                    <option value="3">Quá hạn</option>
-                </select>
-            </div> &emsp;
+            <h4 style="margin-left: 10px;">Danh sách công việc</h4>&emsp;
             <button class="btn btn-outline-secondary" @click="handleShowFilter()" type="button" data-toggle="collapse"
                 data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample1"
                 style="float:right; margin:  -35px 10px 0px 0px;">
@@ -95,7 +85,7 @@
                 data-target="#collapseExample_1" aria-expanded="false" aria-controls="collapseExample"
                 style="margin:  -140px 10px 0px 0px;"> Thông tin thời gian
             </button><br>
-            <table v-if="option == 1" class="table-striped table-responsive table-hover result-point"
+            <table class="table-striped table-responsive table-hover result-point"
                 style="width:99%; margin: 0px 0px 0px 10px">
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
@@ -109,99 +99,32 @@
                         <th scope="col">Thời lượng thực tế (Giờ)</th>
                         <th scope="col" width="180px">Kết thúc thực tế</th>
                         <th scope="col" width="120px">Trạng thái</th>
-                        <th scope="col" width="120px">Thao tác</th>
+                        <th scope="col" width="180px">Thao tác</th>
                     </tr>
                 </thead>
-                <tr v-for="item in list" :key="item.name_task" style="text-align:center;">
+                <tr v-for="(item, index) in list" :key="index" style="text-align:center;">
                     <td>1</td>
-                    <td scope="row" style="text-align:left;">{{ item.name_task }}</td>
+                    <td scope="row" style="text-align:left;">{{ item.task_name }}</td>
                     <td style="text-align:left;">{{ item.project_name }}</td>
-                    <td>{{ item.time_start_expected }}</td>
-                    <td>{{ item.time_expected }}</td>
-                    <td>{{ item.time_end_expected }}</td>
-                    <td>{{ item.time_start_real }}</td>
+                    <td>{{ item.start_time }}</td>
+                    <td>{{ item.time }}</td>
+                    <td>{{ item.end_time }}</td>
+                    <td>{{ item.real_start_time }}</td>
                     <td>{{ item.time_real }}</td>
-                    <td>{{ item.time_end_real }}</td>
-                    <td></td>
+                    <td>{{ item.real_end_time }}</td>
+                    <td>{{ item.status_title }}</td>
                     <td>
-                        <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option value="1">Bắt đầu</option>
-                            <option value="2">Tạm dừng</option>
-                            <option value="3">Kết thúc</option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
-            <table v-if="option == 2" class="table-striped table-responsive table-hover result-point"
-                style="width:99%; margin: 0px 0px 0px 10px">
-                <thead class="point-table-head">
-                    <tr style="text-align: center;">
-                        <th scope="col">STT2</th>
-                        <th scope="col" width="400px">Tên công việc</th>
-                        <th scope="col" width="250px">Dự án</th>
-                        <th scope="col" width="180px">Bắt đầu</th>
-                        <th scope="col">Thời lượng (Giờ)</th>
-                        <th scope="col" width="180px">Kết thúc</th>
-                        <th scope="col" width="180px">Bắt đầu thực tế</th>
-                        <th scope="col">Thời lượng thực tế (Giờ)</th>
-                        <th scope="col" width="180px">Kết thúc thực tế</th>
-                        <th scope="col" width="120px">Trạng thái</th>
-                        <th scope="col" width="120px">Thao tác</th>
-                    </tr>
-                </thead>
-                <tr v-for="item in list" :key="item.name_task" style="text-align:center;">
-                    <td>1</td>
-                    <td scope="row" style="text-align:left;">{{ item.name_task }}</td>
-                    <td style="text-align:left;">{{ item.project_name }}</td>
-                    <td>{{ item.time_start_expected }}</td>
-                    <td>{{ item.time_expected }}</td>
-                    <td>{{ item.time_end_expected }}</td>
-                    <td>{{ item.time_start_real }}</td>
-                    <td>{{ item.time_real }}</td>
-                    <td>{{ item.time_end_real }}</td>
-                    <td></td>
-                    <td>
-                        <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option value="1">Bắt đầu</option>
-                            <option value="2">Tạm dừng</option>
-                            <option value="3">Kết thúc</option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
-            <table v-if="option == 3" class="table-striped table-responsive table-hover result-point"
-                style="width:99%; margin: 0px 0px 0px 10px">
-                <thead class="point-table-head">
-                    <tr style="text-align: center;">
-                        <th scope="col">STT3</th>
-                        <th scope="col" width="400px">Tên công việc</th>
-                        <th scope="col" width="250px">Dự án</th>
-                        <th scope="col" width="180px">Bắt đầu</th>
-                        <th scope="col">Thời lượng (Giờ)</th>
-                        <th scope="col" width="180px">Kết thúc</th>
-                        <th scope="col" width="180px">Bắt đầu thực tế</th>
-                        <th scope="col">Thời lượng thực tế (Giờ)</th>
-                        <th scope="col" width="180px">Kết thúc thực tế</th>
-                        <th scope="col" width="120px">Trạng thái</th>
-                        <th scope="col" width="120px">Thao tác</th>
-                    </tr>
-                </thead>
-                <tr v-for="item in list" :key="item.name_task" style="text-align:center;">
-                    <td>1</td>
-                    <td scope="row" style="text-align:left;">{{ item.name_task }}</td>
-                    <td style="text-align:left;">{{ item.project_name }}</td>
-                    <td>{{ item.time_start_expected }}</td>
-                    <td>{{ item.time_expected }}</td>
-                    <td>{{ item.time_end_expected }}</td>
-                    <td>{{ item.time_start_real }}</td>
-                    <td>{{ item.time_real }}</td>
-                    <td>{{ item.time_end_real }}</td>
-                    <td></td>
-                    <td>
-                        <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option value="1">Bắt đầu</option>
-                            <option value="2">Tạm dừng</option>
-                            <option value="3">Kết thúc</option>
+                        <select
+                            v-if="item.status != 0 && item.status != 4"
+                            class="form-select form-select-sm"
+                            aria-label=".form-select-sm example"
+                            @change="changeStatus($event, item.id)"
+                            v-model="item.status"
+                        >
+                            <option value="1" v-if="item.status == 1">Đang Chờ</option>
+                            <option value="2" :disabled="item.status == 2">Đang tiến hành</option>
+                            <option value="3" :disabled="item.status == 3 || item.status == 1">Tạm dừng</option>
+                            <option value="4" :disabled="item.status == 1 || item.status == 3">Hoàn thành</option>
                         </select>
                     </td>
                 </tr>
@@ -212,65 +135,31 @@
 
 <script>
 
+import {$get, $post} from "../../ultis";
+import Multiselect from 'vue-multiselect';
+
 export default {
     name: "MyWork",
     el: '#infoMyWork',
+    components: { Multiselect },
     data() {
         return {
             option: 1,
             toggle: false,
             show: false,
-            list: [
-                {
-                    "id": 1,
-                    "name_task": "Tìm kiếm model",
-                    "time_start_expected": "01-06-2022",
-                    "time_expected": "1",
-                    "time_end_expected": "01-06-2022",
-                    "project_name": "Beach War Version 0.1.3",
-                    "time_start_real": "01-06-2022",
-                    "time_real": "0.6",
-                    "time_end_real": "01-06-2022"
-                },
-                {
-                    "id": 2,
-                    "name_task": "Design model",
-                    "time_start_expected": "01-06-2022",
-                    "time_expected": "1",
-                    "time_end_expected": "01-06-2022",
-                    "project_name": "Beach War Version 0.1.3",
-                    "time_start_real": "01-06-2022",
-                    "time_real": "0.6",
-                    "time_end_real": "01-06-2022"
-                },
-                {
-                    "id": 3,
-                    "name_task": "Optimize Model",
-                    "time_start_expected": "01-06-2022",
-                    "time_expected": "1",
-                    "time_end_expected": "01-06-2022",
-                    "project_name": "Beach War Version 0.1.3",
-                    "time_start_real": "01-06-2022",
-                    "time_real": "0.6",
-                    "time_end_real": "01-06-2022"
-                },
-                {
-                    "id": 4,
-                    "name_task": "Animation model",
-                    "time_start_expected": "01-06-2022",
-                    "time_expected": "1",
-                    "time_end_expected": "01-06-2022",
-                    "project_name": "Beach War Version 0.1.3",
-                    "time_start_real": "01-06-2022",
-                    "time_real": "0.6",
-                    "time_end_real": "01-06-2022"
-                }
-            ],
+            list: [],
             showModal: false,
             showMyWork: true,
             showFilter: false,
             showInfoMyWork: false,
+            projects: [],
+            project: '',
+            summary: ''
         }
+    },
+    created() {
+        this.getMyWorks();
+        this.getProjects();
     },
     methods: {
 
@@ -280,7 +169,42 @@ export default {
         ShowInfoMyWork() {
             this.showInfoMyWork = !this.showInfoMyWork
         },
+        filterTask() {
+            this.getMyWorks();
+            this.showFilter = false;
+        },
+        async getMyWorks() {
+            let params = {};
 
+            if (this.option && this.option != 1) {
+                params.status = this.option;
+            }
+
+            if (this.project && this.project.id > 0) {
+                params.project_id = this.project.id;
+            }
+
+            const res = await $get('/my-tasks', params);
+
+            if (res.code == 200) {
+                this.list = res.tasks;
+                this.summary = res.summary
+            }
+        },
+        async changeStatus(e, taskId) {
+            const res = await $post(`/tasks/change-status/${taskId}`, {status: e.target.value});
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getMyWorks();
+            }
+        },
+
+        async getProjects() {
+            const res = await $get('/projects/get_all');
+
+            this.projects = res.projects
+        },
     }
 }
 </script>

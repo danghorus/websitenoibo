@@ -10,6 +10,7 @@ use App\Models\Task;
 use App\Models\TaskUser;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
@@ -125,6 +126,14 @@ class TaskController extends Controller
         $task->task_parent = isset($taskInfo['task_parent']) && $taskInfo['task_parent'] ?$taskInfo['task_parent']['id']: null;
         $task->level = isset($taskInfo['task_parent']) && $taskInfo['task_parent'] ?$taskInfo['task_parent']['level'] + 1: 1;
         $task->task_performer = isset($taskInfo['task_performer']) && $taskInfo['task_performer'] ?$taskInfo['task_performer']['id']: null;
+
+        if ($task->task_predecessor) {
+            $taskPredecessor = Task::find($task->task_predecessor);
+            $task->status = $taskPredecessor && $taskPredecessor->status == Task::TASK_COMPLETED? Task::TASK_WAITING: Task::TASK_NEW;
+        } else {
+            $task->status = Task::TASK_WAITING;
+        }
+
         $isCreated = $task->save();
 
         $userIds = $data['user_related'];
@@ -318,6 +327,95 @@ class TaskController extends Controller
             'code' => 200,
             'data' => $detail,
             'user_related' => $userRelated
+        ];
+    }
+
+    public function myTasks(Request $request) {
+        $filters = $request->all();
+
+        $builder = DB::table('tasks', 'tt')->select('tt.*')
+            ->selectRaw('p.project_name');
+
+        $builder->join('projects as p', 'tt.project_id', '=', 'p.id')
+            ->where('task_performer', '=', Auth::id());
+
+        if (isset($filters['project_id']) && $filters['project_id'] > 0) {
+            $builder->where('project_id', '=', $filters['project_id']);
+        }
+
+        if (isset($filters['status']) && $filters['status'] > 1) {
+            $builder->where('status', '=', $filters['status']);
+        }
+
+        $tasks = $builder->get();
+
+        $totalTaskProcessing = 0;
+        $totalTaskPause = 0;
+        $totalTaskComplete = 0;
+
+        foreach ($tasks as $task) {
+            if (($task->status == 0 || $task->status == 1) && (strtotime($task->end_time) < time())) {
+                $task->status_title = 'Đã quá hạn';
+            } elseif ($task->status == 4 && (strtotime($task->real_end_time) > strtotime($task->end_time))) {
+                $task->status_title = 'Hoàn thành chậm';
+            } else {
+                $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
+            }
+
+            switch ($task->status) {
+                case 2:
+                    $totalTaskProcessing++;
+                    break;
+                case 3:
+                    $totalTaskPause++;
+                    break;
+                case 4:
+                    $totalTaskComplete++;
+                    break;
+            }
+
+            $task->time_real = $task->real_end_time?
+                round((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600, 2) - $task->time_pause: 0;
+        }
+
+        return [
+            'code' => 200,
+            'tasks' => $tasks,
+            'summary' => [
+                'total' => count($tasks),
+                'total_processing' => $totalTaskProcessing,
+                'total_pause' => $totalTaskPause,
+                'total_complete' => $totalTaskComplete,
+            ]
+        ];
+    }
+
+    public function changeStatus($taskId, Request $request) {
+        $status = $request->input('status');
+
+        $task = Task::find($taskId);
+
+        switch ($task->status) {
+            case 1:
+                $task->status = $status;
+                $task->real_start_time = date('Y-m-d H:i:s', time());
+                break;
+            case 2:
+                $task->status = $status;
+                $task->real_end_time = date('Y-m-d H:i:s', time());
+                break;
+            case 3:
+                $task->status = $status;
+                $pause = round((time() - strtotime($task->real_end_time))/3600, 2);
+                $task->time_pause += $pause;
+                break;
+        }
+
+        $task->save();
+
+        return [
+            'code' => 200,
+            'message' => 'Cập nhật thành công'
         ];
     }
 }
