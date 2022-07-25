@@ -3,115 +3,87 @@
         <h1 style="margin: 0px 0px 0px 20px">BẢNG THỐNG KÊ CÔNG VIỆC</h1>
         <div style="width:400px; margin: -40px 0px 0px 650px;">
             <span>Thống kê theo dự án</span>
-            <select class="form-select form-select-sm" aria-label=".form-select-sm example" style="height:35px;">
-                <option selected="selected">Tất cả</option>
-                <option>Beach War version 0.1.3</option>
-                <option>Beach War version 0.1.4</option>
-                <option>Beach War version 0.1.5</option>
-            </select>
+            <multiselect v-model="project" :options="projects" value="id" label="project_name"
+                         :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+            </multiselect>
         </div>
-        <div style="width:400px; margin: -59px 0px 0px 1060px;">
+        <div style="width:400px; margin: -67px 0px 0px 1060px;">
             <span>Thống kê theo bộ phận</span>
-            <select class="form-select form-select-sm" aria-label=".form-select-sm example" style="height:35px;">
-                <option selected="selected">Tất cả</option>
-                <option>Dev</option>
-                <option>Art</option>
-                <option>Game Design</option>
-                <option>Tester</option>
-            </select>
+            <multiselect v-model="department" :options="departments" value="value" label="label"
+                         :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+            </multiselect>
         </div>
-        <div style="width:400px; margin: -59px 0px 0px 1470px;">
-            <span>Thời gian thống kê</span>
-            <date-picker v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian thống kê">
-            </date-picker>
-        </div>
+<!--        <div style="width:400px; margin: -59px 0px 0px 1470px;">-->
+<!--            <span>Thời gian thống kê</span>-->
+<!--            <date-picker v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian thống kê">-->
+<!--            </date-picker>-->
+<!--        </div>-->
         <div style="width:320px; margin: -29px 0px 0px 1800px;">
             <button class="btn btn-primary" @click="getReport()"
                 style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê
             </button>
         </div><br>
-        <div class="card-body table-responsive">
-            <table class="project" style=" width:600px;">
-                <tr>
-                    <td colspan="3">
-                        <h4 style="text-align:center;">Công việc</h4>
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>Tổng</b></td>
-                    <td>:</td>
-                    <td>120 công việc</td>
-                </tr>
-                <tr>
-                    <td><b>Hoàn thành</b></td>
-                    <td>:</td>
-                    <td>80 công việc</td>
-                </tr>
-                <tr>
-                    <td><b>Chưa hoàn thành</b></td>
-                    <td>:</td>
-                    <td>20 công việc</td>
-                </tr>
-                <tr>
-                    <td><b>Quá hạn</b></td>
-                    <td>:</td>
-                    <td>20 công việc</td>
-                </tr>
-            </table>
-            <table class="work-department" style="margin: -189px 0px 0px 635px; width:600px;">
-                <tr>
-                    <td colspan="3">
-                        <h4 style="text-align:center;">Công việc bộ phận</h4>
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>Dev</b></td>
-                    <td>:</td>
-                    <td>120 công việc</td>
-                </tr>
-                <tr>
-                    <td><b>Art</b></td>
-                    <td>:</td>
-                    <td>80 công việc</td>
-                </tr>
-                <tr>
-                    <td><b>Game Design</b></td>
-                    <td>:</td>
-                    <td>20 công việc</td>
-                </tr>
-                <tr>
-                    <td><b>Tester</b></td>
-                    <td>:</td>
-                    <td>20 công việc</td>
-                </tr>
-            </table>
-            <table class="weight" style="margin: -189px 0px 0px 1270px; width:600px;">
-                <tr>
-                    <td colspan="3">
-                        <h4 style="text-align:center;">Trọng số</h4>
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>Dev</b></td>
-                    <td>:</td>
-                    <td>1200</td>
-                </tr>
-                <tr>
-                    <td><b>Art</b></td>
-                    <td>:</td>
-                    <td>1200</td>
-                </tr>
-                <tr>
-                    <td><b>Game Design</b></td>
-                    <td>:</td>
-                    <td>1200</td>
-                </tr>
-                <tr>
-                    <td><b>Tester</b></td>
-                    <td>:</td>
-                    <td>1200</td>
-                </tr>
-            </table>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    <table class="project table-responsive" style="width: 100%">
+                        <tr>
+                            <td colspan="3">
+                                <h4 style="text-align:center;">Công việc</h4>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Tổng</b></td>
+                            <td>:</td>
+                            <td>{{ taskSummary.total_task }} công việc</td>
+                        </tr>
+                        <tr>
+                            <td><b>Hoàn thành</b></td>
+                            <td>:</td>
+                            <td>{{ taskSummary.total_complete }} công việc</td>
+                        </tr>
+                        <tr>
+                            <td><b>Chưa hoàn thành</b></td>
+                            <td>:</td>
+                            <td>{{ taskSummary.total_complete_slow }} công việc</td>
+                        </tr>
+                        <tr>
+                            <td><b>Quá hạn</b></td>
+                            <td>:</td>
+                            <td>{{ taskSummary.total_slow }} công việc</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-4">
+                    <table class="work-department table-responsive" style="width: 100%">
+                        <tr>
+                            <td colspan="3">
+                                <h4 style="text-align:center;">Công việc bộ phận</h4>
+                            </td>
+                        </tr>
+
+                        <tr v-for="(dept, idx) in summary" :key="idx">
+                            <td><b>{{ dept.department }}</b></td>
+                            <td>:</td>
+                            <td>{{ dept.total_task }} công việc</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-4">
+                    <table class="weight table-responsive" style="width: 100%">
+                        <tr>
+                            <td colspan="3">
+                                <h4 style="text-align:center;">Trọng số</h4>
+                            </td>
+                        </tr>
+                        <tr v-for="(dept, idx) in summary" :key="idx">
+                            <td><b>{{ dept.department }}</b></td>
+                            <td>:</td>
+                            <td>{{ dept.total_weight }} công việc</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
             <br>
             <div>
                 <table class="table-striped table-responsive table-hover result-point">
@@ -135,52 +107,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(user, index) in data" :key="index">
-                            <td>{{ user.fullname }}</td>
+                        <tr v-for="(user, index) in users" :key="index">
+                            <td>{{ user.user_name }}</td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ user.department }}</td>
+                            <td>{{ user.total_task }}</td>
+                            <td>{{ user.total_complete }}</td>
+                            <td>{{ user.total_processing }}</td>
+                            <td>{{ user.total_wait }}</td>
+                            <td>{{ user.total_complete_slow }}</td>
+                            <td>{{ user.total_slow }}</td>
+                            <td>{{ user.total_weight }}</td>
+                            <td>{{ user.rate_weight }}</td>
                         </tr>
                     </tbody>
-                    <!--<tbody style="font-size:14px;">
-                        <tr v-for="(user, index) in data" :key="index">
-                            <td>{{ user.fullname }}</td>
-                            <td style=" text-align:center;" v-if="user.date_official_new != 0">{{
-                                user.date_official_new
-                                }}</td>
-                            <td style=" text-align:center;" v-else><b>Thử việc</b></td>
-                            <td>{{ user.totalGoLate }}</td>
-                            <td>{{ formatNumber(user.timeGoLate) }}</td>
-                            <td>{{ user.totalAboutEarly }}</td>
-                            <td>{{ formatNumber(user.timeAboutEarly) }}</td>
-                            <td>{{ user.totalGoLateAboutEarly }}</td>
-                            <td>{{ formatNumber(user.timeGoEarly) }}</td>
-                            <td>{{ formatNumber(user.timeAboutLate) }}</td>
-                            <td>{{ user.totalWorkingDays }}</td>
-                            <td>{{ user.totalTimeKeeping }}</td>
-                            <td>{{ user.totalOT }}</td>
-                            <td>{{ user.totalWar }}</td>
-                            <td>{{ user.totalUnpaidLeave }}</td>
-                            <td>{{ user.totalNotCheckOut }}</td>
-                            <td>{{ formatNumber(user.totalHourEfforts) }}</td>
-                            <td>{{ user.currentWar }}</td>
-                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.timeHoldWar) }}</td>
-                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.avgTimeHoldWar) }}</td>
-                            <td v-if="expected.end_date > current.end_date">{{ user.nextWar }}</td>
-                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.timeIncreaseWar) }}
-                            </td>
-                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.avgTimeIncreaseWar) }}
-                            </td>
-                            <td> {{ formatNumber(user.rateGoLate) }} %</td>
-                        </tr>
-                    </tbody>-->
                 </table>
             </div>
         </div>
@@ -192,38 +132,65 @@ import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import { $get } from "../../ultis";
 import moment from "moment";
+import Multiselect from 'vue-multiselect';
 
 export default {
     name: "Report",
     components: {
-        DatePicker
+        DatePicker, Multiselect
     },
     data() {
         return {
+            projects: [],
+            project: '',
+            department: '',
             dateRange: '',
             data: [],
             expected: {},
             current: {},
             search: '',
             currentUser: {},
-
+            departments: [
+                { value: 1, label: 'Admin' },
+                { value: 2, label: 'Dev' },
+                { value: 3, label: 'Game design' },
+                { value: 4, label: 'Art' },
+                { value: 5, label: 'Tester' },
+                { value: 6, label: 'Điều hành' },
+                { value: 7, label: 'Hành chính nhân sự' },
+                { value: 8, label: 'Kế toán' },
+                { value: 9, label: 'Phân tích dữ liệu' },
+                { value: 10, label: 'Support' },
+            ],
+            users: [],
+            summary: [],
+            taskSummary: [],
         }
     },
     created() {
         this.getReport();
+        this.getProjects();
     },
     methods: {
+
+        async getProjects() {
+            const res = await $get('/projects/get_all');
+
+            this.projects = res.projects
+        },
         async getReport() {
             let params = {
                 search: this.search,
+                project_id: this.project && this.project.id? this.project.id: '',
+                task_department: this.department && this.department.value? this.department.value: '',
                 start_date: this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD'),
                 end_date: this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : moment().endOf('month').format('YYYY-MM-DD'),
             }
-            const res = await $get('/time-keeping/get-report', { ...params });
+            const res = await $get('/tasks/get-report', { ...params });
             if (res.code == 200) {
-                this.data = res.data.result;
-                this.expected = res.data.expected;
-                this.current = res.data.current;
+                this.users = res.data;
+                this.summary = res.summary;
+                this.taskSummary = res.task_summary;
             }
 
         },

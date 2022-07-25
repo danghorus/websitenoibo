@@ -130,6 +130,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('tasks/detail/{id}', [TaskController::class, 'detail']);
     Route::post('tasks/delete/{id}', [TaskController::class, 'delete']);
     Route::post('tasks/change-status/{id}', [TaskController::class, 'changeStatus']);
+    Route::get('tasks/get-report', [TaskController::class, 'getReport']);
 
     //My Work
     Route::get('my_work', [ProjectController::class, 'my_work']);

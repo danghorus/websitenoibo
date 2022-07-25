@@ -39,7 +39,7 @@ class TaskController extends Controller
 //            $tmp = '';
 //            if ($task->level && $task->level > 1) {
 //                for ($i = 1; $i < $task->level; $i++){
-//                    if ($i == 1) { 
+//                    if ($i == 1) {
 //                        $tmp .= '|--';
 //                    } else {
 //                        $tmp .= '--';
@@ -416,6 +416,140 @@ class TaskController extends Controller
         return [
             'code' => 200,
             'message' => 'Cập nhật thành công'
+        ];
+    }
+
+    public function getReport(Request $request) {
+
+        $filter = $request->all();
+
+        $taskSummaryQuery = DB::table('tasks as t')
+            ->selectRaw("COUNT(t.id) total_task")
+            ->selectRaw("SUM(IF (t.status = 4, 1, 0)) total_complete")
+            ->selectRaw("SUM(IF (t.status = 4 AND t.real_end_time > t.end_time, 1, 0)) total_complete_slow")
+            ->selectRaw("SUM(IF ((t.status = 0 OR t.status = 1) AND NOW() > t.end_time, 1, 0)) total_slow");
+
+        $usersQuery = User::query()->with(['task' => function ($q) use ($filter) {
+            if (isset($filter['project_id']) && $filter['project_id']) {
+                $q->where('project_id', '=', $filter['project_id']);
+            }
+            if (isset($filter['task_department']) && $filter['task_department']) {
+                $q->where('task_department', '=', $filter['task_department']);
+            }
+        }]);
+
+        $summaryQuery = DB::table('tasks as t')->select('t.task_department')
+            ->selectRaw("SUM(t.weight) total_weight")
+            ->selectRaw("COUNT(t.id) total_task");
+
+
+        if (isset($filter['search']) && $filter['search']) {
+            $search = $filter['search'];
+            $taskSummaryQuery->join('users as u', 't.task_performer', '=', 'u.id');
+            $taskSummaryQuery->where('u.fullname', 'LIKE', "%$search%");
+            $summaryQuery->join('users as u', 't.task_performer', '=', 'u.id');
+            $summaryQuery->where('u.fullname', 'LIKE', "%$search%");
+
+            $usersQuery->where('fullname', 'LIKE', "%$search%");
+        }
+
+
+        if (isset($filter['project_id']) && $filter['project_id']) {
+
+            $taskSummaryQuery->where('t.project_id', '=', $filter['project_id']);
+
+            $summaryQuery->where('t.project_id', '=', $filter['project_id']);
+        }
+
+        if (isset($filter['task_department']) && $filter['task_department']) {
+
+            $taskSummaryQuery->where('t.task_department', '=', $filter['task_department']);
+
+            $summaryQuery->where('t.task_department', '=', $filter['task_department']);
+        }
+
+//        if (isset($filter['start_date']) && $filter['start_date'] &&isset($filter['end_date']) && $filter['end_date']) {
+//
+//            $taskSummaryQuery->where('t.project_id', '=', $filter['project_id']);
+//
+//            $summaryQuery->where('t.project_id', '=', $filter['project_id']);
+//        }
+
+        $taskSummary = $taskSummaryQuery->first();
+        $users = $usersQuery->get();
+        $summary = $summaryQuery->groupBy('task_department')
+            ->get();
+
+        $result = [];
+        $resSummary = [];
+        foreach ($summary as $val) {
+            if ($val->task_department) {
+                $resSummary[Task::DEPARTMENTS[$val->task_department]] = [
+                    'id' => $val->task_department,
+                    'department' => Task::DEPARTMENTS[$val->task_department],
+                    'total_task' => $val->total_task,
+                    'total_weight' => $val->total_weight,
+                ];
+            }
+
+        }
+
+        foreach ($users as $user) {
+
+            if ($user->task && count($user->task) > 0) {
+                $totalTask = 0;
+                $totalComplete = 0;
+                $totalProcessing = 0;
+                $totalWait = 0;
+                $totalCompleteSlow = 0;
+                $totalSlow = 0;
+                $totalWeight = 0;
+                foreach ($user->task as $value) {
+                    $totalTask++;
+                    $totalWeight += $value->weight;
+                    if ($value->status == 4) {
+                        $totalComplete++;
+                    }
+                    if ($value->status == 2) {
+                        $totalProcessing++;
+                    }
+                    if ($value->status == 0 || $value->status == 1) {
+                        $totalWait++;
+                    }
+                    if ($value->status == 4 && (strtotime($value->real_end_time) > strtotime($value->end_time))) {
+                        $totalCompleteSlow++;
+                    }
+                    if (($value->status == 0 || $value->status == 1) && (strtotime($value->end_time) < time())) {
+                        $totalSlow++;
+                    }
+                }
+
+                $rateWeight = 0;
+                if (isset($resSummary[$user->department]) && $resSummary[$user->department]['total_weight'] > 0) {
+                    $rateWeight = round($totalWeight/$resSummary[$user->department]['total_weight'], 2);
+                }
+
+                $result[] = [
+                    'id' => $user->id,
+                    'user_name' => $user->fullname,
+                    'department' => $user->department,
+                    'total_task' => $totalTask,
+                    'total_complete' => $totalComplete,
+                    'total_processing' => $totalProcessing,
+                    'total_wait' => $totalWait,
+                    'total_complete_slow' => $totalCompleteSlow,
+                    'total_slow' => $totalSlow,
+                    'total_weight' => $totalWeight,
+                    'rate_weight' => $rateWeight,
+                ];
+            }
+        }
+
+        return [
+            'code' => 200,
+            'data' => $result,
+            'summary' => $resSummary,
+            'task_summary' => $taskSummary
         ];
     }
 }

@@ -80,4 +80,8 @@ class User extends Authenticatable
 
         return $data;
     }
+
+    public function task() {
+        return $this->hasMany('App\Models\Task', 'task_performer', 'id');
+    }
 }
