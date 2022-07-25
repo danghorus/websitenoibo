@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\TaskController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\PetitionController;
 use App\Http\Controllers\Backend\WarriorController;
+use App\Http\Controllers\Backend\SettingController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Backend\PartnerController;
@@ -41,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('petitions', PetitionController::class);
     Route::resource('warriors', WarriorController::class);
     Route::resource('works', WorkController::class);
+    Route::resource('settings', SettingController::class);
 
     Route::post('users/{user}/change-password', [ChangePasswordController::class, 'change_password'])->name('users.change.password');
     Route::post('users/{user}/change-avatar', [ChangeAvatarController::class, 'change_avatar'])->name('users.change.avatar');

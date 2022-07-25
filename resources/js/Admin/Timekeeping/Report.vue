@@ -16,14 +16,16 @@
                 <table class="table-striped table-responsive table-hover result-point">
                     <thead class="point-table-head">
                         <tr style=" text-align:center;">
-                            <th rowspan="2" width="500px">Thời gian thống kê</th>
-                            <th rowspan="2" width="400px">Công chuẩn</th>
+                            <th width="500px">Thời gian thống kê</th>
+                            <th width="400px">Công chuẩn</th>
                             <th colspan="3" width="30%" style="background-color: #6cb2eb">Thời gian làm việc chính thức
                                 dưới 3 năm</th>
                             <th colspan="3" width="30%" style="background-color: #26C1E0">Thời gian làm việc chính thức
                                 trên 3 năm</th>
                         </tr>
                         <tr style=" text-align:center;">
+                            <td style=" text-align:left;">Công nghỉ tiêu chuẩn theo công ty</td>
+                            <td>{{ current.totalHoliday }}</td>
                             <th width="10%" style="background-color: #6cb2eb">WARRIOR 1</th>
                             <th width="10%" style="background-color: #6cb2eb">WARRIOR 2</th>
                             <th width="10%" style="background-color: #6cb2eb">WARRIOR 3</th>
@@ -114,7 +116,6 @@
                     <tbody style="font-size:14px;">
                         <tr v-for="(user, index) in data" :key="index">
                             <td>{{ user.fullname }}</td>
-                            <!--<td style="text-align:center;">{{ user.id }}</td>-->
                             <td style=" text-align:center;" v-if="user.date_official_new != 0">{{
                                 user.date_official_new}}</td>
                             <td style=" text-align:center;" v-else><b>Thử việc</b></td>
@@ -139,12 +140,18 @@
                             <td>{{ user.totalNotCheckOut }}</td>
                             <td>{{ formatNumber(user.totalHourEfforts) }}</td>
                             <td>{{ user.currentWar }}</td>
-                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.timeHoldWar) }}</td>
-                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.avgTimeHoldWar) }}</td>
-                            <td v-if="expected.end_date > current.end_date">{{ user.nextWar }}</td>
-                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.timeIncreaseWar) }}
+                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.timeHoldWar) }}
                             </td>
-                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.avgTimeIncreaseWar) }}
+                            <td v-if="expected.end_date > current.end_date">{{ formatNumber(user.avgTimeHoldWar)
+                                }}
+                            </td>
+                            <td v-if="expected.end_date > current.end_date">{{ user.nextWar }}</td>
+                            <td v-if="expected.end_date > current.end_date">{{
+                                formatNumber(user.timeIncreaseWar) }}
+                            </td>
+                            <td v-if="expected.end_date > current.end_date">{{
+                                formatNumber(user.avgTimeIncreaseWar)
+                                }}
                             </td>
                             <td> {{ formatNumber(user.rateGoLate)}} %</td>
                         </tr>

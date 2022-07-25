@@ -21,8 +21,8 @@ class HolidayController extends Controller
     public function create(Request $request) {
         $holiday = new Holiday();
         $holiday->holiday_name = $request->input('holiday_name');
-        $holiday->date_start = $request->input('date_start');
-        $holiday->date_end = $request->input('date_end');
+        $holiday->holiday_date_start = $request->input('holiday_date_start');
+        $holiday->holiday_date_end = $request->input('holiday_date_end');
 
         $holiday->save();
 
@@ -34,8 +34,8 @@ class HolidayController extends Controller
     public function update($holidayId, Request $request) {
         $holiday = Holiday::find($holidayId);
         $holiday->holiday_name = $request->input('holiday_name');
-        $holiday->date_start = $request->input('date_start');
-        $holiday->date_end = $request->input('date_end');
+        $holiday->holiday_date_start = $request->input('holiday_date_start');
+        $holiday->holiday_date_end = $request->input('holiday_date_end');
 
         $holiday->save();
 

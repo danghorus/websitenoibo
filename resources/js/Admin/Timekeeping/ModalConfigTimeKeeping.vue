@@ -156,23 +156,6 @@
                     style="height:33px; font-size:14px; padding: -50px 0px 0px 0px">Đồng bộ</button>
             </div>
             <div v-if="isShowTabHoliday" class="tab-pane" id="holiday" role="tabpanel" aria-labelledby="holiday-tab">
-                <!--<div class="col-lg-6">
-                    <input class="form-check-input" v-model="option" value="1" type="radio" name="flexRadioDefault"
-                        id="flexRadioDefault">
-                    <label class="form-check-label" for="flexRadioDefault"> Cả công ty</label>
-                    <DatePicker style="width: 100%" v-model="date_holiday" value-type="format" type="date"
-                        placeholder="Vui lòng chọn">
-                    </DatePicker>
-
-                    <p>Not before than 12:00 Today</p>
-                    <date-picker v-model="value4" type="datetime" :default-value="new Date().setHours(12, 0, 0, 0)"
-                        :disabled-date="notBeforeToday" :disabled-time="notBeforeTodayTwelveOClock" value-type="format">
-                    </date-picker>
-                </div>
-                <button class="btn btn-primary mt-2" @click="getHoliday()"
-                    style="height:33px; font-size:14px; float:right;">Thêm
-                    ngày
-                </button>-->
                 <button class="btn btn-primary float-right mb-2" v-if="!isShowCreateHoliday"
                     @click="handleCreateHoliday()">Thêm ngày nghỉ tiêu chuẩn
                 </button>
@@ -184,63 +167,74 @@
                     </div>
                     <div class="form-group col-lg-2" style="margin: -74px 0px 0px 500px">
                         Ngày bắt đầu
-                        <DatePicker v-model="date_start" value-type="format" type="date" placeholder="Vui lòng chọn">
-                        </DatePicker>
+                        <DatePicker
+                            style="width: 100%"
+                            v-model="holiday_date_start"
+                            value-type="format"
+                            type="date"
+                            placeholder="Vui lòng chọn"
+                        ></DatePicker>
+                        </div>
+                        <div class="form-group col-lg-2" style="margin: -59px 0px 0px 810px">
+                            Ngày kết thúc
+                            <DatePicker
+                                style="width: 100%"
+                                v-model="holiday_date_end"
+                                value-type="format"
+                                type="date"
+                                placeholder="Vui lòng chọn"
+                            ></DatePicker>
+                        </div>
+                        <div style="float: right; margin-top: -40px;">
+                            <button class="btn btn-secondary" @click="closeCreateHoliday()"
+                                style="width: 100px;">Hủy</button>
+                            <button class="btn btn-primary" @click="saveHoliday()"
+                                style="width: 100px;">Lưu</button>
+                        </div>
                     </div>
-                    <div class="form-group col-lg-2" style="margin: -59px 0px 0px 810px">
-                        Ngày kết thúc
-                        <DatePicker v-model="date_end" value-type="format" type="date" placeholder="Vui lòng chọn">
-                        </DatePicker>
-                    </div>
-                    <div style="float: right; margin-top: -40px;">
-                        <button class="btn btn-secondary" @click="closeCreateHoliday()"
-                            style="width: 100px;">Hủy</button>
-                        <button class="btn btn-primary" @click="saveHoliday()" style="width: 100px;">Lưu</button>
-                    </div>
+                    <table class="table-striped table-responsive table-hover result-point">
+                        <thead class="point-table-head">
+                            <tr>
+                                <th style="width:150px; text-align:center;">STT</th>
+                                <th style="width:30%;text-align:center;">Tiêu đề</th>
+                                <th style="width:20%;text-align:center;">Ngày bắt đầu</th>
+                                <th style="width:20%;text-align:center;">Ngày kết thúc</th>
+                                <th style="width:15%;text-align:center;">Số ngày</th>
+                                <th style="width:15%;text-align:center;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(holiday, index) in holiday" :key="index">
+                                <td>{{ index + 1 }}</td>
+                                <td>{{ holiday.holiday_name }}</td>
+                                <td>{{ holiday.holiday_date_start }}</td>
+                                <td>{{ holiday.holiday_date_end }}</td>
+                                <td>{{ }}</td>
+                                <td style="text-align:center;">
+                                    <nav class="navbar navbar-expand">
+                                        <div class="collapse navbar-collapse">
+                                            <ul class="navbar-nav">
+                                                <li>
+                                                    <p @click="handleUpdateHoliday(holiday)">
+                                                        <i class="fas fa-pencil-alt"
+                                                            style="cursor: pointer; margin-left:60px;" />
+                                                    </p>
+                                                </li> &emsp; &emsp;
+                                                <li>
+                                                    <p @click="deleteHoliday(holiday.id)">
+                                                        <i class="fas fa-trash" style="cursor: pointer" />
+                                                    </p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </nav>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <table class="table-striped table-responsive table-hover result-point">
-                    <thead class="point-table-head">
-                        <tr>
-                            <th style="width:150px; text-align:center;">STT</th>
-                            <th style="width:30%;text-align:center;">Tiêu đề</th>
-                            <th style="width:20%;text-align:center;">Ngày bắt đầu</th>
-                            <th style="width:20%;text-align:center;">Ngày kết thúc</th>
-                            <th style="width:15%;text-align:center;">Số ngày</th>
-                            <th style="width:15%;text-align:center;">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(holiday, index) in holiday" :key="index">
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ holiday.holiday_name }}</td>
-                            <td>{{ holiday.date_start }}</td>
-                            <td>{{ holiday.date_end }}</td>
-                            <td>{{ holiday.date_end - holiday.date_start }}</td>
-                            <td style="text-align:center;">
-                                <nav class="navbar navbar-expand">
-                                    <div class="collapse navbar-collapse">
-                                        <ul class="navbar-nav">
-                                            <li>
-                                                <p @click="handleUpdateHoliday(holiday)">
-                                                    <i class="fas fa-pencil-alt"
-                                                        style="cursor: pointer; margin-left:60px;" />
-                                                </p>
-                                            </li> &emsp; &emsp;
-                                            <li>
-                                                <p @click="deleteHoliday(holiday.id)">
-                                                    <i class="fas fa-trash" style="cursor: pointer" />
-                                                </p>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </nav>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -259,8 +253,8 @@ export default {
             isShowCreateHoliday: false,
             dateRange: '',
             holiday_name: '',
-            date_start: '',
-            date_end: '',
+            holiday_date_start: '',
+            holiday_date_end: '',
             holiday: [],
             holiday_id: 0,
             value4: '',
@@ -336,8 +330,8 @@ export default {
             console.log(holiday);
             this.isShowCreateHoliday = true;
             this.holiday_name = holiday.holiday_name;
-            this.date_start = holiday.date_start;
-            this.date_end = holiday.date_end;
+            this.holiday_date_start = holiday.holiday_date_start;
+            this.holiday_date_end = holiday.holiday_date_end;
             this.holiday_id = holiday.id;
         },
         async saveHoliday() {
@@ -345,33 +339,33 @@ export default {
                 toastr.error('Vui lòng nhập tiêu đề');
                 return false;
             }
-            if (!this.date_start) {
+            if (!this.holiday_date_start) {
                 toastr.error('Vui lòng nhập ngày bắt đầu');
                 return false;
             }
-            if (!this.date_end) {
+            if (!this.holiday_date_end) {
                 toastr.error('Vui lòng nhập ngày kết thúc');
                 return false;
             }
             if (this.holiday_id > 0) {
-                const res = await $post(`/holiday/update/${this.holiday_id}`, { holiday_name: this.holiday_name });
+                const res = await $post(`/holiday/update/${this.holiday_id}`, { holiday_name: this.holiday_name, holiday_date_start: this.holiday_date_start, holiday_date_end: this.holiday_date_end });
                 if (res.code == 200) {
                     toastr.success('Cập nhật thành công');
                     this.isShowCreateHoliday = false;
                     this.holiday_name = '';
-                    this.date_start = '';
-                    this.date_end = '';
+                    this.holiday_date_start = '';
+                    this.holiday_date_end = '';
                     this.holiday_id = 0;
                     this.getAllHoliday();
                 }
             } else {
-                const res = await $post('/holiday/create', { holiday_name: this.holiday_name });
+                const res = await $post('/holiday/create', { holiday_name: this.holiday_name, holiday_date_start: this.holiday_date_start, holiday_date_end: this.holiday_date_end });
                 if (res.code == 200) {
                     toastr.success('Tạo mới thành công');
                     this.isShowCreateHoliday = false;
                     this.holiday_name = '';
-                    this.date_start = '';
-                    this.date_end = '';
+                    this.holiday_date_start = '';
+                    this.holiday_date_end = '';
                     this.holiday_id = 0;
                     this.getAllHoliday();
                 }

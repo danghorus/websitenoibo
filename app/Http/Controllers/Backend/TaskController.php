@@ -39,7 +39,7 @@ class TaskController extends Controller
 //            $tmp = '';
 //            if ($task->level && $task->level > 1) {
 //                for ($i = 1; $i < $task->level; $i++){
-//                    if ($i == 1) {
+//                    if ($i == 1) { 
 //                        $tmp .= '|--';
 //                    } else {
 //                        $tmp .= '--';

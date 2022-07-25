@@ -139,7 +139,7 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">Báo cáo</a>
+                            <a class="nav-link" href="{{ url('/settings') }}">Cấu hình</a>
                         </li>
                     </ul>
                     @extends('petitions.create')
