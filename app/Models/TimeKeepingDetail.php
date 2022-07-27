@@ -12,6 +12,7 @@ class TimeKeepingDetail extends Model
         'user_code',
         'detected_image_url',
         'device_name',
+        'device_id',
         'person_name',
         'person_title',
         'place_name',

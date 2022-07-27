@@ -112,6 +112,7 @@
                                         <select id="department" type="text" class="form-control @error('name') is-invalid @enderror" name="department"
                                             required autocomplete="department">
                                             <option>{{ $user->department }}</option>
+                                            <option value="Admin">Admin</option>
                                             <option value="Dev">Dev</option>
                                             <option value="Game design">Game design</option>
                                             <option value="Art">Art</option>
@@ -121,7 +122,7 @@
                                             <option value="Kế toán">Kế toán</option>
                                             <option value="Phân tích dữ liệu">Phân tích dữ liệu</option>
                                             <option value="Support">Support</option>
-                                            <option value="Admin">Admin</option>
+                                            <option value="Marketing">Marketing</option>
                                         </select>
 
                                         @error('department')

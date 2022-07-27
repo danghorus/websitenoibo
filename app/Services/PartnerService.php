@@ -339,6 +339,7 @@ class PartnerService
                             $detail->user_code = $value->aliasID;
                             $detail->detected_image_url = $value->avatar;
                             $detail->device_name = $value->deviceName;
+                            $detail->device_id = $value->deviceID;
                             $detail->person_name = $value->personName;
                             $detail->person_title = $value->title;
                             $detail->place_name = $value->place;

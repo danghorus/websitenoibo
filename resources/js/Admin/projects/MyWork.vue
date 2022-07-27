@@ -5,7 +5,7 @@
                 <div class="form-group p-2">
                     <label for="project_description">Theo dự án</label>
                     <multiselect v-model="project" :options="projects" value="id" label="project_name"
-                                 :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+                        :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
                     </multiselect>
                 </div>
                 <div class="form-group p-2">
@@ -19,7 +19,8 @@
                 </div>
                 <div class="float-right p-2">
                     <button type="submit" class="btn btn-secondary p-2" @click="handleShowFilter()">Đóng</button>
-                    <button type="submit" class="btn btn-primary p-2" style="width:70px;" @click="filterTask()">Lọc</button>
+                    <button type="submit" class="btn btn-primary p-2" style="width:70px;"
+                        @click="filterTask()">Lọc</button>
                 </div>
             </div>
         </div>
@@ -89,7 +90,7 @@
                 style="width:99%; margin: 0px 0px 0px 10px">
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
-                        <th scope="col">STT1</th>
+                        <th scope="col">STT</th>
                         <th scope="col" width="400px">Tên công việc</th>
                         <th scope="col" width="250px">Dự án</th>
                         <th scope="col" width="180px">Bắt đầu</th>
@@ -103,7 +104,7 @@
                     </tr>
                 </thead>
                 <tr v-for="(item, index) in list" :key="index" style="text-align:center;">
-                    <td>1</td>
+                    <td>{{index + 1 }}</td>
                     <td scope="row" style="text-align:left;">{{ item.task_name }}</td>
                     <td style="text-align:left;">{{ item.project_name }}</td>
                     <td>{{ item.start_time }}</td>
@@ -114,17 +115,13 @@
                     <td>{{ item.real_end_time }}</td>
                     <td>{{ item.status_title }}</td>
                     <td>
-                        <select
-                            v-if="item.status != 0 && item.status != 4"
-                            class="form-select form-select-sm"
-                            aria-label=".form-select-sm example"
-                            @change="changeStatus($event, item.id)"
-                            v-model="item.status"
-                        >
+                        <select v-if="item.status != 0" class="form-select form-select-sm"
+                            aria-label=".form-select-sm example" @change="changeStatus($event, item.id)"
+                            v-model="item.status">
                             <option value="1" v-if="item.status == 1">Đang Chờ</option>
                             <option value="2" :disabled="item.status == 2">Đang tiến hành</option>
-                            <option value="3" :disabled="item.status == 3 || item.status == 1">Tạm dừng</option>
-                            <option value="4" :disabled="item.status == 1 || item.status == 3">Hoàn thành</option>
+                            <option value="3" :disabled="item.status == 3">Tạm dừng</option>
+                            <option value="4" :disabled="item.status == 3 || item.status == 4">Hoàn thành</option>
                         </select>
                     </td>
                 </tr>

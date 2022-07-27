@@ -448,6 +448,7 @@ class TimeKeepingService
                 $detail->user_code = $data['aliasID'];
                 $detail->detected_image_url = $data['detected_image_url'];
                 $detail->device_name = $data['deviceName'];
+                $detail->device_id = $data['deviceID'];
                 $detail->person_name = $data['personName'];
                 $detail->person_title = $data['personTitle'];
                 $detail->place_name = $data['placeName'];

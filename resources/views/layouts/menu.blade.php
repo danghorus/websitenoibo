@@ -17,12 +17,13 @@
 
         #loading-image {
             position: absolute;
-            width: 300px;
-            height: 300px;
+            width: 70px;
+            height: 70px;
             top: 40%;
             left: 45%;
             z-index: 99;
         }
+	
     </style>
 
     <!-- CSRF Token -->
@@ -98,7 +99,8 @@
 </head>
 <body>
         <div id="loading">
-            <img id="loading-image" src="{{ asset('img/loading_4.gif') }}" alt="" />
+            <img id="loading-image" src="{{ asset('img/loading_5.gif') }}" alt="" />
+            Loading...
         </div>
         <nav class="sb-topnav navbar navbar-expand navbar" style="background-color:#F8F9FA;">
             <!-- Navbar Brand-->

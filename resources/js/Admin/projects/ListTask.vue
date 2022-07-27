@@ -4,7 +4,6 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col" style="width: 25%">STT</th>
                         <th scope="col" style="width: 25%">Công việc</th>
                         <th scope="col" style="width: 10%">Thời gian bắt đầu</th>
                         <th scope="col" style="width: 10%">Thời lượng (Giờ)</th>

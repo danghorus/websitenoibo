@@ -1,7 +1,7 @@
 <template>
     <div class="col-lg-2 list-project">
         <p style="font-size: 32px;">
-            <i class="fas fa-terminal p-1" style="border: 3px solid #212529; border-radius: 6px"/>
+            <i class="fas fa-terminal p-1" style="border: 3px solid #212529; border-radius: 6px" />
             Danh sách dự án
         </p>
         <div class="pl-3">
@@ -10,7 +10,15 @@
             </li>
             <li class="pointer project-title" v-for="(project, index) in projects" :key="index"
                 @click="chooseProject(project.id)">
-                <p>{{ project.project_name }} ( {{ project.project_start_date }} -> {{ project.project_end_date }} )</p>
+                <p>{{ project.project_name }} ( {{ project.project_start_date }} -> {{ project.project_end_date }} )<div style="display: flex">
+                    <p @click="showModalEditTask(item.id)">
+                        <i class="fas fa-pencil-alt" style="cursor: pointer" />
+                    </p>
+                    <p @click="showModalConfirm(item.id)">
+                        <i class="fas fa-trash ml-2" style="cursor: pointer" />
+                    </p>
+                </div>
+                </p>
             </li>
         </div>
         <div class="div-create-project">
@@ -22,12 +30,13 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Tạo mới dự án</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModalCreate()">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                @click="closeModalCreate()">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <create-project @updateProject="updateProject" :users="users" :groupUsers="groupUsers"  />
+                            <create-project @updateProject="updateProject" :users="users" :groupUsers="groupUsers" />
                         </div>
                     </div>
                 </div>

@@ -79,7 +79,7 @@
                         <tr v-for="(dept, idx) in summary" :key="idx">
                             <td><b>{{ dept.department }}</b></td>
                             <td>:</td>
-                            <td>{{ dept.total_weight }} công việc</td>
+                            <td>{{ dept.total_weight }}</td>
                         </tr>
                     </table>
                 </div>

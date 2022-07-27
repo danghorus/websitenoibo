@@ -17,6 +17,7 @@ class Task extends Model
         8 => 'Kế toán',
         9 => 'Phân tích dữ liệu',
         10 => 'Support',
+        11 => 'Marketing',
     ];
 
     public const ARR_STATUS = [

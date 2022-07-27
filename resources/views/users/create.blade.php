@@ -120,6 +120,7 @@
                                                                         <option value="Kế toán">Kế toán</option>
                                                                         <option value="Phân tích dữ liệu">Phân tích dữ liệu</option>
                                                                         <option value="Support">Support</option>
+                                                                        <option value="Marketing">Marketing</option>
                                                                     </select>
                                                         @error('department')
                                                             <span class="invalid-feedback" role="alert">
