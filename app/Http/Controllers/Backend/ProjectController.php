@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\ProjectUser;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -133,6 +134,17 @@ class ProjectController extends Controller
         return [
             'code' => 200,
             'message' => 'Thêm mới thành công',
+        ];
+    }
+
+    public function delete($projectId) {
+        Project::query()->where('id', '=', $projectId)->delete();
+
+        Task::query()->where('project_id', '=', $projectId)->delete();
+
+        return [
+            'code' => 200,
+            'message' => 'Xóa thành công'
         ];
     }
 }

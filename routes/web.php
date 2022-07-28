@@ -99,6 +99,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('projects/{id}/update', [ProjectController::class, 'update']);
     Route::get('projects/get_all', [ProjectController::class, 'getAll']);
     Route::get('projects/{id}', [ProjectController::class, 'getInfo']);
+    Route::post('projects/delete/{id}', [ProjectController::class, 'delete']);
     Route::get('projects/{id}/get_detail', [ProjectController::class, 'getDetail']);
     Route::get('project-report', [ProjectController::class, 'report']);
 

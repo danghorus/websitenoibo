@@ -8,16 +8,15 @@
             <li class="pointer project-title" @click="showTimeline()">
                 <p>Công việc trong ngày</p>
             </li>
-            <li class="pointer project-title" v-for="(project, index) in projects" :key="index"
-                @click="chooseProject(project.id)">
-                <p>{{ project.project_name }} ( {{ project.project_start_date }} -> {{ project.project_end_date }} )<div style="display: flex">
-                    <p @click="showModalEditTask(item.id)">
-                        <i class="fas fa-pencil-alt" style="cursor: pointer" />
-                    </p>
-                    <p @click="showModalConfirm(item.id)">
-                        <i class="fas fa-trash ml-2" style="cursor: pointer" />
-                    </p>
-                </div>
+            <li class="pointer project-title" v-for="(project, index) in projects" :key="index" style="display: flex">
+                <p @click="chooseProject(project.id)">{{ project.project_name }} ( {{ project.project_start_date }} -> {{ project.project_end_date }} )
+                </p>
+                &nbsp;
+                <p @click="showModalEditTask(project.id)">
+                    <i class="fas fa-pencil-alt" style="cursor: pointer" />
+                </p>
+                <p @click="showModalConfirm(project.id)">
+                    <i class="fas fa-trash ml-2" style="cursor: pointer" />
                 </p>
             </li>
         </div>
@@ -36,7 +35,28 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <create-project @updateProject="updateProject" :users="users" :groupUsers="groupUsers" />
+                            <create-project @updateProject="updateProject" v-if="showModal" :users="users" :groupUsers="groupUsers" />
+                            <create-project @updateProject="updateProject" v-if="showModalEdit" :projectId="projectId" :users="users" :groupUsers="groupUsers" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ref="modalConfirm" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document" style=" max-width: 30%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Xác nhận xóa công việc</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                @click="closeModalConfirm()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <span>Bạn có chắc muốn xóa dự án này?</span><br>
+                        <div class="float-right">
+                            <button class="btn btn-secondary" @click="closeModalConfirm()">Hủy</button>
+                            <button class="btn btn-primary" @click="deleteProject()">Xóa</button>
                         </div>
                     </div>
                 </div>
@@ -47,7 +67,7 @@
 
 <script>
 import CreateProject from "./CreateProject";
-import {$get} from "../../ultis";
+import {$get, $post} from "../../ultis";
 import TimelineTask from './TimelineTask'
 export default {
     name: "ListProject",
@@ -55,7 +75,10 @@ export default {
     props: ['users', 'groupUsers', 'projects'],
     data() {
         return {
-            showModal: false
+            showModal: false,
+            showModalDelete: false,
+            showModalEdit: false,
+            projectId: 0
         }
     },
     created() {
@@ -73,6 +96,8 @@ export default {
         closeModalCreate() {
             $(this.$refs.modalCreate).modal('hide');
             this.showModal = false;
+            this.showModalEdit = false;
+            this.projectId = 0;
         },
         chooseProject(project_id) {
             this.$emit('chooseProject', project_id);
@@ -82,6 +107,33 @@ export default {
         },
         showTimeline(){
             this.$emit('handleShowTimeline');
+        },
+        showModalEditTask(id) {
+            this.showModalEdit = true;
+            this.projectId = id;
+            $(this.$refs.modalCreate).modal('show');
+        },
+
+        showModalConfirm(id) {
+            this.showModalDelete = true;
+            $(this.$refs.modalConfirm).modal('show');
+            this.projectId = id;
+        },
+        closeModalConfirm() {
+            this.showModalDelete = false;
+            $(this.$refs.modalConfirm).modal('hide');
+            this.projectId = 0;
+        },
+        async deleteProject() {
+            const res = await $post(`/projects/delete/${this.projectId}`);
+
+            if (res.code == 200) {
+                toastr.success('Xóa thành công');
+                this.showModalDelete = false;
+                $(this.$refs.modalConfirm).modal('hide');
+                this.projectId = 0;
+                this.getProjects();
+            }
         }
     }
 }
