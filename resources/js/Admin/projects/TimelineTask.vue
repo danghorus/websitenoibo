@@ -16,24 +16,26 @@
                     </tr>
                 </thead>
                 <tr v-for="item in listTaskTimeLine" :key="item.id">
-                    <td scope="row">{{ item.id + 1 }}</td>
-                    <td scope="row">{{ item.task_name }}</td>
-                    <td>{{ item.start_time }}</td>
-                    <td>{{ item.time }}</td>
-                    <td>{{ item.project_name }}</td>
-                    <td>{{ item.department_label }}</td>
-                    <td>{{ item.fullname }}</td>
-                    <td>{{ item.sport }}</td>
-                    <td>
-                        <div style="display: flex">
-                            <p @click="showModalEditTask(item.id)">
-                                <i class="fas fa-pencil-alt" style="cursor: pointer" />
-                            </p>
-                            <p @click="showModalConfirm(item.id)">
-                                <i class="fas fa-trash ml-2" style="cursor: pointer" />
-                            </p>
-                        </div>
-                    </td>
+                    <template v-if="item.fullname != null">
+                        <td scope="row">{{ item.id + 1 }}</td>
+                        <td scope="row">{{ item.task_name }}</td>
+                        <td>{{ item.start_time }}</td>
+                        <td>{{ item.time }}</td>
+                        <td>{{ item.project_name }}</td>
+                        <td>{{ item.department_label }}</td>
+                        <td>{{ item.fullname }}</td>
+                        <td>{{ item.sport }}</td>
+                        <td>
+                            <div style="display: flex">
+                                <p @click="showModalEditTask(item.id)">
+                                    <i class="fas fa-pencil-alt" style="cursor: pointer" />
+                                </p>
+                                <p @click="showModalConfirm(item.id)">
+                                    <i class="fas fa-trash ml-2" style="cursor: pointer" />
+                                </p>
+                            </div>
+                        </td>
+                    </template>
                 </tr>
             </table>
         </div>

@@ -62,6 +62,7 @@ class TaskController extends Controller
         $search = $request->input('search');
         $taskPerformer = $request->input('task_performer');
         $taskDepartment = $request->input('task_department');
+        $taskStatus = $request->input('task_status');
 
         $builder = DB::table('tasks', 'tt')->select('tt.*')
             ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child")
@@ -86,6 +87,10 @@ class TaskController extends Controller
 
         if ($taskDepartment && $taskDepartment > 0) {
             $builder->where('tt.task_department', '=', $taskDepartment);
+        }
+
+        if ($taskStatus && $taskStatus > 0) {
+            $builder->where('tt.task_status', '=', $taskStatus);
         }
 
         if ($search && $search != '') {

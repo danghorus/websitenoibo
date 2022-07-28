@@ -2,6 +2,7 @@
     <div>
         <div class="cmp-tree">
             <div class="cmp-node">
+                <span style="width: 3%">1</span>
                 <div @click="getChildTask()" style="width: 25%; display: flex">
                     <span>{{value.task_name}}</span>
                     <div v-if="hasChildren" class="arrow-right" :class="{ 'active': open }"></div>
@@ -13,7 +14,7 @@
                 <span style="width: 15%">{{ value.fullname }}</span>
                 <span style="width: 10%">{{ value.sport }}</span>
                 <span style="width: 5%; display: flex">
-                    <div @click="showModalEditTask(value.id)" >
+                    <div @click="showModalEditTask(value.id)">
                         <i class="fas fa-pencil-alt" style="cursor: pointer" />
                     </div>
                     <div @click="showModalConfirm(value.id)">
@@ -22,24 +23,10 @@
                 </span>
             </div>
             <div v-if="open">
-                <draggable
-                    :value="value.children"
-                    ghost-class="ghost"
-                    @input="updateValue"
-                    :group="group"
-                    tag="ul"
-                    v-bind="dragOptions"
-                    @start="drag = true"
-                    @end="drag = false"
-                >
-                    <tree-node
-                        v-for="(item,index) in value.children"
-                        :key="index"
-                        :value="item"
-                        @input="updateChildValue"
-                        :group="group"
-                        :rowKey="rowKey"
-                    >
+                <draggable :value="value.children" ghost-class="ghost" @input="updateValue" :group="group" tag="ul"
+                    v-bind="dragOptions" @start="drag = true" @end="drag = false">
+                    <tree-node v-for="(item,index) in value.children" :key="index" :value="item"
+                        @input="updateChildValue" :group="group" :rowKey="rowKey">
                         <span>{{item.task_name}}</span>
                     </tree-node>
                 </draggable>
@@ -51,7 +38,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title">Xác nhận xóa công việc</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                @click="closeModalConfirm()">
+                            @click="closeModalConfirm()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -71,13 +58,13 @@
                     <div class="modal-header">
                         <h5 class="modal-title">Sửa Công việc</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                @click="closeModalEditTask()">
+                            @click="closeModalEditTask()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <create-task v-if="showModalEdit" :users="users" :groupUsers="groupUsers"
-                                     :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId" />
+                            :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId" />
                     </div>
                 </div>
             </div>

@@ -19,8 +19,8 @@
             position: absolute;
             width: 70px;
             height: 70px;
-            top: 40%;
-            left: 45%;
+            top: 45%;
+            left: 57,5%;
             z-index: 99;
         }
 	

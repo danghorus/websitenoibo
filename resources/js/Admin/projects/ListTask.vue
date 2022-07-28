@@ -4,6 +4,7 @@
             <table class="table">
                 <thead>
                     <tr>
+                        <th scope="col" style="width: 3%">STT</th>    
                         <th scope="col" style="width: 25%">Công việc</th>
                         <th scope="col" style="width: 10%">Thời gian bắt đầu</th>
                         <th scope="col" style="width: 10%">Thời lượng (Giờ)</th>
@@ -28,8 +29,8 @@
                 <!--                </draggable>-->
             </table>
             <tree v-if="list.length > 0" v-model="list" :data="[...list]" group="testsailordgod" rowKey="id"
-                  :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                  :stickers="stickers" :projects="projects">
+                :users="users" :groupUsers="groupUsers" :priorities="priorities" :stickers="stickers"
+                :projects="projects">
             </tree>
         </div>
     </div>

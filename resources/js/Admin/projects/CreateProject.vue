@@ -170,7 +170,7 @@ export default {
         },
         'project.project_name': function (newVal) {
             if (newVal) {
-                let arrProjectName = newVal.split(' ');
+                let arrProjectName = newVal.split(/[. ]/);
                 let projectCode = '';
                 arrProjectName.forEach(item => {
                     projectCode = projectCode + item.charAt(0);
