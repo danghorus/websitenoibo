@@ -27,7 +27,9 @@
                 <!--                    </tr>-->
                 <!--                </draggable>-->
             </table>
-            <tree v-if="list.length > 0" v-model="list" :data="[...list]" group="testsailordgod" rowKey="id">
+            <tree v-if="list.length > 0" v-model="list" :data="[...list]" group="testsailordgod" rowKey="id"
+                  :users="users" :groupUsers="groupUsers" :priorities="priorities"
+                  :stickers="stickers" :projects="projects">
             </tree>
         </div>
     </div>
@@ -41,7 +43,7 @@ import Tree from "./Tree";
 export default {
     name: "ListTask",
     components: { draggable, Tree },
-    props: ['projectId'],
+    props: ['projectId', 'users', 'groupUsers', 'priorities', 'stickers', 'projects'],
     data() {
         return {
             list: [],

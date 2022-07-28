@@ -13,9 +13,13 @@
                 <span style="width: 15%">{{ value.fullname }}</span>
                 <span style="width: 10%">{{ value.sport }}</span>
                 <span style="width: 5%; display: flex">
-                <i @click="showModalEditTask(value.id)" class="fas fa-pencil-alt" style="cursor: pointer" />
-                <i @click="showModalConfirm(value.id)" class="fas fa-trash ml-2" style="cursor: pointer" />
-            </span>
+                    <div @click="showModalEditTask(value.id)" >
+                        <i class="fas fa-pencil-alt" style="cursor: pointer" />
+                    </div>
+                    <div @click="showModalConfirm(value.id)">
+                        <i class="fas fa-trash ml-2" style="cursor: pointer" />
+                    </div>
+                </span>
             </div>
             <div v-if="open">
                 <draggable
@@ -84,13 +88,14 @@
 <script>
 import Draggable from "vuedraggable";
 import {$get, $post} from "../../ultis";
+import CreateTask from "./CreateTask";
 
 export default {
     name: "TreeNode",
     components: {
-        Draggable
+        Draggable,CreateTask
     },
-    props: ['value','root','group','rowKey'],
+    props: ['value','root','group','rowKey', 'users', 'groupUsers', 'priorities', 'stickers', 'projects'],
     data() {
         return {
             open: false,

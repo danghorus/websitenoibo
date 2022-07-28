@@ -18,6 +18,8 @@
                 :group="group"
                 @input="updateItem"
                 :rowKey="rowKey"
+                :users="users" :groupUsers="groupUsers" :priorities="priorities"
+                :stickers="stickers" :projects="projects"
             />
         </draggable>
     </div>
@@ -32,7 +34,7 @@ export default {
         Draggable,
         TreeNode
     },
-    props: ['data', 'group', 'rowKey'],
+    props: ['data', 'group', 'rowKey', 'users', 'groupUsers', 'priorities', 'stickers', 'projects'],
     data() {
         return {
             drag: false,

@@ -77,7 +77,8 @@
                 </div>
                 <timeline-task v-if="showTimeline" :listTaskTimeLine="listTaskTimeLine" :users="users" :groupUsers="groupUsers" :priorities="priorities"
                                :stickers="stickers" :projects="projects" />
-                <list-task v-else :project-id="projectId" />
+                <list-task v-else :project-id="projectId" :users="users" :groupUsers="groupUsers" :priorities="priorities"
+                           :stickers="stickers" :projects="projects" />
             </div>
 
         </div>

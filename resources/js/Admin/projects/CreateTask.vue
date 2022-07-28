@@ -103,7 +103,7 @@
                 <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
             </multiselect>
         </div>
-        <button @click="saveTask()" class="btn btn-primary" :close-on-select="true">Tạo mới</button>
+        <button @click="saveTask()" class="btn btn-primary" :close-on-select="true">{{ taskId? 'Cập nhật': 'Tạo mới' }}</button>
     </div>
 </template>
 
