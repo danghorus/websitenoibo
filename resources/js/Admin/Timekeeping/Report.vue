@@ -17,15 +17,18 @@
                     <thead class="point-table-head">
                         <tr style=" text-align:center;">
                             <th width="500px">Thời gian thống kê</th>
-                            <th width="400px">Công chuẩn</th>
+                            <th width="400px" colspan="2">Công chuẩn</th>
                             <th colspan="3" width="30%" style="background-color: #6cb2eb">Thời gian làm việc chính thức
                                 dưới 3 năm</th>
                             <th colspan="3" width="30%" style="background-color: #26C1E0">Thời gian làm việc chính thức
                                 trên 3 năm</th>
                         </tr>
                         <tr style=" text-align:center;">
-                            <td style=" text-align:left;">Công nghỉ tiêu chuẩn theo công ty</td>
-                            <td>{{ current.totalHoliday }}</td>
+                            <td style=" text-align:left;">Công nghỉ tiêu chuẩn theo công ty: <b>{{
+                                    current.totalHoliday}} </b> công
+                            </td>
+                            <th style=" text-align:center;">Chuẩn tháng</th>
+                            <th style=" text-align:center;">Thực tế</th>
                             <th width="10%" style="background-color: #6cb2eb">WARRIOR 1</th>
                             <th width="10%" style="background-color: #6cb2eb">WARRIOR 2</th>
                             <th width="10%" style="background-color: #6cb2eb">WARRIOR 3</th>
@@ -39,6 +42,7 @@
                             <td><b>Dự kiến:</b>: Từ ngày {{ expected.start_date ? expected.start_date : ".........."}}
                                 đến ngày {{ expected.end_date ? expected.end_date : ".........."}}</td>
                             <td style=" text-align:center;">{{ expected.total }}</td>
+                            <td style=" text-align:center;">{{ expected.total_real }}</td>
                             <td style=" text-align:center; background-color: #6cb2eb">{{ expected.warrior1 }}</td>
                             <td style=" text-align:center; background-color: #6cb2eb">{{ expected.warrior2 }}</td>
                             <td style=" text-align:center; background-color: #6cb2eb">{{ expected.warrior3 }}</td>
@@ -56,6 +60,7 @@
                                 đến ngày {{ current.end_date ? current.end_date: ".........."}}
                             </td>
                             <td style=" text-align:center;">{{ current.total }}</td>
+                            <td style=" text-align:center;">{{ current.total_real }}</td>
                             <td style=" text-align:center; background-color: #6cb2eb">{{ current.warrior1 }}</td>
                             <td style=" text-align:center; background-color: #6cb2eb">{{ current.warrior2 }}</td>
                             <td style=" text-align:center; background-color: #6cb2eb">{{ current.warrior3 }}</td>

@@ -701,15 +701,27 @@ class TimeKeepingService
         $expected = [];
         $current = [];
 
+        $holidays = \App\Models\Holiday::all();
+        $totalHo = 0;
+        foreach ($holidays as $holiday) {
+
+            if(date('m',strtotime($holiday->holiday_date_start)) >= date('m',strtotime($filters['start_date'])) && date('m',strtotime($holiday->holiday_date_start)) <= date('m',strtotime($filters['end_date'])) ){
+                $holiday_start = date('Y-m-d',strtotime($holiday->holiday_date_start));
+                $holiday_end = date('Y-m-d',strtotime($holiday->holiday_date_end. ' +1 days'));
+                $timeHoliday = $this->timeReport($holiday_start, $holiday_end) ?? 0;
+                $totalHo += $timeHoliday['total'];
+            }
+        }
+
         if ($filters['start_date'] != '' && $filters['end_date'] != '' ) {
             $start_date = $filters['start_date'];
             $end_date =  date('Y-m-d',strtotime($filters['end_date']. ' +1 days'));
 
             $timeExpected = $this->timeReport($start_date, $end_date);
-            $expectedWar1_3 = $timeExpected['total'] * 1;
-            $expectedWar1 = $timeExpected['total'] * 2;
-            $expectedWar2 = $timeExpected['total'] * 3;
-            $expectedWar3 = $timeExpected['total'] * 4;
+            $expectedWar1_3 = ($timeExpected['total'] - $totalHo ) * 1;
+            $expectedWar1 = ($timeExpected['total'] - $totalHo ) * 2;
+            $expectedWar2 = ($timeExpected['total'] - $totalHo ) * 3;
+            $expectedWar3 = ($timeExpected['total'] - $totalHo ) * 4;
 
             if  (strtotime($filters['end_date']. ' +1 days') >= time() ) {
                 $timeNow = $this->timeReport($start_date, date('Y-m-d', time()));
@@ -717,10 +729,10 @@ class TimeKeepingService
                 $timeNow = $timeExpected;
             }
 
-            $nowWar1_3 = $timeNow['total'] * 1;
-            $nowWar1 = $timeNow['total'] * 2;
-            $nowWar2 = $timeNow['total'] * 3;
-            $nowWar3 = $timeNow['total'] * 4;
+            $nowWar1_3 = ($timeNow['total'] - $totalHo ) * 1;
+            $nowWar1 = ($timeNow['total'] - $totalHo ) * 2;
+            $nowWar2 = ($timeNow['total'] - $totalHo ) * 3;
+            $nowWar3 = ($timeNow['total'] - $totalHo ) * 4;
 
             $range = $timeNow['range'];
 
@@ -732,24 +744,13 @@ class TimeKeepingService
 
             $users = \App\Models\User::getAllUser($filters, $range);
 
-            $holidays = \App\Models\Holiday::all();
+           
 
             $config = ConfigTimeKeeping::query()->where('code', '=', 'TIME')->first();
 
             if ($config && $config->settings) {
                 $settings = json_decode($config->settings, true);
-            }
-            $totalHo = 0;
-            foreach ($holidays as $holiday) {
-
-                if(date('m',strtotime($holiday->holiday_date_start)) >= date('m',strtotime($filters['start_date'])) && date('m',strtotime($holiday->holiday_date_start)) <= date('m',strtotime($filters['end_date'])) ){
-                    $holiday_start = date('Y-m-d',strtotime($holiday->holiday_date_start));
-                    $holiday_end = date('Y-m-d',strtotime($holiday->holiday_date_end. ' +1 days'));
-                    $timeHoliday = $this->timeReport($holiday_start, $holiday_end) ?? 0;
-                    $totalHo += $timeHoliday['total'];
-                }
-            }
-            
+            }       
                         
                 foreach ($users as $user) {
 
@@ -1081,7 +1082,7 @@ class TimeKeepingService
                                 }
                             }
                         }
-                        $totalUnpaidLeave = $timeNow['total'] - $totalTimeKeeping - $totalHo;
+                        $totalUnpaidLeave = $timeNow['total'] - $totalTimeKeeping;
                         $rateGoLate = $totalWorkingDays? round(($totalGoLate/$totalWorkingDays), 4) * 100 : 0;
                         if($user->date_official != ""){
                             $date_official = new Datetime($user->date_official);
@@ -1142,7 +1143,9 @@ class TimeKeepingService
             $expected = [
                 'start_date' => $filters['start_date'],
                 'end_date' => $filters['end_date'],
+                'totalHoliday' => $totalHo ?? 0,
                 'total' => $timeExpected['total'] ?? '',
+                'total_real' => $timeExpected['total'] - $totalHo,
                 'warrior1_3' => $expectedWar1_3 ?? '',
                 'warrior1' => $expectedWar1 ?? '',
                 'warrior2' => $expectedWar2 ?? '',
@@ -1154,6 +1157,7 @@ class TimeKeepingService
                 'totalHoliday' => $totalHo ?? 0,
                 'end_date' => end($keyArr),
                 'total' => $timeNow['total'],
+                'total_real' => $timeNow['total'] - $totalHo,
                 'warrior1_3' => $nowWar1_3,
                 'warrior1' => $nowWar1,
                 'warrior2' => $nowWar2,
