@@ -531,7 +531,7 @@ class TaskController extends Controller
 
                 $rateWeight = 0;
                 if (isset($resSummary[$user->department]) && $resSummary[$user->department]['total_weight'] > 0) {
-                    $rateWeight = round($totalWeight/$resSummary[$user->department]['total_weight'], 2);
+                    $rateWeight = round($totalWeight/$resSummary[$user->department]['total_weight'], 4)*100;
                 }
 
                 $result[] = [

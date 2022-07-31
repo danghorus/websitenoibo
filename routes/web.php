@@ -102,6 +102,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('projects/delete/{id}', [ProjectController::class, 'delete']);
     Route::get('projects/{id}/get_detail', [ProjectController::class, 'getDetail']);
     Route::get('project-report', [ProjectController::class, 'report']);
+    Route::get('warrior', [WarriorController::class, 'warrior']);
 
     //Priority
     Route::post('priorities/create', [PriorityController::class, 'create']);

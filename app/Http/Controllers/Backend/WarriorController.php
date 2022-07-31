@@ -19,7 +19,14 @@ class WarriorController extends Controller
         $petitions = Warrior::latest()->paginate(50);
         $users = User::all();
 
-        return view('petitions.index',compact('petitions','users'));
+        return view('projects.warrior',compact('petitions','users'));
+    }
+
+    public function warrior(Request $request)
+    {
+        $petitions = Warrior::latest()->paginate(50);
+        $users = User::all();
+        return view('projects.warrior', compact('petitions','users'));
     }
 
     /**

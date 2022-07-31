@@ -3,21 +3,21 @@
         <h1 style="margin: 0px 0px 0px 20px">BẢNG THỐNG KÊ CÔNG VIỆC</h1>
         <div style="width:400px; margin: -40px 0px 0px 650px;">
             <span>Thống kê theo dự án</span>
-            <multiselect v-model="project" :options="projects" value="id" label="project_name"
-                         :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+            <multiselect v-model="project" :options="projects" value="id" label="project_name" :close-on-select="true"
+                :show-labels="true" placeholder="Vui lòng chọn">
             </multiselect>
         </div>
         <div style="width:400px; margin: -67px 0px 0px 1060px;">
             <span>Thống kê theo bộ phận</span>
-            <multiselect v-model="department" :options="departments" value="value" label="label"
-                         :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+            <multiselect v-model="department" :options="departments" value="value" label="label" :close-on-select="true"
+                :show-labels="true" placeholder="Vui lòng chọn">
             </multiselect>
         </div>
-<!--        <div style="width:400px; margin: -59px 0px 0px 1470px;">-->
-<!--            <span>Thời gian thống kê</span>-->
-<!--            <date-picker v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian thống kê">-->
-<!--            </date-picker>-->
-<!--        </div>-->
+        <div style="width:400px; margin: -59px 0px 0px 1470px;">
+            <span>Thời gian thống kê</span>
+            <date-picker v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian thống kê">
+            </date-picker>
+        </div>
         <div style="width:320px; margin: -29px 0px 0px 1800px;">
             <button class="btn btn-primary" @click="getReport()"
                 style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê
@@ -29,7 +29,7 @@
                     <table class="project table-responsive" style="width: 100%">
                         <tr>
                             <td colspan="3">
-                                <h4 style="text-align:center;">Công việc</h4>
+                                <h4 style="text-align:center;">Trạng thái công việc</h4>
                             </td>
                         </tr>
                         <tr>
@@ -38,14 +38,24 @@
                             <td>{{ taskSummary.total_task }} công việc</td>
                         </tr>
                         <tr>
+                            <td><b>Đang chờ</b></td>
+                            <td>:</td>
+                            <td>{{ taskSummary.total_wait }} công việc</td>
+                        </tr>
+                        <tr>
+                            <td><b>Đang làm</b></td>
+                            <td>:</td>
+                            <td>{{ taskSummary.total_complete }} công việc</td>
+                        </tr>
+                        <tr>
                             <td><b>Hoàn thành</b></td>
                             <td>:</td>
                             <td>{{ taskSummary.total_complete }} công việc</td>
                         </tr>
                         <tr>
-                            <td><b>Chưa hoàn thành</b></td>
+                            <td><b>Hoàn thành chậm</b></td>
                             <td>:</td>
-                            <td>{{ taskSummary.total_complete_slow }} công việc</td>
+                            <td>{{ taskSummary.total_complete }} công việc</td>
                         </tr>
                         <tr>
                             <td><b>Quá hạn</b></td>
@@ -63,7 +73,37 @@
                         </tr>
 
                         <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>{{ dept.department }}</b></td>
+                            <td><b>Dev</b></td>
+                            <td>:</td>
+                            <td>{{ dept.total_task }} công việc</td>
+                        </tr>
+
+                        <tr v-for="(dept, idx) in summary" :key="idx">
+                            <td><b>Game Design</b></td>
+                            <td>:</td>
+                            <td>{{ dept.total_task }} công việc</td>
+                        </tr>
+
+                        <tr v-for="(dept, idx) in summary" :key="idx">
+                            <td><b>Art</b></td>
+                            <td>:</td>
+                            <td>{{ dept.total_task }} công việc</td>
+                        </tr>
+
+                        <tr v-for="(dept, idx) in summary" :key="idx">
+                            <td><b>Tester</b></td>
+                            <td>:</td>
+                            <td>{{ dept.total_task }} công việc</td>
+                        </tr>
+
+                        <tr v-for="(dept, idx) in summary" :key="idx">
+                            <td><b>Data</b></td>
+                            <td>:</td>
+                            <td>{{ dept.total_task }} công việc</td>
+                        </tr>
+
+                        <tr v-for="(dept, idx) in summary" :key="idx">
+                            <td><b>Marketing</b></td>
                             <td>:</td>
                             <td>{{ dept.total_task }} công việc</td>
                         </tr>
@@ -73,11 +113,40 @@
                     <table class="weight table-responsive" style="width: 100%">
                         <tr>
                             <td colspan="3">
-                                <h4 style="text-align:center;">Trọng số</h4>
+                                <h4 style="text-align:center;">Trọng số bộ phận</h4>
                             </td>
                         </tr>
                         <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>{{ dept.department }}</b></td>
+                            <td><b>Dev</b></td>
+                            <td>:</td>
+                            <td>{{ dept.total_weight }}</td>
+                        </tr>
+
+                        <tr v-for="(dept, idx) in summary" :key="idx">
+                            <td><b>Game Design</b></td>
+                            <td>:</td>
+                            <td>{{ dept.total_weight }}</td>
+                        </tr>
+
+                        <tr v-for="(dept, idx) in summary" :key="idx">
+                            <td><b>Art</b></td>
+                            <td>:</td>
+                            <td>{{ dept.total_weight }}</td>
+                        </tr>
+
+                        <tr v-for="(dept, idx) in summary" :key="idx">
+                            <td><b>Tester</b></td>
+                            <td>:</td>
+                            <td>{{ dept.total_weight }}</td>
+                        </tr>
+                        <tr v-for="(dept, idx) in summary" :key="idx">
+                            <td><b>Data</b></td>
+                            <td>:</td>
+                            <td>{{ dept.total_weight }}</td>
+                        </tr>
+
+                        <tr v-for="(dept, idx) in summary" :key="idx">
+                            <td><b>Marketing</b></td>
                             <td>:</td>
                             <td>{{ dept.total_weight }}</td>
                         </tr>
@@ -95,7 +164,7 @@
                                     placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
                             </th>
                             <th style="vertical-align: middle; width: 8.7%;">Warrior đăng ký</th>
-                            <th style="vertical-align: middle; width: 8.7%;">Bộ phận</th>
+                            <th style="vertical-align: middle; width: 8.7%;">Warrior đạt được</th>
                             <th style="vertical-align: middle; width: 8.7%;">Tổng số công việc</th>
                             <th style="vertical-align: middle; width: 8.7%;">Hoàn thành</th>
                             <th style="vertical-align: middle; width: 8.7%;">Đang làm</th>
@@ -110,7 +179,7 @@
                         <tr v-for="(user, index) in users" :key="index">
                             <td>{{ user.user_name }}</td>
                             <td></td>
-                            <td>{{ user.department }}</td>
+                            <td></td>
                             <td>{{ user.total_task }}</td>
                             <td>{{ user.total_complete }}</td>
                             <td>{{ user.total_processing }}</td>
@@ -118,7 +187,7 @@
                             <td>{{ user.total_complete_slow }}</td>
                             <td>{{ user.total_slow }}</td>
                             <td>{{ user.total_weight }}</td>
-                            <td>{{ user.rate_weight }}</td>
+                            <td>{{ formatNumber(user.rate_weight) }} %</td>
                         </tr>
                     </tbody>
                 </table>

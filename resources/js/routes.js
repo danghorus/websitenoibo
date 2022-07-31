@@ -7,6 +7,7 @@ import ListRequest from "./Admin/Request/ListRequest";
 import Index from "./Admin/projects/Index";
 import MyWork from "./Admin/projects/MyWork";
 import Project_Report from "./Admin/projects/Report";
+import Project_Warrior from "./Admin/projects/Warrior";
 
 export const routes = [
     {
@@ -48,5 +49,10 @@ export const routes = [
         path: "/project-report",
         name: "Project_Report",
         component: Project_Report
+    },
+    {
+        path: "/warrior",
+        name: "Project_Warrior",
+        component: Project_Warrior
     }
 ];
