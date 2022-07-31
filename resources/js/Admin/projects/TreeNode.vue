@@ -26,7 +26,9 @@
                 <draggable :value="value.children" ghost-class="ghost" @input="updateValue" :group="group" tag="ul"
                     v-bind="dragOptions" @start="drag = true" @end="drag = false">
                     <tree-node v-for="(item,index) in value.children" :key="index" :value="item"
-                        @input="updateChildValue" :group="group" :rowKey="rowKey">
+                        @input="updateChildValue" :group="group" :rowKey="rowKey"
+                               :users="users" :groupUsers="groupUsers" :priorities="priorities"
+                               :stickers="stickers" :projects="projects">
                         <span>{{item.task_name}}</span>
                     </tree-node>
                 </draggable>

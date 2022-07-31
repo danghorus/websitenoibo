@@ -378,9 +378,14 @@ class TaskController extends Controller
                     $totalTaskComplete++;
                     break;
             }
+            $task->time_real = 0;
 
-            $task->time_real = $task->real_end_time?
-                round((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600, 2) - $task->time_pause: 0;
+            if ($task->status == Task::TASK_COMPLETED || $task->status == Task::TASK_PAUSE) {
+                $task->time_real = $task->real_end_time?
+                    round((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600, 2) - $task->time_pause: 0;
+            } else if ($task->status == Task::TASK_PROCESSING){
+                $task->time_real = round((time() - strtotime($task->real_start_time))/3600, 2) - $task->time_pause;
+            }
         }
 
         return [
@@ -427,21 +432,15 @@ class TaskController extends Controller
     public function getReport(Request $request) {
 
         $filter = $request->all();
-
+        $department = $filter['task_department']? explode(',', $filter['task_department']): [];
+        $project = $filter['project_id']? explode(',', $filter['project_id']): [];
         $taskSummaryQuery = DB::table('tasks as t')
             ->selectRaw("COUNT(t.id) total_task")
             ->selectRaw("SUM(IF (t.status = 4, 1, 0)) total_complete")
             ->selectRaw("SUM(IF (t.status = 4 AND t.real_end_time > t.end_time, 1, 0)) total_complete_slow")
             ->selectRaw("SUM(IF ((t.status = 0 OR t.status = 1) AND NOW() > t.end_time, 1, 0)) total_slow");
 
-        $usersQuery = User::query()->with(['task' => function ($q) use ($filter) {
-            if (isset($filter['project_id']) && $filter['project_id']) {
-                $q->where('project_id', '=', $filter['project_id']);
-            }
-            if (isset($filter['task_department']) && $filter['task_department']) {
-                $q->where('task_department', '=', $filter['task_department']);
-            }
-        }]);
+        $usersQuery = User::query();
 
         $summaryQuery = DB::table('tasks as t')->select('t.task_department')
             ->selectRaw("SUM(t.weight) total_weight")
@@ -461,16 +460,16 @@ class TaskController extends Controller
 
         if (isset($filter['project_id']) && $filter['project_id']) {
 
-            $taskSummaryQuery->where('t.project_id', '=', $filter['project_id']);
+            $taskSummaryQuery->whereIn('t.project_id', $project);
 
-            $summaryQuery->where('t.project_id', '=', $filter['project_id']);
+            $summaryQuery->whereIn('t.project_id', $project);
         }
 
         if (isset($filter['task_department']) && $filter['task_department']) {
 
-            $taskSummaryQuery->where('t.task_department', '=', $filter['task_department']);
+            $taskSummaryQuery->whereIn('t.task_department', $department);
 
-            $summaryQuery->where('t.task_department', '=', $filter['task_department']);
+            $summaryQuery->whereIn('t.task_department', $department);
         }
 
 //        if (isset($filter['start_date']) && $filter['start_date'] &&isset($filter['end_date']) && $filter['end_date']) {
@@ -479,9 +478,17 @@ class TaskController extends Controller
 //
 //            $summaryQuery->where('t.project_id', '=', $filter['project_id']);
 //        }
-
         $taskSummary = $taskSummaryQuery->first();
-        $users = $usersQuery->get();
+
+        $users = $usersQuery->with(['task' => function ($q) use ($filter, $project, $department) {
+            if (isset($filter['project_id']) && $filter['project_id']) {
+                $q->whereIn('project_id', $project);
+            }
+            if (isset($filter['task_department']) && $filter['task_department']) {
+                $q->whereIn('task_department', $department);
+            }
+        }])->get();
+
         $summary = $summaryQuery->groupBy('task_department')
             ->get();
 

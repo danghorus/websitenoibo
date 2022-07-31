@@ -3,14 +3,16 @@
         <h1 style="margin: 0px 0px 0px 20px">BẢNG THỐNG KÊ CÔNG VIỆC</h1>
         <div style="width:400px; margin: -40px 0px 0px 650px;">
             <span>Thống kê theo dự án</span>
-            <multiselect v-model="project" :options="projects" value="id" label="project_name" :close-on-select="true"
-                :show-labels="true" placeholder="Vui lòng chọn">
+            <multiselect v-model="project" :options="projects" :multiple="true"
+                         placeholder="Vui lòng chọn" track-by="id" label="project_name">
+                <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
             </multiselect>
         </div>
         <div style="width:400px; margin: -67px 0px 0px 1060px;">
             <span>Thống kê theo bộ phận</span>
-            <multiselect v-model="department" :options="departments" value="value" label="label" :close-on-select="true"
-                :show-labels="true" placeholder="Vui lòng chọn">
+            <multiselect v-model="department" :options="departments" :multiple="true"
+                         placeholder="Vui lòng chọn" track-by="value" label="label">
+                <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
             </multiselect>
         </div>
         <div style="width:400px; margin: -59px 0px 0px 1470px;">
@@ -250,8 +252,8 @@ export default {
         async getReport() {
             let params = {
                 search: this.search,
-                project_id: this.project && this.project.id? this.project.id: '',
-                task_department: this.department && this.department.value? this.department.value: '',
+                project_id: this.project.length? this.project.map(val => val.id): [],
+                task_department: this.department.length? this.department.map(val => val.value): [],
                 start_date: this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD'),
                 end_date: this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : moment().endOf('month').format('YYYY-MM-DD'),
             }
