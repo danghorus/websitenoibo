@@ -4,7 +4,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col" style="width: 3%">STT</th>    
+                        <th scope="col" style="width: 3%">STT</th>
                         <th scope="col" style="width: 25%">Công việc</th>
                         <th scope="col" style="width: 10%">Thời gian bắt đầu</th>
                         <th scope="col" style="width: 10%">Thời lượng (Giờ)</th>
@@ -30,7 +30,8 @@
             </table>
             <tree v-if="list.length > 0" v-model="list" :data="[...list]" group="testsailordgod" rowKey="id"
                 :users="users" :groupUsers="groupUsers" :priorities="priorities" :stickers="stickers"
-                :projects="projects">
+                :projects="projects" :searchProjectId="searchProjectId" :search="search"
+                  :startTime="startTime" :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status">
             </tree>
         </div>
     </div>
@@ -44,30 +45,19 @@ import Tree from "./Tree";
 export default {
     name: "ListTask",
     components: { draggable, Tree },
-    props: ['projectId', 'users', 'groupUsers', 'priorities', 'stickers', 'projects'],
+    props: ['projectId', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
+        'startTime', 'taskPerformer', 'taskDepartment', 'status', 'list'],
     data() {
         return {
-            list: [],
             showModal: false,
             showTimeline: true,
             parentTask: 0
         }
     },
     created() {
-        this.getAllTasks();
+        this.$emit('getAllTasks')
     },
     methods: {
-        async getAllTasks() {
-            let filters = {
-                project_id: this.projectId,
-                parent_task: 0
-            }
-            const res = await $get('/tasks/index', filters);
-
-            if (res.code == 200) {
-                this.list = res.data;
-            }
-        }
     },
     watch: {
         'list': function (newVal) {

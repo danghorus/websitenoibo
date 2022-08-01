@@ -24,7 +24,7 @@
                         <td>{{ item.project_name }}</td>
                         <td>{{ item.department_label }}</td>
                         <td>{{ item.fullname }}</td>
-                        <td>{{ item.sport }}</td>
+                        <td>{{ item.status_title }}</td>
                         <td>
                             <div style="display: flex">
                                 <p @click="showModalEditTask(item.id)">

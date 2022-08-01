@@ -16,8 +16,15 @@ use Illuminate\Support\Facades\DB;
 class TaskController extends Controller
 {
     public function index(Request $request) {
+
         $projectId = $request->input('project_id');
         $taskParent = $request->input('parent_task');
+        $startTime = $request->input('start_time');
+        $search = $request->input('search');
+        $taskPerformer = $request->input('task_performer');
+        $taskDepartment = $request->input('task_department');
+        $taskStatus = $request->input('status');
+
         $builder = DB::table('tasks', 'tt')->select('tt.*')
             ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child")
             ->selectRaw('p.project_name, u.fullname');
@@ -31,11 +38,39 @@ class TaskController extends Controller
             $builder->where('tt.task_parent', '=', NULL);
         }
 
+        if ($taskPerformer && $taskPerformer > 0) {
+            $builder->where('tt.task_performer', '=', $taskPerformer);
+        }
+
+        if ($taskDepartment && $taskDepartment > 0) {
+            $builder->where('tt.task_department', '=', $taskDepartment);
+        }
+
+        if ($taskStatus >= 0) {
+            $builder->where('tt.status', '=', $taskStatus);
+        }
+
+        if ($search && $search != '') {
+            $builder->where('tt.task_name', 'LIKE', "%$search%");
+        }
+
+        if ($startTime && $startTime != '') {
+            $builder->whereDate('tt.start_time', '=', $startTime);
+        }
+
         $tasks = $builder->get();
 
         foreach ($tasks as $task) {
             $task->children = [];
             $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
+
+            if (($task->status == 0 || $task->status == 1) && (strtotime($task->end_time) < time())) {
+                $task->status_title = 'Đã quá hạn';
+            } elseif ($task->status == 4 && (strtotime($task->real_end_time) > strtotime($task->end_time))) {
+                $task->status_title = 'Hoàn thành chậm';
+            } else {
+                $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
+            }
 //            $tmp = '';
 //            if ($task->level && $task->level > 1) {
 //                for ($i = 1; $i < $task->level; $i++){
@@ -62,7 +97,7 @@ class TaskController extends Controller
         $search = $request->input('search');
         $taskPerformer = $request->input('task_performer');
         $taskDepartment = $request->input('task_department');
-        $taskStatus = $request->input('task_status');
+        $taskStatus = $request->input('status');
 
         $builder = DB::table('tasks', 'tt')->select('tt.*')
             ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child")
@@ -89,18 +124,25 @@ class TaskController extends Controller
             $builder->where('tt.task_department', '=', $taskDepartment);
         }
 
-        if ($taskStatus && $taskStatus > 0) {
-            $builder->where('tt.task_status', '=', $taskStatus);
+        if ($taskStatus >= 0) {
+            $builder->where('tt.status', '=', $taskStatus);
         }
 
         if ($search && $search != '') {
             $builder->where('tt.task_name', 'LIKE', "%$search%");
         }
-
         $tasks = $builder->get();
 
         foreach ($tasks as $task) {
             $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
+
+            if (($task->status == 0 || $task->status == 1) && (strtotime($task->end_time) < time())) {
+                $task->status_title = 'Đã quá hạn';
+            } elseif ($task->status == 4 && (strtotime($task->real_end_time) > strtotime($task->end_time))) {
+                $task->status_title = 'Hoàn thành chậm';
+            } else {
+                $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
+            }
         }
 
         return [
@@ -413,6 +455,11 @@ class TaskController extends Controller
             case 2:
                 $task->status = $status;
                 $task->real_end_time = date('Y-m-d H:i:s', time());
+                if ($status == 4) {
+                    Task::query()->where('task_predecessor', '=', $taskId)->update([
+                        'status' => 1
+                    ]);
+                }
                 break;
             case 3:
                 $task->status = $status;

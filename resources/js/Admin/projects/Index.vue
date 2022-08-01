@@ -64,21 +64,21 @@
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo trạng thái</label>
-                        <select class="form-select">
-                            <option>Lê Duy1</option>
-                            <option>Lê Duy2</option>
-                            <option>Lê Duy3</option>
-                        </select>
+                        <multiselect v-model="status" :options="arrStatus" value="value" label="label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                        </multiselect>
                     </div>
                     <div class="float-right p-2">
                         <button type="submit" class="btn btn-secondary p-2" @click="handleShowFilter()">Đóng</button>
-                        <button type="submit" class="btn btn-primary p-2" @click="getTaskTimeLine()">Áp dụng</button>
+                        <button type="submit" class="btn btn-primary p-2" @click="showTimeline? getTaskTimeLine(): getAllTasks()">Áp dụng</button>
                     </div>
                 </div>
                 <timeline-task v-if="showTimeline" :listTaskTimeLine="listTaskTimeLine" :users="users" :groupUsers="groupUsers" :priorities="priorities"
                                :stickers="stickers" :projects="projects" />
                 <list-task v-else :project-id="projectId" :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                           :stickers="stickers" :projects="projects" />
+                           :stickers="stickers" :projects="projects" :searchProjectId="searchProjectId" :search="search"
+                           :startTime="startTime" :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status"
+                           @getAllTasks="getAllTasks" :list="list"
+                />
             </div>
 
         </div>
@@ -186,6 +186,14 @@ export default {
                 { value: 9, label: 'Phân tích dữ liệu' },
                 { value: 10, label: 'Support' },
             ],
+            arrStatus: [
+                { value: 0, label: 'Mới tạo' },
+                { value: 1, label: 'Đang chờ' },
+                { value: 2, label: 'Đang tiến hành' },
+                { value: 3, label: 'Tạm dừng' },
+                { value: 4, label: 'Hoàn thành' },
+            ],
+            status: ''
         }
     },
     created() {
@@ -275,6 +283,7 @@ export default {
                 start_time: this.startTime || '',
                 task_performer: this.taskPerformer || 0,
                 task_department: this.taskDepartment? this.taskDepartment.value : 0,
+                status: this.status? this.status.value : -1,
             }
             const res = await $get('/tasks/timeline', filters);
 
@@ -284,6 +293,23 @@ export default {
         },
         handleShowTimeline() {
             this.showTimeline = true;
+        },
+        async getAllTasks() {
+
+            let filters = {
+                project_id: this.projectId,
+                parent_task: 0,
+                search: this.search || '',
+                start_time: this.startTime || '',
+                task_performer: this.taskPerformer || 0,
+                task_department: this.taskDepartment? this.taskDepartment.value : 0,
+                status: this.status? this.status.value : -1,
+            }
+            const res = await $get('/tasks/index', filters);
+
+            if (res.code == 200) {
+                this.list = res.data;
+            }
         }
     },
     watch: {

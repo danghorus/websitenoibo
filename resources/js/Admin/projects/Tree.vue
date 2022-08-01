@@ -20,6 +20,9 @@
                 :rowKey="rowKey"
                 :users="users" :groupUsers="groupUsers" :priorities="priorities"
                 :stickers="stickers" :projects="projects"
+                :searchProjectId="searchProjectId" :search="search"
+                :startTime="startTime" :taskPerformer="taskPerformer"
+                :taskDepartment="taskDepartment" :status="status"
             />
         </draggable>
     </div>
@@ -34,7 +37,8 @@ export default {
         Draggable,
         TreeNode
     },
-    props: ['data', 'group', 'rowKey', 'users', 'groupUsers', 'priorities', 'stickers', 'projects'],
+    props: ['data', 'group', 'rowKey', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
+        'startTime', 'taskPerformer', 'taskDepartment', 'status'],
     data() {
         return {
             drag: false,

@@ -12,7 +12,7 @@
                 <span style="width: 15%">{{ value.project_name }}</span>
                 <span style="width: 10%">{{ value.department_label }}</span>
                 <span style="width: 15%">{{ value.fullname }}</span>
-                <span style="width: 10%">{{ value.sport }}</span>
+                <span style="width: 10%">{{ value.status_title }}</span>
                 <span style="width: 5%; display: flex">
                     <div @click="showModalEditTask(value.id)">
                         <i class="fas fa-pencil-alt" style="cursor: pointer" />
@@ -84,7 +84,8 @@ export default {
     components: {
         Draggable,CreateTask
     },
-    props: ['value','root','group','rowKey', 'users', 'groupUsers', 'priorities', 'stickers', 'projects'],
+    props: ['value','root','group','rowKey', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
+        'startTime', 'taskPerformer', 'taskDepartment', 'status'],
     data() {
         return {
             open: false,
@@ -143,10 +144,17 @@ export default {
         },
         async getChildTask() {
             if (!this.open) {
+
                 let filters = {
                     project_id: this.localValue.project_id,
-                    parent_task: this.localValue.id
+                    parent_task: this.localValue.id,
+                    search: this.search || '',
+                    start_time: this.startTime || '',
+                    task_performer: this.taskPerformer || 0,
+                    task_department: this.taskDepartment? this.taskDepartment.value : 0,
+                    status: this.status? this.status.value : -1,
                 }
+
                 const res = await $get('/tasks/index', filters);
 
                 if (res.code == 200) {
