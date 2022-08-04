@@ -701,15 +701,29 @@ class TimeKeepingService
         $expected = [];
         $current = [];
 
+        
         $holidays = \App\Models\Holiday::all();
+         
+        $arrHoliday = [];
+
+        foreach ($holidays as $holiday) {
+            $labelHoliday = [];
+            $rangeHoliday = $this->getLabelTimeKeeping($holiday->holiday_date_start, date('Y-m-d',strtotime('+1 days', strtotime($holiday->holiday_date_end))), $labelHoliday);
+            foreach($rangeHoliday as $key => $val) {
+                $arrHoliday[] = $key;
+            }
+        }
+
         $totalHo = 0;
         foreach ($holidays as $holiday) {
-
-            if(date('m',strtotime($holiday->holiday_date_start)) >= date('m',strtotime($filters['start_date'])) && date('m',strtotime($holiday->holiday_date_start)) <= date('m',strtotime($filters['end_date'])) ){
-                $holiday_start = date('Y-m-d',strtotime($holiday->holiday_date_start));
-                $holiday_end = date('Y-m-d',strtotime($holiday->holiday_date_end. ' +1 days'));
-                $timeHoliday = $this->timeReport($holiday_start, $holiday_end) ?? 0;
-                $totalHo += $timeHoliday['total'];
+            if(strtotime($holiday->holiday_date_start) <= time()){
+                if(strtotime($holiday->holiday_date_start) >= strtotime($filters['start_date'])
+                && strtotime($holiday->holiday_date_start) <= strtotime($filters['end_date'])){
+                        $holiday_start = date('Y-m-d',strtotime($holiday->holiday_date_start));
+                        $holiday_end = date('Y-m-d',strtotime($holiday->holiday_date_end. ' +1 days'));
+                        $timeHoliday = $this->timeReport($holiday_start, $holiday_end) ?? 0;   
+                        $totalHo += $timeHoliday['total'];
+                }
             }
         }
 
@@ -783,8 +797,13 @@ class TimeKeepingService
                             $labelDay = $range[$value->check_date];
                             $configDay = $settings[$labelDay] ?? [];
 
-                            $checkIn = $value->checkin? strtotime($value->check_date. ' '. $value->checkin): '';
-                            $checkOut = $value->checkout? strtotime($value->check_date. ' '. $value->checkout): '';
+                             if(in_array($value->check_date, $arrHoliday) ){
+                                $checkIn ='';
+                                $checkOut = '';
+                            }else{
+                                $checkIn = $value->checkin? strtotime($value->check_date. ' '. $value->checkin): '';
+                                $checkOut = $value->checkout? strtotime($value->check_date. ' '. $value->checkout): '';
+                            }
 
                                 if ($configDay && ($value->petition_type == 0 || $value->petition_type == 1 || $value->petition_type == 4 )) {
                                     $start = $configDay['start_timeAM'] != ''? strtotime($value->check_date. ' '. $configDay['start_timeAM']): '';
@@ -1049,8 +1068,8 @@ class TimeKeepingService
                                     $timeIncreaseWar = $expectedWar3 - $totalHourEfforts;
                                 }
                             }
-                            $avgTimeHoldWar = $timeHoldWar/$timeRange;
-                            $avgTimeIncreaseWar = $timeIncreaseWar/$timeRange;
+                            $avgTimeHoldWar = $timeHoldWar/($timeExpected['total'] -  $timeNow['total']);
+                            $avgTimeIncreaseWar = $timeIncreaseWar/($timeExpected['total'] -  $timeNow['total']);
                         } else{
                             if($totalWorkDate > $EmployeeLongtime ){
                                 if($totalWorkDate > $EmployeeLongtime && $totalHourEfforts < $nowWar1_3) {
@@ -1082,7 +1101,7 @@ class TimeKeepingService
                                 }
                             }
                         }
-                        $totalUnpaidLeave = $timeNow['total'] - $totalTimeKeeping;
+                        $totalUnpaidLeave = $timeNow['total'] - $totalTimeKeeping - $totalHo;
                         $rateGoLate = $totalWorkingDays? round(($totalGoLate/$totalWorkingDays), 4) * 100 : 0;
                         if($user->date_official != ""){
                             $date_official = new Datetime($user->date_official);
