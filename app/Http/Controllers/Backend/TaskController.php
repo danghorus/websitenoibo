@@ -348,11 +348,33 @@ class TaskController extends Controller
         }
 
         if ($task->task_predecessor) {
-            $detail['task_predecessor'] = Task::find($task->task_predecessor);
+            $taskPre = Task::query()->with(['parent'])->where('id', '=', $task->task_predecessor)->first();
+            $label = '';
+            if ($taskPre->parent) {
+                $item = $taskPre->parent;
+                while ($item) {
+                    $label .= $item->task_name . ' > ';
+                    $item = $item->parent;
+                }
+            }
+            $taskPre->label = $label. $taskPre->task_name;
+            $detail['task_predecessor'] = $taskPre;
         }
 
         if ($task->task_parent) {
-            $detail['task_parent'] = Task::find($task->task_parent);
+
+            $taskParent = Task::query()->with(['parent'])->where('id', '=', $task->task_parent)->first();
+            $label = '';
+            if ($taskParent->parent) {
+                $item = $taskParent->parent;
+                while ($item) {
+                    $label .= $item->task_name . ' > ';
+                    $item = $item->parent;
+                }
+            }
+            $taskParent->label = $label. $taskParent->task_name;
+
+            $detail['task_parent'] = $taskParent;
         }
 
         if ($task->task_performer) {
@@ -609,6 +631,65 @@ class TaskController extends Controller
             'data' => $result,
             'summary' => $resSummary,
             'task_summary' => $taskSummary
+        ];
+    }
+
+    public function copy($taskId) {
+        $task = Task::find($taskId);
+        $newTask = new Task();
+        $newTask->task_name = $task->task_name;
+        $newTask->task_code = $task->task_code;
+        $newTask->start_time = $task->start_time;
+        $newTask->time = $task->time;
+        $newTask->end_time = $task->end_time;
+        $newTask->description = $task->description;
+        $newTask->task_priority = $task->task_priority;
+        $newTask->task_sticker = $task->task_sticker;
+        $newTask->task_department =$task->task_department;
+        $newTask->weight = $task->weight;
+        $newTask->project_id = $task->project_id;
+        $newTask->task_predecessor = $task->task_predecessor;
+        $newTask->task_parent = $task->task_parent;
+        $newTask->level = $task->level;
+        $newTask->task_performer = $task->task_performer;
+
+        if ($task->task_predecessor) {
+            $taskPre = Task::find($task->task_predecessor);
+            if($taskPre->status == 4) {
+                $newTask->status = 1;
+            } else {
+                $newTask->status = 0;
+            }
+        } else {
+            $newTask->status = 1;
+        }
+
+        $newTask->save();
+        $taskUsers = TaskUser::query()->where('task_id', '=', $taskId);
+        foreach ($taskUsers as $value) {
+            $taskUser = new TaskUser();
+            $taskUser->user_id = $value->user_id;
+            $taskUser->task_id = $newTask->id;
+            $taskUser->save();
+        }
+
+        if ($newTask->project_id) {
+            $project = Project::find($newTask->project_id);
+            if ($newTask->start_time
+                && (! $project->project_start_date || strtotime($project->project_start_date. ' 23:59:59') > strtotime($newTask->start_time))) {
+                $project->project_start_date = date('Y-m-d', strtotime($newTask->start_time));
+            }
+            if ($newTask->end_time
+                && (! $project->project_end_date || strtotime($project->project_end_date. ' 23:59:59') > strtotime($newTask->end_time))) {
+                $project->project_end_date = date('Y-m-d', strtotime($newTask->end_time));
+            }
+
+            $project->save();
+        }
+
+        return [
+            'code' => 200,
+            'message' => 'Copy thành công'
         ];
     }
 }

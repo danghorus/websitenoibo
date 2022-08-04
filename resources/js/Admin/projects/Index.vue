@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <timeline-task v-if="showTimeline" :listTaskTimeLine="listTaskTimeLine" :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                               :stickers="stickers" :projects="projects" />
+                               :stickers="stickers" :projects="projects" @getTaskTimeLine="getTaskTimeLine()" />
                 <list-task v-else :project-id="projectId" :users="users" :groupUsers="groupUsers" :priorities="priorities"
                            :stickers="stickers" :projects="projects" :searchProjectId="searchProjectId" :search="search"
                            :startTime="startTime" :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status"

@@ -3,13 +3,12 @@
         <div class="cmp-tree">
             <div class="cmp-node">
                 <span style="width: 3%">1</span>
-                <div @click="getChildTask()" style="width: 25%; display: flex">
+                <div @click="getChildTask()" style="width: 30%; display: flex">
                     <span>{{value.task_name}}</span>
                     <div v-if="hasChildren" class="arrow-right" :class="{ 'active': open }"></div>
                 </div>
-                <span style="width: 10%">{{ value.start_time }}</span>
+                <span style="width: 15%">{{ value.start_time }}</span>
                 <span style="width: 10%">{{ value.time }}</span>
-                <span style="width: 15%">{{ value.project_name }}</span>
                 <span style="width: 10%">{{ value.department_label }}</span>
                 <span style="width: 15%">{{ value.fullname }}</span>
                 <span style="width: 10%">{{ value.status_title }}</span>
@@ -20,6 +19,9 @@
                     <div @click="showModalConfirm(value.id)">
                         <i class="fas fa-trash ml-2" style="cursor: pointer" />
                     </div>
+                    <div @click="copyTask(value.id)">
+                        <i class="fas fa-copy ml-2" style="cursor: pointer" />
+                    </div>
                 </span>
             </div>
             <div v-if="open">
@@ -28,7 +30,8 @@
                     <tree-node v-for="(item,index) in value.children" :key="index" :value="item"
                         @input="updateChildValue" :group="group" :rowKey="rowKey"
                                :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                               :stickers="stickers" :projects="projects">
+                               :stickers="stickers" :projects="projects" @handleGetAllTask="handleGet()"
+                    >
                         <span>{{item.task_name}}</span>
                     </tree-node>
                 </draggable>
@@ -175,7 +178,6 @@ export default {
             this.taskId = 0;
         },
         showModalEditTask(id) {
-            console.log(123);
             this.showModalEdit = true;
             $(this.$refs.modalUpdateTask).modal('show');
             this.taskEditId = id;
@@ -194,6 +196,17 @@ export default {
                 $(this.$refs.modalConfirm).modal('hide');
                 this.taskId = 0;
             }
+        },
+        async copyTask(id) {
+            const res = await $get(`/tasks/copy/${id}`);
+
+            if (res.code == 200) {
+                toastr.success('Copy thành công');
+                this.$emit('handleGetAllTask');
+            }
+        },
+        handleGet() {
+            this.$emit('handleGetAllTask');
         }
     }
 };

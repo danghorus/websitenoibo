@@ -23,6 +23,7 @@
                 :searchProjectId="searchProjectId" :search="search"
                 :startTime="startTime" :taskPerformer="taskPerformer"
                 :taskDepartment="taskDepartment" :status="status"
+                @handleGetAllTask="handleGetAllTask()"
             />
         </draggable>
     </div>
@@ -83,6 +84,9 @@ export default {
             const index = this.localValue.findIndex(v => v[this.rowKey] === itemValue[this.rowKey]);
             this.$set(this.localValue, index, itemValue);
             this.$emit("input", this.localValue);
+        },
+        handleGetAllTask() {
+            this.$emit('handleGetAll')
         }
     }
 };

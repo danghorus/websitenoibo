@@ -33,6 +33,9 @@
                                 <p @click="showModalConfirm(item.id)">
                                     <i class="fas fa-trash ml-2" style="cursor: pointer" />
                                 </p>
+                                <p @click="copyTask(item.id)">
+                                    <i class="fas fa-copy ml-2" style="cursor: pointer" />
+                                </p>
                             </div>
                         </td>
                     </template>
@@ -81,7 +84,7 @@
 
 <script>
 
-import {$post} from "../../ultis";
+import {$post, $get} from "../../ultis";
 import CreateTask from "./CreateTask";
 
 export default {
@@ -129,6 +132,14 @@ export default {
                 this.showModal = false;
                 $(this.$refs.modalConfirm).modal('hide');
                 this.taskId = 0;
+            }
+        },
+        async copyTask(id) {
+            const res = await $get(`/tasks/copy/${id}`);
+
+            if (res.code == 200) {
+                toastr.success('Copy thành công');
+                this.$emit('getTaskTimeLine');
             }
         }
     }

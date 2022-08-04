@@ -8,7 +8,6 @@
                         <th scope="col" style="width: 25%">Công việc</th>
                         <th scope="col" style="width: 10%">Thời gian bắt đầu</th>
                         <th scope="col" style="width: 10%">Thời lượng (Giờ)</th>
-                        <th scope="col" style="width: 15%">Dự án</th>
                         <th scope="col" style="width: 10%">Bộ phận</th>
                         <th scope="col" style="width: 15%">Người thực hiện</th>
                         <th scope="col" style="width: 10%">Trạng thái</th>
@@ -31,7 +30,9 @@
             <tree v-if="list.length > 0" v-model="list" :data="[...list]" group="testsailordgod" rowKey="id"
                 :users="users" :groupUsers="groupUsers" :priorities="priorities" :stickers="stickers"
                 :projects="projects" :searchProjectId="searchProjectId" :search="search"
-                  :startTime="startTime" :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status">
+                  :startTime="startTime" :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status"
+                  @handleGetAll="handleGetAll()"
+            >
             </tree>
         </div>
     </div>
@@ -58,14 +59,17 @@ export default {
         this.$emit('getAllTasks')
     },
     methods: {
+        handleGetAll() {
+            this.$emit('getAllTasks')
+        }
     },
     watch: {
         'list': function (newVal) {
             // console.log(newVal);
         },
-        'projectId': function (newVal) {
-            this.getAllTasks();
-        }
+        // 'projectId': function (newVal) {
+        //     this.getAllTasks();
+        // }
     }
 }
 </script>
