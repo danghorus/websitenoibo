@@ -189,10 +189,11 @@ class TimeKeepingService
 
                                 }else{
 
-                                if ($time->check_date == $key && ($time->petition_type == 0 || $time->petition_type == 1 || $time->petition_type == 4 )) {
+                                if ($time->check_date == $key && ($time->petition_type == 0 || $time->petition_type == 1 || $time->petition_type == 4 ) && $time->date_to =='' ) {
                                     $tmp[$key]['petition_type'] = $time->petition_type;
                                     $tmp[$key]['label_day'] = $range[$time->check_date];
                                     $tmp[$key]['type_leave'] = $time->type_leave;
+                                    $tmp[$key]['date_to'] = $time->date_to;
                                     $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
                                     $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
                                     $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
@@ -242,148 +243,219 @@ class TimeKeepingService
                                             }
                                         }
                                     }
-                                } else if ((($time->check_date <= $key && $key <= $time->date_to) &&  $time->petition_type == 2) ||($time->check_date == $key && $time->petition_type == 2)) {
-                                    if($time->type_leave == 1){
-                                        $tmp[$key]['petition_type'] = $time->petition_type;
-                                        $tmp[$key]['type_leave'] = $time->type_leave;
-                                        $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
-                                        $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
-                                        $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
-                                        $tmp[$key]['checkout'] = $time->checkout? date('H:i', strtotime($key. ' '. $time->checkout)) : '-:-';
-                                    
-                                        $tmp[$key]['class'] = 'text-light bg-secondary';
-
-                                        $tmp[$key]['checkin'] =  $time->checkin ? date('H:i', strtotime($key. ' '. $time->checkin)): '-:-';
-                                        if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                            $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                        }else{
-                                            $tmp[$key]['checkout'] = '-:-';
-                                        }
-
-                                        $configTimeKeepingDay = $settings[$day]?? [];
-
-                                        if ($configTimeKeepingDay && $configTimeKeepingDay['start_timePM'] && $configTimeKeepingDay['end_timePM']) {
-                                            $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
-                                           if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                                $checkOut = strtotime($key. ' '. $time->checkout);
-                                            }else {
-                                                $checkOut = '';
-                                            }
-                                            
-                                            $start = $configTimeKeepingDay['start_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timePM']): '';
-                                            $end = $configTimeKeepingDay['end_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_timePM']): '';
-
-                                            if ($checkIn && $start) {
-                                                if ($checkIn < $start) {
-                                                    $tmp[$key]['go_early'] = (int) (($start - $checkIn) / 60);
-                                                    $tmp[$key]['go_late'] = 0;
-                                                } else {
-                                                    $tmp[$key]['go_early'] = 0;
-                                                    $tmp[$key]['go_late'] = (int) (($checkIn - $start) / 60);
-                                                }
-                                            }
-
-                                            if ($checkOut && $end) {
-                                                if ($checkOut < $end) {
-                                                    $tmp[$key]['about_early'] = (int) (($end - $checkOut) / 60);
-                                                    $tmp[$key]['about_late'] = 0;
-                                                } else {
-                                                    $tmp[$key]['about_early'] = 0;
-                                                    $tmp[$key]['about_late'] = (int) (($checkOut - $end) / 60);
-                                                }
-                                            }
-                                        }
-                                    } else if ($time->type_leave == 2) {
-                                        $tmp[$key]['petition_type'] = $time->petition_type;
-                                        $tmp[$key]['type_leave'] = $time->type_leave;
-                                        $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
-                                        $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
-                                        $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
-                                        if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                            $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                        }else{
-                                            $tmp[$key]['checkout'] = '-:-';
-                                        }
-                                    
-                                        $tmp[$key]['class'] = ' text-light bg-secondary';
-
-                                        $configTimeKeepingDay = $settings[$day]?? [];
-
-                                        if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timeAM']) {
-                                            $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
+                                } else if ($time->petition_type == 2) {
+                                    if($time->check_date == $key){
+                                        if($time->type_leave == 1){
+                                            $tmp[$key]['petition_type'] = $time->petition_type;
+                                            $tmp[$key]['type_leave'] = $time->type_leave;
+                                            $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
+                                            $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
+                                            $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
+                                        
                                             if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                                $checkOut = strtotime($key. ' '. $time->checkout);
-                                            }else {
-                                                $checkOut = '';
-                                            }
-                                            
-                                            $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
-                                            $end = $configTimeKeepingDay['end_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_timeAM']): '';
-
-                                            if ($checkIn && $start) {
-                                                if ($checkIn < $start) {
-                                                    $tmp[$key]['go_early'] = (int) (($start - $checkIn) / 60);
-                                                    $tmp[$key]['go_late'] = 0;
-                                                } else {
-                                                    $tmp[$key]['go_early'] = 0;
-                                                    $tmp[$key]['go_late'] = (int) (($checkIn - $start) / 60);
-                                                }
+                                                $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                            }else{
+                                                $tmp[$key]['checkout'] = '-:-';
                                             }
 
-                                            if ($checkOut && $end) {
-                                                if ($checkOut < $end) {
-                                                    $tmp[$key]['about_early'] = (int) (($end - $checkOut) / 60);
-                                                    $tmp[$key]['about_late'] = 0;
-                                                } else {
-                                                    $tmp[$key]['about_early'] = 0;
-                                                    $tmp[$key]['about_late'] = (int) (($checkOut - $end) / 60);
-                                                }
-                                            }
-                                        }
-                                    } else if ($time->type_leave == 3 || $time->type_leave == 4) {
-                                        $tmp[$key]['petition_type'] = $time->petition_type;
-                                        $tmp[$key]['type_leave'] = $time->type_leave;
-                                        $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
-                                        $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
-                                        $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
-                                       if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                            $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                        }else{
-                                            $tmp[$key]['checkout'] = '-:-';
-                                        }
-                                    
-                                        $tmp[$key]['class'] = 'text-light bg-dark';
+                                            $tmp[$key]['class'] = 'text-light bg-secondary';
 
-                                        $configTimeKeepingDay = $settings[$day]?? [];
+                                            $configTimeKeepingDay = $settings[$day]?? [];
 
-                                        if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timePM']) {
-                                            $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
+                                            if ($configTimeKeepingDay && $configTimeKeepingDay['start_timePM'] && $configTimeKeepingDay['end_timePM']) {
+                                                $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
                                             if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                                $checkOut = strtotime($key. ' '. $time->checkout);
-                                            }else {
-                                                $checkOut = '';
-                                            }
-                                            
-                                            $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
-                                            $end = $configTimeKeepingDay['end_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_timePM']): '';
+                                                    $checkOut = strtotime($key. ' '. $time->checkout);
+                                                }else {
+                                                    $checkOut = '';
+                                                }
+                                                
+                                                $start = $configTimeKeepingDay['start_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timePM']): '';
+                                                $end = $configTimeKeepingDay['end_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_timePM']): '';
 
-                                            if ($checkIn && $start) {
-                                                if ($checkIn < $start) {
-                                                    $tmp[$key]['go_early'] = (int) (($start - $checkIn) / 60);
-                                                    $tmp[$key]['go_late'] = 0;
-                                                } else {
-                                                    $tmp[$key]['go_early'] = 0;
-                                                    $tmp[$key]['go_late'] = (int) (($checkIn - $start) / 60);
+                                                if ($checkIn && $start) {
+                                                    if ($checkIn < $start) {
+                                                        $tmp[$key]['go_early_0'] = ($start - $checkIn);
+                                                        $tmp[$key]['go_early'] = (int) (($start - $checkIn) / 60);
+                                                        $tmp[$key]['go_late'] = 0;
+                                                    } else {
+                                                        $tmp[$key]['go_early'] = 0;
+                                                        $tmp[$key]['go_late'] = (int) (($checkIn - $start) / 60);
+                                                        $tmp[$key]['go_late_0'] =($checkIn - $start);
+                                                    }
+                                                }
+
+                                                if ($checkOut && $end) {
+                                                    if ($checkOut < $end) {
+                                                        $tmp[$key]['about_early_0'] =($end - $checkOut);
+                                                        $tmp[$key]['about_early'] = (int) (($end - $checkOut) / 60);
+                                                        $tmp[$key]['about_late'] = 0;
+                                                    } else {
+                                                        $tmp[$key]['about_early'] = 0;
+                                                        $tmp[$key]['about_late'] = (int) (($checkOut - $end) / 60);
+                                                        $tmp[$key]['about_late_0'] =($checkOut - $end);
+                                                    }
                                                 }
                                             }
+                                        } else if ($time->type_leave == 2) {
+                                            $tmp[$key]['petition_type'] = $time->petition_type;
+                                            $tmp[$key]['type_leave'] = $time->type_leave;
+                                            $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
+                                            $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
+                                            $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
+                                            if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                            }else{
+                                                $tmp[$key]['checkout'] = '-:-';
+                                            }
+                                        
+                                            $tmp[$key]['class'] = ' text-light bg-secondary';
 
-                                            if ($checkOut && $end) {
-                                                if ($checkOut < $end) {
-                                                    $tmp[$key]['about_early'] = (int) (($end - $checkOut) / 60);
-                                                    $tmp[$key]['about_late'] = 0;
-                                                } else {
-                                                    $tmp[$key]['about_early'] = 0;
-                                                    $tmp[$key]['about_late'] = (int) (($checkOut - $end) / 60);
+                                            $configTimeKeepingDay = $settings[$day]?? [];
+
+                                            if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timeAM']) {
+                                                $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
+
+                                                if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                    $checkOut = strtotime($key. ' '. $time->checkout);
+                                                }else {
+                                                    $checkOut = '';
+                                                }
+                                                
+                                                $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
+                                                $end = $configTimeKeepingDay['end_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_timeAM']): '';
+
+                                                if ($checkIn && $start) {
+                                                    if ($checkIn < $start) {
+                                                        $tmp[$key]['go_early_0'] = ($start - $checkIn);
+                                                        $tmp[$key]['go_early'] = (int) (($start - $checkIn) / 60);
+                                                        $tmp[$key]['go_late'] = 0;
+                                                    } else {
+                                                        $tmp[$key]['go_early'] = 0;
+                                                        $tmp[$key]['go_late'] = (int) (($checkIn - $start) / 60);
+                                                        $tmp[$key]['go_late_0'] =($checkIn - $start);
+                                                    }
+                                                }
+
+                                                if ($checkOut && $end) {
+                                                    if ($checkOut < $end) {
+                                                        $tmp[$key]['about_early_0'] =($end - $checkOut);
+                                                        $tmp[$key]['about_early'] = (int) (($end - $checkOut) / 60);
+                                                        $tmp[$key]['about_late'] = 0;
+                                                    } else {
+                                                        $tmp[$key]['about_early'] = 0;
+                                                        $tmp[$key]['about_late'] = (int) (($checkOut - $end) / 60);
+                                                        $tmp[$key]['about_late_0'] =($checkOut - $end);
+                                                    }
+                                                }
+                                            }
+                                        } else if ($time->type_leave == 3) {
+                                            $tmp[$key]['petition_type'] = $time->petition_type;
+                                            $tmp[$key]['type_leave'] = $time->type_leave;
+                                            $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
+                                            $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
+                                            $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
+                                            $tmp[$key]['checkout'] = $time->checkout? date('H:i', strtotime($key. ' '. $time->checkout)) : '-:-';
+                                            //if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                            //    $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                            //}else{
+                                            //    $tmp[$key]['checkout'] = '-:-';
+                                            //}
+                                        
+                                            $tmp[$key]['class'] = 'text-light bg-dark';
+
+                                            $configTimeKeepingDay = $settings[$day]?? [];
+
+                                            if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timePM']) {
+                                                $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
+                                                $checkOut = $time->checkout? strtotime($key. ' '. $time->checkout): '';
+                                                //if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                //    $checkOut = strtotime($key. ' '. $time->checkout);
+                                                //}else {
+                                                //    $checkOut = '';
+                                                //}
+                                                
+                                                $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
+                                                $end = $configTimeKeepingDay['end_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_timePM']): '';
+
+                                                if ($checkIn && $start) {
+                                                    if ($checkIn < $start) {
+                                                        $tmp[$key]['go_early_0'] = ($start - $checkIn);
+                                                        $tmp[$key]['go_early'] = (int) (($start - $checkIn) / 60);
+                                                        $tmp[$key]['go_late'] = 0;
+                                                    } else {
+                                                        $tmp[$key]['go_early'] = 0;
+                                                        $tmp[$key]['go_late'] = (int) (($checkIn - $start) / 60);
+                                                        $tmp[$key]['go_late_0'] =($checkIn - $start);
+                                                    }
+                                                }
+
+                                                if ($checkOut && $end) {
+                                                    if ($checkOut < $end) {
+                                                        $tmp[$key]['about_early_0'] =($end - $checkOut);
+                                                        $tmp[$key]['about_early'] = (int) (($end - $checkOut) / 60);
+                                                        $tmp[$key]['about_late'] = 0;
+                                                    } else {
+                                                        $tmp[$key]['about_early'] = 0;
+                                                        $tmp[$key]['about_late'] = (int) (($checkOut - $end) / 60);
+                                                        $tmp[$key]['about_late_0'] =($checkOut - $end);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if($time->check_date <= $key && $key <= $time->date_to){
+                                        if ($time->type_leave == 4) {
+                                            $tmp[$key]['petition_type'] = $time->petition_type;
+                                            $tmp[$key]['type_leave'] = $time->type_leave;
+                                            $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
+                                            $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
+                                            $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
+                                            $tmp[$key]['checkout'] = $time->checkout? date('H:i', strtotime($key. ' '. $time->checkout)) : '-:-';
+                                            //if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                            //    $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                            //}else{
+                                            //    $tmp[$key]['checkout'] = '-:-';
+                                            //}
+                                        
+                                            $tmp[$key]['class'] = 'text-light bg-dark';
+
+                                            $configTimeKeepingDay = $settings[$day]?? [];
+
+                                            if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timePM']) {
+                                                $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
+                                                $checkOut = $time->checkout? strtotime($key. ' '. $time->checkout): '';
+                                                //if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                //    $checkOut = strtotime($key. ' '. $time->checkout);
+                                                //}else {
+                                                //    $checkOut = '';
+                                                //}
+                                                
+                                                $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
+                                                $end = $configTimeKeepingDay['end_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_timePM']): '';
+
+                                                if ($checkIn && $start) {
+                                                    if ($checkIn < $start) {
+                                                        $tmp[$key]['go_early_0'] = ($start - $checkIn);
+                                                        $tmp[$key]['go_early'] = (int) (($start - $checkIn) / 60);
+                                                        $tmp[$key]['go_late'] = 0;
+                                                    } else {
+                                                        $tmp[$key]['go_early'] = 0;
+                                                        $tmp[$key]['go_late'] = (int) (($checkIn - $start) / 60);
+                                                        $tmp[$key]['go_late_0'] =($checkIn - $start);
+                                                    }
+                                                }
+
+                                                if ($checkOut && $end) {
+                                                    if ($checkOut < $end) {
+                                                        $tmp[$key]['about_early_0'] =($end - $checkOut);
+                                                        $tmp[$key]['about_early'] = (int) (($end - $checkOut) / 60);
+                                                        $tmp[$key]['about_late'] = 0;
+                                                    } else {
+                                                        $tmp[$key]['about_early'] = 0;
+                                                        $tmp[$key]['about_late'] = (int) (($checkOut - $end) / 60);
+                                                        $tmp[$key]['about_late_0'] =($checkOut - $end);
+                                                    }
                                                 }
                                             }
                                         }
@@ -910,6 +982,8 @@ class TimeKeepingService
                                     $start = $configDay['start_timePM'] != ''? strtotime($value->check_date. ' '. $configDay['start_timePM']): '';
                                     $end = $configDay['end_timePM'] != ''? strtotime($value->check_date. ' '. $configDay['end_timePM']): '';
 
+                                    $totalUnpaidLeave = $totalUnpaidLeave +1/2;
+
                                     if ($checkIn && $start && $checkIn > $start) {
                                         $totalGoLate++;
                                         $timeGoLate += $checkIn - $start;
@@ -928,6 +1002,8 @@ class TimeKeepingService
                                 } else if($configDay && $value->petition_type == 2 && $value->type_leave == 2){
                                     $start = $configDay['start_timeAM'] != ''? strtotime($value->check_date. ' '. $configDay['start_timeAM']): '';
                                     $end = $configDay['end_timeAM'] != ''? strtotime($value->check_date. ' '. $configDay['end_timeAM']): '';
+
+                                    $totalUnpaidLeave = $totalUnpaidLeave +1/2;
 
                                     if ($checkIn && $start && $checkIn > $start) {
                                         $totalGoLate++;
@@ -1161,7 +1237,7 @@ class TimeKeepingService
                                 }
                             }
                         }
-                        $totalUnpaidLeave = $timeNow['total'] - $totalTimeKeeping - $totalHo;
+                        //$totalUnpaidLeave = $timeNow['total'] - $totalTimeKeeping - $totalHo;
                         $rateGoLate = $totalWorkingDays? round(($totalGoLate/$totalWorkingDays), 4) * 100 : 0;
                         if($user->date_official != ""){
                             $date_official = new Datetime($user->date_official);
