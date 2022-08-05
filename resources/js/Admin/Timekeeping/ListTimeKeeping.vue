@@ -56,14 +56,15 @@
                                 <b>Ca hành chính</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
                                     time.checkout:'-:-' }}</div>
-                                <div v-if="time.go_early_0 > 0 && time.checkin == ''">(Đi sớm: {{ time.go_early }} - )
-                                </div>
+                                <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
+                                    Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_late_0 > 0">(Đi sớm: {{ time.go_early }} -
-                                    Về
-                                    muộn: {{ time.about_late }})</div>
+                                    Về muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_early_0 > 0">(Đi sớm: {{ time.go_early }} -
                                     <b style="color:red;">Về sớm: {{ time.about_early }})</b>
                                 </div>
+                                <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
+                                        Đi muộn: {{ time.go_late }}</b> -)</div>
                                 <div v-if="time.go_late_0  > 0 && time.about_late_0 > 0">(<b style="color:red;">Đi muộn:
                                         {{ time.go_late }}</b> - Về muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_late_0  > 0 && time.about_early_0 > 0">(<b style="color:red;">Đi
@@ -74,10 +75,14 @@
                                 <b>Thay đổi giờ công</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
                                     time.checkout:'-:-' }}</div>
+                                <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
+                                    Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_early > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
                                     sớm: {{ time.about_early }})</div>
+                                <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
+                                        Đi muộn: {{ time.go_late }}</b> -)</div>
                                 <div v-if="time.go_late  > 0 && time.about_late > 0">(Đi muộn: {{ time.go_late }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
@@ -87,10 +92,14 @@
                                 <b>Đăng ký làm tính công</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
                                     time.checkout:'-:-' }}</div>
+                                <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
+                                    Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_early > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
                                     sớm: {{ time.about_early }})</div>
+                                <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
+                                        Đi muộn: {{ time.go_late }}</b> -)</div>
                                 <div v-if="time.go_late  > 0 && time.about_late > 0">(Đi muộn: {{ time.go_late }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
@@ -100,10 +109,14 @@
                                 <b>Đăng ký làm tính công</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
                                     time.checkout:'-:-' }}</div>
+                                <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
+                                    Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_early > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
                                     sớm: {{ time.about_early }})</div>
+                                <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
+                                        Đi muộn: {{ time.go_late }}</b> -)</div>
                                 <div v-if="time.go_late  > 0 && time.about_late > 0">(Đi muộn: {{ time.go_late }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
@@ -120,10 +133,14 @@
                                 <b>Đi muộn/về sớm</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
                                     time.checkout:'-:-' }}</div>
+                                <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
+                                    Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_early > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
                                     sớm: {{ time.about_early }})</div>
+                                <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
+                                        Đi muộn: {{ time.go_late }}</b> -)</div>
                                 <div v-if="time.go_late  > 0 && time.about_late > 0">(Đi muộn: {{ time.go_late }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
@@ -133,10 +150,14 @@
                                 <b>Nghỉ buổi sáng</b>
                                 <div v-if="time.checkin == ''"></div>
                                 <div v-else>{{time.checkin}} - {{time.checkout }}</div>
+                                <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
+                                    Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_early > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
                                     sớm: {{ time.about_early }})</div>
+                                <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
+                                        Đi muộn: {{ time.go_late }}</b> -)</div>
                                 <div v-if="time.go_late  > 0 && time.about_late > 0">(Đi muộn: {{ time.go_late }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
@@ -146,10 +167,14 @@
                                 <b>Nghỉ buổi chiều</b>
                                 <div v-if="time.checkin == ''"></div>
                                 <div v-else>{{time.checkin}} - {{time.checkout }}</div>
+                                <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
+                                    Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_early > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
                                     sớm: {{ time.about_early }})</div>
+                                <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
+                                        Đi muộn: {{ time.go_late }}</b> -)</div>
                                 <div v-if="time.go_late  > 0 && time.about_late > 0">(Đi muộn: {{ time.go_late }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
@@ -160,10 +185,14 @@
                                 <b>Nghỉ cả ngày</b>
                                 <div v-if="time.checkin == ''"></div>
                                 <div v-else>{{time.checkin}} - {{time.checkout }}</div>
+                                <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
+                                    Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_early > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
                                     sớm: {{ time.about_early }})</div>
+                                <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
+                                        Đi muộn: {{ time.go_late }}</b> -)</div>
                                 <div v-if="time.go_late  > 0 && time.about_late > 0">(Đi muộn: {{ time.go_late }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
@@ -173,11 +202,15 @@
                                 v-else-if="time.holiday == 1 && time.petition_type != 6 && time.petition_type != 5">
                                 <b>Nghỉ theo lịch</b>
                                 <div v-if="time.checkin !=null">{{time.checkin}} - {{time.checkout }}</div>
-                                <div v-else ></div>
+                                <div v-else></div>
+                                <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
+                                    Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_early > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
                                     sớm: {{ time.about_early }})</div>
+                                <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
+                                        Đi muộn: {{ time.go_late }}</b> -)</div>
                                 <div v-if="time.go_late  > 0 && time.about_late > 0">(Đi muộn: {{ time.go_late }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
@@ -186,10 +219,14 @@
                             <template v-else>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
                                     time.checkout:'-:-' }}</div>
+                                <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
+                                    Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_early > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
                                     sớm: {{ time.about_early }})</div>
+                                <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
+                                        Đi muộn: {{ time.go_late }}</b> -)</div>
                                 <div v-if="time.go_late  > 0 && time.about_late > 0">(Đi muộn: {{ time.go_late }} - Về
                                     muộn: {{ time.about_late }})</div>
                                 <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
