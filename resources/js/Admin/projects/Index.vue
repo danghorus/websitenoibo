@@ -154,13 +154,15 @@ export default {
     name: "Index",
     components: {ListTask, TimelineTask, CreateTask, ListProject, draggable, CreateProject, Config, DatePicker, Multiselect},
     data() {
+        let localProjectId = localStorage.getItem('project_id') || 0;
+
         return {
-            projectId: 0,
+            projectId: localProjectId,
             searchProjectId: 0,
             list: [],
             showModal: false,
             showFilter: false,
-            showTimeline: true,
+            showTimeline: localProjectId == 0,
             project: {},
             isShowModalEditProject: false,
             showModalConfig: false,
@@ -202,7 +204,13 @@ export default {
         this.getAllPriority();
         this.getAllSticker();
         this.getProjects();
-        this.getTaskTimeLine();
+        console.log(this.projectId)
+        if (this.projectId > 0) {
+            this.getInfoProject();
+            this.getAllTasks();
+        } else {
+            this.getTaskTimeLine();
+        }
     },
     methods: {
         async getAllUser() {
@@ -315,6 +323,7 @@ export default {
     watch: {
         'projectId': function (newVal) {
             this.getInfoProject();
+            this.getAllTasks();
         }
     }
 }

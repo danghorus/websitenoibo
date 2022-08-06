@@ -56,7 +56,7 @@ export default {
         }
     },
     created() {
-        this.$emit('getAllTasks')
+        // this.$emit('getAllTasks')
     },
     methods: {
         handleGetAll() {
