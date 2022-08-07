@@ -1,84 +1,96 @@
 <template>
     <div class="col-lg-12">
         <div class="row">
-            <list-project @chooseProject="chooseProject" :users="users" :groupUsers="groupUsers" :projects="projects" @handleShowTimeline="handleShowTimeline()" />
+            <list-project @chooseProject="chooseProject" :users="users" :groupUsers="groupUsers" :projects="projects"
+                @handleShowTimeline="handleShowTimeline()" />
             <div class="col-lg-10">
                 <div class="row">
-                    <div
-                        class="col-lg-6"
-                        @click="showModalEditProject()"
-                    >
+                    <div class="col-lg-6" @click="showModalEditProject()">
                         <h4>{{ showTimeline? 'Timeline công việc': project.project_name }}
-                            <i v-if="projectId" class="fas fa-pencil-alt" style="font-size: 25px; cursor: pointer"/>
+                            <i v-if="projectId" class="fas fa-pencil-alt" style="font-size: 25px; cursor: pointer" />
                         </h4>
                     </div>
                     <div class="col-lg-6" style="margin: 0 0 20px -10px;">
                         <div class="input-seach float-right">
                             <input class="input-elevated" type="text" placeholder="Search" v-model="search">
-                            <button class="btn btn-outline-secondary border-btn-search" @click="getTaskTimeLine()" style="width:100px;">
+                            <button class="btn btn-outline-secondary border-btn-search" @click="getTaskTimeLine()"
+                                style="width:100px;">
                                 Tìm kiếm
                             </button> &ensp;
-                            <button
-                                class="btn-outline-secondary border-search"
-                                @click="handleShowFilter()"
-                                type="button"
-                                data-toggle="collapse"
-                                data-target="#collapseExample"
-                                aria-expanded="false"
-                                aria-controls="collapseExample"
-                                style="float:right; width:130px;"
-                            >
+                            <button class="btn-outline-secondary border-search" @click="handleShowFilter()"
+                                type="button" data-toggle="collapse" data-target="#collapseExample"
+                                aria-expanded="false" aria-controls="collapseExample" style="float:right; width:130px;">
                                 <i class="fas fa-filter"></i>
                                 Tạo bộ lọc
                             </button> &ensp;
-                            <button class="btn btn-primary float-right" style="width: 110px" @click="showModalCreateTask()">Thêm mới</button>
-                            <button class="btn btn-primary float-right ml-2" style="width: 110px" @click="showModalConfigTask()">Cấu hình</button>
+
+                            <nav class="navbar navbar-expand-lg navbar-light" style="float:right;width:110px">
+                                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item dropdown">
+                                            <button class="btn btn-primary float-right" style="width:110px"
+                                                type="button" data-bs-toggle="dropdown" data-bs-auto-close="true">Thêm
+                                                mới</button>
+                                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                                <li><a class="dropdown-item" @click="showModalCreateTask_Parent()">Thêm
+                                                        mới công việc cha</a></li>
+                                                <li><a class="dropdown-item" @click="showModalCreateTask()">Thêm
+                                                        mới công việc con</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>&ensp;&ensp;&ensp;&ensp;
+                            <button class="btn btn-primary float-right" style="width: 110px"
+                                @click="showModalConfigTask()">Cấu hình</button>
                         </div>
                     </div>
                 </div>
                 <div class="collapse search-collapse" id="collapseExample" v-if="showFilter">
                     <div class="form-group p-2">
                         <label for="project_description">Theo ngày bắt đầu</label>
-                        <DatePicker
-                            style="width: 100%"
-                            v-model="startTime"
-                            value-type="format"
-                            type="date"
-                            placeholder="Select time"
-                        ></DatePicker>
+                        <DatePicker style="width: 100%" v-model="startTime" value-type="format" type="date"
+                            placeholder="Select time"></DatePicker>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo dự án</label>
-                        <multiselect v-model="searchProjectId" :disabled="!showTimeline" :options="projects" value="id" label="project_name" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                        <multiselect v-model="searchProjectId" :disabled="!showTimeline" :options="projects" value="id"
+                            label="project_name" :close-on-select="false" :show-labels="true"
+                            placeholder="Vui lòng chọn">
                         </multiselect>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo bộ phận</label>
-                        <multiselect v-model="taskDepartment" :options="departments" value="value" label="label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                        <multiselect v-model="taskDepartment" :options="departments" value="value" label="label"
+                            :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
                         </multiselect>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo người thực hiện</label>
-                        <multiselect v-model="taskPerformer" :options="users" value="id" label="fullname" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                        <multiselect v-model="taskPerformer" :options="users" value="id" label="fullname"
+                            :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
                         </multiselect>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo trạng thái</label>
-                        <multiselect v-model="status" :options="arrStatus" value="value" label="label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                        <multiselect v-model="status" :options="arrStatus" value="value" label="label"
+                            :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
                         </multiselect>
                     </div>
                     <div class="float-right p-2">
                         <button type="submit" class="btn btn-secondary p-2" @click="handleShowFilter()">Đóng</button>
-                        <button type="submit" class="btn btn-primary p-2" @click="showTimeline? getTaskTimeLine(): getAllTasks()">Áp dụng</button>
+                        <button type="submit" class="btn btn-primary p-2"
+                            @click="showTimeline? getTaskTimeLine(): getAllTasks()">Áp dụng</button>
                     </div>
                 </div>
-                <timeline-task v-if="showTimeline" :listTaskTimeLine="listTaskTimeLine" :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                               :stickers="stickers" :projects="projects" @getTaskTimeLine="getTaskTimeLine()" />
-                <list-task v-else :project-id="projectId" :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                           :stickers="stickers" :projects="projects" :searchProjectId="searchProjectId" :search="search"
-                           :startTime="startTime" :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status"
-                           @getAllTasks="getAllTasks" :list="list"
-                />
+                <timeline-task v-if="showTimeline" :listTaskTimeLine="listTaskTimeLine" :users="users"
+                    :groupUsers="groupUsers" :priorities="priorities" :stickers="stickers" :projects="projects"
+                    @getTaskTimeLine="getTaskTimeLine()" />
+                <list-task v-else :project-id="projectId" :users="users" :groupUsers="groupUsers"
+                    :priorities="priorities" :stickers="stickers" :projects="projects"
+                    :searchProjectId="searchProjectId" :search="search" :startTime="startTime"
+                    :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status"
+                    @getAllTasks="getAllTasks" :list="list" />
             </div>
 
         </div>
@@ -88,13 +100,33 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Tạo mới Công việc</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModalCreateTask()">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                @click="closeModalCreateTask()">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <create-task :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                                         :stickers="stickers" :projects="projects" :projectId="projectId" />
+                                :stickers="stickers" :projects="projects" :projectId="projectId" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div ref="modalCreateTask_Parent" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document" style=" max-width: 60%;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Tạo mới Công việc</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                @click="closeModalCreateTask_Parent()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <create-task :users="users" :groupUsers="groupUsers" :priorities="priorities"
+                                :stickers="stickers" :projects="projects" :projectId="projectId" />
                         </div>
                     </div>
                 </div>
@@ -106,12 +138,14 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Sửa dự án</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModalEditProject()">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                @click="closeModalEditProject()">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <CreateProject v-if="isShowModalEditProject" :projectId="projectId" :users="users" :groupUsers="groupUsers" @updateProject="updateProject" />
+                            <CreateProject v-if="isShowModalEditProject" :projectId="projectId" :users="users"
+                                :groupUsers="groupUsers" @updateProject="updateProject" />
                         </div>
                     </div>
                 </div>
@@ -123,7 +157,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Cấu hình</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModalConfigTask()">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                @click="closeModalConfigTask()">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -141,6 +176,7 @@
 import ListProject from "./ListProject";
 import draggable from 'vuedraggable';
 import CreateTask from "./CreateTask";
+import CreateTask_Parent from "./CreateTask_Parent";
 import CreateProject from "./CreateProject";
 import TimelineTask from "./TimelineTask";
 import ListTask from "./ListTask";
@@ -152,7 +188,7 @@ import Multiselect from 'vue-multiselect';
 
 export default {
     name: "Index",
-    components: {ListTask, TimelineTask, CreateTask, ListProject, draggable, CreateProject, Config, DatePicker, Multiselect},
+    components: { ListTask, TimelineTask, CreateTask, CreateTask_Parent, ListProject, draggable, CreateProject, Config, DatePicker, Multiselect},
     data() {
         return {
             projectId: 0,
@@ -221,12 +257,20 @@ export default {
             this.showModal = true;
             $(this.$refs.modalCreateTask).modal('show');
         },
+        showModalCreateTask_Parent() {
+            this.showModal = true;
+            $(this.$refs.modalCreateTask_Parent).modal('show');
+        },
         showModalConfigTask() {
             this.showModalConfig = true;
             $(this.$refs.modalConfigTask).modal('show');
         },
         closeModalCreateTask() {
             $(this.$refs.modalCreateTask).modal('hide');
+            this.showModal = false;
+        },
+        closeModalCreateTask_Parent() {
+            $(this.$refs.modalCreateTask_Parent).modal('hide');
             this.showModal = false;
         },
         closeModalConfigTask() {
