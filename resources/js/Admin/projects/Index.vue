@@ -104,7 +104,8 @@
                         </div>
                         <div class="modal-body">
                             <create-task :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                                :stickers="stickers" :projects="projects" :projectId="projectId" />
+                                :stickers="stickers" :projects="projects" :projectId="projectId" @handleGetTasks="handleGetTasks()"
+                            />
                         </div>
                     </div>
                 </div>
@@ -369,6 +370,7 @@ export default {
             }
         },
         handleGetTasks() {
+            this.closeModalCreateTask_Parent()
             this.closeModalCreateTask();
             if (this.projectId > 0) {
                 this.getInfoProject();
@@ -380,7 +382,6 @@ export default {
     },
     watch: {
         'projectId': function (newVal) {
-            console.log(newVal);
             if (newVal > 0) {
                 this.getInfoProject();
                 this.getAllTasks();
