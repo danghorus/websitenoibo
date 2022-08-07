@@ -212,13 +212,14 @@ export default {
         'task.time': function (newVal) {
             if (newVal > 0 && this.task.start_time) {
                 let dateTime = moment(this.task.start_time).add(newVal, 'h').toDate();
-                this.task.end_time = moment(dateTime).format('YYYY-MM-DD hh:mm:ss');
+                this.task.end_time = moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
             }
         },
         'task.start_time': function (newVal) {
-            if (newVal > 0 && this.task.time) {
+            console.log(newVal);
+            if (newVal && this.task.time) {
                 let dateTime = moment(newVal).add(this.task.time, 'h').toDate();
-                this.task.end_time = moment(dateTime).format('YYYY-MM-DD hh:mm:ss');
+                this.task.end_time = moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
             }
         },
         'task.project_id': function (newVal) {

@@ -101,12 +101,14 @@ export default {
         },
         chooseProject(project_id) {
             this.$emit('chooseProject', project_id);
+            localStorage.setItem('project_id', project_id);
         },
         updateProject() {
             this.getProjects();
         },
         showTimeline(){
             this.$emit('handleShowTimeline');
+            localStorage.setItem('project_id', 0);
         },
         showModalEditTask(id) {
             this.showModalEdit = true;
