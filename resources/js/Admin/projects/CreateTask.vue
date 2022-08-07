@@ -183,14 +183,22 @@ export default {
                 const res = await $post(`/tasks/update/${this.taskId}`, data);
                 if (res.code == 200) {
                     toastr.success(res.message);
+                    this.task = {
+                        project_id: ''
+                    };
+                    this.values = [];
                 }
             } else {
                 const res = await $post('/tasks/create', data);
                 if (res.code == 200) {
                     toastr.success(res.message);
+                    this.task = {
+                        project_id: ''
+                    };
+                    this.values = [];
                 }
             }
-
+            this.$emit('handleGetTasks');
         },
         async getTaskByProject(projectId) {
             const res = await $get('/tasks/get_all', {project_id: projectId})

@@ -15,7 +15,7 @@
                     <div class="col-lg-6" style="margin: 0 0 20px -10px;">
                         <div class="input-seach float-right">
                             <input class="input-elevated" type="text" placeholder="Search" v-model="search">
-                            <button class="btn btn-outline-secondary border-btn-search" @click="getTaskTimeLine()" style="width:100px;">
+                            <button class="btn btn-outline-secondary border-btn-search" @click="showTimeline? getTaskTimeLine(): getAllTasks()" style="width:100px;">
                                 Tìm kiếm
                             </button> &ensp;
                             <button
@@ -94,7 +94,9 @@
                         </div>
                         <div class="modal-body">
                             <create-task :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                                         :stickers="stickers" :projects="projects" :projectId="projectId" />
+                                         :stickers="stickers" :projects="projects" :projectId="projectId"
+                                         @handleGetTasks="handleGetTasks()"
+                            />
                         </div>
                     </div>
                 </div>
@@ -111,7 +113,13 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <CreateProject v-if="isShowModalEditProject" :projectId="projectId" :users="users" :groupUsers="groupUsers" @updateProject="updateProject" />
+                            <CreateProject
+                                v-if="isShowModalEditProject"
+                                :projectId="projectId"
+                                :users="users"
+                                :groupUsers="groupUsers"
+                                @updateProject="updateProject"
+                            />
                         </div>
                     </div>
                 </div>
@@ -204,7 +212,7 @@ export default {
         this.getAllPriority();
         this.getAllSticker();
         this.getProjects();
-        console.log(this.projectId)
+
         if (this.projectId > 0) {
             this.getInfoProject();
             this.getAllTasks();
@@ -301,6 +309,7 @@ export default {
         },
         handleShowTimeline() {
             this.showTimeline = true;
+            this.projectId = 0;
         },
         async getAllTasks() {
 
@@ -318,12 +327,26 @@ export default {
             if (res.code == 200) {
                 this.list = res.data;
             }
+        },
+        handleGetTasks() {
+            this.closeModalCreateTask();
+            if (this.projectId > 0) {
+                this.getInfoProject();
+                this.getAllTasks();
+            } else {
+                this.getTaskTimeLine();
+            }
         }
     },
     watch: {
         'projectId': function (newVal) {
-            this.getInfoProject();
-            this.getAllTasks();
+            console.log(newVal);
+            if (newVal > 0) {
+                this.getInfoProject();
+                this.getAllTasks();
+            } else {
+                this.getTaskTimeLine();
+            }
         }
     }
 }

@@ -74,7 +74,9 @@
                     </div>
                     <div class="modal-body">
                         <create-task v-if="showModalEdit" :users="users" :groupUsers="groupUsers"
-                            :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId" />
+                            :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId"
+                                     @handleGetTasks="handleGetTasks()"
+                        />
                     </div>
                 </div>
             </div>
@@ -132,6 +134,7 @@ export default {
                 this.showModal = false;
                 $(this.$refs.modalConfirm).modal('hide');
                 this.taskId = 0;
+                this.handleGetTasks();
             }
         },
         async copyTask(id) {
@@ -141,6 +144,10 @@ export default {
                 toastr.success('Copy thành công');
                 this.$emit('getTaskTimeLine');
             }
+        },
+        handleGetTasks() {
+            this.closeModalEditTask();
+            this.$emit('getTaskTimeLine');
         }
     }
 }

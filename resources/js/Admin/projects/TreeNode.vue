@@ -69,7 +69,9 @@
                     </div>
                     <div class="modal-body">
                         <create-task v-if="showModalEdit" :users="users" :groupUsers="groupUsers"
-                            :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId" />
+                            :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId"
+                                     @handleGetTasks="handleGet()"
+                        />
                     </div>
                 </div>
             </div>
@@ -195,6 +197,7 @@ export default {
                 this.showModal = false;
                 $(this.$refs.modalConfirm).modal('hide');
                 this.taskId = 0;
+                this.handleGet();
             }
         },
         async copyTask(id) {
@@ -206,6 +209,7 @@ export default {
             }
         },
         handleGet() {
+            this.closeModalEditTask();
             this.$emit('handleGetAllTask');
         }
     }

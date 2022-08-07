@@ -105,6 +105,7 @@ export default {
         },
         updateProject() {
             this.getProjects();
+            this.closeModalCreate();
         },
         showTimeline(){
             this.$emit('handleShowTimeline');

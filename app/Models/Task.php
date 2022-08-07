@@ -61,11 +61,50 @@ class Task extends Model
 
     public function children()
     {
-        return $this->hasMany('App\Models\Task', 'task_parent', 'id');
+        return $this->hasMany('App\Models\Task', 'task_parent', 'id')->with(['children']);
     }
 
     public function parent()
     {
         return $this->hasOne('App\Models\Task', 'id', 'task_parent')->with(['parent']);
+    }
+
+    public static function taskChildrent($arr, $taskParent, $isFirst = true) {
+        if ($arr) {
+            foreach ($arr as $value) {
+
+                $newTask = new Task();
+                $newTask->task_name = $value->task_name;
+                $newTask->task_code = $value->task_code;
+                $newTask->start_time = $value->start_time;
+                $newTask->time = $value->time;
+                $newTask->end_time = $value->end_time;
+                $newTask->description = $value->description;
+                $newTask->task_priority = $value->task_priority;
+                $newTask->task_sticker = $value->task_sticker;
+                $newTask->task_department =$value->task_department;
+                $newTask->weight = $value->weight;
+                $newTask->project_id = $value->project_id;
+//                $newTask->task_predecessor = $value->task_predecessor;
+                $newTask->task_parent = $taskParent;
+                $newTask->level = $value->level;
+                $newTask->task_performer = $value->task_performer;
+                $newTask->status = $isFirst? 1: 0;
+
+                $newTask->save();
+
+                $taskUsers = TaskUser::query()->where('task_id', '=', $value->id);
+                foreach ($taskUsers as $val) {
+                    $taskUser = new TaskUser();
+                    $taskUser->user_id = $val->user_id;
+                    $taskUser->task_id = $newTask->id;
+                    $taskUser->save();
+                }
+
+                if (count($value->children) > 0) {
+                    self::taskChildrent($value->children, $newTask->id, false);
+                }
+            }
+        }
     }
 }
