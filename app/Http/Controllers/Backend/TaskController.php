@@ -241,7 +241,7 @@ class TaskController extends Controller
         $task->level = isset($taskInfo['task_parent']) && $taskInfo['task_parent'] ?$taskInfo['task_parent']['level'] + 1: 1;
         $task->task_performer = isset($taskInfo['task_performer']) && $taskInfo['task_performer'] ?$taskInfo['task_performer']['id']: null;
 
-        if ($task->task_predecessor != $taskInfo['task_predecessor']) {
+        if (isset($taskInfo['task_predecessor']) && $task->task_predecessor != $taskInfo['task_predecessor']) {
             $taskPredecessor = Task::find($taskInfo['task_predecessor']);
             $task->status = $taskPredecessor && $taskPredecessor->status == Task::TASK_COMPLETED? Task::TASK_WAITING: Task::TASK_NEW;
         }
