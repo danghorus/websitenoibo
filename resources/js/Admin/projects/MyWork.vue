@@ -106,7 +106,7 @@
                 <tr v-for="(item, index) in list" :key="index" style="text-align:center;">
                     <td>{{index + 1 }}</td>
                     <td scope="row" style="text-align:left;">{{ item.task_name }}</td>
-                    <td style="text-align:left;">{{ item.project_name }}</td>
+                    <td style="text-align:left;">{{ item.task_parent }}</td>
                     <td>{{ item.start_time }}</td>
                     <td>{{ item.time }}</td>
                     <td>{{ item.end_time }}</td>
