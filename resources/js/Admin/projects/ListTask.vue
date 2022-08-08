@@ -31,7 +31,7 @@
                 :users="users" :groupUsers="groupUsers" :priorities="priorities" :stickers="stickers"
                 :projects="projects" :searchProjectId="searchProjectId" :search="search"
                   :startTime="startTime" :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status"
-                  @handleGetAll="handleGetAll()"
+                  @handleGetAll="handleGetAll()" @input="handleChangeInput"
             >
             </tree>
         </div>
@@ -61,6 +61,9 @@ export default {
     methods: {
         handleGetAll() {
             this.$emit('getAllTasks')
+        },
+        handleChangeInput(value) {
+            this.list = [...value];
         }
     },
     watch: {

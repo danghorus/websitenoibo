@@ -71,8 +71,8 @@ export default {
         }
     },
     watch: {
-        value(value) {
-            this.localValue = [...value];
+        'data': function (newVal) {
+            this.localValue = [...newVal];
         }
     },
     methods: {

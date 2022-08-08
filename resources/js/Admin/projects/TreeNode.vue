@@ -122,8 +122,8 @@ export default {
         }
     },
     watch: {
-        value(value) {
-            this.localValue = Object.assign({}, value);
+        'value': function (newValue) {
+            this.localValue = Object.assign({}, newValue);
         }
     },
     methods: {
@@ -134,9 +134,7 @@ export default {
             }
         },
         updateChildValue(value) {
-            console.log(value, 'value');
             const index = this.localValue.children.findIndex(c => c[this.rowKey] === value[this.rowKey]);
-            console.log(index, 'index');
             this.$set(this.localValue.children, index, value);
             this.$emit("input", this.localValue);
         },
