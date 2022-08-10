@@ -104,22 +104,22 @@ table tr td img {
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="content-unapproved" role="tabpanel" aria-labelledby="tab-unapproved">
-                        <table class="table-striped table-responsive table-hover result-point">
+                        <table class="table-striped table-responsive table-hover result-point" style="table-layout: fixed;">
                             <thead class="point-table-head">
                                 <tr style="text-align:center;">
-                                    <th scope="col" width="3%" >STT</th>
+                                    <th scope="col" width="3%">STT</th>
                                     <th scope="col" width="7%">Mã nhân viên</th>
                                     <th scope="col" width="8%">Ảnh đại diện</th>
                                     <th scope="col" width="10%" >Họ và tên</th>
                                     <th scope="col" width="8%" >Số điện thoại</th>
                                     <th scope="col" width="10%">Email</th>
-                                    <th scope="col" width="8%" >Ngày sinh</th>
+                                    <th scope="col" width="8%"  >Ngày sinh</th>
                                     <th scope="col" width="6%" >Bộ phận</th>
-                                    <th scope="col" width="7%" >Chức danh</th>
-                                    <th scope="col" width="8%" >Ngày làm việc</th>
-                                    <th scope="col" width="8%" >Quyền truy cập</th>
+                                    <th scope="col" width="7%">Chức danh</th>
+                                    <th scope="col" width="8%">Ngày làm việc</th>
+                                    <th scope="col" width="8%">Quyền truy cập</th>
                                     <?php if(Auth::user()->permission == 1) { ?>
-                                    <th scope="col" width="7%" >Thao tác</th>
+                                    <th scope="col" width="7%">Thao tác</th>
                                     <?php } ?>
                                 </tr>
                             </thead>
@@ -130,16 +130,16 @@ table tr td img {
                                     if($user->user_status == 1) {
                                     ?>
                                     <tr style="text-align:center;">
-                                        <td>{{++$i }}</td>
-                                        <td scope="row">{{ $user->id }}</td>
-                                        <td ><img src="{{asset('image/'.$user->avatar)}}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
-                                        <td>{{ $user->fullname }}</td>
-                                        <td scope="row">{{ $user->phone }}</td>
-                                        <td>{{ $user->email }}</td>
-                                        <td scope="row">{{ $user->birthday }}</td>
-                                        <td scope="row">{{ $user->department }}</td>
-                                        <td scope="row">{{ $user->position }}</td>
-                                        <td scope="row">
+                                        <td scope="col" width="3.57%">{{++$i }}</td>
+                                        <td scope="col" width="7%" >{{ $user->id }}</td>
+                                        <td scope="col" width="8%" ><img src="{{asset('image/'.$user->avatar)}}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
+                                        <td scope="col" width="10%">{{ $user->fullname }}</td>
+                                        <td scope="col" width="8%" >{{ $user->phone }}</td>
+                                        <td scope="col" width="10%">{{ $user->email }}</td>
+                                        <td scope="col" width="8.05%" >{{ $user->birthday }}</td>
+                                        <td scope="col" width="6%" >{{ $user->department }}</td>
+                                        <td scope="col" width="7%" >{{ $user->position }}</td>
+                                        <td scope="col" width="8%" >
                                         <?php 
                                             if($user->date_official != ""){
                                                 echo $user->date_official;
@@ -148,10 +148,10 @@ table tr td img {
                                             } 
                                         ?>
                                     </td>
-                                        <td scope="row">{{ $user->permission==0?'Nhân viên':'Quản lý' }} </td>
+                                        <td scope="col" width="8%">{{ $user->permission==0?'Nhân viên':'Quản lý' }} </td>
                                         <?php if(Auth::user()->permission == 1) { ?>
 
-                                        <td style="text-align:center; font-size:14px;">
+                                        <td scope="col" width="6.2%" style="text-align:center; font-size:14px;">
                                             <form method="POST" action="{{ route('users.destroy', $user->id) }}">
                                                 <a class="btn btn-success" href="{{route('users.edit', $user->id)}}" style="font-size:12px;">Sửa</a>
                                                 @csrf
@@ -167,9 +167,9 @@ table tr td img {
                         </table>
                     </div>
                     <div class="tab-pane fade" id="content-approved" role="tabpanel" aria-labelledby="tab-approved">
-                        <table class="table-striped table-responsive table-hover result-point">
+                        <table class="table-striped table-responsive table-hover result-point" style="table-layout: fixed;">
                             <thead class="point-table-head">
-                            <tr style="text-align:center;">
+                            <tr style="text-align:center;" style="table-layout: fixed;">
                                 <th scope="col" width="3%" >STT</th>
                                 <th scope="col" width="7%">Mã nhân viên</th>
                                 <th scope="col" width="8%">Ảnh đại diện</th>
@@ -191,18 +191,18 @@ table tr td img {
                                 if($user->user_status == 2) {
                                 ?>
                                 <tr style="text-align:center;">
-                                    <td>{{++$i }}</td>
-                                    <td scope="row">{{ $user->id }}</td>
-                                    <td ><img src="{{asset('image/'.$user->avatar)}}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
-                                    <td>{{ $user->fullname }}</td>
-                                    <td scope="row">{{ $user->phone }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td scope="row">{{ $user->birthday }}</td>
-                                    <td scope="row">{{ $user->department }}</td>
-                                    <td scope="row">{{ $user->position }}</td>
-                                    <td scope="row">{{ $user->date_official}}</td>
-                                    <td scope="row">{{ $user->permission==0?'Nhân viên':'Quản lý' }} </td>
-                                    <td style="text-align:center; font-size:14px;">
+                                    <td scope="col" width="3.6%">{{++$i }}</td>
+                                    <td scope="col" width="7%">{{ $user->id }}</td>
+                                    <td scope="col" width="8%"><img src="{{asset('image/'.$user->avatar)}}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
+                                    <td scope="col" width="10%">{{ $user->fullname }}</td>
+                                    <td scope="col" width="8%">{{ $user->phone }}</td>
+                                    <td scope="col" width="10%">{{ $user->email }}</td>
+                                    <td scope="col" width="8%">{{ $user->birthday }}</td>
+                                    <td scope="col" width="6%">{{ $user->department }}</td>
+                                    <td scope="col" width="7%">{{ $user->position }}</td>
+                                    <td scope="col" width="8%">{{ $user->date_official}}</td>
+                                    <td scope="col" width="8%">{{ $user->permission==0?'Nhân viên':'Quản lý' }} </td>
+                                    <td scope="col" width="7%" style="text-align:center; font-size:14px;">
                                         <form method="POST" action="{{ route('users.destroy', $user->id) }}">
                                             <a class="btn btn-success" href="{{route('users.edit', $user->id)}}" style="font-size:12px;">Sửa</a>
                                             @csrf
@@ -220,4 +220,29 @@ table tr td img {
             </form>
         </div>
     </div>
+    <style>
+        table {
+        table-layout: fixed;
+        }
+
+        th, td {
+        padding: 0px 0px;
+        border: 1px solid #000;
+        }
+
+        thead {
+        background: #f9f9f9;
+        display: table;
+        }
+
+        tbody {
+        height: 650px;
+        overflow: auto;
+        display: block;
+        tr {
+            display: table;
+            table-layout: fixed;
+        }
+        }
+    </style>
 @endsection
