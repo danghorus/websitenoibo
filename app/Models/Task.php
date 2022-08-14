@@ -112,10 +112,13 @@ class Task extends Model
             }
         }
     }
-    public static function taskChildrentFormat($arr)
+    public static function taskChildrentFormat($arr, $isFirst = true, $keyLabel = '')
     {
         if ($arr) {
-            foreach ($arr as $value) {
+            foreach ($arr as $key => $value) {
+                $indexKey = (int)$key + 1;
+                $value->key_label = $isFirst? $indexKey: $keyLabel. '.'.$indexKey;
+
                 $value->department_label = $value->task_department? Task::DEPARTMENTS[$value->task_department]: '';
 
                 if (($value->status == 0 || $value->status == 1) && (strtotime($value->end_time) < time())) {
@@ -128,7 +131,7 @@ class Task extends Model
                 $value->fullname = $value->taskUser? $value->taskUser->fullname: '';
 
                 if (count($value->children) > 0) {
-                    self::taskChildrentFormat($value->children);
+                    self::taskChildrentFormat($value->children, false, $value->key_label);
                 }
             }
         }

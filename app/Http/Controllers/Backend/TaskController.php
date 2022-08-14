@@ -274,7 +274,7 @@ class TaskController extends Controller
             if ($task->parent) {
                 $item = $task->parent;
                 while ($item) {
-                    $label .= $item->task_name . ' > ';
+                    $label = $item->task_name . ' > ' . $label;
                     $item = $item->parent;
                 }
             }
@@ -352,11 +352,11 @@ class TaskController extends Controller
             if ($taskParent->parent) {
                 $item = $taskParent->parent;
                 while ($item) {
-                    $label .= $item->task_name . ' > ';
+                    $label = $item->task_name . ' > ' . $label;
                     $item = $item->parent;
                 }
             }
-            $taskParent->label = $label. $taskParent->task_name;
+            $taskParent->label = $label .$taskParent->task_name;
 
             $detail['task_parent'] = $taskParent;
         }

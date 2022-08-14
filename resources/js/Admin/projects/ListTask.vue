@@ -10,7 +10,7 @@
                 :border="true"
                 :show-header="true"
                 :show-row-hover="true"
-                :show-index="true"
+                :show-index="false"
                 :tree-type="true"
                 :is-fold="false"
                 :expand-type="false"
@@ -96,6 +96,10 @@ export default {
             showModalEdit: false,
             taskEditId: 0,
             columns: [
+            {
+                label: 'STT',
+                prop: 'key_label',
+            },
             {
                 label: 'Công việc',
                 prop: 'task_name',
