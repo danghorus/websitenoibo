@@ -31,12 +31,12 @@
             <table v-if="option == 1" class="table table-bordered mt-5">
                 <thead class="table-active">
                     <tr>
-                        <th style="width:200px">
+                        <th style="width:250px">
                             <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
                                 placeholder="Tìm kiếm" v-on:keyup.enter="getTimeKeepings()">
                         </th>
                         <th v-for="(label, index) in labels" :key="index"
-                            style="font-size:13px; text-align:center; vertical-align: middle; width:180px">
+                            style="font-size:13px; text-align:center; vertical-align: middle; width:228.65px">
                             <button type="button" data-toggle="tooltip" data-placement="bottom"
                                 title="Click để chọn ngày nghỉ của công ty( Du lịch, nghỉ lễ,...)"
                                 style="background-color:#d4d4d4; border: 0px;"><b>{{ label }}</b>
@@ -46,11 +46,11 @@
                 </thead>
                 <tbody>
                     <tr v-for="(user, index) in data" :key="index">
-                        <td style="width:200px; font-size:14px; vertical-align: middle; height: 88px">{{ user.fullname
+                        <td style="width:251px; font-size:14px; vertical-align: middle; height: 88px">{{ user.fullname
                             }}</td>
                         <td v-for="(time, index) in user.time_keeping" :key="index" :class="time.class"
                             @click="showModal(user.id, user.fullname, time)"
-                            style="text-align:center;vertical-align: middle">
+                            style="text-align:center;vertical-align: middle;width:230px">
                             <template v-if="time.petition_type == 0 && time.label_day != 'sunday' && time.holiday != 1"
                                 style="background-color: red;">
                                 <b>Ca hành chính</b>
@@ -79,7 +79,8 @@
                                     Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
-                                <div v-if="time.go_early_0 > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
+                                <div v-if="time.go_early_0 > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} -
+                                    Về
                                     sớm: {{ time.about_early }})</div>
                                 <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
                                         Đi muộn: {{ time.go_late }}</b> -)</div>
@@ -96,7 +97,8 @@
                                     Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
-                                <div v-if="time.go_early_0 > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
+                                <div v-if="time.go_early_0 > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} -
+                                    Về
                                     sớm: {{ time.about_early }})</div>
                                 <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
                                         Đi muộn: {{ time.go_late }}</b> -)</div>
@@ -113,7 +115,8 @@
                                     Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
-                                <div v-if="time.go_early_0 > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
+                                <div v-if="time.go_early_0 > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} -
+                                    Về
                                     sớm: {{ time.about_early }})</div>
                                 <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
                                         Đi muộn: {{ time.go_late }}</b> -)</div>
@@ -137,7 +140,8 @@
                                     Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
                                     muộn: {{ time.about_late }})</div>
-                                <div v-if="time.go_early_0 > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
+                                <div v-if="time.go_early_0 > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} -
+                                    Về
                                     sớm: {{ time.about_early }})</div>
                                 <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
                                         Đi muộn: {{ time.go_late }}</b> -)</div>
@@ -152,9 +156,11 @@
                                 <div v-else>{{time.checkin}} - {{time.checkout }}</div>
                                 <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
                                     Đi sớm: {{ time.go_early }} -)</div>
-                                <div v-if="time.go_early_0 > 0 && time.about_late_0 > 0">(Đi sớm: {{ time.go_early }} - Về
+                                <div v-if="time.go_early_0 > 0 && time.about_late_0 > 0">(Đi sớm: {{ time.go_early }} -
+                                    Về
                                     muộn: {{ time.about_late }})</div>
-                                <div v-if="time.go_early_0 > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} - Về
+                                <div v-if="time.go_early_0 > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} -
+                                    Về
                                     sớm: {{ time.about_early }})</div>
                                 <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
                                         Đi muộn: {{ time.go_late }}</b> -)</div>
@@ -239,12 +245,12 @@
             <table v-else class="table table-bordered mt-5">
                 <thead class="table-active">
                     <tr>
-                        <th style="width:200px">
+                        <th style="width:199px">
                             <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
                                 placeholder="Tìm kiếm" v-on:keyup.enter="getTimeKeepings()">
                         </th>
                         <th v-for="(label, index) in labels" :key="index"
-                            style="font-size:13px; text-align:center; vertical-align: middle;">{{ label
+                            style="font-size:13px; text-align:center; vertical-align: middle; width: 53.3px">{{ label
                             }}
                         </th>
                     </tr>
@@ -254,7 +260,7 @@
                         <td style="width:200px; font-size:14px; vertical-align: middle;">{{ user.fullname }}</td>
                         <td v-for="(time, index) in user.time_keeping" :key="index" :class="time.class"
                             @click="showModal(user.id, user.fullname, time)"
-                            style="text-align:center;vertical-align: middle">
+                            style="text-align:center;vertical-align: middle; width: 53.5px;">
                             <div style=" font-size:13px; text-align: center;">
                                 {{ time.checkin ? time.checkin: '--:--'}} <br>
                                 {{ time.checkout ? time.checkout: '--:--' }}
@@ -263,11 +269,11 @@
                     </tr>
                 </tbody>
             </table>
-            <div>
+            <!--<div>
                 <p><i class="fa fa-circle" style="color: red"></i> Chưa checkin (checkout)</p>
                 <p><i class="fa fa-circle" style="color: green"></i> Chấm công đầy đủ</p>
                 <p><i class="fa fa-circle" style="color: yellow"></i> Chấm công muộn (Về sớm)</p>
-            </div>
+            </div>-->
         </div>
         <div>
             <div ref="modalDetail" class="modal" tabindex="-1" role="dialog">
@@ -420,6 +426,7 @@ export default {
 </script>
 
 <style scoped>
+
 table table-bordered mt-5
 {
     background: #fff;
@@ -455,5 +462,27 @@ table.result-point tr td .fa {
 table tr td {
     padding: 5px 5px;
     border: 1px solid #999999;
+}
+
+table {
+    table-layout: fixed;
+}
+
+th,
+
+td {
+    padding: 0px 0px;
+    border: 1px solid #000;
+}
+
+thead {
+    background: #f9f9f9;
+    display: table;
+}
+
+tbody {
+    height: 640px;
+    overflow: auto;
+    display: block;
 }
 </style>

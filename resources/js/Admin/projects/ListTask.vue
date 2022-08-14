@@ -202,7 +202,7 @@ export default {
     },
     watch: {
         'list': function (newVal) {
-            console.log(newVal);
+            // console.log(newVal);
         },
         // 'projectId': function (newVal) {
         //     this.getAllTasks();
