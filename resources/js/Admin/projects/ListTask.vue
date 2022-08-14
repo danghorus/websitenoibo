@@ -96,42 +96,38 @@ export default {
             showModalEdit: false,
             taskEditId: 0,
             columns: [
-            {
-                label: 'STT',
-                prop: 'key_label',
-            },
-            {
-                label: 'Công việc',
-                prop: 'task_name',
-                minWidth: '400px',
-            },
-            {
-                label: 'Thời gian bắt đầu',
-                prop: 'start_time',
-            },
-            {
-                label: 'Thời lượng',
-                prop: 'time',
-            },
-            {
-                label: 'Bộ phận',
-                prop: 'department_label',
-            },
-            {
-                label: 'Người thực hiện',
-                prop: 'fullname',
-            },
-            {
-                label: 'Trạng thái',
-                prop: 'status_title',
-            },
-            {
-                label: 'Thao tác',
-                prop: 'man',
-                type: 'template',
-                template: 'man',
-            },
-        ],
+                {
+                    label: 'Công việc',
+                    prop: 'task_name_label',
+                    minWidth: '400px',
+                },
+                {
+                    label: 'Thời gian bắt đầu',
+                    prop: 'start_time',
+                },
+                {
+                    label: 'Thời lượng',
+                    prop: 'time',
+                },
+                {
+                    label: 'Bộ phận',
+                    prop: 'department_label',
+                },
+                {
+                    label: 'Người thực hiện',
+                    prop: 'fullname',
+                },
+                {
+                    label: 'Trạng thái',
+                    prop: 'status_title',
+                },
+                {
+                    label: 'Thao tác',
+                    prop: 'man',
+                    type: 'template',
+                    template: 'man',
+                },
+            ],
         }
     },
     created() {
