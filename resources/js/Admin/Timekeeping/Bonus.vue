@@ -15,6 +15,7 @@
                         <tr>
                             <td colspan="2"><b>Tính thưởng dự án</b></td>
                             <td style=" text-align:center;">{{ current.start_month ?current.start_month : " "}}</td>
+                        </tr>
                         <tr>
                             <td colspan="2"><b>Công chuẩn</b></td>
                             <td style=" text-align:center;">{{ expected.total }}</td>
