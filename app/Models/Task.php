@@ -69,6 +69,11 @@ class Task extends Model
         return $this->hasOne('App\Models\Task', 'id', 'task_parent')->with(['parent']);
     }
 
+    public function taskUser()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'task_performer');
+    }
+
     public static function taskChildrent($arr, $taskParent, $isFirst = true) {
         if ($arr) {
             foreach ($arr as $value) {
@@ -106,5 +111,28 @@ class Task extends Model
                 }
             }
         }
+    }
+    public static function taskChildrentFormat($arr)
+    {
+        if ($arr) {
+            foreach ($arr as $value) {
+                $value->department_label = $value->task_department? Task::DEPARTMENTS[$value->task_department]: '';
+
+                if (($value->status == 0 || $value->status == 1) && (strtotime($value->end_time) < time())) {
+                    $value->status_title = 'Đã quá hạn';
+                } elseif ($value->status == 4 && (strtotime($value->real_end_time) > strtotime($value->end_time))) {
+                    $value->status_title = 'Hoàn thành chậm';
+                } else {
+                    $value->status_title = $value->status >= 0 ? Task::ARR_STATUS[$value->status]: '';
+                }
+                $value->fullname = $value->taskUser? $value->taskUser->fullname: '';
+
+                if (count($value->children) > 0) {
+                    self::taskChildrentFormat($value->children);
+                }
+            }
+        }
+
+        return $arr;
     }
 }

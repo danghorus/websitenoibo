@@ -25,64 +25,41 @@ class TaskController extends Controller
         $taskDepartment = $request->input('task_department');
         $taskStatus = $request->input('status');
 
-        $builder = DB::table('tasks', 'tt')->select('tt.*')
-            ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child")
-            ->selectRaw('p.project_name, u.fullname');
-        $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
-        $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
-        $builder->where('tt.project_id', '=',$projectId);
+        $builder = Task::query()->select('*');
+        $builder->with(['children', 'taskUser']);
+//        $builder->join('projects as p', 'project_id', '=', 'p.id');
+//        $builder->join('users as u', 'task_performer', '=', 'u.id', 'left');
+        $builder->where('project_id', '=',$projectId);
 
         if ($taskParent) {
-            $builder->where('tt.task_parent', '=', $taskParent);
+            $builder->where('task_parent', '=', $taskParent);
         } else {
-            $builder->where('tt.task_parent', '=', NULL);
+            $builder->where('task_parent', '=', NULL);
         }
 
         if ($taskPerformer && $taskPerformer > 0) {
-            $builder->where('tt.task_performer', '=', $taskPerformer);
+            $builder->where('task_performer', '=', $taskPerformer);
         }
 
         if ($taskDepartment && $taskDepartment > 0) {
-            $builder->where('tt.task_department', '=', $taskDepartment);
+            $builder->where('task_department', '=', $taskDepartment);
         }
 
         if ($taskStatus >= 0) {
-            $builder->where('tt.status', '=', $taskStatus);
+            $builder->where('status', '=', $taskStatus);
         }
 
         if ($search && $search != '') {
-            $builder->where('tt.task_name', 'LIKE', "%$search%");
+            $builder->where('task_name', 'LIKE', "%$search%");
         }
 
         if ($startTime && $startTime != '') {
-            $builder->whereDate('tt.start_time', '=', $startTime);
+            $builder->whereDate('start_time', '=', $startTime);
         }
 
         $tasks = $builder->get();
 
-        foreach ($tasks as $task) {
-            $task->children = [];
-            $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
-
-            if (($task->status == 0 || $task->status == 1) && (strtotime($task->end_time) < time())) {
-                $task->status_title = 'Đã quá hạn';
-            } elseif ($task->status == 4 && (strtotime($task->real_end_time) > strtotime($task->end_time))) {
-                $task->status_title = 'Hoàn thành chậm';
-            } else {
-                $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
-            }
-//            $tmp = '';
-//            if ($task->level && $task->level > 1) {
-//                for ($i = 1; $i < $task->level; $i++){
-//                    if ($i == 1) {
-//                        $tmp .= '|--';
-//                    } else {
-//                        $tmp .= '--';
-//                    }
-//                }
-//                $task->task_name = $tmp. ' '.$task->task_name;
-//            }
-        }
+        Task::taskChildrentFormat($tasks);
 
         return [
             'code' => 200,
