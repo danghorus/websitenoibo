@@ -119,7 +119,7 @@ import _ from "lodash";
 export default {
     name: "CreateTask",
     components: { Editor, DatePicker, Multiselect },
-    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'taskId', 'projectId'],
+    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'taskId', 'projectId', 'taskParentId'],
     data() {
         return {
             task: {
@@ -143,6 +143,12 @@ export default {
         }
     },
     created() {
+        if (this.projectId) {
+            this.task.project_id = _.find(this.projects, {id: parseInt(this.projectId)});
+            this.getTaskByProject(this.projectId);
+        } else {
+            this.task.project_id = '';
+        }
         if (this.taskId) {
             this.getInfoTask();
         }
@@ -209,14 +215,6 @@ export default {
         }
     },
     watch: {
-        'projectId': function (newVal) {
-            if (newVal) {
-                let project = _.find(this.projects, {id: newVal});
-                this.task.project_id = project;
-            } else {
-                this.task.project_id = '';
-            }
-        },
         'task.time': function (newVal) {
             if (newVal > 0 && this.task.start_time) {
                 let dateTime = moment(this.task.start_time).add(newVal, 'h').toDate();
@@ -224,14 +222,10 @@ export default {
             }
         },
         'task.start_time': function (newVal) {
-            console.log(newVal);
             if (newVal && this.task.time) {
                 let dateTime = moment(newVal).add(this.task.time, 'h').toDate();
                 this.task.end_time = moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
             }
-        },
-        'task.project_id': function (newVal) {
-            if (newVal) this.getTaskByProject(newVal.id);
         },
         'task.task_name': function (newVal) {
             if (newVal) {
@@ -244,6 +238,21 @@ export default {
                 this.task.task_code = taskCode.toUpperCase();
             } else {
                 this.task.task_code = '';
+            }
+        },
+        'tasks': function (newVal) {
+            if (this.taskParentId) {
+                this.task.task_parent = _.find(newVal, {id: parseInt(this.taskParentId)});
+            }
+        },
+        'projectId': function (newVal) {
+            this.task.project_id = _.find(this.projects, {id: parseInt(newVal)});
+            this.getTaskByProject(this.projectId);
+        },
+        'projects': function (newVal) {
+            if (this.projectId) {
+                this.task.project_id = _.find(newVal, {id: parseInt(this.projectId)});
+                this.getTaskByProject(this.projectId);
             }
         }
     }

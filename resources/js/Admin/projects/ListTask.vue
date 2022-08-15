@@ -29,6 +29,9 @@
                         <p @click="copyTask(scope.row.id)">
                             <i class="fas fa-copy ml-2" style="cursor: pointer" />
                         </p>
+                        <p @click="showCreateTask(scope.row.id)">
+                            <i class="fas fa-plus-square ml-2" style="cursor: pointer" />
+                        </p>
                     </div>
                 </template>
             </zk-table>
@@ -72,6 +75,25 @@
                 </div>
             </div>
         </div>
+        <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document" style=" max-width: 60%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Thêm mới Công việc</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                @click="closeModalCreateTask()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <create-task v-if="showModalCreate" :users="users" :groupUsers="groupUsers" :projectId="projectId"
+                                     :priorities="priorities" :stickers="stickers" :projects="projects" :taskParentId="parentId"
+                                     @handleGetTasks="handleGetAll()"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -94,7 +116,9 @@ export default {
             parentTask: 0,
             taskId: 0,
             showModalEdit: false,
+            showModalCreate: false,
             taskEditId: 0,
+            parentId: 0,
             columns: [
                 {
                     label: 'Công việc',
@@ -138,6 +162,7 @@ export default {
             this.$emit('getAllTasks');
             this.closeModalConfirm();
             this.closeModalEditTask();
+            this.closeModalCreateTask();
         },
         handleChangeInput(value) {
             this.list = [...value];
@@ -199,6 +224,16 @@ export default {
                 this.handleGetAll();
             }
         },
+        showCreateTask(parentId) {
+            this.parentId = parentId;
+            this.showModalCreate = true;
+            $(this.$refs.modalCreateTask).modal('show');
+        },
+        closeModalCreateTask() {
+            this.showModalCreate = false;
+            $(this.$refs.modalCreateTask).modal('hide');
+            this.parentId = 0;
+        }
     },
     watch: {
         'list': function (newVal) {

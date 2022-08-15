@@ -196,7 +196,6 @@ export default {
     components: { ListTask, TimelineTask, CreateTask, CreateTask_Parent, ListProject, draggable, CreateProject, Config, DatePicker, Multiselect},
     data() {
         let localProjectId = localStorage.getItem('project_id') || 0;
-
         return {
             projectId: localProjectId,
             searchProjectId: 0,
