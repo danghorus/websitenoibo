@@ -25,19 +25,12 @@
 
                             <nav class="navbar navbar-expand-lg navbar-light" style="float:right;width:110px">
                                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                                    <ul class="navbar-nav">
-                                        <li class="nav-item dropdown">
-                                            <button class="btn btn-primary float-right" style="width:110px"
-                                                type="button" data-bs-toggle="dropdown" data-bs-auto-close="true">Thêm
-                                                mới</button>
-                                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                                <li><a class="dropdown-item" @click="showModalCreateTask_Parent()">Thêm
-                                                        mới công việc cha</a></li>
-                                                <li><a class="dropdown-item" @click="showModalCreateTask()">Thêm
-                                                        mới công việc con</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
+                                    <button class="btn btn-primary float-right" style="width:110px"
+                                        type="button" data-bs-toggle="dropdown" data-bs-auto-close="true"
+                                            @click="showModalCreateTask()"
+                                    >
+                                        Thêm mới
+                                    </button>
                                 </div>
                             </nav>&ensp;&ensp;&ensp;&ensp;
                             <button class="btn btn-primary float-right" style="width: 110px"
@@ -86,7 +79,7 @@
                 <list-task v-else :project-id="projectId" :users="users" :groupUsers="groupUsers" :priorities="priorities"
                            :stickers="stickers" :projects="projects" :searchProjectId="searchProjectId" :search="search"
                            :startTime="startTime" :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status"
-                           @getAllTasks="getAllTasks" :list="list"
+                           @getAllTasks="getAllTasks" :list="list" :currentUser="currentUser"
                 />
             </div>
 
@@ -103,29 +96,8 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <create-task :users="users" :groupUsers="groupUsers" :priorities="priorities"
+                            <create-task v-if="showModal" :users="users" :groupUsers="groupUsers" :priorities="priorities"
                                 :stickers="stickers" :projects="projects" :projectId="projectId" @handleGetTasks="handleGetTasks()"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div>
-            <div ref="modalCreateTask_Parent" class="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document" style=" max-width: 60%;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Tạo mới Công việc</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                @click="closeModalCreateTask_Parent()">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <create-task :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                                         :stickers="stickers" :projects="projects" :projectId="projectId"
-                                         @handleGetTasks="handleGetTasks()"
                             />
                         </div>
                     </div>
@@ -235,7 +207,8 @@ export default {
                 { value: 3, label: 'Tạm dừng' },
                 { value: 4, label: 'Hoàn thành' },
             ],
-            status: ''
+            status: '',
+            currentUser: ''
         }
     },
     created() {
@@ -366,6 +339,7 @@ export default {
 
             if (res.code == 200) {
                 this.list = res.data;
+                this.currentUser = res.currentUser;
             }
         },
         handleGetTasks() {

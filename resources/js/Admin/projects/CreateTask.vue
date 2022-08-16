@@ -85,7 +85,7 @@
         </div>
         <div class="form-group">
             <label for="project_description">Công việc cha</label>
-            <multiselect v-model="task.task_parent" :disabled="task.project_id == 0" :options="tasks" value="id"
+            <multiselect v-model="task.task_parent" @input="changeTaskParent($event)" :disabled="task.project_id == 0" :options="tasks" value="id"
                 label="label" :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
             </multiselect>
         </div>
@@ -103,7 +103,7 @@
                 <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
             </multiselect>
         </div>
-        <button @click="saveTask()" class="btn btn-primary" :close-on-select="true">{{ taskId? 'Cập nhật': 'Tạo mới' }}</button>
+        <button @click="saveTask()" class="btn btn-primary">{{ taskId? 'Cập nhật': 'Tạo mới' }}</button>
     </div>
 </template>
 
@@ -126,6 +126,7 @@ export default {
                 project_id: ''
             },
             users: [],
+            count: 0,
             values: [],
             departments: [
                 { value: 1, label: 'Admin' },
@@ -212,6 +213,9 @@ export default {
             if (res.code == 200) {
                 this.tasks = res.data;
             }
+        },
+        changeTaskParent(e) {
+            this.task.task_parent = e;
         }
     },
     watch: {
@@ -241,19 +245,23 @@ export default {
             }
         },
         'tasks': function (newVal) {
-            if (this.taskParentId) {
+            if (this.taskParentId && this.count === 0) {
                 this.task.task_parent = _.find(newVal, {id: parseInt(this.taskParentId)});
+                this.count = this.count + 1;
             }
         },
-        'projectId': function (newVal) {
-            this.task.project_id = _.find(this.projects, {id: parseInt(newVal)});
-            this.getTaskByProject(this.projectId);
-        },
-        'projects': function (newVal) {
-            if (this.projectId) {
-                this.task.project_id = _.find(newVal, {id: parseInt(this.projectId)});
-                this.getTaskByProject(this.projectId);
-            }
+        // 'projectId': function (newVal) {
+        //     this.task.project_id = _.find(this.projects, {id: parseInt(newVal)});
+        //     this.getTaskByProject(this.projectId);
+        // },
+        // 'projects': function (newVal) {
+        //     if (this.projectId) {
+        //         this.task.project_id = _.find(newVal, {id: parseInt(this.projectId)});
+        //         this.getTaskByProject(this.projectId);
+        //     }
+        // },
+        'task.task_parent': function (newVal) {
+            console.log(newVal, 'new val');
         }
     }
 }

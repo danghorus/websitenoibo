@@ -63,7 +63,8 @@ class TaskController extends Controller
 
         return [
             'code' => 200,
-            'data' => $tasks
+            'data' => $tasks,
+            'currentUser' => Auth::user()
         ];
     }
 

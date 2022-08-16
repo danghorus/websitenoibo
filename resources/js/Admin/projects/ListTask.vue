@@ -34,6 +34,21 @@
                         </p>
                     </div>
                 </template>
+                <template slot="status_template" scope="scope">
+                    <div v-if="currentUser.permission == 1 && scope.row.status != 0">
+                        <select class="form-select form-select-sm"
+                                aria-label=".form-select-sm example" @change="changeStatus($event, scope.row.id)"
+                                v-model="scope.row.status">
+                            <option value="1" v-if="scope.row.status == 1">Đang Chờ</option>
+                            <option value="2" :disabled="scope.row.status == 2">Đang tiến hành</option>
+                            <option value="3" :disabled="scope.row.status == 3">Tạm dừng</option>
+                            <option value="4" :disabled="scope.row.status == 3 || scope.row.status == 4">Hoàn thành</option>
+                        </select>
+                    </div>
+                    <div v-else>
+                        <p>{{ scope.row.status_title }}</p>
+                    </div>
+                </template>
             </zk-table>
         </div>
         <div ref="modalConfirm" class="modal" tabindex="-1" role="dialog">
@@ -67,7 +82,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <create-task v-if="showModalEdit" :users="users" :groupUsers="groupUsers"
+                        <create-task v-if="showModalEdit" :users="users" :groupUsers="groupUsers" :projectId="projectId"
                                      :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId"
                                      @handleGetTasks="handleGetAll()"
                         />
@@ -108,7 +123,7 @@ export default {
     name: "ListTask",
     components: { draggable, Tree, ZkTable, CreateTask },
     props: ['projectId', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
-        'startTime', 'taskPerformer', 'taskDepartment', 'status', 'list'],
+        'startTime', 'taskPerformer', 'taskDepartment', 'status', 'list', 'currentUser'],
     data() {
         return {
             showModal: false,
@@ -143,7 +158,9 @@ export default {
                 },
                 {
                     label: 'Trạng thái',
-                    prop: 'status_title',
+                    prop: 'status_template',
+                    type: 'template',
+                    template: 'status_template',
                 },
                 {
                     label: 'Thao tác',
@@ -233,7 +250,15 @@ export default {
             this.showModalCreate = false;
             $(this.$refs.modalCreateTask).modal('hide');
             this.parentId = 0;
-        }
+        },
+        async changeStatus(e, taskId) {
+            const res = await $post(`/tasks/change-status/${taskId}`, {status: e.target.value});
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.$emit('getAllTasks');
+            }
+        },
     },
     watch: {
         'list': function (newVal) {
