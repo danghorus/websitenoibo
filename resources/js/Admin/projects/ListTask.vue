@@ -123,11 +123,12 @@ export default {
                 {
                     label: 'Công việc',
                     prop: 'task_name_label',
-                    minWidth: '400px',
+                    minWidth: '700px',
                 },
                 {
                     label: 'Thời gian bắt đầu',
                     prop: 'start_time',
+                    minWidth: '120px',
                 },
                 {
                     label: 'Thời lượng',
