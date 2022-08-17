@@ -1,23 +1,9 @@
 <template>
     <div>
         <div class="mt-4">
-            <zk-table
-                ref="table"
-                index-text="#"
-                :data="list"
-                :columns="columns"
-                :stripe="false"
-                :border="true"
-                :show-header="true"
-                :show-row-hover="true"
-                :show-index="false"
-                :tree-type="true"
-                :is-fold="false"
-                :expand-type="false"
-                :selection-type="false"
-                row-style="font-size: 15px"
-                empty-text="Không có dữ liệu"
-            >
+            <zk-table ref="table" index-text="#" :data="list" :columns="columns" :stripe="false" :border="true"
+                :show-header="true" :show-row-hover="true" :show-index="false" :tree-type="true" :is-fold="false"
+                :expand-type="false" :selection-type="false" row-style="font-size: 15px" empty-text="Không có dữ liệu">
                 <template slot="man" scope="scope">
                     <div style="display: flex">
                         <p @click="showModalEditTask(scope.row.id)">
@@ -35,14 +21,15 @@
                     </div>
                 </template>
                 <template slot="status_template" scope="scope">
-                    <div v-if="currentUser.permission == 1 && scope.row.status != 0">
-                        <select class="form-select form-select-sm"
-                                aria-label=".form-select-sm example" @change="changeStatus($event, scope.row.id)"
-                                v-model="scope.row.status">
+                    <div v-if="currentUser.permission == 1">
+                        <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                            @change="changeStatus($event, scope.row.id)" v-model="scope.row.status">
+                            <option value="0" :disabled="scope.row.status == 2 || scope.row.status == 3 || scope.row.status==4">Quá hạn</option>
                             <option value="1" v-if="scope.row.status == 1">Đang Chờ</option>
                             <option value="2" :disabled="scope.row.status == 2">Đang tiến hành</option>
                             <option value="3" :disabled="scope.row.status == 3">Tạm dừng</option>
-                            <option value="4" :disabled="scope.row.status == 3 || scope.row.status == 4">Hoàn thành</option>
+                            <option value="4" :disabled="scope.row.status == 3 || scope.row.status == 4">Hoàn thành
+                            </option>
                         </select>
                     </div>
                     <div v-else>
@@ -57,7 +44,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title">Xác nhận xóa công việc</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                @click="closeModalConfirm()">
+                            @click="closeModalConfirm()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -77,15 +64,14 @@
                     <div class="modal-header">
                         <h5 class="modal-title">Sửa Công việc</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                @click="closeModalEditTask()">
+                            @click="closeModalEditTask()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <create-task v-if="showModalEdit" :users="users" :groupUsers="groupUsers" :projectId="projectId"
-                                     :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId"
-                                     @handleGetTasks="handleGetAll()"
-                        />
+                            :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId"
+                            @handleGetTasks="handleGetAll()" />
                     </div>
                 </div>
             </div>
@@ -96,15 +82,14 @@
                     <div class="modal-header">
                         <h5 class="modal-title">Thêm mới Công việc</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                @click="closeModalCreateTask()">
+                            @click="closeModalCreateTask()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <create-task v-if="showModalCreate" :users="users" :groupUsers="groupUsers" :projectId="projectId"
-                                     :priorities="priorities" :stickers="stickers" :projects="projects" :taskParentId="parentId"
-                                     @handleGetTasks="handleGetAll()"
-                        />
+                        <create-task v-if="showModalCreate" :users="users" :groupUsers="groupUsers"
+                            :projectId="projectId" :priorities="priorities" :stickers="stickers" :projects="projects"
+                            :taskParentId="parentId" @handleGetTasks="handleGetAll()" />
                     </div>
                 </div>
             </div>

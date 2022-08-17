@@ -455,6 +455,9 @@ class TaskController extends Controller
         $task = Task::find($taskId);
 
         switch ($task->status) {
+            case 0:
+                $task->status = $status;
+                break;
             case 1:
                 $task->status = $status;
                 $task->real_start_time = date('Y-m-d H:i:s', time());
@@ -472,6 +475,9 @@ class TaskController extends Controller
                 $task->status = $status;
                 $pause = round((time() - strtotime($task->real_end_time))/3600, 2);
                 $task->time_pause += $pause;
+                break;
+            case 4:
+                $task->status = $status;
                 break;
         }
 
