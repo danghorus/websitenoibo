@@ -91,33 +91,33 @@
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
-                        <th scope="col" width="400px">Tên công việc</th>
-                        <th scope="col" width="250px">Dự án</th>
+                        <th scope="col" width="450px">Tên công việc</th>
+                        <th scope="col" width="600px">Công việc cha</th>
                         <th scope="col" width="180px">Bắt đầu</th>
                         <th scope="col">Thời lượng (Giờ)</th>
-                        <th scope="col" width="180px">Kết thúc</th>
-                        <th scope="col" width="180px">Bắt đầu thực tế</th>
+                        <!--<th scope="col" width="180px">Kết thúc</th>
+                        <th scope="col" width="180px">Bắt đầu thực tế</th>-->
                         <th scope="col">Thời lượng thực tế (Giờ)</th>
-                        <th scope="col" width="180px">Kết thúc thực tế</th>
-                        <th scope="col" width="120px">Trạng thái</th>
+                        <!--<th scope="col" width="180px">Kết thúc thực tế</th>-->
+                        <th scope="col" width="150px">Trạng thái</th>
                         <th scope="col" width="180px">Thao tác</th>
                     </tr>
                 </thead>
                 <tr v-for="(item, index) in list" :key="index" style="text-align:center;">
                     <td>{{index + 1 }}</td>
                     <td scope="row" style="text-align:left;">{{ item.task_name }}</td>
-                    <td style="text-align:left;">{{ item.task_parent }}</td>
+                    <td style="text-align:left;"></td>
                     <td>{{ item.start_time }}</td>
                     <td>{{ item.time }}</td>
-                    <td>{{ item.end_time }}</td>
-                    <td>{{ item.real_start_time }}</td>
-                    <td>{{ item.time_real }}</td>
-                    <td>{{ item.real_end_time }}</td>
+                    <!--<td>{{ item.end_time }}</td>
+                    <td>{{ item.real_start_time }}</td>-->
+                    <td>{{ item.time_real}}</td>
+                    <!--<td>{{ item.real_end_time }}</td>-->
                     <td>{{ item.status_title }}</td>
                     <td>
-                        <select v-if="item.status != 0" class="form-select form-select-sm"
-                            aria-label=".form-select-sm example" @change="changeStatus($event, item.id)"
-                            v-model="item.status">
+                        <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                            @change="changeStatus($event, item.id)" v-model="item.status">
+                            <option value="0">Đã quá hạn</option>
                             <option value="1" v-if="item.status == 1">Đang Chờ</option>
                             <option value="2" :disabled="item.status == 2">Đang tiến hành</option>
                             <option value="3" :disabled="item.status == 3">Tạm dừng</option>

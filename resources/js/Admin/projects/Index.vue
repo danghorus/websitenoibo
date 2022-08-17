@@ -22,17 +22,10 @@
                                 <i class="fas fa-filter"></i>
                                 Tạo bộ lọc
                             </button> &ensp;
-
-                            <nav class="navbar navbar-expand-lg navbar-light" style="float:right;width:110px">
-                                <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                                    <button class="btn btn-primary float-right" style="width:110px"
-                                        type="button" data-bs-toggle="dropdown" data-bs-auto-close="true"
-                                            @click="showModalCreateTask()"
-                                    >
-                                        Thêm mới
-                                    </button>
-                                </div>
-                            </nav>&ensp;&ensp;&ensp;&ensp;
+                            <button class="btn btn-primary float-right" style="width:110px"
+                                type="button" data-bs-toggle="dropdown" data-bs-auto-close="true"
+                                @click="showModalCreateTask()">Thêm mới
+                            </button>&ensp;
                             <button class="btn btn-primary float-right" style="width: 110px"
                                 @click="showModalConfigTask()">Cấu hình</button>
                         </div>

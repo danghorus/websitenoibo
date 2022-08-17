@@ -126,13 +126,14 @@ export default {
                     minWidth: '700px',
                 },
                 {
-                    label: 'Thời gian bắt đầu',
+                    label: 'Ngày bắt đầu',
                     prop: 'start_time',
-                    minWidth: '120px',
+                    minWidth: '65px',
                 },
                 {
                     label: 'Thời lượng',
                     prop: 'time',
+                    minWidth: '45px',
                 },
                 {
                     label: 'Bộ phận',
@@ -141,6 +142,7 @@ export default {
                 {
                     label: 'Người thực hiện',
                     prop: 'fullname',
+                    minWidth: '160px',
                 },
                 {
                     label: 'Trạng thái',

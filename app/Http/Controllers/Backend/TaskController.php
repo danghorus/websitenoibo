@@ -20,6 +20,7 @@ class TaskController extends Controller
         $projectId = $request->input('project_id');
         $taskParent = $request->input('parent_task');
         $startTime = $request->input('start_time');
+        $startTimeDay = date('Y-m-d', strtotime($request->input('start_time')));
         $search = $request->input('search');
         $taskPerformer = $request->input('task_performer');
         $taskDepartment = $request->input('task_department');
@@ -138,9 +139,9 @@ class TaskController extends Controller
 
         $task->task_name = $taskInfo['task_name'] ?? '';
         $task->task_code = $taskInfo['task_code'] ?? '';
-        $task->start_time = $taskInfo['start_time'] ?? date('Y-m-d H:i:s', time());
-        $task->time = $taskInfo['time'] ?? 0;
-        $task->end_time = $taskInfo['end_time'] ?? date('Y-m-d H:i:s', time());
+        $task->start_time = $taskInfo['start_time'] ?? null;
+        $task->time = $taskInfo['time'] ?? null;
+        $task->end_time = $taskInfo['end_time'] ?? null;
         $task->description = $taskInfo['description'] ?? '';
         $task->task_priority = isset($taskInfo['task_priority']) && $taskInfo['task_priority'] ? $taskInfo['task_priority']['id']: null;
         $task->task_sticker = isset($taskInfo['task_sticker']) && $taskInfo['task_sticker'] ?$taskInfo['task_sticker']['id']: null;
@@ -206,9 +207,9 @@ class TaskController extends Controller
 
         $task->task_name = $taskInfo['task_name'] ?? '';
         $task->task_code = $taskInfo['task_code'] ?? '';
-        $task->start_time = $taskInfo['start_time'] ?? date('Y-m-d H:i:s', time());
-        $task->time = $taskInfo['time'] ?? 0;
-        $task->end_time = $taskInfo['end_time'] ?? date('Y-m-d H:i:s', time());
+        $task->start_time = $taskInfo['start_time'] ?? null;
+        $task->time = $taskInfo['time'] ?? null;
+        $task->end_time = $taskInfo['end_time'] ?? null;
         $task->description = $taskInfo['description'] ?? '';
         $task->task_priority = isset($taskInfo['task_priority']) && $taskInfo['task_priority'] ? $taskInfo['task_priority']['id']: null;
         $task->task_sticker = isset($taskInfo['task_sticker']) && $taskInfo['task_sticker'] ?$taskInfo['task_sticker']['id']: null;
@@ -312,7 +313,11 @@ class TaskController extends Controller
 
         $detail['task_name'] = $task->task_name ?? '';
         $detail['task_code'] = $task->task_code ?? '';
-        $detail['start_time'] = $task->start_time ?? '';
+        //$detail['start_time'] = $task->start_time ?? '';
+        if($task->start_time){
+            $task->start_time_day = date('Y-m-d', strtotime($task->start_time)) ?? '';
+        }
+        $detail['start_time_day'] = $task->start_time_day ?? '';
         $detail['time'] = $task->time ?? 0;
         $detail['end_time'] = $task->end_time ?? '';
         $detail['description'] = $task->description ?? '';
@@ -417,6 +422,12 @@ class TaskController extends Controller
             }
 
             switch ($task->status) {
+                case 0:
+                    $totalTaskProcessing++;
+                    break;
+                case 1:
+                    $totalTaskProcessing++;
+                    break;
                 case 2:
                     $totalTaskProcessing++;
                     break;
@@ -431,7 +442,7 @@ class TaskController extends Controller
 
             if ($task->status == Task::TASK_COMPLETED || $task->status == Task::TASK_PAUSE) {
                 $task->time_real = $task->real_end_time?
-                    round((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600, 2) - $task->time_pause: 0;
+                    round(((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600 - $task->time_pause), 4): 0;
             } else if ($task->status == Task::TASK_PROCESSING){
                 $task->time_real = round((time() - strtotime($task->real_start_time))/3600, 2) - $task->time_pause;
             }
