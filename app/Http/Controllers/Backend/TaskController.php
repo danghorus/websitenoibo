@@ -313,11 +313,8 @@ class TaskController extends Controller
 
         $detail['task_name'] = $task->task_name ?? '';
         $detail['task_code'] = $task->task_code ?? '';
-        //$detail['start_time'] = $task->start_time ?? '';
-        if($task->start_time){
-            $task->start_time_day = date('Y-m-d', strtotime($task->start_time)) ?? '';
-        }
-        $detail['start_time_day'] = $task->start_time_day ?? '';
+        $detail['start_time'] = $task->start_time ?? '';
+        //$detail['start_time_day'] = $task->start_time_day ?? '';
         $detail['time'] = $task->time ?? 0;
         $detail['end_time'] = $task->end_time ?? '';
         $detail['description'] = $task->description ?? '';
