@@ -11,6 +11,7 @@ use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\PetitionController;
 use App\Http\Controllers\Backend\WarriorController;
 use App\Http\Controllers\Backend\SettingController;
+use App\Http\Controllers\Backend\OfficeController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Backend\PartnerController;
@@ -43,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('warriors', WarriorController::class);
     Route::resource('works', WorkController::class);
     Route::resource('settings', SettingController::class);
+    Route::resource('offices', OfficeController::class);
 
     Route::post('users/{user}/change-password', [ChangePasswordController::class, 'change_password'])->name('users.change.password');
     Route::post('users/{user}/change-avatar', [ChangeAvatarController::class, 'change_avatar'])->name('users.change.avatar');
@@ -138,6 +140,8 @@ Route::middleware(['auth'])->group(function () {
     //My Work
     Route::get('my_work', [ProjectController::class, 'my_work']);
     Route::get('my-tasks', [TaskController::class, 'myTasks']);
+    Route::get('list_work', [ProjectController::class, 'list_work']);
+    Route::get('list-works', [TaskController::class, 'ListWork']);
 
 });
 

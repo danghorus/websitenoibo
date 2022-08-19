@@ -119,6 +119,7 @@ export default {
             showModalCreate: false,
             taskEditId: 0,
             parentId: 0,
+            
             columns: [
                 {
                     label: 'Công việc',
@@ -133,6 +134,11 @@ export default {
                 {
                     label: 'Thời lượng',
                     prop: 'time',
+                    minWidth: '45px',
+                },
+                {
+                    label: 'Trọng số',
+                    prop: 'weight',
                     minWidth: '45px',
                 },
                 {

@@ -3,15 +3,15 @@
         <h1 style="margin: 0px 0px 0px 20px">BẢNG THỐNG KÊ CÔNG VIỆC</h1>
         <div style="width:400px; margin: -40px 0px 0px 650px;">
             <span>Thống kê theo dự án</span>
-            <multiselect v-model="project" :options="projects" :multiple="true"
-                         placeholder="Vui lòng chọn" track-by="id" label="project_name">
+            <multiselect v-model="project" :options="projects" :multiple="true" placeholder="Vui lòng chọn"
+                track-by="id" label="project_name">
                 <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
             </multiselect>
         </div>
         <div style="width:400px; margin: -67px 0px 0px 1060px;">
             <span>Thống kê theo bộ phận</span>
-            <multiselect v-model="department" :options="departments" :multiple="true"
-                         placeholder="Vui lòng chọn" track-by="value" label="label">
+            <multiselect v-model="department" :options="departments" :multiple="true" placeholder="Vui lòng chọn"
+                track-by="value" label="label">
                 <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
             </multiselect>
         </div>
@@ -40,24 +40,29 @@
                             <td>{{ taskSummary.total_task }} công việc</td>
                         </tr>
                         <tr>
+                            <td><b>Đang làm</b></td>
+                            <td>:</td>
+                            <td>{{ taskSummary.total_processing }} công việc</td>
+                        </tr>
+                        <tr>
                             <td><b>Đang chờ</b></td>
                             <td>:</td>
                             <td>{{ taskSummary.total_wait }} công việc</td>
                         </tr>
                         <tr>
-                            <td><b>Đang làm</b></td>
+                            <td><b>Tạm dừng</b></td>
                             <td>:</td>
-                            <td>{{ taskSummary.total_complete }} công việc</td>
+                            <td>{{ taskSummary.total_pause }} công việc</td>
                         </tr>
                         <tr>
-                            <td><b>Hoàn thành</b></td>
+                            <td><b>Hoàn thành đúng hạn</b></td>
                             <td>:</td>
                             <td>{{ taskSummary.total_complete }} công việc</td>
                         </tr>
                         <tr>
                             <td><b>Hoàn thành chậm</b></td>
                             <td>:</td>
-                            <td>{{ taskSummary.total_complete }} công việc</td>
+                            <td>{{ taskSummary.total_complete_slow }} công việc</td>
                         </tr>
                         <tr>
                             <td><b>Quá hạn</b></td>
@@ -75,40 +80,11 @@
                         </tr>
 
                         <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>Dev</b></td>
+                            <td><b>{{dept.department}}</b></td>
                             <td>:</td>
                             <td>{{ dept.total_task }} công việc</td>
                         </tr>
 
-                        <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>Game Design</b></td>
-                            <td>:</td>
-                            <td>{{ dept.total_task }} công việc</td>
-                        </tr>
-
-                        <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>Art</b></td>
-                            <td>:</td>
-                            <td>{{ dept.total_task }} công việc</td>
-                        </tr>
-
-                        <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>Tester</b></td>
-                            <td>:</td>
-                            <td>{{ dept.total_task }} công việc</td>
-                        </tr>
-
-                        <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>Data</b></td>
-                            <td>:</td>
-                            <td>{{ dept.total_task }} công việc</td>
-                        </tr>
-
-                        <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>Marketing</b></td>
-                            <td>:</td>
-                            <td>{{ dept.total_task }} công việc</td>
-                        </tr>
                     </table>
                 </div>
                 <div class="col-lg-4">
@@ -119,39 +95,11 @@
                             </td>
                         </tr>
                         <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>Dev</b></td>
+                            <td><b>{{dept.department}}</b></td>
                             <td>:</td>
                             <td>{{ dept.total_weight }}</td>
                         </tr>
 
-                        <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>Game Design</b></td>
-                            <td>:</td>
-                            <td>{{ dept.total_weight }}</td>
-                        </tr>
-
-                        <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>Art</b></td>
-                            <td>:</td>
-                            <td>{{ dept.total_weight }}</td>
-                        </tr>
-
-                        <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>Tester</b></td>
-                            <td>:</td>
-                            <td>{{ dept.total_weight }}</td>
-                        </tr>
-                        <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>Data</b></td>
-                            <td>:</td>
-                            <td>{{ dept.total_weight }}</td>
-                        </tr>
-
-                        <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>Marketing</b></td>
-                            <td>:</td>
-                            <td>{{ dept.total_weight }}</td>
-                        </tr>
                     </table>
                 </div>
             </div>
@@ -161,26 +109,24 @@
                     <thead class="point-table-head">
                         <tr style="vertical-align: middle; text-align:center; ">
 
-                            <th style="vertical-align: middle; width:250px;" rowspan="2">
+                            <th style="vertical-align: middle; width:300px;" rowspan="2">
                                 <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
                                     placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
                             </th>
-                            <th style="vertical-align: middle; width: 8.7%;">Warrior đăng ký</th>
-                            <th style="vertical-align: middle; width: 8.7%;">Warrior đạt được</th>
-                            <th style="vertical-align: middle; width: 8.7%;">Tổng số công việc</th>
-                            <th style="vertical-align: middle; width: 8.7%;">Hoàn thành</th>
-                            <th style="vertical-align: middle; width: 8.7%;">Đang làm</th>
-                            <th style="vertical-align: middle; width: 8.7%;">Chưa làm</th>
-                            <th style="vertical-align: middle; width: 8.7%;">Hoàn thành muộn</th>
-                            <th style="vertical-align: middle; width: 8.7%;">Quá hạn</th>
-                            <th style="vertical-align: middle; width: 8.7%;">Trọng số</th>
-                            <th style="vertical-align: middle; width: 8.7%;">Trọng số/Bộ phận</th>
+                            <th style="vertical-align: middle; width: 9.5%;">Warrior đăng ký</th>
+                            <th style="vertical-align: middle; width: 9.5%;">Tổng số công việc</th>
+                            <th style="vertical-align: middle; width: 9.5%;">Hoàn thành</th>
+                            <th style="vertical-align: middle; width: 9.5%;">Đang làm</th>
+                            <th style="vertical-align: middle; width: 9.5%;">Chưa làm</th>
+                            <th style="vertical-align: middle; width: 9.5%;">Hoàn thành muộn</th>
+                            <th style="vertical-align: middle; width: 9.5%;">Quá hạn</th>
+                            <th style="vertical-align: middle; width: 9.5%;">Trọng số</th>
+                            <th style="vertical-align: middle; width: 9.5%;">Trọng số/Bộ phận</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(user, index) in users" :key="index">
                             <td>{{ user.user_name }}</td>
-                            <td></td>
                             <td></td>
                             <td>{{ user.total_task }}</td>
                             <td>{{ user.total_complete }}</td>
@@ -195,7 +141,47 @@
                 </table>
             </div>
         </div>
+        <vuetiful-board :theme="classic" :dark-mode="true" :col-num="12" :row-height="30" :layout-editable="true"
+            :datasets="[
+              {
+                  chartInfo: {
+                    series: [200, 12, 40, 25, 34, 6, 23],
+                    options: {
+                      chart: {
+                        type: 'pie',
+                      },
+                      title: {
+                        text: 'The recent inflow route',
+                        align: 'center',
+                        style: {
+                          fontSize: '18px',
+                          fontWeight: 'bold',
+                        },
+                      },
+                      labels: [
+                        'SNS',
+                        'Recommend',
+                        'Homepage',
+                        'Blog',
+                        'Kakaotalk Channel',
+                        'Rumor',
+                        'ETC',
+                      ],
+                      fill: {
+                        opacity: 1,
+                      },
+                      legend: {
+                        position: 'bottom',
+                      }
+                    }
+                  },
+                  gridInfo: {
+                    x: 6, y: 0, w: 6, h: 12, i: '1', static: false
+                  },
+                },
+            ]" />
     </div>
+
 </template>
 
 <script>

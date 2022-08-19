@@ -8,9 +8,11 @@
             <li class="pointer project-title" @click="showTimeline()">
                 <p>Công việc trong ngày</p>
             </li>
+            <li class="pointer project-title">
+                <a class="pointer project-title" v-bind:href="'/list_work'" style="color:black">Danh sách công việc</a>
+            </li><br>
             <li class="pointer project-title" v-for="(project, index) in projects" :key="index" style="display: flex">
-                <p @click="chooseProject(project.id)">{{ project.project_name }} ( {{ project.project_start_date }} -> {{ project.project_end_date }} )
-                </p>
+                <p @click="chooseProject(project.id)">{{ project.project_name }}</p>
                 &nbsp;
                 <p @click="showModalEditTask(project.id)">
                     <i class="fas fa-pencil-alt" style="cursor: pointer" />
@@ -35,8 +37,10 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <create-project @updateProject="updateProject" v-if="showModal" :users="users" :groupUsers="groupUsers" />
-                            <create-project @updateProject="updateProject" v-if="showModalEdit" :projectId="projectId" :users="users" :groupUsers="groupUsers" />
+                            <create-project @updateProject="updateProject" v-if="showModal" :users="users"
+                                :groupUsers="groupUsers" />
+                            <create-project @updateProject="updateProject" v-if="showModalEdit" :projectId="projectId"
+                                :users="users" :groupUsers="groupUsers" />
                         </div>
                     </div>
                 </div>
@@ -48,7 +52,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title">Xác nhận xóa công việc</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                @click="closeModalConfirm()">
+                            @click="closeModalConfirm()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>

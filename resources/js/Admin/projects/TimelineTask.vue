@@ -16,7 +16,7 @@
                     </tr>
                 </thead>
                 <tr v-for="item in listTaskTimeLine" :key="item.id">
-                    <template v-if="item.fullname != null">
+                    <template >
                         <td scope="row">{{ item.id + 1 }}</td>
                         <td scope="row">{{ item.task_name }}</td>
                         <td>{{ item.start_time }}</td>
