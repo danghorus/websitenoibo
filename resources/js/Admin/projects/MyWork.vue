@@ -24,6 +24,9 @@
                 </div>
             </div>
         </div>
+        <div class="form-group col-lg-1" style="float:right;">
+            <button class="btn btn-outline-secondary "><a v-bind:href="'/list_work'">Việc bộ phận</a></button>
+        </div>
         <div class="col-lg">
             <div class="collapse info-my-work" id="collapseExample_1" v-if="showInfoMyWork">
                 <div>
@@ -106,22 +109,36 @@
                 <tr v-for="(item, index) in list" :key="index" style="text-align:center;">
                     <td>{{index + 1 }}</td>
                     <td scope="row" style="text-align:left;">{{ item.task_name }}</td>
-                    <td style="text-align:left;"></td>
+                    <td style="text-align:left;">{{ item.task_parent }}
+                    </td>
                     <td>{{ item.start_time }}</td>
                     <td>{{ item.time }}</td>
                     <!--<td>{{ item.end_time }}</td>
                     <td>{{ item.real_start_time }}</td>-->
                     <td>{{ item.time_real}}</td>
                     <!--<td>{{ item.real_end_time }}</td>-->
-                    <td>{{ item.status_title }}</td>
+                    <!--<td>{{ item.status_title }}</td>-->
+                    <td v-if="item.status == 0" style="background-color:red">Đã quá hạn</td>
+                    <td v-else-if="item.status == 1" style="background-color:white">Đang chờ</td>
+                    <td v-else-if="item.status == 2" style="background-color:#008080">Đang làm</td>
+                    <td v-else-if="item.status == 3" style="background-color:orange">Tạm dừng</td>
+                    <td v-else-if="item.status == 5" style="background-color:#ff8080">Chờ feedback</td>
+                    <td v-else-if=" item.status==6" style="background-color:#ff0000">Làm lại</td>
+                    <td v-else-if="item.status_title == 'Hoàn thành chậm'" style="background-color:gray">Hoàn thành chậm
+                    </td>
+                    <td v-else-if="item.status_title == 'Hoàn thành'" style="background-color:green">Hoàn thành</td>
                     <td>
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                             @change="changeStatus($event, item.id)" v-model="item.status">
-                            <option value="0">Đã quá hạn</option>
                             <option value="1" v-if="item.status == 1">Đang Chờ</option>
-                            <option value="2" :disabled="item.status == 2">Đang tiến hành</option>
-                            <option value="3" :disabled="item.status == 3">Tạm dừng</option>
-                            <option value="4" :disabled="item.status == 3 || item.status == 4">Hoàn thành</option>
+                            <option value="2" :disabled="item.status == 2 || item.status == 4">Đang tiến hành</option>
+                            <option value="3"
+                                :disabled="item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6">
+                                Tạm dừng</option>
+                            <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
+                                feedback</option>
+                            <option value="6" v-if="item.status == 6">Làm lại</option>
+                            <option value="4" v-if="item.status == 4"> Hoàn thành</option>
                         </select>
                     </td>
                 </tr>

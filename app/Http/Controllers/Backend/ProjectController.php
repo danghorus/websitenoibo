@@ -22,6 +22,11 @@ class ProjectController extends Controller
         $users = User::all();
         return view('projects.my_work', compact('users'));
     }
+    public function list_work(Request $request)
+    {
+        $users = User::all();
+        return view('projects.list_work', compact('users'));
+    }
 
     public function report(Request $request)
     {

@@ -148,6 +148,10 @@ export default {
                     property: 'time',
                 },
                 {
+                    title: 'Trọng số',
+                    property: 'weight',
+                },
+                {
                     title: 'Bộ phận',
                     property: 'department_label',
                 },

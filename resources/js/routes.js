@@ -6,6 +6,7 @@ import Bonus from "./Admin/Timekeeping/Bonus";
 import ListRequest from "./Admin/Request/ListRequest";
 import Index from "./Admin/projects/Index";
 import MyWork from "./Admin/projects/MyWork";
+import ListWork from "./Admin/projects/ListWork";
 import Project_Report from "./Admin/projects/Report";
 import Project_Warrior from "./Admin/projects/Warrior";
 
@@ -44,6 +45,11 @@ export const routes = [
         path: "/my_work", 
         name: "MyWork",
         component: MyWork
+    },
+    {
+        path: "/list_work", 
+        name: "ListWork",
+        component: ListWork
     },
     {
         path: "/project-report",

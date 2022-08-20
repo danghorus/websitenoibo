@@ -6,14 +6,16 @@
             <div class="col-lg-10">
                 <div class="row">
                     <div class="col-lg-6" @click="showModalEditProject()">
-                        <h4>{{ showTimeline? 'Timeline công việc': project.project_name }}
+                        <h4>{{ showTimeline? 'Timeline công việc': project.project_name }}( {{
+                            project.project_start_date }} -> {{ project.project_end_date }} )
                             <i v-if="projectId" class="fas fa-pencil-alt" style="font-size: 25px; cursor: pointer" />
                         </h4>
                     </div>
                     <div class="col-lg-6" style="margin: 0 0 20px -10px;">
                         <div class="input-seach float-right">
                             <input class="input-elevated" type="text" placeholder="Search" v-model="search">
-                            <button class="btn btn-outline-secondary border-btn-search" @click="showTimeline? getTaskTimeLine(): getAllTasks()" style="width:100px;">
+                            <button class="btn btn-outline-secondary border-btn-search"
+                                @click="showTimeline? getTaskTimeLine(): getAllTasks()" style="width:100px;">
                                 Tìm kiếm
                             </button> &ensp;
                             <button class="btn-outline-secondary border-search" @click="handleShowFilter()"
@@ -22,9 +24,9 @@
                                 <i class="fas fa-filter"></i>
                                 Tạo bộ lọc
                             </button> &ensp;
-                            <button class="btn btn-primary float-right" style="width:110px"
-                                type="button" data-bs-toggle="dropdown" data-bs-auto-close="true"
-                                @click="showModalCreateTask()">Thêm mới
+                            <button class="btn btn-primary float-right" style="width:110px" type="button"
+                                data-bs-toggle="dropdown" data-bs-auto-close="true" @click="showModalCreateTask()">Thêm
+                                mới
                             </button>&ensp;
                             <button class="btn btn-primary float-right" style="width: 110px"
                                 @click="showModalConfigTask()">Cấu hình</button>
@@ -34,46 +36,48 @@
                 <div class="collapse search-collapse" id="collapseExample" v-if="showFilter">
                     <div class="form-group p-2">
                         <label for="project_description">Theo ngày bắt đầu</label>
-                        <DatePicker
-                            style="width: 100%"
-                            v-model="startTime"
-                            value-type="format"
-                            type="date"
-                            placeholder="Select time"
-                        ></DatePicker>
+                        <DatePicker style="width: 100%" v-model="startTime" value-type="format" type="date"
+                            placeholder="Select time"></DatePicker>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo dự án</label>
-                        <multiselect v-model="searchProjectId" :disabled="!showTimeline" :options="projects" value="id" label="project_name" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                        <multiselect v-model="searchProjectId" :disabled="!showTimeline" :options="projects" value="id"
+                            label="project_name" :close-on-select="false" :show-labels="true"
+                            placeholder="Vui lòng chọn">
                         </multiselect>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo bộ phận</label>
-                        <multiselect v-model="taskDepartment" :options="departments" value="value" label="label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                        <multiselect v-model="taskDepartment" :options="departments" value="value" label="label"
+                            :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
                         </multiselect>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo người thực hiện</label>
-                        <multiselect v-model="taskPerformer" :options="users" value="id" label="fullname" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                        <multiselect v-model="taskPerformer" :options="users" value="id" label="fullname"
+                            :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
                         </multiselect>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo trạng thái</label>
-                        <multiselect v-model="status" :options="arrStatus" value="value" label="label" :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
+                        <multiselect v-model="status" :options="arrStatus" value="value" label="label"
+                            :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
                         </multiselect>
                     </div>
                     <div class="float-right p-2">
                         <button type="submit" class="btn btn-secondary p-2" @click="handleShowFilter()">Đóng</button>
-                        <button type="submit" class="btn btn-primary p-2" @click="showTimeline? getTaskTimeLine(): getAllTasks()">Áp dụng</button>
+                        <button type="submit" class="btn btn-primary p-2"
+                            @click="showTimeline? getTaskTimeLine(): getAllTasks()">Áp dụng</button>
                     </div>
                 </div>
-                <timeline-task v-if="showTimeline" :listTaskTimeLine="listTaskTimeLine" :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                               :stickers="stickers" :projects="projects" @getTaskTimeLine="getTaskTimeLine()" />
-                <list-task v-else :project-id="projectId" :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                           :stickers="stickers" :projects="projects" :searchProjectId="searchProjectId" :search="search"
-                           :startTime="startTime" :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status"
-                           @getAllTasks="getAllTasks" :list="list" :currentUser="currentUser"
-                />
+                <timeline-task v-if="showTimeline" :listTaskTimeLine="listTaskTimeLine" :users="users"
+                    :groupUsers="groupUsers" :priorities="priorities" :stickers="stickers" :projects="projects"
+                    @getTaskTimeLine="getTaskTimeLine()" />
+                <list-task v-else :project-id="projectId" :users="users" :groupUsers="groupUsers"
+                    :priorities="priorities" :stickers="stickers" :projects="projects"
+                    :searchProjectId="searchProjectId" :search="search" :startTime="startTime"
+                    :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status"
+                    @getAllTasks="getAllTasks" :list="list" :currentUser="currentUser" />
             </div>
 
         </div>
@@ -89,9 +93,9 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <create-task v-if="showModal" :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                                :stickers="stickers" :projects="projects" :projectId="projectId" @handleGetTasks="handleGetTasks()"
-                            />
+                            <create-task v-if="showModal" :users="users" :groupUsers="groupUsers"
+                                :priorities="priorities" :stickers="stickers" :projects="projects"
+                                :projectId="projectId" @handleGetTasks="handleGetTasks()" />
                         </div>
                     </div>
                 </div>
@@ -109,13 +113,8 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <CreateProject
-                                v-if="isShowModalEditProject"
-                                :projectId="projectId"
-                                :users="users"
-                                :groupUsers="groupUsers"
-                                @updateProject="updateProject"
-                            />
+                            <CreateProject v-if="isShowModalEditProject" :projectId="projectId" :users="users"
+                                :groupUsers="groupUsers" @updateProject="updateProject" />
                         </div>
                     </div>
                 </div>
