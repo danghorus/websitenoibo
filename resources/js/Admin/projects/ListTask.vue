@@ -1,29 +1,33 @@
 <template>
     <div>
-        <div class="mt-4">
-            <zk-table ref="table" index-text="#" :data="list" :columns="columns" :stripe="false" :border="true"
-                :show-header="true" :show-row-hover="true" :show-index="false" :tree-type="true" :is-fold="false"
-                :expand-type="false" :selection-type="false" row-style="font-size: 15px" empty-text="Không có dữ liệu">
-                <template slot="man" scope="scope">
+        <div>
+            <vue-ads-table
+                :columns="columns"
+                :rows="list"
+                :classes="classes"
+                :call-children="getChildTask"
+            >
+                <template slot="man" slot-scope="props">
                     <div style="display: flex">
-                        <p @click="showModalEditTask(scope.row.id)">
+                        <p @click="showModalEditTask(props.row.id)">
                             <i class="fas fa-pencil-alt" style="cursor: pointer" />
                         </p>
-                        <p @click="showModalConfirm(scope.row.id)">
+                        <p @click="showModalConfirm(props.row.id)">
                             <i class="fas fa-trash ml-2" style="cursor: pointer" />
                         </p>
-                        <p @click="copyTask(scope.row.id)">
+                        <p @click="copyTask(props)">
                             <i class="fas fa-copy ml-2" style="cursor: pointer" />
                         </p>
-                        <p @click="showCreateTask(scope.row.id)">
+                        <p @click="showCreateTask(props.row.id)">
                             <i class="fas fa-plus-square ml-2" style="cursor: pointer" />
                         </p>
                     </div>
+
                 </template>
                 <template slot="status_template" scope="scope">
                     <div v-if="currentUser.permission == 1">
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                            @change="changeStatus($event, scope.row.id)" v-model="scope.row.status">
+                                @change="changeStatus($event, scope.row.id)" v-model="scope.row.status">
                             <option value="0" :disabled="scope.row.status == 2 || scope.row.status == 3 || scope.row.status==4">Quá hạn</option>
                             <option value="1" v-if="scope.row.status == 1">Đang Chờ</option>
                             <option value="2" :disabled="scope.row.status == 2">Đang tiến hành</option>
@@ -36,60 +40,62 @@
                         <p>{{ scope.row.status_title }}</p>
                     </div>
                 </template>
-            </zk-table>
-        </div>
-        <div ref="modalConfirm" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document" style=" max-width: 30%;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Xác nhận xóa công việc</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                            @click="closeModalConfirm()">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <span>Bạn có chắc muốn xóa công việc này?</span><br>
-                        <div class="float-right">
-                            <button class="btn btn-secondary" @click="closeModalConfirm()">Hủy</button>
-                            <button class="btn btn-primary" @click="deleteTask()">Xóa</button>
+                <template slot="no-rows">Không có dữ liệu</template>
+                <template slot="toggle-children-icon" slot-scope="props"> <span style="cursor: pointer"> [{{ props.expanded ? '-' : '+' }}] </span></template>
+            </vue-ads-table>
+            <div ref="modalConfirm" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document" style=" max-width: 30%;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Xác nhận xóa công việc</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                    @click="closeModalConfirm()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <span>Bạn có chắc muốn xóa công việc này?</span><br>
+                            <div class="float-right">
+                                <button class="btn btn-secondary" @click="closeModalConfirm()">Hủy</button>
+                                <button class="btn btn-primary" @click="deleteTask()">Xóa</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div ref="modalUpdateTask" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document" style=" max-width: 60%;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Sửa Công việc</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                            @click="closeModalEditTask()">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <create-task v-if="showModalEdit" :users="users" :groupUsers="groupUsers" :projectId="projectId"
-                            :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId"
-                            @handleGetTasks="handleGetAll()" />
+            <div ref="modalUpdateTask" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document" style=" max-width: 60%;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sửa Công việc</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                    @click="closeModalEditTask()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <create-task v-if="showModalEdit" :users="users" :groupUsers="groupUsers" :projectId="projectId"
+                                         :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId"
+                                         @handleGetTasks="handleGetAll()" />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document" style=" max-width: 60%;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Thêm mới Công việc</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                            @click="closeModalCreateTask()">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <create-task v-if="showModalCreate" :users="users" :groupUsers="groupUsers"
-                            :projectId="projectId" :priorities="priorities" :stickers="stickers" :projects="projects"
-                            :taskParentId="parentId" @handleGetTasks="handleGetAll()" />
+            <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document" style=" max-width: 60%;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Thêm mới Công việc</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                    @click="closeModalCreateTask()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <create-task v-if="showModalCreate" :users="users" :groupUsers="groupUsers"
+                                         :projectId="projectId" :priorities="priorities" :stickers="stickers" :projects="projects"
+                                         :taskParentId="parentId" @handleGetTasks="handleGetAll()" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -98,19 +104,28 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable';
 import {$get, $post} from "../../ultis";
-import Tree from "./Tree";
-import ZkTable from 'vue-table-with-tree-grid';
+import { VueAdsTable } from 'vue-ads-table-tree';
 import CreateTask from "./CreateTask";
 
 export default {
     name: "ListTask",
-    components: { draggable, Tree, ZkTable, CreateTask },
+    components: { VueAdsTable, CreateTask },
     props: ['projectId', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
         'startTime', 'taskPerformer', 'taskDepartment', 'status', 'list', 'currentUser'],
-    data() {
+
+    data () {
+        let classes = {
+            table: {
+                'table': true
+            },
+            '1_/0': {
+                'vue-ads-cursor-pointer': true
+            }
+        };
+
         return {
+            classes: classes,
             showModal: false,
             showTimeline: true,
             parentTask: 0,
@@ -121,47 +136,37 @@ export default {
             parentId: 0,
             columns: [
                 {
-                    label: 'Công việc',
-                    prop: 'task_name_label',
-                    minWidth: '700px',
+                    title: 'Công việc',
+                    property: 'task_name',
                 },
                 {
-                    label: 'Ngày bắt đầu',
-                    prop: 'start_time',
-                    minWidth: '65px',
+                    title: 'Ngày bắt đầu',
+                    property: 'start_time',
                 },
                 {
-                    label: 'Thời lượng',
-                    prop: 'time',
-                    minWidth: '45px',
+                    title: 'Thời lượng',
+                    property: 'time',
                 },
                 {
-                    label: 'Bộ phận',
-                    prop: 'department_label',
+                    title: 'Bộ phận',
+                    property: 'department_label',
                 },
                 {
-                    label: 'Người thực hiện',
-                    prop: 'fullname',
-                    minWidth: '160px',
+                    title: 'Người thực hiện',
+                    property: 'fullname',
                 },
                 {
-                    label: 'Trạng thái',
-                    prop: 'status_template',
-                    type: 'template',
-                    template: 'status_template',
+                    title: 'Trạng thái',
+                    property: 'status_template',
                 },
                 {
-                    label: 'Thao tác',
-                    prop: 'man',
-                    type: 'template',
-                    template: 'man',
+                    title: 'Thao tác',
+                    property: 'man',
                 },
             ],
         }
     },
-    created() {
-        // this.$emit('getAllTasks')
-    },
+
     methods: {
         handleGetAll() {
             this.$emit('getAllTasks');
@@ -169,13 +174,53 @@ export default {
             this.closeModalEditTask();
             this.closeModalCreateTask();
         },
-        handleChangeInput(value) {
-            this.list = [...value];
+
+        sleep (ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         },
-        async getChildTask(e) {
+
+        async callRows (indexesToLoad) {
+            await this.sleep(1000);
+            return indexesToLoad.map(index => {
+                return {
+                    name: 'Call Rows',
+                    function: 'Developer',
+                    city: 'San Francisco',
+                    id: '8196',
+                    since: '2010/07/14',
+                    budget: '$86,500',
+                };
+            });
+        },
+
+        async callTempRows (filter, columns, start, end) {
+            await this.sleep(1000);
+            return {
+                rows: [
+                    {
+                        name: 'Temp call',
+                        function: 'Developer',
+                        city: 'San Francisco',
+                        id: '8196',
+                        since: '2010/07/14',
+                        budget: '$86,500',
+                    },
+                    {
+                        name: 'Temp call',
+                        function: 'Developer',
+                        city: 'San Francisco',
+                        id: '8196',
+                        since: '2010/07/14',
+                        budget: '$86,500',
+                    },
+                ],
+                total: 4,
+            };
+        },
+        async getChildTask(parent) {
             let filters = {
-                project_id: e.project_id,
-                parent_task: e.id,
+                project_id: parent.project_id,
+                parent_task: parent.id,
                 search: this.search || '',
                 start_time: this.startTime || '',
                 task_performer: this.taskPerformer || 0,
@@ -186,8 +231,7 @@ export default {
             const res = await $get('/tasks/index', filters);
 
             if (res.code == 200) {
-                let index = this.list.findIndex(item => item.id === e.id);
-                this.list[index].children = res.data;
+                return [...res.data];
             }
         },
         showModalConfirm(id) {
@@ -222,6 +266,8 @@ export default {
             }
         },
         async copyTask(id) {
+            console.log(id, 'props');
+            console.log(this.$ref.tableTree, 'ref');
             const res = await $get(`/tasks/copy/${id}`);
 
             if (res.code == 200) {
@@ -248,17 +294,11 @@ export default {
             }
         },
     },
-    watch: {
-        'list': function (newVal) {
-            // console.log(newVal);
-        },
-        // 'projectId': function (newVal) {
-        //     this.getAllTasks();
-        // }
-    }
-}
+};
 </script>
 
 <style scoped>
-
+.leftAlign {
+    text-align: left;
+}
 </style>

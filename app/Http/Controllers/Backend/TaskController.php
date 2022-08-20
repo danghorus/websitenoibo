@@ -26,11 +26,12 @@ class TaskController extends Controller
         $taskDepartment = $request->input('task_department');
         $taskStatus = $request->input('status');
 
-        $builder = Task::query()->select('*');
-        $builder->with(['children', 'taskUser']);
-//        $builder->join('projects as p', 'project_id', '=', 'p.id');
-//        $builder->join('users as u', 'task_performer', '=', 'u.id', 'left');
-        $builder->where('project_id', '=',$projectId);
+        $builder = DB::table('tasks', 'tt')->select('tt.*')
+            ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child")
+            ->selectRaw('p.project_name, u.fullname');
+        $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
+        $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
+        $builder->where('tt.project_id', '=',$projectId);
 
         if ($taskParent) {
             $builder->where('task_parent', '=', $taskParent);
@@ -60,7 +61,28 @@ class TaskController extends Controller
 
         $tasks = $builder->get();
 
-        Task::taskChildrentFormat($tasks);
+        foreach ($tasks as $key => $value) {
+            $indexKey = (int)$key + 1;
+//            $value->key_label = $isFirst? $indexKey: $keyLabel. '.'.$indexKey;
+
+            $value->department_label = $value->task_department? Task::DEPARTMENTS[$value->task_department]: '';
+
+            if (($value->status == 0 || $value->status == 1) && (strtotime($value->end_time) < time())) {
+                $value->status_title = 'Đã quá hạn';
+            } elseif ($value->status == 4 && (strtotime($value->real_end_time) > strtotime($value->end_time))) {
+                $value->status_title = 'Hoàn thành chậm';
+            } else {
+                $value->status_title = $value->status >= 0 ? Task::ARR_STATUS[$value->status]: '';
+            }
+//            $value->fullname = $value->taskUser? $value->taskUser->fullname: '';
+            $value->_hasChildren = $value->total_child > 0;
+            $value->_children = [];
+//            $value->task_name_label = $value->key_label . '   ' . $value->task_name;
+
+//            if (count($value->children) > 0) {
+//                self::taskChildrentFormat($value->children, false, $value->key_label);
+//            }
+        }
 
         return [
             'code' => 200,
