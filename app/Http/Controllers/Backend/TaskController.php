@@ -322,6 +322,18 @@ class TaskController extends Controller
     public function delete($taskId) {
         $task = Task::find($taskId);
 
+        $tasks = Task::query()->with(['parent'])->where('id', '=', $taskId)->get();
+        $arrParent = [];
+        foreach ($tasks as $value) {
+            if ($value->parent) {
+                $item = $value->parent;
+                while ($item) {
+                    $arrParent[] = $item->id;
+                    $item = $item->parent;
+                }
+            }
+        }
+
         Task::query()->where('id', '=', $taskId)->delete();
         TaskUser::query()->where('task_id', '=', $taskId)->delete();
 
@@ -333,7 +345,9 @@ class TaskController extends Controller
         }
 
         return [
-            'code' => 200
+            'code' => 200,
+            'task_id' => $taskId,
+            'arr_parent' => array_reverse($arrParent)
         ];
     }
 

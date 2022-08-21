@@ -107,6 +107,7 @@
 import {$get, $post} from "../../ultis";
 import { VueAdsTable } from 'vue-ads-table-tree';
 import CreateTask from "./CreateTask";
+import _ from "lodash";
 
 export default {
     name: "ListTask",
@@ -184,7 +185,7 @@ export default {
         },
 
         async callRows (indexesToLoad) {
-            await this.sleep(1000);
+            await this.sleep(300);
             return indexesToLoad.map(index => {
                 return {
                     name: 'Call Rows',
@@ -198,7 +199,7 @@ export default {
         },
 
         async callTempRows (filter, columns, start, end) {
-            await this.sleep(1000);
+            await this.sleep(300);
             return {
                 rows: [
                     {
@@ -258,20 +259,38 @@ export default {
             this.showModalEdit = false;
             this.taskEditId = 0;
         },
+        resetData(tree, arrIndex, index, taskId) {
+            if (index < arrIndex.length - 1) {
+                this.resetData([...tree[arrIndex[index]]._children], arrIndex, index + 1, taskId);
+            } else {
+                let indexTask = _.findIndex(tree[arrIndex[index]]._children, val => val.id == taskId);
+                tree[arrIndex[index]]._children.splice(indexTask, 1);
+            }
+            return tree;
+        },
         async deleteTask() {
             const res = await $post(`/tasks/delete/${this.taskId}`);
-
             if (res.code == 200) {
                 toastr.success('Xóa thành công');
                 this.showModal = false;
                 $(this.$refs.modalConfirm).modal('hide');
                 this.taskId = 0;
-                this.handleGetAll();
+                if (res.arr_parent.length > 0) {
+                    let arrIndex = [];
+                    let listData = _.cloneDeep(this.list);
+                    res.arr_parent.forEach(item => {
+                        let index = _.findIndex(listData, val => val.id === item);
+                        arrIndex.push(index);
+                        listData = listData[index]._children;
+                    });
+                    this.list = this.resetData([...this.list], arrIndex, 0, res.task_id);
+                } else {
+                    let index = _.findIndex(this.list, val => val.id == res.task_id);
+                    this.list.splice(index, 1);
+                }
             }
         },
         async copyTask(id) {
-            console.log(id, 'props');
-            console.log(this.$ref.tableTree, 'ref');
             const res = await $get(`/tasks/copy/${id}`);
 
             if (res.code == 200) {
