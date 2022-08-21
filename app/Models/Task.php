@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use function GuzzleHttp\Promise\task;
 
 class Task extends Model
 {
@@ -75,6 +76,7 @@ class Task extends Model
     }
 
     public static function taskChildrent($arr, $taskParent, $isFirst = true) {
+        $taskId = 0;
         if ($arr) {
             foreach ($arr as $value) {
 
@@ -97,7 +99,9 @@ class Task extends Model
                 $newTask->status = $isFirst? 1: 0;
 
                 $newTask->save();
-
+                if ($isFirst) {
+                    $taskId = $newTask->id;
+                }
                 $taskUsers = TaskUser::query()->where('task_id', '=', $value->id);
                 foreach ($taskUsers as $val) {
                     $taskUser = new TaskUser();
@@ -111,6 +115,8 @@ class Task extends Model
                 }
             }
         }
+
+        return $taskId;
     }
     public static function taskChildrentFormat($arr, $isFirst = true, $keyLabel = '')
     {

@@ -910,11 +910,42 @@ class TaskController extends Controller
     public function copy($taskId) {
         $task = Task::query()->with(['children'])->where('id', '=', $taskId)->first();
 
-        Task::taskChildrent([$task], $task->task_parent);
+        $newTaskId = Task::taskChildrent([$task], $task->task_parent);
+
+        $tasks = Task::query()->with(['parent'])->where('id', '=', $taskId)->get();
+        $arrParent = [];
+        foreach ($tasks as $value) {
+            if ($value->parent) {
+                $item = $value->parent;
+                while ($item) {
+                    $arrParent[] = $item->id;
+                    $item = $item->parent;
+                }
+            }
+        }
+
+        $newTasks = Task::query()->with(['children', 'taskUser'])->where('id', '=', $newTaskId)->first();
+        if ($newTasks) {
+            $newTasks->department_label = $newTasks->task_department? Task::DEPARTMENTS[$newTasks->task_department]: '';
+
+            if (($newTasks->status == 0 || $newTasks->status == 1) && (strtotime($newTasks->end_time) < time())) {
+                $newTasks->status_title = 'Đã quá hạn';
+            } elseif ($newTasks->status == 4 && (strtotime($newTasks->real_end_time) > strtotime($newTasks->end_time))) {
+                $newTasks->status_title = 'Hoàn thành chậm';
+            } else {
+                $newTasks->status_title = $newTasks->status >= 0 ? Task::ARR_STATUS[$newTasks->status]: '';
+            }
+            $newTasks->fullname = $newTasks->taskUser? $newTasks->taskUser->fullname: '';
+            $totalChild = Task::query()->where('task_parent', '=', $newTaskId)->count();
+            $newTasks->_hasChildren = $totalChild > 0;
+            $newTasks->_children = [];
+        }
 
         return [
             'code' => 200,
-            'message' => 'Copy thành công'
+            'message' => 'Copy thành công',
+            'new_task' => $newTasks,
+            'arr_parent' => $arrParent,
         ];
     }
 

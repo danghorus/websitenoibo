@@ -15,7 +15,7 @@
                         <p @click="showModalConfirm(props.row.id)">
                             <i class="fas fa-trash ml-2" style="cursor: pointer" />
                         </p>
-                        <p @click="copyTask(props)">
+                        <p @click="copyTask(props.row.id)">
                             <i class="fas fa-copy ml-2" style="cursor: pointer" />
                         </p>
                         <p @click="showCreateTask(props.row.id)">
@@ -290,12 +290,32 @@ export default {
                 }
             }
         },
+        resetDataAfterCopy(tree, arrIndex, index, tasks) {
+            if (index < arrIndex.length - 1) {
+                this.resetData([...tree[arrIndex[index]]._children], arrIndex, index + 1, tasks);
+            } else {
+
+                tree[arrIndex[index]]._children.push(tasks);
+            }
+            return tree;
+        },
         async copyTask(id) {
             const res = await $get(`/tasks/copy/${id}`);
 
             if (res.code == 200) {
                 toastr.success('Copy thành công');
-                this.handleGetAll();
+                if (res.arr_parent.length > 0) {
+                    let arrIndex = [];
+                    let listData = _.cloneDeep(this.list);
+                    res.arr_parent.forEach(item => {
+                        let index = _.findIndex(listData, val => val.id === item);
+                        arrIndex.push(index);
+                        listData = listData[index]._children;
+                    });
+                    this.list = this.resetDataAfterCopy([...this.list], arrIndex, 0, res.new_task);
+                } else {
+                    this.list.push(res.new_task);
+                }
             }
         },
         showCreateTask(parentId) {
