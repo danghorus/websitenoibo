@@ -91,10 +91,16 @@
         </div>-->
         <div class="form-group">
             <label for="project_description">Công việc cha</label>
-            <multiselect v-model="task.task_parent" @input="changeTaskParent($event)" :disabled="task.project_id == 0"
-                :options="tasks" value="id" label="label" :close-on-select="true" :show-labels="true"
-                placeholder="Vui lòng chọn">
-            </multiselect>
+            <treeselect
+                :options="tasks"
+                :load-options="loadOptions"
+                placeholder="Try expanding any folder option..."
+                v-model="task.task_parent"
+            />
+<!--            <multiselect v-model="task.task_parent" @input="changeTaskParent($event)" :disabled="task.project_id == 0"-->
+<!--                :options="tasks" value="id" label="label" :close-on-select="true" :show-labels="true"-->
+<!--                placeholder="Vui lòng chọn">-->
+<!--            </multiselect>-->
         </div>
         <div v-if="option == 2 || task.task_performer != null" class=" row">
             <div class="form-group col-lg-6">
@@ -124,10 +130,12 @@ import moment from "moment";
 import {$get, $post} from "../../ultis";
 import Multiselect from 'vue-multiselect';
 import _ from "lodash";
+import Treeselect from '@riophae/vue-treeselect';
+import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 
 export default {
     name: "CreateTask",
-    components: { Editor, DatePicker, Multiselect },
+    components: { Editor, DatePicker, Multiselect, Treeselect },
     props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'taskId', 'projectId', 'taskParentId'],
     data() {
         return {
@@ -171,6 +179,13 @@ export default {
             if(res.code == 200) {
                 this.task = res.data;
                 this.values = res.user_related;
+            }
+        },
+        async loadOptions({ action, parentNode, callback }) {
+            const res = await $get('/tasks/get_all', {project_id: this.projectId, task_parent: parentNode.id})
+
+            if (res.code == 200) {
+                parentNode.children = res.data;
             }
         },
         async saveTask() {

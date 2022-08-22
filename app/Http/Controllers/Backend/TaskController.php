@@ -106,6 +106,8 @@ class TaskController extends Controller
         $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
         $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
 
+        $builder->where('tt.status', '!=', '4');
+
         if ($projectId > 0) {
             $builder->where('tt.project_id', '=',$projectId);
         }
@@ -113,7 +115,7 @@ class TaskController extends Controller
         if ($startTime && $startTime != '') {
             $builder->whereDate('tt.start_time', '=', $startTime);
         } else {
-            $builder->whereDate('tt.start_time', '<=', date('Y-m-d', time()))->where('tt.status', '!=', '4');
+            $builder->whereDate('tt.start_time', '<=', date('Y-m-d', time()));
             //$builder->whereDate('tt.end_time', '>=', date('Y-m-d', time()));
         }
 
@@ -179,8 +181,8 @@ class TaskController extends Controller
         $task->weight = $taskInfo['weight'] ?? null;
         $task->project_id = isset($taskInfo['project_id']) && $taskInfo['project_id'] ?$taskInfo['project_id']['id']: null;
         $task->task_predecessor = isset($taskInfo['task_predecessor']) && $taskInfo['task_predecessor'] ?$taskInfo['task_predecessor']['id']: null;
-        $task->task_parent = isset($taskInfo['task_parent']) && $taskInfo['task_parent'] ?$taskInfo['task_parent']['id']: null;
-        $task->level = isset($taskInfo['task_parent']) && $taskInfo['task_parent'] ?$taskInfo['task_parent']['level'] + 1: 1;
+        $task->task_parent = isset($taskInfo['task_parent']) && $taskInfo['task_parent'] ?$taskInfo['task_parent']: null;
+//        $task->level = isset($taskInfo['task_parent']) && $taskInfo['task_parent'] ?$taskInfo['task_parent']['level'] + 1: 1;
         $task->task_performer = isset($taskInfo['task_performer']) && $taskInfo['task_performer'] ?$taskInfo['task_performer']['id']: null;
 
         if ($task->task_predecessor) {
@@ -298,19 +300,27 @@ class TaskController extends Controller
 
     public function getAll(Request $request) {
         $projectId = $request->input('project_id');
+        $taskParent = $request->input('task_parent');
 
-        $tasks = Task::query()->with(['parent'])->where('project_id', '=', $projectId)->get();
-
+        $builder = Task::query()
+            ->where('project_id', '=', $projectId);
+        if ($taskParent) {
+            $builder->where('task_parent', '=', $taskParent);
+        } else {
+            $builder->whereRaw('(task_parent = 0 OR task_parent IS NULL)');
+        }
+        $tasks = $builder->get();
         foreach ($tasks as $task) {
-            $label = '';
-            if ($task->parent) {
-                $item = $task->parent;
-                while ($item) {
-                    $label = $item->task_name . ' > ' . $label;
-                    $item = $item->parent;
-                }
-            }
-            $task->label = $label. $task->task_name;
+//            $label = '';
+//            if ($task->parent) {
+//                $item = $task->parent;
+//                while ($item) {
+//                    $label = $item->task_name . ' > ' . $label;
+//                    $item = $item->parent;
+//                }
+//            }
+            $task->label = $task->task_name;
+            $task->children = null;
         }
 
         return [

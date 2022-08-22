@@ -157,7 +157,7 @@ import Multiselect from 'vue-multiselect';
 
 export default {
     name: "Index",
-    components: { ListTask, TimelineTask, CreateTask, CreateTask_Parent, ListProject, draggable, CreateProject, Config, DatePicker, Multiselect},
+    components: { ListTask, TimelineTask, CreateTask, CreateTask_Parent, ListProject, CreateProject, Config, DatePicker, Multiselect},
     data() {
         let localProjectId = localStorage.getItem('project_id') || 0;
         return {
