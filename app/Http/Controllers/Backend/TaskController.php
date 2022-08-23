@@ -248,8 +248,8 @@ class TaskController extends Controller
         $task->task_department = isset($taskInfo['task_department']) && $taskInfo['task_department']? $taskInfo['task_department']['value']: null;
         $task->weight = $taskInfo['weight'] ?? null;
         $task->project_id = isset($taskInfo['project_id']) && $taskInfo['project_id'] ?$taskInfo['project_id']['id']: null;
-        $task->task_parent = isset($taskInfo['task_parent']) && $taskInfo['task_parent'] ?$taskInfo['task_parent']['id']: null;
-        $task->level = isset($taskInfo['task_parent']) && $taskInfo['task_parent'] ?$taskInfo['task_parent']['level'] + 1: 1;
+        $task->task_parent = isset($taskInfo['task_parent']) && $taskInfo['task_parent'] ?$taskInfo['task_parent']: null;
+//        $task->level = isset($taskInfo['task_parent']) && $taskInfo['task_parent'] ?$taskInfo['task_parent']['level'] + 1: 1;
         $task->task_performer = isset($taskInfo['task_performer']) && $taskInfo['task_performer'] ?$taskInfo['task_performer']['id']: null;
 
         if (isset($taskInfo['task_predecessor']) && $task->task_predecessor != $taskInfo['task_predecessor']) {
@@ -301,6 +301,7 @@ class TaskController extends Controller
     public function getAll(Request $request) {
         $projectId = $request->input('project_id');
         $taskParent = $request->input('task_parent');
+        $taskId = $request->input('task_id');
 
         $builder = Task::query()
             ->where('project_id', '=', $projectId);
@@ -310,17 +311,26 @@ class TaskController extends Controller
             $builder->whereRaw('(task_parent = 0 OR task_parent IS NULL)');
         }
         $tasks = $builder->get();
-        foreach ($tasks as $task) {
-//            $label = '';
-//            if ($task->parent) {
-//                $item = $task->parent;
-//                while ($item) {
-//                    $label = $item->task_name . ' > ' . $label;
-//                    $item = $item->parent;
-//                }
-//            }
-            $task->label = $task->task_name;
-            $task->children = null;
+        if ($taskId > 0) {
+            $task = Task::query()->with(['parent'])->where('id', '=', $taskId)->first();
+
+            $id = $task->id;
+            $item = $task->parent;
+            while ($item) {
+                $id = $item->id;
+                $item = $item->parent;
+            }
+            $taskParent = Task::query()->with(['children'])->where('id', '=', $id)->first();
+        }
+
+        foreach ($tasks as $key => $task) {
+            if ($taskId > 0 && $task->id == $id) {
+                $task->label = $task->task_name;
+                $task->children = Task::taskChildrentFormat($taskParent->children);
+            } else {
+                $task->label = $task->task_name;
+                $task->children = null;
+            }
         }
 
         return [
@@ -404,18 +414,18 @@ class TaskController extends Controller
 
         if ($task->task_parent) {
 
-            $taskParent = Task::query()->with(['parent'])->where('id', '=', $task->task_parent)->first();
-            $label = '';
-            if ($taskParent->parent) {
-                $item = $taskParent->parent;
-                while ($item) {
-                    $label = $item->task_name . ' > ' . $label;
-                    $item = $item->parent;
-                }
-            }
-            $taskParent->label = $label .$taskParent->task_name;
+//            $taskParent = Task::query()->with(['parent'])->where('id', '=', $task->task_parent)->first();
+//            $label = '';
+//            if ($taskParent->parent) {
+//                $item = $taskParent->parent;
+//                while ($item) {
+//                    $label = $item->task_name . ' > ' . $label;
+//                    $item = $item->parent;
+//                }
+//            }
+//            $taskParent->label = $label .$taskParent->task_name;
 
-            $detail['task_parent'] = $taskParent;
+            $detail['task_parent'] = $task->task_parent;
         }
 
         if ($task->task_performer) {

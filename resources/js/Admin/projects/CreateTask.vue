@@ -94,7 +94,7 @@
             <treeselect
                 :options="tasks"
                 :load-options="loadOptions"
-                placeholder="Try expanding any folder option..."
+                loadingText="Loading..."
                 v-model="task.task_parent"
             />
 <!--            <multiselect v-model="task.task_parent" @input="changeTaskParent($event)" :disabled="task.project_id == 0"-->
@@ -162,14 +162,18 @@ export default {
         }
     },
     created() {
-        if (this.projectId) {
-            this.task.project_id = _.find(this.projects, {id: parseInt(this.projectId)});
-            this.getTaskByProject(this.projectId);
-        } else {
-            this.task.project_id = '';
-        }
         if (this.taskId) {
             this.getInfoTask();
+        } else {
+            if (this.projectId) {
+                this.task.project_id = _.find(this.projects, {id: parseInt(this.projectId)});
+                // if (this.taskParentId) {
+                //     this.task.task_parent = this.taskParentId;
+                // }
+                this.getTaskByProject(this.projectId, this.taskParentId ?? 0);
+            } else {
+                this.task.project_id = '';
+            }
         }
     },
     methods: {
@@ -179,6 +183,7 @@ export default {
             if(res.code == 200) {
                 this.task = res.data;
                 this.values = res.user_related;
+                this.getTaskByProject(this.task.project_id.id, this.task.task_parent ?? 0);
             }
         },
         async loadOptions({ action, parentNode, callback }) {
@@ -232,11 +237,14 @@ export default {
             }
             this.$emit('handleGetTasks');
         },
-        async getTaskByProject(projectId) {
-            const res = await $get('/tasks/get_all', {project_id: projectId})
+        async getTaskByProject(projectId, taskId) {
+            const res = await $get('/tasks/get_all', {project_id: projectId, task_id: taskId ?? 0})
 
             if (res.code == 200) {
                 this.tasks = res.data;
+                if (taskId) {
+                    this.task.task_parent = taskId;
+                }
             }
         },
         changeTaskParent(e) {
@@ -269,12 +277,12 @@ export default {
                 this.task.task_code = '';
             }
         },
-        'tasks': function (newVal) {
-            if (this.taskParentId && this.count === 0) {
-                this.task.task_parent = _.find(newVal, {id: parseInt(this.taskParentId)});
-                this.count = this.count + 1;
-            }
-        },
+        // 'tasks': function (newVal) {
+        //     if (this.taskParentId && this.count === 0) {
+        //         this.task.task_parent = _.find(newVal, {id: parseInt(this.taskParentId)});
+        //         this.count = this.count + 1;
+        //     }
+        // },
         // 'projectId': function (newVal) {
         //     this.task.project_id = _.find(this.projects, {id: parseInt(newVal)});
         //     this.getTaskByProject(this.projectId);
@@ -285,7 +293,7 @@ export default {
         //         this.getTaskByProject(this.projectId);
         //     }
         // },
-        'task.task_parent': function (newVal) {
+        'taskParentId': function (newVal) {
             console.log(newVal, 'new val');
         }
     }

@@ -118,33 +118,14 @@ class Task extends Model
 
         return $taskId;
     }
-    public static function taskChildrentFormat($arr, $isFirst = true, $keyLabel = '')
+    public static function taskChildrentFormat($arr)
     {
         if ($arr) {
             foreach ($arr as $key => $value) {
-                $indexKey = (int)$key + 1;
-                $value->key_label = $isFirst? $indexKey: $keyLabel. '.'.$indexKey;
-
-                $value->department_label = $value->task_department? Task::DEPARTMENTS[$value->task_department]: '';
-
-                if (($value->status == 0 || $value->status == 1) && (strtotime($value->end_time) < time())) {
-                    $value->status_title = 'Đã quá hạn';
-                } elseif ($value->status == 4 && (strtotime($value->real_end_time) > strtotime($value->end_time))) {
-                    $value->status_title = 'Hoàn thành chậm';
-                }
-                elseif ($value->status == 5 ) {
-                    $value->status_title = 'Chờ feedback';
-                }
-                 elseif ($value->status == 6 ) {
-                    $value->status_title = 'Làm lại';
-                } else {
-                    $value->status_title = $value->status >= 0 ? Task::ARR_STATUS[$value->status]: '';
-                }
-                $value->fullname = $value->taskUser? $value->taskUser->fullname: '';
-                $value->task_name_label = $value->key_label . '   ' . $value->task_name ;
+                $value->label = $value->task_name;
 
                 if (count($value->children) > 0) {
-                    self::taskChildrentFormat($value->children, false, $value->key_label);
+                    self::taskChildrentFormat($value->children);
                 }
             }
         }
