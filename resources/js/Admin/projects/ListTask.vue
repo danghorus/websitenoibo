@@ -292,7 +292,7 @@ export default {
         },
         resetDataAfterCopy(tree, arrIndex, index, tasks) {
             if (index < arrIndex.length - 1) {
-                this.resetData([...tree[arrIndex[index]]._children], arrIndex, index + 1, tasks);
+                this.resetDataAfterCopy([...tree[arrIndex[index]]._children], arrIndex, index + 1, tasks);
             } else {
 
                 tree[arrIndex[index]]._children.push(tasks);

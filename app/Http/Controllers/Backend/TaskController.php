@@ -965,7 +965,7 @@ class TaskController extends Controller
             'code' => 200,
             'message' => 'Copy thành công',
             'new_task' => $newTasks,
-            'arr_parent' => $arrParent,
+            'arr_parent' => array_reverse($arrParent),
         ];
     }
 
