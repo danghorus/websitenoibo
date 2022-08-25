@@ -283,10 +283,11 @@ export default {
         //         this.count = this.count + 1;
         //     }
         // },
-        // 'projectId': function (newVal) {
-        //     this.task.project_id = _.find(this.projects, {id: parseInt(newVal)});
-        //     this.getTaskByProject(this.projectId);
-        // },
+        'task.project_id': function (newVal) {
+            if (newVal.id) {
+                this.getTaskByProject(newVal.id, 0);
+            }
+        },
         // 'projects': function (newVal) {
         //     if (this.projectId) {
         //         this.task.project_id = _.find(newVal, {id: parseInt(this.projectId)});
