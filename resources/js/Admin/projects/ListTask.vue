@@ -359,7 +359,7 @@ export default {
             }
         },
         resetDataAfterCopy(tree, arrIndex, index, tasks) {
-            if (tree[arrIndex[index]]._showChildren) {
+            if (tree[arrIndex[index]]._showChildren || tree[arrIndex[index]]._children.length > 0 || !tree[arrIndex[index]]._hasChildren) {
                 if (index < arrIndex.length - 1) {
                     this.resetDataAfterCopy([...tree[arrIndex[index]]._children], arrIndex, index + 1, tasks);
                 } else {
