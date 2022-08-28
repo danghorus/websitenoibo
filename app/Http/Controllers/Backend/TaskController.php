@@ -224,9 +224,42 @@ class TaskController extends Controller
             $project->save();
         }
 
+        $arrParent = [];
+
+        if ($task->task_parent) {
+            $tasks = Task::query()->with(['parent'])->where('id', '=', $task->id)->get();
+            foreach ($tasks as $value) {
+                if ($value->parent) {
+                    $item = $value->parent;
+                    while ($item) {
+                        $arrParent[] = $item->id;
+                        $item = $item->parent;
+                    }
+                }
+            }
+        }
+
+        $newTasks = Task::query()->with(['taskUser'])->where('id', '=', $task->id)->first();
+        if ($newTasks) {
+            $newTasks->department_label = $newTasks->task_department? Task::DEPARTMENTS[$newTasks->task_department]: '';
+
+            if (($newTasks->status == 0 || $newTasks->status == 1) && (strtotime($newTasks->end_time) < time())) {
+                $newTasks->status_title = 'Đã quá hạn';
+            } elseif ($newTasks->status == 4 && (strtotime($newTasks->real_end_time) > strtotime($newTasks->end_time))) {
+                $newTasks->status_title = 'Hoàn thành chậm';
+            } else {
+                $newTasks->status_title = $newTasks->status >= 0 ? Task::ARR_STATUS[$newTasks->status]: '';
+            }
+            $newTasks->fullname = $newTasks->taskUser? $newTasks->taskUser->fullname: '';
+            $newTasks->_hasChildren = false;
+            $newTasks->_children = [];
+        }
+
         return [
             'code' => 200,
             'message' => 'Thêm mới thành công',
+            'new_task' => $newTasks,
+            'arr_parent' => array_reverse($arrParent),
         ];
     }
 
@@ -236,6 +269,27 @@ class TaskController extends Controller
         $taskInfo = $data['task'];
 
         $task = Task::find($taskId);
+
+        $changeParent = false;
+        $arrNewParent = [];
+        $arrOldParent = [];
+
+        if ($task->task_parent) {
+            $tasks = Task::query()->with(['parent'])->where('id', '=', $task->id)->get();
+            foreach ($tasks as $value) {
+                if ($value->parent) {
+                    $item = $value->parent;
+                    while ($item) {
+                        $arrOldParent[] = $item->id;
+                        $item = $item->parent;
+                    }
+                }
+            }
+        }
+
+        if ((isset($taskInfo['task_parent']) && $task->task_parent != $taskInfo['task_parent']) || ($task->task_parent && !isset($taskInfo['task_parent']))) {
+            $changeParent = true;
+        }
 
         $task->task_name = $taskInfo['task_name'] ?? '';
         $task->task_code = $taskInfo['task_code'] ?? '';
@@ -292,9 +346,46 @@ class TaskController extends Controller
             $project->save();
         }
 
+        $newTasks = Task::query()->with(['taskUser'])->where('id', '=', $task->id)->first();
+
+        if ($newTasks) {
+            $newTasks->department_label = $newTasks->task_department? Task::DEPARTMENTS[$newTasks->task_department]: '';
+
+            if (($newTasks->status == 0 || $newTasks->status == 1) && (strtotime($newTasks->end_time) < time())) {
+                $newTasks->status_title = 'Đã quá hạn';
+            } elseif ($newTasks->status == 4 && (strtotime($newTasks->real_end_time) > strtotime($newTasks->end_time))) {
+                $newTasks->status_title = 'Hoàn thành chậm';
+            } else {
+                $newTasks->status_title = $newTasks->status >= 0 ? Task::ARR_STATUS[$newTasks->status]: '';
+            }
+            $newTasks->fullname = $newTasks->taskUser? $newTasks->taskUser->fullname: '';
+            $totalChild = Task::query()->where('task_parent', '=', $taskId)->count();
+            $newTasks->_hasChildren = $totalChild > 0;
+            $newTasks->_children = [];
+        }
+
+        if ($changeParent) {
+            if ($task->task_parent) {
+                $tasks = Task::query()->with(['parent'])->where('id', '=', $task->id)->get();
+                foreach ($tasks as $value) {
+                    if ($value->parent) {
+                        $item = $value->parent;
+                        while ($item) {
+                            $arrNewParent[] = $item->id;
+                            $item = $item->parent;
+                        }
+                    }
+                }
+            }
+        }
+
         return [
             'code' => 200,
             'message' => 'Cập nhật thành công',
+            'change_parent' => $changeParent,
+            'new_task' => $newTasks,
+            'arr_old_parent' => $arrOldParent,
+            'arr_new_parent' => $arrNewParent,
         ];
     }
 
@@ -944,7 +1035,7 @@ class TaskController extends Controller
             }
         }
 
-        $newTasks = Task::query()->with(['children', 'taskUser'])->where('id', '=', $newTaskId)->first();
+        $newTasks = Task::query()->with(['taskUser'])->where('id', '=', $newTaskId)->first();
         if ($newTasks) {
             $newTasks->department_label = $newTasks->task_department? Task::DEPARTMENTS[$newTasks->task_department]: '';
 

@@ -76,7 +76,7 @@
                         <div class="modal-body">
                             <create-task v-if="showModalEdit" :users="users" :groupUsers="groupUsers" :projectId="projectId"
                                          :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId"
-                                         @handleGetTasks="handleGetAll()" />
+                                         @handleGetTasks="handleGetAll" />
                         </div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                         <div class="modal-body">
                             <create-task v-if="showModalCreate" :users="users" :groupUsers="groupUsers"
                                          :projectId="projectId" :priorities="priorities" :stickers="stickers" :projects="projects"
-                                         :taskParentId="parentId" @handleGetTasks="handleGetAll()" />
+                                         :taskParentId="parentId" @handleCreateTask="handleCreateTask" />
                         </div>
                     </div>
                 </div>
@@ -113,7 +113,7 @@ export default {
     name: "ListTask",
     components: { VueAdsTable, CreateTask },
     props: ['projectId', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
-        'startTime', 'taskPerformer', 'taskDepartment', 'status', 'list', 'currentUser'],
+        'startTime', 'taskPerformer', 'taskDepartment', 'status', 'list', 'currentUser', 'bus'],
 
     data () {
         let classes = {
@@ -171,13 +171,71 @@ export default {
             ],
         }
     },
-
+    mounted() {
+        this.bus.$on('submit', this.handleCreateTask)
+    },
     methods: {
-        handleGetAll() {
-            this.$emit('getAllTasks');
-            this.closeModalConfirm();
-            this.closeModalEditTask();
+        handleCreateTask(e) {
             this.closeModalCreateTask();
+            if (e.arr_parent.length > 0) {
+                let arrIndex = [];
+                let listData = _.cloneDeep(this.list);
+                e.arr_parent.forEach(item => {
+                    let index = _.findIndex(listData, val => val.id == item);
+                    arrIndex.push(index);
+                    listData = listData[index]._children;
+                });
+                this.list = this.resetDataAfterCopy([...this.list], arrIndex, 0, {...e.new_task, _meta: {}});
+            } else {
+                this.list.push(e.new_task);
+            }
+        },
+        handleGetAll(e) {
+            this.closeModalEditTask();
+            if (e.change_parent) {
+                if (e.arr_old_parent.length > 0) {
+                    let arrIndex = [];
+                    let listData = _.cloneDeep(this.list);
+                    e.arr_old_parent.forEach(item => {
+                        let index = _.findIndex(listData, val => val.id == item);
+                        arrIndex.push(index);
+                        listData = listData[index]._children;
+                    });
+                    this.list = this.resetData([...this.list], arrIndex, 0, e.new_task.id);
+                } else {
+                    let index = _.findIndex(this.list, val => val.id == e.new_task.id);
+                    this.list.splice(index, 1);
+                }
+                if (e.arr_new_parent.length > 0) {
+                    let arrIndex = [];
+                    let listData = _.cloneDeep(this.list);
+                    e.arr_new_parent.forEach(item => {
+                        let index = _.findIndex(listData, val => val.id == item);
+                        arrIndex.push(index);
+                        listData = listData[index]._children;
+                    });
+                    this.list = this.resetDataAfterCopy([...this.list], arrIndex, 0, e.new_task);
+                } else {
+                    this.list.push(e.new_task);
+                }
+            } else {
+                if (e.arr_old_parent.length > 0) {
+                    let arrIndex = [];
+                    let listData = _.cloneDeep(this.list);
+                    e.arr_old_parent.forEach(item => {
+                        let index = _.findIndex(listData, val => val.id == item);
+                        arrIndex.push(index);
+                        listData = listData[index]._children;
+                    });
+                    this.list = this.resetRow([...this.list], arrIndex, 0, e.new_task);
+                } else {
+                    let listData = _.cloneDeep(this.list);
+                    let indexTask = _.findIndex(listData, val => val.id == e.new_task.id);
+                    let tmpTask = listData[indexTask];
+                    listData[indexTask] = Object.assign({}, tmpTask, e.new_task);
+                    this.list = [...listData];
+                }
+            }
         },
 
         sleep (ms) {
@@ -268,6 +326,16 @@ export default {
             }
             return tree;
         },
+        resetRow(tree, arrIndex, index, task) {
+            if (index < arrIndex.length - 1) {
+                this.resetRow([...tree[arrIndex[index]]._children], arrIndex, index + 1, task);
+            } else {
+                let indexTask = _.findIndex(tree[arrIndex[index]]._children, val => val.id == task.id);
+                let tmpTask = tree[arrIndex[index]]._children[indexTask];
+                tree[arrIndex[index]]._children[indexTask] = Object.assign({}, tmpTask, task);
+            }
+            return tree;
+        },
         async deleteTask() {
             const res = await $post(`/tasks/delete/${this.taskId}`);
             if (res.code == 200) {
@@ -291,11 +359,22 @@ export default {
             }
         },
         resetDataAfterCopy(tree, arrIndex, index, tasks) {
-            if (index < arrIndex.length - 1) {
-                this.resetDataAfterCopy([...tree[arrIndex[index]]._children], arrIndex, index + 1, tasks);
-            } else {
-
-                tree[arrIndex[index]]._children.push(tasks);
+            if (tree[arrIndex[index]]._showChildren) {
+                if (index < arrIndex.length - 1) {
+                    this.resetDataAfterCopy([...tree[arrIndex[index]]._children], arrIndex, index + 1, tasks);
+                } else {
+                    tasks = {...tasks, _meta: {
+                            groupParent: 0,
+                            parent: tree[arrIndex[index]] ? tree[arrIndex[index]]._meta.parent + 1 : 0,
+                            uniqueIndex: _.uniqueId(),
+                            loading: false,
+                            visibleChildren: tasks._children,
+                            index: tree[arrIndex[index]]._children.length,
+                            groupColumn: null,
+                            selected: false
+                        }};
+                    tree[arrIndex[index]]._children.push(tasks);
+                }
             }
             return tree;
         },

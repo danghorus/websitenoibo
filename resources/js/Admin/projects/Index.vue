@@ -77,7 +77,7 @@
                     :priorities="priorities" :stickers="stickers" :projects="projects"
                     :searchProjectId="searchProjectId" :search="search" :startTime="startTime"
                     :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status"
-                    @getAllTasks="getAllTasks" :list="list" :currentUser="currentUser" />
+                    @getAllTasks="getAllTasks" :list="list" :currentUser="currentUser" :bus="bus" />
             </div>
 
         </div>
@@ -95,7 +95,7 @@
                         <div class="modal-body">
                             <create-task v-if="showModal" :users="users" :groupUsers="groupUsers"
                                 :priorities="priorities" :stickers="stickers" :projects="projects"
-                                :projectId="projectId" @handleGetTasks="handleGetTasks()" />
+                                :projectId="projectId" @handleCreateTask="handleCreateTask"/>
                         </div>
                     </div>
                 </div>
@@ -154,6 +154,7 @@ import {$get, $post} from "../../ultis";
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import Multiselect from 'vue-multiselect';
+import _ from "lodash";
 
 export default {
     name: "Index",
@@ -200,7 +201,8 @@ export default {
                 { value: 4, label: 'Hoàn thành' },
             ],
             status: '',
-            currentUser: ''
+            currentUser: '',
+            bus: new Vue(),
         }
     },
     created() {
@@ -334,12 +336,19 @@ export default {
                 this.currentUser = res.currentUser;
             }
         },
-        handleGetTasks() {
+        handleGetTasks(res) {
             this.closeModalCreateTask_Parent()
             this.closeModalCreateTask();
             if (this.projectId > 0) {
-                this.getInfoProject();
-                this.getAllTasks();
+                this.bus.$emit('submit', _.cloneDeep(res))
+            } else {
+                this.getTaskTimeLine();
+            }
+        },
+        handleCreateTask(res) {
+            this.closeModalCreateTask();
+            if (this.projectId > 0) {
+                this.bus.$emit('submit', _.cloneDeep(res))
             } else {
                 this.getTaskTimeLine();
             }

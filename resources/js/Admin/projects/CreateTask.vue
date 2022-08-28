@@ -224,6 +224,7 @@ export default {
                         project_id: ''
                     };
                     this.values = [];
+                    this.$emit('handleGetTasks', _.cloneDeep(res));
                 }
             } else {
                 const res = await $post('/tasks/create', data);
@@ -233,9 +234,10 @@ export default {
                         project_id: ''
                     };
                     this.values = [];
+                    this.$emit('handleCreateTask', _.cloneDeep(res));
                 }
             }
-            this.$emit('handleGetTasks');
+
         },
         async getTaskByProject(projectId, taskId) {
             const res = await $get('/tasks/get_all', {project_id: projectId, task_id: taskId ?? 0})
