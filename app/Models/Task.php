@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use function GuzzleHttp\Promise\task;
 
 class Task extends Model
@@ -62,7 +63,14 @@ class Task extends Model
 
     public function children()
     {
-        return $this->hasMany('App\Models\Task', 'task_parent', 'id')->with(['children']);
+        return $this->hasMany('App\Models\Task', 'task_parent', 'id')->with(['children' => function ($q) {
+            $q->where('valid', '=', 1);
+        }]);
+    }
+
+    public function childrenInvalid()
+    {
+        return $this->hasMany('App\Models\Task', 'task_parent', 'id')->with(['childrenInvalid']);
     }
 
     public function parent()
@@ -126,6 +134,60 @@ class Task extends Model
 
                 if (count($value->children) > 0) {
                     self::taskChildrentFormat($value->children);
+                }
+            }
+        }
+
+        return $arr;
+    }
+    public static function taskChildrenInvalid($arr)
+    {
+        if ($arr) {
+            foreach ($arr as $key => $value) {
+                self::query()->where('id', '=', $value->id)
+                    ->update([
+                        'valid' => 0,
+                        'deleted_by' => Auth::id(),
+                        'deleted_at' => date('Y-m-d H:i:s', time())
+                    ]);
+
+                if (count($value->children) > 0) {
+                    self::taskChildrenInvalid($value->children);
+                }
+            }
+        }
+
+        return $arr;
+    }
+    public static function taskChildrenValid($arr, $hasParent)
+    {
+        if ($arr) {
+            foreach ($arr as $key => $value) {
+                self::query()->where('id', '=', $value->id)
+                    ->update([
+                        'valid' => 1,
+                        'task_parent' => $hasParent? $value->task_parent: null,
+                        'deleted_by' => null,
+                        'deleted_at' => null
+                    ]);
+
+                if (count($value->children) > 0) {
+                    self::taskChildrenValid($value->children, true);
+                }
+            }
+        }
+
+        return $arr;
+    }
+    public static function deleteTaskChildren($arr)
+    {
+        if ($arr) {
+            foreach ($arr as $key => $value) {
+                self::query()->where('id', '=', $value->id)
+                    ->delete();
+
+                if (count($value->children) > 0) {
+                    self::deleteTaskChildren($value->children);
                 }
             }
         }

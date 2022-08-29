@@ -32,6 +32,7 @@ class TaskController extends Controller
         $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
         $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
         $builder->where('tt.project_id', '=',$projectId);
+        $builder->where('tt.valid', '=', 1);
 
         if ($taskParent) {
             $builder->where('task_parent', '=', $taskParent);
@@ -111,6 +112,7 @@ class TaskController extends Controller
         $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
 
         $builder->where('tt.status', '!=', '4');
+        $builder->where('tt.valid', '=', 1);
 
         if ($projectId > 0) {
             $builder->where('tt.project_id', '=',$projectId);
@@ -139,7 +141,7 @@ class TaskController extends Controller
             $builder->where('tt.task_name', 'LIKE', "%$search%");
         }
         $tasks = $builder->get();
-
+        dd(123);
         foreach ($tasks as $task) {
             $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
 
@@ -388,8 +390,8 @@ class TaskController extends Controller
             'message' => 'Cập nhật thành công',
             'change_parent' => $changeParent,
             'new_task' => $newTasks,
-            'arr_old_parent' => $arrOldParent,
-            'arr_new_parent' => $arrNewParent,
+            'arr_old_parent' => array_reverse($arrOldParent),
+            'arr_new_parent' => array_reverse($arrNewParent),
         ];
     }
 
@@ -399,7 +401,8 @@ class TaskController extends Controller
         $taskId = $request->input('task_id');
 
         $builder = Task::query()
-            ->where('project_id', '=', $projectId);
+            ->where('project_id', '=', $projectId)
+            ->where('valid', '=', 1);
         if ($taskParent) {
             $builder->where('task_parent', '=', $taskParent);
         } else {
@@ -415,7 +418,10 @@ class TaskController extends Controller
                 $id = $item->id;
                 $item = $item->parent;
             }
-            $taskParent = Task::query()->with(['children'])->where('id', '=', $id)->first();
+            $taskParent = Task::query()->with(['children' => function ($q) {
+                $q->where('valid', '=', 1);
+            }])
+                ->where('id', '=', $id)->first();
         }
 
         foreach ($tasks as $key => $task) {
@@ -449,14 +455,12 @@ class TaskController extends Controller
             }
         }
 
-        Task::query()->where('id', '=', $taskId)->delete();
-        TaskUser::query()->where('task_id', '=', $taskId)->delete();
-
         if ($task) {
-            Task::query()->where('task_parent', '=', $taskId)
-                ->update([
-                    'task_parent' => $task->task_parent
-                ]);
+            $tasks = Task::query()->with(['children' => function ($q) {
+                $q->where('valid', '=', 1);
+            }])->where('id', '=', $taskId)->first();
+
+            Task::taskChildrenInvalid([$tasks]);
         }
 
         return [
@@ -992,6 +996,7 @@ class TaskController extends Controller
 //
 //            $summaryQuery->where('t.project_id', '=', $filter['project_id']);
 //        }
+        $taskSummaryQuery->where('valid', '=', 1);
         $taskSummary = $taskSummaryQuery->first();
 
         $users = $usersQuery->with(['task' => function ($q) use ($filter, $project, $department) {
@@ -1001,8 +1006,9 @@ class TaskController extends Controller
             if (isset($filter['task_department']) && $filter['task_department']) {
                 $q->whereIn('task_department', $department);
             }
+            $q->where('valid', '=', 1);
         }])->get();
-
+        $summaryQuery->where('valid', '=', 1);
         $summary = $summaryQuery->groupBy('task_department')
             ->get();
 
@@ -1082,7 +1088,9 @@ class TaskController extends Controller
     }
 
     public function copy($taskId) {
-        $task = Task::query()->with(['children'])->where('id', '=', $taskId)->first();
+        $task = Task::query()->with(['children' => function ($q) {
+            $q->where('valid', '=', 1);
+        }])->where('id', '=', $taskId)->first();
 
         $newTaskId = Task::taskChildrent([$task], $task->task_parent);
 
@@ -1123,4 +1131,62 @@ class TaskController extends Controller
         ];
     }
 
+    public function invalidTasks() {
+        $users = User::all();
+        return view('projects.invalid_tasks', compact('users'));
+    }
+
+    public function invalid(Request $request) {
+        $builder = DB::table('tasks', 'tt')->select('tt.*')
+            ->selectRaw('p.project_name, u.fullname, ud.fullname as d_fullname');
+        $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
+        $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
+        $builder->join('users as ud', 'tt.deleted_by', '=', 'ud.id', 'left');
+        $builder->where('tt.valid', '=', 0);
+
+
+        $tasks = $builder->get();
+
+        foreach ($tasks as $key => $value) {
+            $value->department_label = $value->task_department ? Task::DEPARTMENTS[$value->task_department] : '';
+        }
+
+        return [
+            'code' => 200,
+            'data' => $tasks
+        ];
+    }
+
+    public function invalidDelete($taskId, Request $request) {
+        $tasks = Task::query()->with(['childrenInvalid'])->where('id', '=', $taskId)->first();
+        Task::deleteTaskChildren([$tasks]);
+        return [
+            'code' => 200,
+            'message' => 'Thành công'
+        ];
+    }
+
+    public function restore($taskId, Request $request) {
+        $tasks = Task::query()->with(['childrenInvalid'])->where('id', '=', $taskId)->first();
+
+        $hasParent = false;
+
+        if ($tasks->task_parent > 0) {
+            $taskParent = Task::query()
+                ->where('id', '=', $tasks->task_parent)
+                ->where('valid', '=', 1)->first();
+
+            if ($taskParent) {
+                $hasParent = true;
+            }
+        }
+
+
+
+        Task::taskChildrenValid([$tasks], $hasParent);
+        return [
+            'code' => 200,
+            'message' => 'Thành công'
+        ];
+    }
 }

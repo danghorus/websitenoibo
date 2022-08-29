@@ -9,6 +9,7 @@ import MyWork from "./Admin/projects/MyWork";
 import ListWork from "./Admin/projects/ListWork";
 import Project_Report from "./Admin/projects/Report";
 import Project_Warrior from "./Admin/projects/Warrior";
+import InvalidTasks from "./Admin/projects/InvalidTasks";
 
 export const routes = [
     {
@@ -42,12 +43,12 @@ export const routes = [
         component: Index
     },
     {
-        path: "/my_work", 
+        path: "/my_work",
         name: "MyWork",
         component: MyWork
     },
     {
-        path: "/list_work", 
+        path: "/list_work",
         name: "ListWork",
         component: ListWork
     },
@@ -60,5 +61,10 @@ export const routes = [
         path: "/warrior",
         name: "Project_Warrior",
         component: Project_Warrior
+    },
+    {
+        path: "/invalid_tasks",
+        name: "Invalid Tasks",
+        component: InvalidTasks
     }
 ];

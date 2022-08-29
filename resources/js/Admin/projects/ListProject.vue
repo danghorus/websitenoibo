@@ -9,6 +9,9 @@
                 <p>Công việc trong ngày</p>
             </li>
             <li class="pointer project-title">
+                <a class="pointer project-title" v-bind:href="'/invalid_tasks'" style="color:black">Thùng rác</a>
+            </li><br>
+            <li class="pointer project-title">
                 <a class="pointer project-title" v-bind:href="'/list_work'" style="color:black">Danh sách công việc</a>
             </li><br>
             <li class="pointer project-title" v-for="(project, index) in projects" :key="index" style="display: flex">
