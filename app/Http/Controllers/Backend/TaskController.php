@@ -631,6 +631,7 @@ class TaskController extends Controller
     }
 
     public function ListWork(Request $request) {
+         $filters = $request->all();
         $projectId = $request->input('project_id');
         $startTime = $request->input('start_time');
         $taskPerformer = $request->input('task_performer');
@@ -642,10 +643,10 @@ class TaskController extends Controller
         $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
         $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
 
-        $builder = DB::table('tasks', 'tt')->select('tt.*')
-            ->selectRaw('p.project_name');
+        //$builder = DB::table('tasks', 'tt')->select('tt.*')
+        //   ->selectRaw('p.project_name');
 
-        $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
+        //$builder->join('projects as p', 'tt.project_id', '=', 'p.id');
 
 
         if ($startTime && $startTime != '') {
@@ -882,14 +883,72 @@ class TaskController extends Controller
         $department = $filter['task_department']? explode(',', $filter['task_department']): [];
         $project = $filter['project_id']? explode(',', $filter['project_id']): [];
         $taskSummaryQuery = DB::table('tasks as t')
-            ->selectRaw("COUNT(t.id)")
-            ->selectRaw("COUNT(t.task_performer) total_task")
+           ->selectRaw("COUNT(t.id)")
+            //->selectRaw("COUNT(t.task_department) total_task")
+            ->selectRaw("SUM(IF (t.task_department != '', 1, 0)) total_task")
             ->selectRaw("SUM(IF (t.status = 1 AND t.task_performer > 0, 1, 0)) total_wait")
             ->selectRaw("SUM(IF (t.status = 2, 1, 0)) total_processing ")
             ->selectRaw("SUM(IF (t.status = 3, 1, 0)) total_pause")
-            ->selectRaw("SUM(IF (t.status = 4 AND t.real_end_time < t.start_time, 1, 0)) total_complete")
-            ->selectRaw("SUM(IF (t.status = 4 AND t.real_end_time > t.start_time, 1, 0)) total_complete_slow")
-            ->selectRaw("SUM(IF ((t.status = 0 OR t.status = 1) AND t.task_performer > 0  AND ((t.real_end_time - t.real_start_time) > t.time), 1, 0)) total_slow");
+            ->selectRaw("SUM(IF (t.status = 4 , 1, 0)) total_complete")
+            ->selectRaw("SUM(IF (t.status = 4 AND (((t.real_end_time - t.real_start_time)/3600 - t.time_pause)>t.time), 1, 0)) total_complete_slow")
+            ->selectRaw("SUM(IF (t.status = 0  AND (t.task_performer > 0), 1, 0)) total_slow")
+            ->selectRaw("SUM(IF (t.status = 5  AND (t.task_performer > 0), 1, 0)) total_wait_fb")
+            ->selectRaw("SUM(IF (t.status = 6  AND (t.task_performer > 0), 1, 0)) total_again")
+            ->selectRaw("SUM(t.weight) total_weight")
+            ->selectRaw("SUM(IF (t.status = 4, t.weight, 0)) total_weight_complete")
+
+
+            ->selectRaw("SUM(IF (t.task_department = 2, 1, 0)) total_task_dev")
+            ->selectRaw("SUM(IF (t.task_department = 2 && t.status = 1 AND t.task_performer > 0, 1, 0)) total_wait_dev")
+            ->selectRaw("SUM(IF (t.task_department = 2 && t.status = 2, 1, 0)) total_processing_dev ")
+            ->selectRaw("SUM(IF (t.task_department = 2 && t.status = 3, 1, 0)) total_pause_dev")
+            ->selectRaw("SUM(IF (t.task_department = 2 && t.status = 4 , 1, 0)) total_complete_dev")
+            ->selectRaw("SUM(IF (t.task_department = 2 && t.status = 4 AND (((t.real_end_time - t.real_start_time)/3600 - t.time_pause)>t.time), 1, 0)) total_complete_slow_dev")
+            ->selectRaw("SUM(IF (t.task_department = 2 && (t.status = 0) AND t.task_performer > 0 , 1, 0)) total_slow_dev")
+            ->selectRaw("SUM(IF (t.task_department = 2 && t.status = 5  AND (t.task_performer > 0), 1, 0)) total_wait_fb_dev")
+            ->selectRaw("SUM(IF (t.task_department = 2 && t.status = 6  AND (t.task_performer > 0), 1, 0)) total_again_dev")
+            ->selectRaw("SUM(IF (t.task_department = 2, t.weight, 0)) total_weight_dev")
+            ->selectRaw("SUM(IF (t.task_department = 2 && t.status = 4, t.weight, 0)) total_weight_dev_complete")
+
+
+            ->selectRaw("SUM(IF (t.task_department = 3, 1, 0)) total_task_gd")
+            ->selectRaw("SUM(IF (t.task_department = 3 && t.status = 1 AND t.task_performer > 0, 1, 0)) total_wait_gd")
+            ->selectRaw("SUM(IF (t.task_department = 3 && t.status = 2, 1, 0)) total_processing_gd ")
+            ->selectRaw("SUM(IF (t.task_department = 3 && t.status = 3, 1, 0)) total_pause_gd")
+            ->selectRaw("SUM(IF (t.task_department = 3 && t.status = 4 , 1, 0)) total_complete_gd")
+            ->selectRaw("SUM(IF (t.task_department = 3 && t.status = 4 AND (((t.real_end_time - t.real_start_time)/3600 - t.time_pause)>t.time), 1, 0)) total_complete_slow_gd")
+            ->selectRaw("SUM(IF (t.task_department = 3 && (t.status = 0 OR t.status = 1) AND t.task_performer > 0  AND ((t.real_end_time - t.real_start_time) > t.time), 1, 0)) total_slow_gd")
+            ->selectRaw("SUM(IF (t.task_department = 3 && t.status = 5  AND (t.task_performer > 0), 1, 0)) total_wait_fb_gd")
+            ->selectRaw("SUM(IF (t.task_department = 3 && t.status = 6  AND (t.task_performer > 0), 1, 0)) total_again_gd")
+            ->selectRaw("SUM(IF (t.task_department = 3, t.weight, 0)) total_weight_gd")
+            ->selectRaw("SUM(IF (t.task_department = 3 && t.status = 4, t.weight, 0)) total_weight_gd_complete")
+
+
+            ->selectRaw("SUM(IF (t.task_department = 4, 1, 0)) total_task_art")
+            ->selectRaw("SUM(IF (t.task_department = 4 && t.status = 1 AND t.task_performer > 0, 1, 0)) total_wait_art")
+            ->selectRaw("SUM(IF (t.task_department = 4 && t.status = 2, 1, 0)) total_processing_art ")
+            ->selectRaw("SUM(IF (t.task_department = 4 && t.status = 3, 1, 0)) total_pause_art")
+            ->selectRaw("SUM(IF (t.task_department = 4 && t.status = 4 , 1, 0)) total_complete_art")
+            ->selectRaw("SUM(IF (t.task_department = 4 && t.status = 4 AND (((t.real_end_time - t.real_start_time)/3600 - t.time_pause)>t.time), 1, 0)) total_complete_slow_art")
+            ->selectRaw("SUM(IF (t.task_department = 4 && (t.status = 0 OR t.status = 1) AND t.task_performer > 0  AND ((t.real_end_time - t.real_start_time) > t.time), 1, 0)) total_slow_art")
+            ->selectRaw("SUM(IF (t.task_department = 4 && t.status = 5  AND (t.task_performer > 0), 1, 0)) total_wait_fb_art")
+            ->selectRaw("SUM(IF (t.task_department = 4 && t.status = 6  AND (t.task_performer > 0), 1, 0)) total_again_art")
+            ->selectRaw("SUM(IF (t.task_department = 4, t.weight, 0)) total_weight_art")
+            ->selectRaw("SUM(IF (t.task_department = 4 && t.status = 4, t.weight, 0)) total_weight_art_complete")
+
+
+            ->selectRaw("SUM(IF (t.task_department = 5, 1, 0)) total_task_test")
+            ->selectRaw("SUM(IF (t.task_department = 5 && t.status = 1 AND t.task_performer > 0, 1, 0)) total_wait_test")
+            ->selectRaw("SUM(IF (t.task_department = 5 && t.status = 2, 1, 0)) total_processing_test ")
+            ->selectRaw("SUM(IF (t.task_department = 5 && t.status = 3, 1, 0)) total_pause_test")
+            ->selectRaw("SUM(IF (t.task_department = 5 && t.status = 4 , 1, 0)) total_complete_test")
+            ->selectRaw("SUM(IF (t.task_department = 5 && t.status = 4 AND (((t.real_end_time - t.real_start_time)/3600 - t.time_pause)>t.time), 1, 0)) total_complete_slow_test")
+            ->selectRaw("SUM(IF (t.task_department = 5 && (t.status = 0 OR t.status = 1) AND t.task_performer > 0  AND ((t.real_end_time - t.real_start_time) > t.time), 1, 0)) total_slow_test")
+            ->selectRaw("SUM(IF (t.task_department = 5 && t.status = 5  AND (t.task_performer > 0), 1, 0)) total_wait_fb_test")
+            ->selectRaw("SUM(IF (t.task_department = 5 && t.status = 6  AND (t.task_performer > 0), 1, 0)) total_again_test")
+            ->selectRaw("SUM(IF (t.task_department = 5, t.weight, 0)) total_weight_test")
+            ->selectRaw("SUM(IF (t.task_department = 5 && t.status = 4, t.weight, 0)) total_weight_test_complete");
+
 
         $usersQuery = User::query();
 

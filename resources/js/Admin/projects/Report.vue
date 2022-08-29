@@ -1,7 +1,15 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
+
 <template>
     <div>
         <h1 style="margin: 0px 0px 0px 20px">BẢNG THỐNG KÊ CÔNG VIỆC</h1>
-        <div style="width:400px; margin: -40px 0px 0px 650px;">
+        <div class="col-lg-6" style="margin-top:20px; padding-left:30px;">
+            <div class="form-check">
+                 <input class="form-check-input" type="checkbox" v-model="option" value="2" name="flexRadioDefault" id="flexRadioDefault2">
+                <label class="form-check-label" for="flexRadioDefault2"><h5>Bảng tổng</h5></label>
+            </div>
+        </div>
+        <div style="width:400px; margin: -80px 0px 0px 650px;">
             <span>Thống kê theo dự án</span>
             <multiselect v-model="project" :options="projects" :multiple="true" placeholder="Vui lòng chọn"
                 track-by="id" label="project_name">
@@ -10,7 +18,7 @@
         </div>
         <div style="width:400px; margin: -67px 0px 0px 1060px;">
             <span>Thống kê theo bộ phận</span>
-            <multiselect v-model="department" :options="departments" :multiple="true" placeholder="Vui lòng chọn"
+            <multiselect v-model="department" :options="departments" value="2" :multiple="true" placeholder="Vui lòng chọn"
                 track-by="value" label="label">
                 <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
             </multiselect>
@@ -25,81 +33,146 @@
                 style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê
             </button>
         </div><br>
-        <div class="card-body">
+        <div class="card-body" style="margin-top:-30px;">
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-12" v-if="option == 1">
                     <table class="project table-responsive" style="width: 100%">
                         <tr>
-                            <td colspan="3">
-                                <h4 style="text-align:center;">Trạng thái công việc</h4>
+                            <td width="250px"></td>
+                            <td width="68px"></td>
+                            <td>
+                                <h4 style="text-align:right; width:120px;">Tổng</h4>
+                            </td>
+                             <td>
+                                <h4 style="text-align:right; width:350px;">Game Design</h4>
+                            </td>
+                            <td>
+                                <h4 style="text-align:right; width:350px;">ART</h4>
+                            </td>
+                            <td>
+                                <h4 style="text-align:right; width:350px;">DEV</h4>
+                            </td>
+                            <td>
+                                <h4 style="text-align:right; width:350px;">Tester</h4>
                             </td>
                         </tr>
                         <tr>
                             <td><b>Tổng</b></td>
                             <td>:</td>
-                            <td>{{ taskSummary.total_task }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_task }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_task_gd }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_task_art }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_task_dev }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_task_test }} công việc</td>
                         </tr>
                         <tr>
                             <td><b>Đang làm</b></td>
                             <td>:</td>
-                            <td>{{ taskSummary.total_processing }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_processing }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_processing_gd }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_processing_art }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_processing_dev }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_processing_test }} công việc</td>
                         </tr>
                         <tr>
                             <td><b>Đang chờ</b></td>
                             <td>:</td>
-                            <td>{{ taskSummary.total_wait }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_wait }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_wait_gd }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_wait_art }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_wait_dev }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_wait_test }} công việc</td>
                         </tr>
                         <tr>
                             <td><b>Tạm dừng</b></td>
                             <td>:</td>
-                            <td>{{ taskSummary.total_pause }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_pause }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_pause_gd }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_pause_art }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_pause_dev }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_pause_test }} công việc</td>
+                        </tr>
+                        <tr>
+                            <td><b>Chờ feedback</b></td>
+                            <td>:</td>
+                            <td style="text-align:right">{{ taskSummary.total_wait_fb }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_wait_fb_gd }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_wait_fb_art }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_wait_fb_dev }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_wait_fb_test }} công việc</td>
+                        </tr>
+                        <tr>
+                            <td><b>Làm lại</b></td>
+                            <td>:</td>
+                            <td style="text-align:right">{{ taskSummary.total_again }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_again_gd }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_again_art }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_again_dev }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_again_test }} công việc</td>
                         </tr>
                         <tr>
                             <td><b>Hoàn thành đúng hạn</b></td>
                             <td>:</td>
-                            <td>{{ taskSummary.total_complete }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_complete - taskSummary.total_complete_slow  }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_complete_gd - taskSummary.total_complete_slow_gd  }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_complete_art - taskSummary.total_complete_slow_art  }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_complete_dev - taskSummary.total_complete_slow_dev  }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_complete_test - taskSummary.total_complete_slow_test }} công việc</td>
                         </tr>
                         <tr>
                             <td><b>Hoàn thành chậm</b></td>
                             <td>:</td>
-                            <td>{{ taskSummary.total_complete_slow }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_complete_slow }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_complete_slow_gd }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_complete_slow_art }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_complete_slow_dev }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_complete_slow_test }} công việc</td>
                         </tr>
                         <tr>
                             <td><b>Quá hạn</b></td>
                             <td>:</td>
-                            <td>{{ taskSummary.total_slow }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_slow }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_slow_gd }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_slow_art }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_slow_dev }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_slow_test }} công việc</td>
                         </tr>
-                    </table>
-                </div>
-                <div class="col-lg-4">
-                    <table class="work-department table-responsive" style="width: 100%">
                         <tr>
-                            <td colspan="3">
-                                <h4 style="text-align:center;">Công việc bộ phận</h4>
-                            </td>
-                        </tr>
-
-                        <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>{{dept.department}}</b></td>
+                            <td><b>Trọng số</b></td>
                             <td>:</td>
-                            <td>{{ dept.total_task }} công việc</td>
+                            <td style="text-align:right">{{ taskSummary.total_weight }} &emsp;&ensp;&nbsp; điểm</td>
+                            <td style="text-align:right">{{ taskSummary.total_weight_gd }} &emsp;&ensp;&nbsp; điểm</td>
+                            <td style="text-align:right">{{ taskSummary.total_weight_art }} &emsp;&ensp;&nbsp; điểm</td>
+                            <td style="text-align:right">{{ taskSummary.total_weight_dev }} &emsp;&ensp;&nbsp; điểm</td>
+                            <td style="text-align:right">{{ taskSummary.total_weight_test }} &emsp;&ensp;&nbsp; điểm</td>
                         </tr>
-
-                    </table>
-                </div>
-                <div class="col-lg-4">
-                    <table class="weight table-responsive" style="width: 100%">
+                         <tr>
+                            <td><b>Trọng số đã hoàn thành</b></td>
+                            <td>:</td>
+                            <td style="text-align:right">{{ taskSummary.total_weight_complete }} &emsp;&ensp;&nbsp; điểm</td>
+                            <td style="text-align:right">{{ taskSummary.total_weight_gd_complete }} &emsp;&ensp;&nbsp; điểm</td>
+                            <td style="text-align:right">{{ taskSummary.total_weight_art_complete }} &emsp;&ensp;&nbsp; điểm</td>
+                            <td style="text-align:right">{{ taskSummary.total_weight_dev_complete }} &emsp;&ensp;&nbsp; điểm</td>
+                            <td style="text-align:right">{{ taskSummary.total_weight_test_complete }} &emsp;&ensp;&nbsp; điểm</td>
+                        </tr>
                         <tr>
-                            <td colspan="3">
-                                <h4 style="text-align:center;">Trọng số bộ phận</h4>
-                            </td>
-                        </tr>
-                        <tr v-for="(dept, idx) in summary" :key="idx">
-                            <td><b>{{dept.department}}</b></td>
+                            <td><b>Tỉ lệ hoàn thành(công việc)</b></td>
                             <td>:</td>
-                            <td>{{ dept.total_weight }}</td>
+                            <td style="text-align:right">{{ formatNumber((taskSummary.total_complete)*100 / (taskSummary.total_task)) }} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right">{{ formatNumber((taskSummary.total_complete_gd)*100 / (taskSummary.total_task_gd)) }} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right">{{ formatNumber((taskSummary.total_complete_art)*100 / (taskSummary.total_task_art)) }} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right">{{ formatNumber((taskSummary.total_complete_dev)*100 / (taskSummary.total_task_dev)) }} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right">{{ formatNumber((taskSummary.total_complete_test)*100 / (taskSummary.total_task_test)) }} &emsp;&ensp;&nbsp; %</td>
                         </tr>
-
+                        <tr>
+                            <td><b>Tỉ lệ hoàn thành(Trọng số)</b></td>
+                            <td>:</td>
+                            <td style="text-align:right">{{ formatNumber((taskSummary.total_weight_complete)*100 / (taskSummary.total_weight)) }} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right">{{ formatNumber((taskSummary.total_weight_gd_complete)*100 / (taskSummary.total_weight_gd)) }} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right">{{ formatNumber((taskSummary.total_weight_art_complete)*100 / (taskSummary.total_weight_art)) }} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right">{{ formatNumber((taskSummary.total_weight_dev_complete)*100 / (taskSummary.total_weight_dev)) }} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right">{{ formatNumber((taskSummary.total_weight_test_complete)*100 / (taskSummary.total_weight_test)) }} &emsp;&ensp;&nbsp; %</td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -118,7 +191,7 @@
                             <th style="vertical-align: middle; width: 9.5%;">Hoàn thành</th>
                             <th style="vertical-align: middle; width: 9.5%;">Đang làm</th>
                             <th style="vertical-align: middle; width: 9.5%;">Chưa làm</th>
-                            <th style="vertical-align: middle; width: 9.5%;">Hoàn thành muộn</th>
+                            <th style="vertical-align: middle; width: 9.5%;">Hoàn thành chậm</th>
                             <th style="vertical-align: middle; width: 9.5%;">Quá hạn</th>
                             <th style="vertical-align: middle; width: 9.5%;">Trọng số</th>
                             <th style="vertical-align: middle; width: 9.5%;">Trọng số/Bộ phận</th>
@@ -198,6 +271,7 @@ export default {
     },
     data() {
         return {
+            option:1,
             projects: [],
             project: '',
             department: '',
@@ -208,16 +282,16 @@ export default {
             search: '',
             currentUser: {},
             departments: [
-                { value: 1, label: 'Admin' },
+                //{ value: 1, label: 'Admin' },
                 { value: 2, label: 'Dev' },
                 { value: 3, label: 'Game design' },
                 { value: 4, label: 'Art' },
                 { value: 5, label: 'Tester' },
-                { value: 6, label: 'Điều hành' },
-                { value: 7, label: 'Hành chính nhân sự' },
-                { value: 8, label: 'Kế toán' },
+                //{ value: 6, label: 'Điều hành' },
+                //{ value: 7, label: 'Hành chính nhân sự' },
+                //{ value: 8, label: 'Kế toán' },
                 { value: 9, label: 'Phân tích dữ liệu' },
-                { value: 10, label: 'Support' },
+                //{ value: 10, label: 'Support' },
             ],
             users: [],
             summary: [],
