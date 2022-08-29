@@ -176,7 +176,9 @@
                                         <select id="permission" type="text" class="form-control @error('name') is-invalid @enderror" name="permission"
                                             value="" required autocomplete="permission">
                                             <option value="0" {{old('permission')==0 || $user->permission==0?'selected':false}}>Nhân viên</option>
-                                            <option value="1" {{old('permission')==1 || $user->permission==1?'selected':false}}>Quản lý</option>
+                                            <option value="2" {{old('permission')==2 || $user->permission==2?'selected':false}}>Leader</option>
+                                            <option value="3" {{old('permission')==3 || $user->permission==3?'selected':false}}>Quản lý</option>
+                                            <option value="1" {{old('permission')==1 || $user->permission==1?'selected':false}}>Admin</option>
                                         </select>
 
                                         @error('permission')

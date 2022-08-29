@@ -25,7 +25,7 @@
 
                 </template>
                 <template slot="status_template" scope="scope">
-                    <div v-if="currentUser.permission == 1">
+                    <div v-if="currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3">
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changeStatus($event, scope.row.id)" v-model="scope.row.status">
                             <option value="0" :disabled="scope.row.status == 2 || scope.row.status == 3 || scope.row.status==4">Quá hạn</option>

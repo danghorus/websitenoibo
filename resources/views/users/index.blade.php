@@ -191,7 +191,7 @@ table tr td img {
                                 if($user->user_status == 2) {
                                 ?>
                                 <tr style="text-align:center;">
-                                    <td scope="col" width="3.6%">{{++$i }}</td>
+                                    <td scope="col" width="3%">{{++$i }}</td>
                                     <td scope="col" width="7%">{{ $user->id }}</td>
                                     <td scope="col" width="8%"><img src="{{asset('image/'.$user->avatar)}}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
                                     <td scope="col" width="10%">{{ $user->fullname }}</td>
