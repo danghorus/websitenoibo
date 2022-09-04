@@ -141,7 +141,7 @@ class TaskController extends Controller
             $builder->where('tt.task_name', 'LIKE', "%$search%");
         }
         $tasks = $builder->get();
-        dd(123);
+
         foreach ($tasks as $task) {
             $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
 

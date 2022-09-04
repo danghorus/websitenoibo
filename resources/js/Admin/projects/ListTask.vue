@@ -408,11 +408,13 @@ export default {
             this.parentId = 0;
         },
         async changeStatus(e, taskId) {
-            const res = await $post(`/tasks/change-status/${taskId}`, {status: e.target.value});
+            if (e.target.value) {
+                const res = await $post(`/tasks/change-status/${taskId}`, {status: e.target.value});
 
-            if (res.code == 200) {
-                toastr.success(res.message);
-                this.$emit('getAllTasks');
+                if (res.code == 200) {
+                    toastr.success(res.message);
+                    // this.$emit('getAllTasks');
+                }
             }
         },
     },
