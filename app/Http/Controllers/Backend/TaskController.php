@@ -366,8 +366,11 @@ class TaskController extends Controller
             }
             $newTasks->fullname = $newTasks->taskUser? $newTasks->taskUser->fullname: '';
             $totalChild = Task::query()->where('task_parent', '=', $taskId)->count();
-            $newTasks->_hasChildren = $totalChild > 0;
-            $newTasks->_children = [];
+            if ($changeParent) {
+                $newTasks->_hasChildren = $totalChild > 0;
+                $newTasks->_children = [];
+            }
+
         }
 
         if ($changeParent) {
