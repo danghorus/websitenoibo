@@ -30,24 +30,26 @@
                         <input class="form-control" name="user_id" type="text" value="{{ Auth::user()->id }}" hidden/>
                         <label for="">Mã nhân viên:</label>
                     </div>
-
                     <div class="form-floating mb-3">
-                        <select class="form-control" name="warrior" type="text">
+                        <select class="form-control" id="warrior" name="warrior">
+                            <option selected disabled value>Lựa chọn</option>
                             <option value="0">Soldier</option>
                             <option value="1">Warrior 1</option>
                             <option value="2">Warrior 2</option>
                             <option value="3">Warrior 3</option>
                         </select>
-                        <label for="">Cấp độ Warrior muốn đăng ký</label>
+                        <label for="">Cấp độ Warrior đăng ký</label>
                     </div>
-                     <div class="form-floating mb-3">
-                        <select class="form-control" name="project_code" type="text">
-                            <option value="Dự án 1">Dự án 1</option>
-                            <option value="Dự án 2">Dự án 2</option>
-                            <option value="Dự án 3">Dự án 3</option>
+                    <div class="form-floating mb-3">
+                        <select class="form-control" id="project_id" name="project_id">
+                            <option selected disabled value>Lựa chọn</option>
+                            @foreach($projects as $project)
+                                <option value="{{$project->id}}"> {{$project->project_name}}</option>
+                            @endforeach
                         </select>
                         <label for="">Chọn dự án</label>
                     </div>
+                     
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" >Tạo yêu cầu</button>

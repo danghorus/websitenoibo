@@ -23,8 +23,10 @@ class Petition extends Model
         'time_to',
         'date_to',
         'type_leave',
+        'type_OT',
         'petition_reason',
         'petition_status',
+        'read',
         'check_type'
     ];
 

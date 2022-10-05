@@ -30,7 +30,7 @@ class TimeKeepingExport implements WithHeadings, FromArray
     public function headings(): array
     {
         $res = [
-            '#',
+            'Mã nhân viên',
             'Tên nhân viên',
         ];
 
@@ -54,8 +54,10 @@ class TimeKeepingExport implements WithHeadings, FromArray
             $tmp[] = $value['fullname'] ?? '';
             foreach ($value['time_keeping'] as $val) {
                 $timeCheckin = "";
+                $timeCheckin .= "Giờ vào ca";
                 $timeCheckin .= $val['checkin'] ?? '--:--:--';
-                $timeCheckin .= " / ";
+                $timeCheckin .= '</br>';
+                $timeCheckin .= "Giờ ra ca";
                 $timeCheckin .= $val['checkout'] ?? '--:--:--';
                 $tmp[] = $timeCheckin;
             }

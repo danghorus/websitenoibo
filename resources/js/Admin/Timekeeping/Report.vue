@@ -3,12 +3,12 @@
         <div class="card-header" style="height:50px;">
             <h4>Bảng thống kê chấm công</h4>
             <div style="position: absolute; right: 10px; top: 8px">
-                <date-picker v-model="dateRange" type="date" range
+                <date-picker @change="changeOption()" v-model="dateRange" type="date" range
                     placeholder="Vui lòng chọn khoảng thời gian thống kê"></date-picker>
-                <button class="btn btn-primary" @click="getReport()"
+                <!--<button class="btn btn-primary" @click="getReport()"
                     style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê</button>
                 <button v-if=" currentUser.permission == 1" class="btn btn-success" @click="exportData()"
-                    style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Xuất file Excel</button>
+                    style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Xuất file Excel</button>-->
             </div>
         </div>
         <div class="card-body table-responsive">
@@ -76,9 +76,9 @@
                     <thead class="point-table-head">
                         <tr style="vertical-align: middle; font-size:12px; text-align:center; ">
 
-                            <th style="vertical-align: middle; width:180px;" rowspan="2">
+                            <th style="vertical-align: middle; width:195px;" rowspan="2">
                                 <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
-                                    placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
+                                    placeholder="Tìm kiếm" @input="changeOption()">
                             </th>
                             <!--<th rowspan="2" style="vertical-align: middle;">Mã Nhân viên</th>-->
                             <th style="vertical-align: middle; width:90px;" rowspan="2" @click="sort('date_official')">
@@ -90,12 +90,15 @@
                             <th rowspan="2" style="vertical-align: middle; width:70px;">Tổng giờ ĐMVS</th>
                             <th rowspan="2" style="vertical-align: middle; width:70px;">Số giờ đi sớm</th>
                             <th rowspan="2" style="vertical-align: middle; width:70px;">Số giờ về muộn</th>
-                            <th rowspan="2" style="vertical-align: middle; width:70px;">Số ngày chấm công</th>
-                            <th rowspan="2" style="vertical-align: middle; width:70px;">Công thực tế</th>
+                            
+                            <th rowspan="2" style="vertical-align: middle; width:70px;">Nghỉ phép có lương</th>
+                            <th rowspan="2" style="vertical-align: middle; width:70px;">Nghỉ phép có lương(12)</th>
+                            <th rowspan="2" style="vertical-align: middle; width:70px;">Nghỉ không lương</th>
                             <th rowspan="2" style="vertical-align: middle; width:70px;">Công đăng ký làm thêm</th>
                             <th rowspan="2" style="vertical-align: middle; width:70px;">Công đăng ký nỗ lực</th>
-                            <th rowspan="2" style="vertical-align: middle; width:70px;">Công nghỉ</th>
-                            <th rowspan="2" style="vertical-align: middle; width:66px;">Không checkout</th>
+                            <th rowspan="2" style="vertical-align: middle; width:70px;">Công thực tế</th>
+                            <th rowspan="2" style="vertical-align: middle; width:70px;">Công tính lương</th>
+                            <th rowspan="2" style="vertical-align: middle; width:70px;">Ngày phép có lương còn lại</th>
                             <th rowspan="2" style="vertical-align: middle; width:66px;">Tổng giờ nỗ lực</th>
                             <th rowspan="2" style="vertical-align: middle; width:90px;">Warrior hiện tại</th>
                             <th rowspan="2" style="vertical-align: middle; width:65px;"
@@ -118,8 +121,12 @@
                         </tr>
                     </thead>
                     <tbody class="detail" style="font-size:14px;">
+                        <template>
                         <tr v-for="(user, index) in data" :key="index">
-                            <td style="width:180px;">{{ user.fullname }}</td>
+
+                            <td style="width:195px;font-size:18px" v-if="user.rateGoLate >= 12.5" ><b style="color:red;">{{ user.fullname }}</b></td>
+                            <td style="width:195px;" v-else>{{ user.fullname }}</td>
+
                             <td style=" text-align:center; width:90px;" v-if="user.date_official_new != 0">{{
                                 user.date_official_new}}</td>
                             <td style=" text-align:center;" v-else><b>Thử việc</b></td>
@@ -136,14 +143,22 @@
                             <td style="width:70px;">{{ user.totalGoLateAboutEarly }}</td>
                             <td style="width:70px;">{{ formatNumber(user.timeGoEarly) }}</td>
                             <td style="width:70px;">{{ formatNumber(user.timeAboutLate) }}</td>
-                            <td style="width:70px;">{{ user.totalWorkingDays }}</td>
-                            <td style="width:70px;">{{ user.totalTimeKeeping }}</td>
+                            <td style="width:70px;">{{ user.totalPaidLeave }}</td>
+                            <td style="width:70px;">{{ user.totalPaidLeave12 }}</td>
+                            <td style="width:70px;">{{ user.totalUnpaidLeave }}</td>
                             <td style="width:70px;">{{ user.totalOT}}</td>
                             <td style="width:70px;">{{ user.totalWar}}</td>
-                            <td style="width:70px;">{{ user.totalUnpaidLeave }}</td>
-                            <td style="width:66px;">{{ user.totalNotCheckOut }}</td>
+                            <td style="width:70px;">{{ user.totalTimeKeeping }}</td>
+                            <td style="width:70px;">{{ user.totalPayroll }}</td>
+                            <td style="width:70px;">{{ user.totalPaidLeaveFull }}</td>
+                            
                             <td style="width:66px;">{{ formatNumber(user.totalHourEfforts) }}</td>
-                            <td style="width:90px;">{{ user.currentWar }}</td>
+
+                            <td v-if="user.currentWar == 'Warrior 1'" style="width:90px;"><b style="color:green;">{{ user.currentWar }}</b></td>
+                            <td v-else-if="user.currentWar == 'Warrior 2'" style="width:90px;"><b style="color:orange;">{{ user.currentWar }}</b></td>
+                            <td v-else-if="user.currentWar == 'Warrior 3'" style="width:90px;"><b style="color:#800000;">{{ user.currentWar }}</b></td>
+                            <td v-else style="width:90px;"><b style="color:gray;">{{ user.currentWar }}</b></td>
+
                             <td style="width:65px;" v-if="expected.end_date > current.end_date">{{
                                 formatNumber(user.timeHoldWar) }}
                             </td>
@@ -151,16 +166,23 @@
                                 formatNumber(user.avgTimeHoldWar)
                                 }}
                             </td>
-                            <td style="width:90px;" v-if="expected.end_date > current.end_date">{{ user.nextWar }}</td>
+                            <td v-if=" expected.end_date > current.end_date & user.nextWar == 'Warrior 1'" style="width:90px;"><b style="color:green;">{{ user.nextWar }}</b></td>
+                            <td v-else-if=" expected.end_date > current.end_date & user.nextWar == 'Warrior 2'" style="width:90px;"><b style="color:orange;">{{ user.nextWar }}</b></td>
+                            <td v-else-if=" expected.end_date > current.end_date & user.nextWar == 'Warrior 3'" style="width:90px;"><b style="color:#800000;">{{ user.nextWar }}</b></td>
+                            <td v-else-if=" expected.end_date > current.end_date & user.nextWar == 'Soldier'" style="width:90px;"><b style="color:gray;">{{ user.currentWar }}</b></td>
+
+                            <!--<td style="width:90px;" v-if="expected.end_date > current.end_date">{{ user.nextWar }}</td>-->
+
+
                             <td style="width:65px;" v-if="expected.end_date > current.end_date">{{
                                 formatNumber(user.timeIncreaseWar) }}
                             </td>
-                            <td style="width:65px;" v-if="expected.end_date > current.end_date">{{
-                                formatNumber(user.avgTimeIncreaseWar)
-                                }}
-                            </td>
-                            <td style="width:85px;"> {{ formatNumber(user.rateGoLate)}} %</td>
+                            <td style="width:65px;" v-if="expected.end_date > current.end_date & user.avgTimeIncreaseWar < 5"><b style="color:green;">{{formatNumber(user.avgTimeIncreaseWar)}}</b></td>
+							<td style="width:65px;" v-else-if="expected.end_date > current.end_date & user.avgTimeIncreaseWar > 5"">{{formatNumber(user.avgTimeIncreaseWar)}}</td>
+                            <td style="width:85px; font-size:18px" v-if="user.rateGoLate >= 12.5" ><b style="color:red;">{{ formatNumber(user.rateGoLate)}} %</b></td>
+                            <td style="width:85px;" v-else> {{ formatNumber(user.rateGoLate)}} %</td>
                         </tr>
+                    </template>
                     </tbody>
                 </table>
             </div>
@@ -185,7 +207,7 @@ export default {
             data: [],
             expected: {},
             current: {},
-            search: '',
+            search:'',
             currentUser: {},
 
         }
@@ -194,6 +216,9 @@ export default {
         this.getReport();
     },
     methods: {
+        changeOption(){
+            this.getReport();
+            },
         async getReport() {
             let params = {
                 search: this.search ,

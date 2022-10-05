@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,10 +20,11 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = User::all();
+        $projects = Project::all();
         if ($request->has('search')) {
             $users = User::where('fullname', 'like', "%{$request->search}%")->get();
         }
-        return view('users.index', compact('users'));
+        return view('users.index', compact('users', 'projects'));
     }
 
     /**
@@ -33,7 +35,8 @@ class UserController extends Controller
     public function create()
     {
         $users = User::all();
-        return view('users.create',compact('users'));
+        $projects = Project::all();
+        return view('users.create',compact('users','projects'));
     }
 
     /**
@@ -83,8 +86,9 @@ class UserController extends Controller
         ]);
 
         $users = User::all();
+        $projects = Project::all();
 
-        return redirect()->route('users.index',compact('users'))->with('message', 'User Register Succesfully');
+        return redirect()->route('users.index',compact('users', 'projects'))->with('message', 'User Register Succesfully');
 
     }
 
@@ -97,7 +101,8 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $users = User::all();
-        return view('users.edit', compact('user', 'users'));
+        $projects = Project::all();
+        return view('users.edit', compact('user','projects', 'users'));
     }
 
     /**
@@ -143,7 +148,7 @@ class UserController extends Controller
 
     public function all_user()
     {
-        $users = User::query()->select(['id', 'fullname', 'user_code', 'place_id'])->get();
+        $users = User::query()->select(['id', 'fullname', 'user_code', 'place_id'])->where('user_status', '=', 1)->get();
 
         return [
             'code' => 200,
@@ -153,7 +158,7 @@ class UserController extends Controller
 
     public function all_user_by_group()
     {
-        $users = User::query()->select(['id', 'fullname', 'user_code', 'place_id', 'department'])->get();
+        $users = User::query()->select(['id', 'fullname', 'user_code', 'place_id', 'department'])->where('user_status', '=', 1)->get();
 
         $newUsers = [];
 

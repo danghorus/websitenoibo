@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\StickerController;
 use App\Http\Controllers\Backend\TaskController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\PetitionController;
+use App\Http\Controllers\Backend\ProposalController;
 use App\Http\Controllers\Backend\WarriorController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\OfficeController;
@@ -43,8 +44,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('petitions', PetitionController::class);
     Route::resource('warriors', WarriorController::class);
     Route::resource('works', WorkController::class);
+    Route::resource('projects', ProjectController::class);
     Route::resource('settings', SettingController::class);
     Route::resource('offices', OfficeController::class);
+    //Route::resource('proposals', ProposalController::class);
 
     Route::post('users/{user}/change-password', [ChangePasswordController::class, 'change_password'])->name('users.change.password');
     Route::post('users/{user}/change-avatar', [ChangeAvatarController::class, 'change_avatar'])->name('users.change.avatar');
@@ -56,8 +59,9 @@ Route::middleware(['auth'])->group(function () {
 
     //Petition
     Route::post('/petition/create_petition_time_keeping', [PetitionController::class, 'create_petition_time_keeping']);
-    Route::post('/petition/create_holiday', [PetitionController::class, 'create_holiday']);
-    Route::post('/petition/warrior', [PetitionController::class, 'warrior']);
+    Route::get('/approved', [PetitionController::class, 'approved'])->name('approved');
+    Route::get('/unapproved', [PetitionController::class, 'unapproved'])->name('unapproved');
+    //Route::post('petition/change_read/{id}', [PetitionController::class, 'changeRead']);
 
     Route::post('/partner/connect', [PartnerController::class, 'connect']);
     Route::get('/partner/get_devices', [PartnerController::class, 'getDevices']);
@@ -82,6 +86,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/time-keeping/petition', [TimeKeepingController::class, 'petition']);
     Route::post('/petition/petition', [PetitionController::class, 'petition']);
+    Route::post('/petitions/index', [PetitionController::class, 'changeRead']);
 
     Route::get('/time-keeping/export', [TimeKeepingController::class, 'export']);
     Route::get('/time-keeping/get-report', [TimeKeepingController::class, 'getReport']);
@@ -106,6 +111,26 @@ Route::middleware(['auth'])->group(function () {
     Route::get('project-report', [ProjectController::class, 'report']);
     Route::get('warrior', [WarriorController::class, 'warrior']);
 
+    //proposals
+    Route::get('proposals', [ProposalController::class, 'index']);
+    Route::get('proposals/list_proposals', [ProposalController::class, 'list_proposals']);
+    Route::post('proposals/create', [ProposalController::class, 'create']);
+    Route::post('proposals/delete/{id}', [ProposalController::class, 'delete']);
+    //Route::get('list-proposals', [PetitionCloneController::class, 'list-proposals']);
+
+    //Route::get('list-proposals', [ProposalController::class, 'index']);
+    //Route::post('petitions01/{id}/update', [PetitionController::class, 'update']);
+    //Route::get('petitions01/get_all', [PetitionController::class, 'getAll']);
+    //Route::get('petitions01/{id}', [PetitionController::class, 'getInfo']);
+    //Route::post('petitions01/delete/{id}', [PetitionController::class, 'delete']);
+    //Route::get('petitions01/{id}/get_detail', [PetitionController::class, 'getDetail']);
+
+    //Proposal
+    //Route::post('proposals/create', [ProposalController::class, 'create']);
+    //Route::post('proposals/update/{id}', [ProposalController::class, 'update']);
+    //Route::post('proposals/delete/{id}', [ProposalController::class, 'delete']);
+    //Route::get('/proposals/get_all', [ProposalController::class, 'index']);
+
     //Priority
     Route::post('priorities/create', [PriorityController::class, 'create']);
     Route::post('priorities/update/{id}', [PriorityController::class, 'update']);
@@ -124,7 +149,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('stickers/delete/{id}', [StickerController::class, 'delete']);
     Route::get('/stickers/get_all', [StickerController::class, 'index']);
 
-
     //Task
     Route::post('tasks/create', [TaskController::class, 'create']);
     Route::post('tasks/update/{id}', [TaskController::class, 'update']);
@@ -134,8 +158,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('tasks/detail/{id}', [TaskController::class, 'detail']);
     Route::post('tasks/delete/{id}', [TaskController::class, 'delete']);
     Route::post('tasks/change-status/{id}', [TaskController::class, 'changeStatus']);
+	Route::post('tasks/change-progress/{id}', [TaskController::class, 'changeProgress']);
+    Route::post('tasks/change-task_name/{id}', [TaskController::class, 'changeTaskName']);
+    Route::post('tasks/change-start_time/{id}', [TaskController::class, 'changeStartTime']);
+    Route::post('tasks/change-time/{id}', [TaskController::class, 'changeTime']);
+    Route::post('tasks/change-pause/{id}', [TaskController::class, 'changePause']);
+    Route::post('tasks/change-department/{id}', [TaskController::class, 'changeDepartment']);
+    Route::post('tasks/change-performer/{id}', [TaskController::class, 'changePerformer']);
+    Route::post('tasks/change-weight/{id}', [TaskController::class, 'changeWeight']);
+    Route::post('tasks/change-sticker/{id}', [TaskController::class, 'changeSticker']);
+    Route::post('tasks/change-priority/{id}', [TaskController::class, 'changePriority']);
     Route::get('tasks/get-report', [TaskController::class, 'getReport']);
     Route::get('tasks/copy/{id}', [TaskController::class, 'copy']);
+    Route::get('tasks/copyClone/{id}', [TaskController::class, 'copyClone']);
     Route::get('tasks/invalid', [TaskController::class, 'invalid']);
     Route::get('/tasks/delete/{id}/invalid', [TaskController::class, 'invalidDelete']);
     Route::get('/tasks/restore/{id}', [TaskController::class, 'restore']);
@@ -148,8 +183,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('invalid_tasks', [TaskController::class, 'invalidTasks']);
 
 });
-
-
 
 Route::get('{any}', function () {
     return view('employees.index');

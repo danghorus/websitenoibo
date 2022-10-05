@@ -8,15 +8,15 @@
                         <th scope="col">Công việc</th>
                         <th scope="col">Thời gian bắt đầu</th>
                         <th scope="col">Thời lượng</th>
-                        <th scope="col">Dự án</th>
-                        <th scope="col">Bộ phận</th>
+                        <th scope="col" width="150px">Dự án</th>
+                        <th scope="col"  width="150px">Bộ phận</th>
                         <th scope="col">Người thực hiện</th>
                         <th scope="col">Trạng thái</th>
                         <th scope="col">Thao tác</th>
                     </tr>
                 </thead>
-                <tr v-for="item in listTaskTimeLine" :key="item.id">
-                    <td scope="row">{{ item.id + 1 }}</td>
+                <tr v-for=" (item, index) in listTaskTimeLine" :key="item" style="font-size:14px;">
+                    <td scope="row">{{ index + 1 }}</td>
                     <td scope="row">{{ item.task_name }}</td>
                     <td>{{ item.start_time }}</td>
                     <td>{{ item.time }}</td>
@@ -27,13 +27,13 @@
                     <td>
                         <div style="display: flex">
                             <p @click="showModalEditTask(item.id)">
-                                <i class="fas fa-pencil-alt" style="cursor: pointer" />
-                            </p>
+                                <button class="btn btn-primary btn-sm" style="height:20px; font-size:10px;">Sửa</button>
+                            </p> &ensp;
                             <p @click="showModalConfirm(item.id)">
-                                <i class="fas fa-trash ml-2" style="cursor: pointer" />
-                            </p>
+                                 <button class="btn btn-danger btn-sm"  style="height:20px; font-size:10px;">Xoá</button>
+                            </p>&ensp;
                             <p @click="copyTask(item.id)">
-                                <i class="fas fa-copy ml-2" style="cursor: pointer" />
+                                 <button class="btn btn-success btn-sm"  style="height:20px; font-size:10px;">Copy</button>
                             </p>
                         </div>
                     </td>

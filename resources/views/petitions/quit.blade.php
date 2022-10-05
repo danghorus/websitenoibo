@@ -38,19 +38,19 @@
                     </div>
                     <?php } else {?>
 
-                       <div class="form-floating mb-3">
-                            <select class="form-control" id="user_fullname" name="user_fullname">
-                                <option selected disabled value>Chọn nhân viên</option>
-                                @foreach($users as $user)
-                                    <?php
-                                    if ($user->user_status==1 && $user->id){
-                                    ?>
-                                    <option>{{$user->fullname}}</option>
-                                    <?php } ?>
-                                @endforeach
-                            </select>
-                            <label for="user_fullname">Họ và tên:</label>
-                        </div>
+                    <div class="form-floating mb-3">
+                        <select class="form-control" id="user_fullname" name="user_id">
+                            <option selected disabled value>Chọn nhân viên</option>
+                            @foreach($users as $user)
+                                <?php
+                                if ($user->user_status==1){
+                                ?>
+                                <option value="{{$user->id}}"> {{$user->fullname}}</option>
+                                <?php } ?>
+                            @endforeach
+                        </select>
+                        <label for="user_fullname">Họ và tên:</label>
+                    </div>
                     <?php } ?>
 
                     <div class="form-floating mb-3">
@@ -65,7 +65,7 @@
                         <label for="">Ngày dự định nghỉ việc:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" name="reason" type="text" style="height:100px;"></textarea>
+                        <textarea class="form-control" name="petition_reason" type="text" style="height:100px;"></textarea>
                         <label for="">Lý do:</label>
                     </div>
 

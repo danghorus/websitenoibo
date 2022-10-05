@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
+use App\Models\Project;
 
 class TimeKeepingController extends Controller
 {
@@ -27,23 +28,27 @@ class TimeKeepingController extends Controller
     public function index(Request $request)
     {
         $users = User::all();
-        return view('timekeeping.index', compact('users'));
+        $projects = Project::all();
+        return view('timekeeping.index', compact('users', 'projects'));
     }
 
     public function report(Request $request)
     {
         $users = User::all();
-        return view('timekeeping.report', compact('users'));
+        $projects = Project::all();
+        return view('timekeeping.report', compact('users','projects'));
     }
     public function wage(Request $request)
     {
         $users = User::all();
-        return view('timekeeping.wage', compact('users'));
+        $projects = Project::all();
+        return view('timekeeping.wage', compact('users','projects'));
     }
     public function bonus(Request $request)
     {
         $users = User::all();
-        return view('timekeeping.bonus', compact('users'));
+        $projects = Project::all();
+        return view('timekeeping.bonus', compact('users', 'projects'));
     }
 
     public function get(Request $request) {

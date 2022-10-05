@@ -62,6 +62,13 @@
                         <label for="">Loại nghỉ phép</label>
                     </div>
                     <div class="form-floating mb-3">
+                        <select class="form-control" name="type_paid">
+                            <option value="0">Nghỉ không lương</option>
+                            <option value="1">Nghỉ có lương</option>
+                        </select>
+                        <label for="">Hình thức nghỉ</label>
+                    </div>
+                    <div class="form-floating mb-3">
                         <input class="form-control" id="indaypm" name="date_from" type="date" />
                         <script>
                             document.getElementById('indaypm').value = new Date().toISOString().substring(0, 10);

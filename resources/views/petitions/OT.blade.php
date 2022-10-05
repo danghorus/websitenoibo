@@ -2,7 +2,7 @@
      <div class="modal-dialog" role="document">
         <div class="modal-content" style="width:100%;">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">Đăng ký làm thêm</h3>
+                <h3 class="modal-title" id="exampleModalLabel">ĐKLC một ngày</h3>
                 <button type="button" class="close" data-bs-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -56,6 +56,10 @@
                     <div class="form-floating mb-3">
                         <input class="form-control" name="petition_type" type="text" value="5" hidden/>
                         <label for="">Loại yêu cầu</label>
+                    </div>
+                     <div class="form-floating mb-3">
+                        <input class="form-control" name="type_OT" type="text" value="3" hidden/>
+                        <label for="">Loại ĐKLC</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" id="OT_from" name="date_from" type="date" />

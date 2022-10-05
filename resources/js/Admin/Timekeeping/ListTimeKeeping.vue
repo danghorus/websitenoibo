@@ -33,24 +33,22 @@
                     <tr>
                         <th style="width:250px">
                             <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
-                                placeholder="Tìm kiếm" v-on:keyup.enter="getTimeKeepings()">
+                                placeholder="Tìm kiếm" @input="changeOption()">
                         </th>
                         <th v-for="(label, index) in labels" :key="index"
-                            style="font-size:13px; text-align:center; vertical-align: middle; width:228.65px">
-                            <button type="button" data-toggle="tooltip" data-placement="bottom"
-                                title="Click để chọn ngày nghỉ của công ty( Du lịch, nghỉ lễ,...)"
-                                style="background-color:#d4d4d4; border: 0px;"><b>{{ label }}</b>
-                            </button>
+                            style="font-size:13px; text-align:center; vertical-align: middle; width:12.255%">
+                            <b>{{ label }}</b>
                         </th>
+                        <th style="width:16px"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(user, index) in data" :key="index">
-                        <td style="width:251px; font-size:14px; vertical-align: middle; height: 88px">{{ user.fullname
+                        <td style="width:250px; font-size:14px; vertical-align: middle; height: 88px">{{ user.fullname
                             }}</td>
                         <td v-for="(time, index) in user.time_keeping" :key="index" :class="time.class"
                             @click="showModal(user.id, user.fullname, time)"
-                            style="text-align:center;vertical-align: middle;width:230px">
+                            style="text-align:center;vertical-align: middle;width:12.375%">
                             <template v-if="time.petition_type == 0 && time.label_day != 'sunday' && time.holiday != 1"
                                 style="background-color: red;">
                                 <b>Ca hành chính</b>
@@ -245,22 +243,23 @@
             <table v-else class="table table-bordered mt-5">
                 <thead class="table-active">
                     <tr>
-                        <th style="width:199px">
+                        <th style="width:250px">
                             <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
                                 placeholder="Tìm kiếm" v-on:keyup.enter="getTimeKeepings()">
                         </th>
                         <th v-for="(label, index) in labels" :key="index"
-                            style="font-size:13px; text-align:center; vertical-align: middle; width: 53.3px">{{ label
+                            style="font-size:13px; text-align:center; vertical-align: middle; width: 2.879%">{{ label
                             }}
                         </th>
+                        <th  style=" width: 16px"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(user, index) in data" :key="index">
-                        <td style="width:200px; font-size:14px; vertical-align: middle;">{{ user.fullname }}</td>
+                        <td style="width:250px; font-size:14px; vertical-align: middle;">{{ user.fullname }}</td>
                         <td v-for="(time, index) in user.time_keeping" :key="index" :class="time.class"
                             @click="showModal(user.id, user.fullname, time)"
-                            style="text-align:center;vertical-align: middle; width: 53.5px;">
+                            style="text-align:center;vertical-align: middle; width: 2.9%;">
                             <div style=" font-size:13px; text-align: center;">
                                 {{ time.checkin ? time.checkin: '--:--'}} <br>
                                 {{ time.checkout ? time.checkout: '--:--' }}
@@ -276,7 +275,7 @@
             </div>-->
         </div>
         <div>
-            <div ref="modalDetail" class="modal" tabindex="-1" role="dialog">
+            <div ref="modalDetail" data-bs-backdrop="static" data-bs-keyboard="false" class="modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document" style="  max-width: 80%;">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -430,12 +429,12 @@ export default {
 table table-bordered mt-5
 {
     background: #fff;
-    border: 1px solid #999999;
+    border: 0px solid #999999;
 }
 
 table thead tr th {
     padding: 5px;
-    border: 1px solid #9b9b9b;
+    border: 0px solid #9b9b9b;
     color: #000;
 }
 
@@ -481,7 +480,7 @@ thead {
 }
 
 tbody {
-    height: 640px;
+    height: 860px;
     overflow: auto;
     display: block;
 }

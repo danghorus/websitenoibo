@@ -14,6 +14,6 @@ class Warrior extends Model
         'user_id',
         'user_fullname',
         'warrior',
-        'project_code'   
+        'project_id'
     ];
 }

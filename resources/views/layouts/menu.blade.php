@@ -23,7 +23,7 @@
             left: 57,5%;
             z-index: 99;
         }
-	
+
     </style>
 
     <!-- CSRF Token -->
@@ -64,7 +64,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-    
+
 
 <style>
 
@@ -102,18 +102,21 @@
             <img id="loading-image" src="{{ asset('img/loading_5.gif') }}" alt="" />
             Loading...
         </div>
-        <nav class="sb-topnav navbar navbar-expand navbar" style="background-color:#F8F9FA;">
+        <nav class="sb-topnav navbar navbar-expand navbar" style="background-color:#F8F9FA; ">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="{{ url('/home') }}" style="color:#999da1; padding:6px 0px 0px 0px;margin:0px -50px 0px -10px;"><h4>HORUS WORK</h4></a>
             <!-- Sidebar Toggle-->
             <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px;">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto" style="font-size:16px;" id="">
+                    <ul onclick="myFunction(event)" class="navbar-nav mr-auto" style="font-size:16px;" id="">
                         <li class="nav-item">
                             <a class="nav-link" href="{{url('/home') }}">Trang chủ</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/petitions') }}">Yêu cầu</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/proposals') }}">Yêu cầu(clone)</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/users') }}">Nhân sự</a>
@@ -147,12 +150,16 @@
                     </ul>
                     @extends('petitions.create')
                     @extends('petitions.go_late')
+                    @extends('petitions.go_out')
                     @extends('petitions.quit')
                     @extends('petitions.in_day_am')
                     @extends('petitions.in_day_pm')
                     @extends('petitions.in_day')
                     @extends('petitions.multi_day')
+                    @extends('petitions.OT_AM')
+                    @extends('petitions.OT_PM')
                     @extends('petitions.OT')
+                    @extends('petitions.MultiOT')
                     @extends('petitions.OTWar')
                     @extends('petitions.warrior')
                     <script>

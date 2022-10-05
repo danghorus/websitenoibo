@@ -1,86 +1,152 @@
 <template>
     <div>
-        <div class="col-lg">
-            <div class="collapse search-collapse" id="collapseExample" v-if="showFilter">
-                <div class="form-group p-2">
-                    <label for="project_description">Theo dự án</label>
-                    <multiselect v-model="project" :options="projects" value="id" label="project_name"
-                        :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
-                    </multiselect>
-                </div>
-                <div class="form-group p-2">
-                    <label for="project_description">Theo bộ phận</label>
-                    <multiselect v-model="taskDepartment" :options="departments" value="value" label="label"
-                        :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
-                    </multiselect>
-                </div>
-                <div class="form-group p-2">
-                    <label for="project_description">Theo người thực hiện</label>
-                    <multiselect v-model="taskPerformer" :options="users" value="id" label="fullname"
-                        :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
-                    </multiselect>
-                </div>
-                <div class="form-group p-2">
-                    <label for="project_description">Theo trạng thái</label>
-                    <select class="form-select" v-model="option">
-                        <option value="1">Tất cả</option>
-                        <option value="2">Đang tiến hành </option>
-                        <option value="3">Tạm dừng</option>
-                        <option value="4">Hoàn thành</option>
-                    </select>
-                </div>
-                <div class="float-right p-2">
-                    <button type="submit" class="btn btn-secondary p-2" @click="handleShowFilter()">Đóng</button>
-                    <button type="submit" class="btn btn-primary p-2" style="width:70px;"
-                        @click="filterTask()">Lọc</button>
-                </div>
-            </div>
-        </div>
-        <div class="form-group col-lg-1" style="float:right;">
-            <button class="btn btn-outline-secondary "><a v-bind:href="'/my_work'">Việc của tôi</a></button>
-        </div>
         <div class="mt-4">
-            <h4 style="margin-left: 10px;">Danh sách công việc</h4>&emsp;
-            <button class="btn btn-outline-secondary" @click="handleShowFilter()" type="button" data-toggle="collapse"
-                data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample1"
-                style="float:right; margin:  -35px 10px 0px 0px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-funnel"
-                    viewBox="0 0 16 16">
-                    <path
-                        d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z" />
-                </svg> Tạo bộ lọc
-            </button>
+            <h4 style="margin: -30px 0px 0px 25px;">Danh sách công việc</h4>
+            <select  @change="changeOption()" class="form-select col-lg-2" style="position: absolute; left: 25px; top: 105px; width:220px; height:34px;"
+            v-model="option2">
+				<option value="3">Tất cả</option>
+                <option value="1">Chưa hoàn thành</option>
+                <option value="2">Đã hoàn thành</option>
+            </select>
+            <nav class="navbar navbar-expand-lg" style="margin-top:-45px;float:right;">
+                <ul class="navbar-nav mr-auto" style="font-size:16px;" >
+                    <li class="nav-item">
+                        <div class="form-group p-2">
+                            <label for="project_description" style="font-size:12px;">Nhập tên công việc</label></br>
+                            <input @input="changeOption()" class="form-control" style="width:250px;height:33px;font-size:14px" type="text" placeholder="Tên công việc" v-model="search">
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="form-group p-2">
+                            <label for="project_description" style="font-size:12px">Theo ngày bắt đầu</label>
+                            <DatePicker style="width: 100%" v-model="startTime" value-type="format" type="date"
+                                placeholder="Select time" @change="changeOption()">
+                            </DatePicker>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="form-group p-2">
+                            <label for="project_description" style="font-size:12px">Theo dự án</label>
+                            <select  class="form-select"  @change="changeOption()" v-model="project" style="width:200px">
+                                <option value="0" selected="selected">Tất cả</option>
+                                <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="form-group p-2">
+                            <label for="project_description" style="font-size:12px">Theo bộ phận</label>
+                            <select  @change="changeOption()" class="form-select" v-model="option1" style="width:200px"> 
+                                <option value="1" >Tất cả</option>
+                                <option value="2" >Dev</option>
+                                <option value="3" > Game design</option>
+                                <option value="4" >Art</option>
+                                <option value="5" >Tester</option>
+                                <option value="9" >Phân tích dữ liệu</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="form-group p-2">
+                            <label for="project_description" style="font-size:12px">Người thực hiện</label>
+                            <select class="form-select" @change="changeOption()" v-model="performer"  style="width:200px">
+                                <option value="0" selected="selected">Tất cả</option>
+                                <option v-for="(user, index) in users" :key="index" :value="user.id">{{user.fullname}}</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li v-if="option2 == 1" class="nav-item">
+                        <div class="form-group p-2">
+                            <label for="project_description" style="font-size:12px">Theo trạng thái</label>
+                            <select  @change="changeOption()" class="form-select" v-model="option" style="width:200px">
+                                <option value="10">Tất cả</option>
+                                <option value="0">Quá hạn</option>
+                                <option value="1">Đang chờ </option>
+                                <option value="2">Đang tiến hành </option>
+                                <option value="3">Tạm dừng</option>
+                                <option value="5">Chờ feedback</option>
+                                <option value="6">Làm lại</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li style="margin-top:38px;">
+                        <button class="btn btn-outline-secondary "><a v-bind:href="'/my_work'">Việc của tôi</a></button>
+                    </li>
+                </ul>
+            </nav>
             <table class="table-striped table-responsive table-hover result-point"
                 style="width:99%; margin: 0px 0px 0px 10px">
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
-                        <th scope="col">STT</th>
-                        <th scope="col" width="430px">Tên công việc</th>
-                        <th scope="col" width="430px">Công việc cha</th>
-                        <th scope="col">Bắt đầu</th>
-                        <th scope="col">Thời lượng (Giờ)</th>
-                        <th scope="col">Thời lượng thực tế (Giờ)</th>
-                        <th scope="col">Người thực hiện</th>
-                        <th scope="col" width="120px">Bộ phận</th>
-                        <th scope="col" width="150px">Trạng thái</th>
-                        <th scope="col">Thao tác</th>
+                        <th scope="col" width="40px">STT</th>
+                        <th scope="col" width="610px" sortKey="name" defaultSort="desc">Tên công việc</th>
+                        <th scope="col" width="120px">Bắt đầu</th>
+                        <th scope="col" width="80px">Thời lượng (Giờ)</th>
+                        <th scope="col" width="80px">Thời lượng thực tế (Giờ)</th>
+                        <th scope="col" width="120px">Thời gian tạm dừng</th>
+                        <th scope="col" width="120px">Loại công việc</th>
+                        <th scope="col" >Cấp độ công việc</th>
+                        <th scope="col" width="50px">Trọng số</th>
+                        <th scope="col" width="200px">Người thực hiện</th>
+                        <th scope="col" width="100px">Bộ phận</th>
+                        <th scope="col" width="145px">Trạng thái</th>
+                        <th scope="col" width="125px">Thao tác</th>
+                        <th scope="col" width="17px"></th>
                     </tr>
                 </thead>
-                <tr v-for="(item, index) in list" :key="item.id" style="text-align:center;">
-                    <template v-if="item.task_performer != null">
-                        <td>{{ index + 1 }}</td>
+                <tbody >
+                    <tr v-for="(item, index) in list" :key="item.id"  style="text-align:center;">
+                        <td width="40px">{{ index +1 }}</td>
                         <td scope="row" style="text-align:left;">
-                            <p @click="showModalEditTask(item.id)">
-                                {{ item.task_name }}
-                            </p>
+                            <input style="width:600px; border:0px;"  @change="changeTaskName($event, item.id)" v-model="item.task_name">
                         </td>
-                        <td style="text-align:left;">{{ item.task_parent }}
+                        <!--<td>{{ item.start_time }}</td>-->
+                        <td>
+                            <input type="date" style="width: 110px; border:0px;" @change="changeStartTime($event, item.id)" v-model="item.start_time">
                         </td>
-                        <td>{{ item.start_time }}</td>
-                        <td>{{ item.time }}</td>
-                        <td>{{ item.time_real}}</td>
-                        <td>{{ item.fullname }}</td>
-                        <td>{{ item.department_label }}</td>
+                        <td><input style="width:70px; border:0px; text-align:right;"  @change="changeTime($event, item.id)" v-model="item.time"></td>
+                        <td style="width:80px; text-align:right;">{{ item.time_real}}</td>
+                        <td style="width:80px; text-align:right;">
+                            <input style="width:80px; border:0px; text-align:right;" @change="changePause($event, item.id)" v-model="item.time_pause">
+                        </td>
+                        <td>
+                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                @change="changeSticker($event, item.id)" v-model="item.task_sticker">
+                                <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">{{sticker.sticker_name}}</option>
+                            </select>
+                        </td>
+                        <td>
+                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                @change="changePriority($event, item.id)" v-model="item.task_priority">
+                                <option v-for="(priority, index) in priorities" :key="index" :value="priority.priority_label">Level {{priority.priority_label}}</option>
+                            </select>
+                        </td>
+                        <td> <input style="width:100%; border:0px;"  @change="changeWeight($event, item.id)" v-model="item.weight"></td>
+                        <!--<td>
+                            <div @change="changePerformer($event, item.id)">
+                                <multiselect v-model="item.task_performer" 
+                                    :options="users" value="id" label="fullname"
+                                    :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+                                </multiselect>
+                            </div>
+                        </td>-->
+                        <td>
+                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                @change="changePerformer($event, item.id)" v-model="item.task_performer">
+                                <option v-for="(user, index) in users" :key="index" :value="user.id">{{user.fullname}}</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div style="display: flex">
+                                <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                        @change="changeDepartment($event, item.id)" v-model="item.task_department">
+                                        <option value="2">Dev</option>
+                                        <option value="3">Game Design</option>
+                                        <option value="4">Art</option>
+                                        <option value="5">Tester</option>
+                                </select>
+                            </div>
+                        </td>
                         <td v-if="item.status == 0" style="background-color:red">Đã quá hạn</td>
                         <td v-else-if="item.status == 1" style="background-color:white">Đang chờ</td>
                         <td v-else-if="item.status == 2" style="background-color:#008080">Đang làm</td>
@@ -94,42 +160,19 @@
                             <div style="display: flex">
                                 <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                     @change="changeStatus($event, item.id)" v-model="item.status">
-
-                                    <option value="1" v-if="item.status == 1" disabled>Lựa chọn</option>
-                                    <option value="2" v-if="item.status == 2" disabled>Lựa chọn</option>
-                                    <option value="3" v-if="item.status == 3" disabled>Lựa chọn</option>
-                                    <option value="5" v-if="item.status == 5" disabled>Lựa chọn</option>
-                                    <option value="6"
-                                        :disabled="item.status == 1 || item.status == 2 || item.status == 3 || item.status == 6 ">
-                                        Làm lại </option>
-                                    <option value="4"
-                                        :disabled="item.status == 1 || item.status == 2 || item.status == 3 || item.status == 6 || item.status == 4">
-                                        Hoàn thành </option>
+                                    <option value="1" >Đang chờ</option>
+                                    <option value="2" >Đang tiến hành</option>
+                                    <option value="3" >Lựa chọn</option>
+                                    <option value="5" >Lựa chọn</option>
+                                    <option value="6" >Làm lại </option>
+                                    <option value="4" >Hoàn thành </option>
                                     <option value="0">Đã quá hạn</option>
                                 </select>
                             </div>
                         </td>
-                    </template>
-                </tr>
+                    </tr>
+                </tbody>
             </table>
-        </div>
-        <div ref="modalUpdateTask" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document" style=" max-width: 60%;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Sửa Công việc</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                            @click="closeModalEditTask()">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <create-task v-if="showModalEdit" :users="users" :groupUsers="groupUsers"
-                            :priorities="priorities" :stickers="stickers" :projects="projects" :taskId="taskEditId"
-                            @handleGetTasks="handleGetTasks()" />
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -139,17 +182,23 @@
 import { $get, $post } from "../../ultis";
 import Multiselect from 'vue-multiselect';
 import CreateTask from "./CreateTask";
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
 
 export default {
     name: "ListWork",
-    components: { CreateTask },
-    el: '#infoListWork',
-    components: { Multiselect },
+    components: {DatePicker, Multiselect, CreateTask },
     props: ['projectId', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
-        'startTime', 'taskPerformer', 'taskDepartment', 'status', 'list', 'currentUser'],
+        'startTime', 'taskPerformer', 'task_performer', 'taskDepartment', 'status', 'list', 'currentUser'],
     data() {
         return {
-            option: 1,
+            search:'',
+            option: 5,
+            option1: 1,
+            option2: 1,
+            performer: 0,
+            project: 0,
+            startTime: '',
             toggle: false,
             show: false,
             list: [],
@@ -157,7 +206,6 @@ export default {
             showListWork: true,
             showFilter: false,
             projects: [],
-            project: '',
             departments: [],
             summary: '',
             taskId: 0,
@@ -168,101 +216,47 @@ export default {
             priorities: [],
             stickers: [],
             taskPerformer: '',
+            task_performer: '',
             taskDepartment: 0,
-            departments: [
-                { value: 1, label: 'Admin' },
-                { value: 2, label: 'Dev' },
-                { value: 3, label: 'Game design' },
-                { value: 4, label: 'Art' },
-                { value: 5, label: 'Tester' },
-                { value: 6, label: 'Điều hành' },
-                { value: 7, label: 'Hành chính nhân sự' },
-                { value: 8, label: 'Kế toán' },
-                { value: 9, label: 'Phân tích dữ liệu' },
-                { value: 10, label: 'Support' },
-            ],
-            arrStatus: [
-                { value: 0, label: 'Mới tạo' },
-                { value: 1, label: 'Đang chờ' },
-                { value: 2, label: 'Đang tiến hành' },
-                { value: 3, label: 'Tạm dừng' },
-                { value: 4, label: 'Hoàn thành' },
-            ],
             status: '',
             currentUser: ''
         }
     },
     created() {
-        this.getAllUser();
         this.getProjects();
+        this.getAllPriority();
+        this.getAllSticker();
+
+        this.getAllUser();
         this.getListWorks();
     },
     methods: {
+
+        changeOption(){
+            this.getListWorks();
+        },
+
+        async getAllPriority() {
+            const res = await $get('/priorities/get_all');
+            if (res.code == 200) {
+                this.priorities = res.data;
+            }
+        },
+        async getAllSticker() {
+            const res = await $get('/stickers/get_all');
+            if (res.code == 200) {
+                this.stickers = res.data;
+            }
+        },
+        async getProjects() {
+            const res = await $get('/projects/get_all');
+
+            this.projects = res.projects;
+        },
         async getAllUser() {
             const res = await $get('/user/all_user');
             if (res.code == 200) {
                 this.users = res.data;
-            }
-        },
-        async getGroupUsers() {
-            const res = await $get('/user/all_user_by_group');
-            if (res.code == 200) {
-                this.groupUsers = res.data;
-            }
-        },
-        showModalCreateTask() {
-            this.showModal = true;
-            $(this.$refs.modalCreateTask).modal('show');
-        },
-        closeModalCreateTask() {
-            $(this.$refs.modalCreateTask).modal('hide');
-            this.showModal = false;
-        },
-        showModalEditProject() {
-            $(this.$refs.modalCreate).modal('show');
-            this.isShowModalEditProject = true;
-        },
-        closeModalEditProject() {
-            $(this.$refs.modalCreate).modal('hide');
-            this.isShowModalEditProject = false;
-        },
-        showModalConfirm(id) {
-            this.showModal = true;
-            $(this.$refs.modalConfirm).modal('show');
-            this.taskId = id;
-        },
-        closeModalConfirm() {
-            this.showModal = false;
-            $(this.$refs.modalConfirm).modal('hide');
-            this.taskId = 0;
-        },
-        showModalEditTask(id) {
-            this.showModalEdit = true;
-            $(this.$refs.modalUpdateTask).modal('show');
-            this.taskEditId = id;
-        },
-        closeModalEditTask() {
-            $(this.$refs.modalUpdateTask).modal('hide');
-            this.showModalEdit = false;
-            this.taskEditId = 0;
-        },
-        async deleteTask() {
-            const res = await $post(`/tasks/delete/${this.taskId}`);
-
-            if (res.code == 200) {
-                toastr.success('Xóa thành công');
-                this.showModal = false;
-                $(this.$refs.modalConfirm).modal('hide');
-                this.taskId = 0;
-                this.handleGetTasks();
-            }
-        },
-        async copyTask(id) {
-            const res = await $get(`/tasks/copy/${id}`);
-
-            if (res.code == 200) {
-                toastr.success('Copy thành công');
-                this.$emit('getTaskTimeLine');
             }
         },
         handleShowFilter() {
@@ -271,33 +265,38 @@ export default {
         ShowInfoListWork() {
             this.showInfoListWork = !this.showInfoListWork
         },
+
         filterTask() {
             this.getListWorks();
-            this.showFilter = false;
         },
         async getListWorks() {
             let params = {};
 
-            if (this.option && this.option != 1) {
+            if (this.option && this.option != 10) {
                 params.status = this.option;
             }
 
-            if (this.project && this.project.id > 0) {
-                params.project_id = this.project.id;
+            if (this.option1 && this.option1 != 1) {
+                params.task_department = this.option1;
             }
 
-            if (this.taskDepartment && this.taskDepartment > 0) {
-                params.task_department = this.taskDepartment;
-            }
-            let filters = {
-                project_id: this.searchProjectId ? this.searchProjectId.id : 0,
-                search: this.search || '',
-                start_time: this.startTime || '',
-                task_performer: this.taskPerformer || 0,
-                task_department: this.taskDepartment ? this.taskDepartment.value : 0,
-                status: this.status ? this.status.value : -1,
+            if (this.option2 && this.option2 != 3) {
+                params.status2 = this.option2;
             }
 
+            if (this.project && this.project != 0) {
+                params.project_id = this.project;
+            }
+    
+            if (this.performer && this.performer != 0) {
+                params.task_performer = this.performer;
+            }
+            if (this.startTime) {
+                params.start_time = this.startTime ;
+            }
+            if(this.search){
+                params.search = this.search || '';
+            }
 
             const res = await $get('/list-works', params);
 
@@ -314,6 +313,80 @@ export default {
                 this.getListWorks();
             }
         },
+        async changeTaskName(e, taskId) {
+            const res = await $post(`/tasks/change-task_name/${taskId}`, { task_name: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changeStartTime(e, taskId) {
+            const res = await $post(`/tasks/change-start_time/${taskId}`, { start_time: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changeTime(e, taskId) {
+            const res = await $post(`/tasks/change-time/${taskId}`, { time: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changePause(e, taskId) {
+            const res = await $post(`/tasks/change-pause/${taskId}`, { time_pause: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changeDepartment(e, taskId) {
+            const res = await $post(`/tasks/change-department/${taskId}`, { task_department: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changePerformer(e, taskId) {
+            const res = await $post(`/tasks/change-performer/${taskId}`, { task_performer: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changeSticker(e, taskId) {
+
+            const res = await $post(`/tasks/change-sticker/${taskId}`, {task_sticker: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changePriority(e, taskId) {
+            const res = await $post(`/tasks/change-priority/${taskId}`, { task_priority: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changeWeight(e, taskId) {
+            const res = await $post(`/tasks/change-weight/${taskId}`, { weight: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+
 
         async getProjects() {
             const res = await $get('/projects/get_all');
@@ -324,7 +397,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 table table-bordered mt-5 {
     background: #fff;
     border: 1px solid #999999;
@@ -386,5 +459,28 @@ table.my-work td {
     z-index: 9;
     background: #c5c5c5;
     border: 2px;
+}
+
+
+table {
+    table-layout: fixed;
+}
+
+th,
+
+td {
+    padding: 0px 0px;
+    border: 1px solid #000;
+}
+
+thead {
+    background: #f9f9f9;
+    display: table;
+}
+
+tbody {
+    height: 820px;
+    overflow: auto;
+    display: block;
 }
 </style>

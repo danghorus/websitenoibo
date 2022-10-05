@@ -10,6 +10,7 @@ import ListWork from "./Admin/projects/ListWork";
 import Project_Report from "./Admin/projects/Report";
 import Project_Warrior from "./Admin/projects/Warrior";
 import InvalidTasks from "./Admin/projects/InvalidTasks";
+import ListProposal from "./Admin/Proposal/ListProposal";
 
 export const routes = [
     {
@@ -66,5 +67,10 @@ export const routes = [
         path: "/invalid_tasks",
         name: "Invalid Tasks",
         component: InvalidTasks
+    },
+    {
+        path: "/proposals",
+        name: "List Proposal",
+        component: ListProposal
     }
 ];

@@ -5,12 +5,12 @@
 
 table {
     background: #fff;
-    border: 1px solid #dedede;
+    border: 0px solid #dedede;
 }
 
 table thead tr th {
     padding: 20px;
-    border: 1px solid #dedede;
+    border: 0px solid #dedede;
     color: #000;
 }
 
@@ -29,7 +29,7 @@ table.result-point tr td.number {
 
 table tr td {
     padding: 0px 0px;
-    border: 1px solid #dedede;
+    border: 0px solid #dedede;
 }
 table.result-point tr td .fa.fa-caret-up {
     color: green;
@@ -43,13 +43,13 @@ table.result-point tr td .fa {
 
 table tr td {
     padding: 5px 5px;
-    border: 1px solid #dedede;
+    border: 0px solid #dedede;
 }
 
 table tr td img {
     margin-right: 12px;
     margin-top: 1px;
-    border: 1px solid #dedede;
+    border: 0px solid #dedede;
 }
 
 </style>
@@ -137,7 +137,33 @@ table tr td img {
                                         <td scope="col" width="8%" >{{ $user->phone }}</td>
                                         <td scope="col" width="10%">{{ $user->email }}</td>
                                         <td scope="col" width="8.05%" >{{ $user->birthday }}</td>
-                                        <td scope="col" width="6%" >{{ $user->department }}</td>
+                                        <td scope="col" width="6%" >
+                                            <?php
+                                                if($user->department == 1){ 
+                                                    echo  "Admin";
+                                                } else if($user->department == 2){
+                                                    echo  "Dev";
+                                                } else if($user->department == 3){
+                                                    echo  "Game Design";
+                                                } else if($user->department == 4){
+                                                    echo  "Art";
+                                                } else if($user->department == 5){
+                                                    echo  "Tester";
+                                                } else if($user->department == 6){
+                                                    echo  "Điều hành";
+                                                } else if($user->department == 7){
+                                                    echo  "Hành chính nhân sự";
+                                                } else if($user->department == 8){
+                                                    echo  "Kế toán";
+                                                } else if($user->department == 9){
+                                                    echo  "Phân tích dữ liệu";
+                                                } else if($user->department == 10){
+                                                    echo  "Support";
+                                                } else if($user->department == 11){
+                                                    echo  "Marketing";
+                                                }
+                                            ?>
+                                        </td>
                                         <td scope="col" width="7%" >{{ $user->position }}</td>
                                         <td scope="col" width="8%" >
                                         <?php 
@@ -148,7 +174,18 @@ table tr td img {
                                             } 
                                         ?>
                                     </td>
-                                        <td scope="col" width="8%">{{ $user->permission==0?'Nhân viên':'Quản lý' }} </td>
+										
+                                        <?php if($user->permission==0){ ?>
+											<td scope="col" width="8%">Nhân viên</td>
+										<?php }if($user->permission==1) { ?>
+											<td scope="col" width="8%">Admin</td>
+										<?php }if($user->permission==2) { ?>
+											<td scope="col" width="8%">Leader</td>
+										<?php }if($user->permission==3) { ?>
+											<td scope="col" width="8%">Quản lý</td>
+										<?php } ?>
+										
+										
                                         <?php if(Auth::user()->permission == 1) { ?>
 
                                         <td scope="col" width="6.2%" style="text-align:center; font-size:14px;">
@@ -201,7 +238,17 @@ table tr td img {
                                     <td scope="col" width="6%">{{ $user->department }}</td>
                                     <td scope="col" width="7%">{{ $user->position }}</td>
                                     <td scope="col" width="8%">{{ $user->date_official}}</td>
-                                    <td scope="col" width="8%">{{ $user->permission==0?'Nhân viên':'Quản lý' }} </td>
+									
+                                    <?php if($user->permission==0){ ?>
+                                        <td scope="col" width="8%">Nhân viên</td>
+                                    <?php }if($user->permission==1) { ?>
+                                        <td scope="col" width="8%">Admin</td>
+                                    <?php }if($user->permission==2) { ?>
+                                        <td scope="col" width="8%">Leader</td>
+                                    <?php }if($user->permission==3) { ?>
+                                        <td scope="col" width="8%">Quản lý</td>
+                                    <?php } ?>
+									
                                     <td scope="col" width="7%" style="text-align:center; font-size:14px;">
                                         <form method="POST" action="{{ route('users.destroy', $user->id) }}">
                                             <a class="btn btn-success" href="{{route('users.edit', $user->id)}}" style="font-size:12px;">Sửa</a>
@@ -236,7 +283,7 @@ table tr td img {
         }
 
         tbody {
-        height: 650px;
+        height: 860px;
         overflow: auto;
         display: block;
         tr {

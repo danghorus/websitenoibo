@@ -14,33 +14,39 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         $users = User::all();
-        return view('projects.index', compact('users'));
+        $projects = Project::all();
+        return view('projects.index', compact('users','projects'));
     }
 
     public function my_work(Request $request)
     {
         $users = User::all();
-        return view('projects.my_work', compact('users'));
+        $projects = Project::all();
+        return view('projects.my_work', compact('users','projects'));
     }
     public function list_work(Request $request)
     {
         $users = User::all();
-        return view('projects.list_work', compact('users'));
+        $projects = Project::all();
+        return view('projects.list_work', compact('users','projects'));
     }
 
     public function report(Request $request)
     {
         $users = User::all();
-        return view('projects.report', compact('users'));
+        $projects = Project::all();
+        return view('projects.report', compact('users','projects'));
     }
 
     public function warrior(Request $request)
     {
         $users = User::all();
-        return view('projects.warrior', compact('users'));
+        $projects = Project::all();
+        return view('projects.warrior', compact('users','projects'));
     }
 
     public function getAll(Request $request) {
+        
         $projects = Project::query() ->select(['id', 'project_name', 'project_start_date', 'project_end_date'])->get();
 
         return [

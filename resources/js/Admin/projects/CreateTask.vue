@@ -20,26 +20,33 @@
             </div>-->
         </div>
         <div v-if="option == 2 || task.task_performer != null" class="row">
-            <div class="form-group col-lg-4">
+            <div class="form-group col-lg-3">
                 <label for="project_start_date">Ngày bắt đầu</label>
-                <DatePicker style="width: 100%" v-model="task.start_time_day" value-type="format" type="date"
-                    placeholder="Select time"></DatePicker>
+                <DatePicker 
+                    style="width: 100%"
+                    v-model="task.start_time"
+                    value-type="format"
+                    type="datetime"
+                    placeholder="Select time"
+                >
+                </DatePicker>
             </div>
-            <div class="form-group col-lg-4">
-                <label for="project_end_date">Thời lượng</label>
+            
+            <div class="form-group col-lg-3">
+                <label for="project_time">Thời lượng</label>
                 <input type="number" class="form-control" v-model="task.time" id="project_end_date"
                     placeholder="Nhập thời gian (Giờ)">
             </div>
-            <div class="form-group col-lg-4">
+            <div class="form-group col-lg-3">
+                <label for="project_day">Thời gian kết thúc</label>
+                <DatePicker style="width: 100%" v-model="task.end_time" value-type="format" type="datetime" disabled>
+                </DatePicker>
+            </div>
+            <div class="form-group col-lg-3">
                 <label for="project_weight">Trọng số</label>
                 <input type="text" v-model="task.weight" class="form-control" id="project_weight"
                     placeholder="Nhập trọng số">
             </div>
-            <!--<div class="form-group col-lg-4">
-                <label for="project_day">Thời gian kết thúc</label>
-                <DatePicker style="width: 100%" v-model="task.end_time" value-type="format" type="datetime" disabled>
-                </DatePicker>
-            </div>-->
         </div>
         <div class="form-group">
             <label for="project_description">Thông tin công việc</label>
@@ -58,23 +65,37 @@
             }" />
         </div>
         <div v-if="option == 2 || task.task_performer != null" class=" row">
-            <div class="form-group col-lg-4">
-                <label for="project_description">Độ ưu tiên</label>
-                <multiselect v-model="task.task_priority" :options="priorities" value="id" label="priority_label"
-                    :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
-                </multiselect>
-            </div>
-            <div class="form-group col-lg-4">
-                <label for="project_description">Nhãn dán</label>
-                <multiselect v-model="task.task_sticker" :options="stickers" value="id" label="sticker_name"
-                    :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
-                </multiselect>
-            </div>
-            <div class="form-group col-lg-4">
-                <label for="project_description">Bộ phận</label>
-                <multiselect v-model="task.task_department" :options="departments" value="value" label="label"
-                    :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
-                </multiselect>
+            <div v-if="option == 2 || task.task_performer != null" class=" row">
+                <div class="form-group col-lg-3">
+                    <label for="project_description">Độ ưu tiên</label>
+                    <multiselect v-model="task.task_priority" :options="priorities" value="id" label="priority_label"
+                        :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+                    </multiselect>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="project_description">Nhãn dán</label>
+                    <multiselect v-model="task.task_sticker" :options="stickers" value="id" label="sticker_name"
+                        :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+                    </multiselect>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="project_description">Bộ phận</label>
+                    <multiselect v-model="task.task_department" :options="departments" value="value" label="label"
+                        :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+                    </multiselect>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="project_description">Trạng thái công việc</label>
+                    <select class="form-control" placeholder="Vui lòng chọn" v-model="task.status">
+                        <option value="0">Quá hạn</option>
+                        <option value="1" selected>Đang Chờ</option>
+                        <option value="2">Đang tiến hành</option>
+                        <option value="3">Tạm dừng</option>
+                        <option value="4">Hoàn thành</option>
+                        <option value="5">Chờ feedback</option>
+                        <option value="6">làm lại</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -91,16 +112,12 @@
         </div>-->
         <div class="form-group">
             <label for="project_description">Công việc cha</label>
-            <treeselect
-                :options="tasks"
-                :load-options="loadOptions"
-                loadingText="Loading..."
-                v-model="task.task_parent"
-            />
-<!--            <multiselect v-model="task.task_parent" @input="changeTaskParent($event)" :disabled="task.project_id == 0"-->
-<!--                :options="tasks" value="id" label="label" :close-on-select="true" :show-labels="true"-->
-<!--                placeholder="Vui lòng chọn">-->
-<!--            </multiselect>-->
+            <treeselect :options="tasks" :load-options="loadOptions" loadingText="Loading..."
+                v-model="task.task_parent" />
+            <!--            <multiselect v-model="task.task_parent" @input="changeTaskParent($event)" :disabled="task.project_id == 0"-->
+            <!--                :options="tasks" value="id" label="label" :close-on-select="true" :show-labels="true"-->
+            <!--                placeholder="Vui lòng chọn">-->
+            <!--            </multiselect>-->
         </div>
         <div v-if="option == 2 || task.task_performer != null" class=" row">
             <div class="form-group col-lg-6">
@@ -127,7 +144,7 @@ import Editor from '@tinymce/tinymce-vue'
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import moment from "moment";
-import {$get, $post} from "../../ultis";
+import { $get, $post } from "../../ultis";
 import Multiselect from 'vue-multiselect';
 import _ from "lodash";
 import Treeselect from '@riophae/vue-treeselect';
@@ -139,7 +156,7 @@ export default {
     props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'taskId', 'projectId', 'taskParentId'],
     data() {
         return {
-            option:1,
+            option: 1,
             task: {
                 project_id: ''
             },
@@ -166,7 +183,7 @@ export default {
             this.getInfoTask();
         } else {
             if (this.projectId) {
-                this.task.project_id = _.find(this.projects, {id: parseInt(this.projectId)});
+                this.task.project_id = _.find(this.projects, { id: parseInt(this.projectId) });
                 // if (this.taskParentId) {
                 //     this.task.task_parent = this.taskParentId;
                 // }
@@ -180,14 +197,14 @@ export default {
         async getInfoTask() {
             const res = await $get(`/tasks/detail/${this.taskId}`);
 
-            if(res.code == 200) {
+            if (res.code == 200) {
                 this.task = res.data;
                 this.values = res.user_related;
                 this.getTaskByProject(this.task.project_id.id, this.task.task_parent ?? 0);
             }
         },
         async loadOptions({ action, parentNode, callback }) {
-            const res = await $get('/tasks/get_all', {project_id: this.projectId, task_parent: parentNode.id})
+            const res = await $get('/tasks/get_all', { project_id: this.projectId, task_parent: parentNode.id })
 
             if (res.code == 200) {
                 parentNode.children = res.data;
@@ -240,7 +257,7 @@ export default {
 
         },
         async getTaskByProject(projectId, taskId) {
-            const res = await $get('/tasks/get_all', {project_id: projectId, task_id: taskId ?? 0})
+            const res = await $get('/tasks/get_all', { project_id: projectId, task_id: taskId ?? 0 })
 
             if (res.code == 200) {
                 this.tasks = res.data;
@@ -254,10 +271,14 @@ export default {
         }
     },
     watch: {
-        'task.time': function (newVal) {
-            if (newVal > 0 && this.task.start_time_day) {
-                let dateTime = moment(this.task.start_time_day).add(newVal, 'h').toDate();
+        /*'task.time': function (newVal) {
+            if (newVal > 0 && this.task.start_time) {
+                let dateTime = moment(this.task.start_time).add(newVal, 'h').toDate();
+                if (moment(dateTime).format('YYYY-MM-DD HH:mm:ss') < (moment(dateTime).format('YYYY-MM-DD 12:00:00')){
                 this.task.end_time = moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
+                } else {
+                    this.task.end_time = 1;
+                }
             }
         },
         'task.start_time_day': function (newVal) {
@@ -278,7 +299,7 @@ export default {
             } else {
                 this.task.task_code = '';
             }
-        },
+        },*/
         // 'tasks': function (newVal) {
         //     if (this.taskParentId && this.count === 0) {
         //         this.task.task_parent = _.find(newVal, {id: parseInt(this.taskParentId)});

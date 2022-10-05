@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Project;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +15,8 @@ class PasswordController extends Controller
     {
 
         $users = User::all();
-        return view('change_password', compact('users'));
+        $password = Project::all();
+        return view('change_password', compact('users','project'));
     }
 
     public function changePassword(Request $request)

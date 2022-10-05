@@ -2,28 +2,57 @@
 
 <template>
     <div>
-        <h1 style="margin: 0px 0px 0px 20px">BẢNG THỐNG KÊ CÔNG VIỆC</h1>
-        <div class="col-lg-6" style="margin-top:20px; padding-left:30px;">
-            <div class="form-check">
-                 <input class="form-check-input" type="checkbox" v-model="option" value="2" name="flexRadioDefault" id="flexRadioDefault2">
-                <label class="form-check-label" for="flexRadioDefault2"><h5>Bảng tổng</h5></label>
-            </div>
-        </div>
-        <div style="width:400px; margin: -80px 0px 0px 650px;">
+         <nav class="navbar navbar-expand-lg navbar-light bg-light" >
+                <ul class="navbar-nav mr-auto" style="font-size:16px;" >
+                    <li class="nav-item" style="width:600px;">
+                        <h1 style="margin: 0px 0px 0px 20px">BẢNG THỐNG KÊ CÔNG VIỆC</h1>
+                        <div class="col-lg-6" style="margin-top:0px; padding-left:20px;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" v-model="option" value="2" name="flexRadioDefault" id="flexRadioDefault2">
+                                <label class="form-check-label" for="flexRadioDefault2"><h5>Bảng tổng</h5></label>
+                            </div>
+                        </div>
+                    </li>
+        <!--<div style="width:400px; margin: -80px 0px 0px 650px;">
             <span>Thống kê theo dự án</span>
-            <multiselect v-model="project" :options="projects" :multiple="true" placeholder="Vui lòng chọn"
+            <multiselect @click="getReport()" v-model="project" :options="projects" :multiple="true" placeholder="Vui lòng chọn"
                 track-by="id" label="project_name">
                 <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
             </multiselect>
-        </div>
-        <div style="width:400px; margin: -67px 0px 0px 1060px;">
+        </div>-->
+                <li class="nav-item" style="width:540px"></li>
+                <li class="nav-item">
+                    <div>
+                        <span>Thống kê theo dự án</span>
+                        <select class="form-select" @click="getReport()" v-model="project" style="width:350px;">
+                            <option value="" selected="selected">Tất cả</option>
+                            <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
+                        </select>
+                    </div>
+                </li> &emsp;&emsp;
+                <li class="nav-item">
+                    <div >
+                        <span>Thống kê theo bộ phận</span>
+                        <select class="form-select" @click="getReport()" v-model="department" style="width:350px; ">
+                            <option value="" selected="selected">Tất cả</option>
+                            <option value="2">DEV</option>
+                            <option value="3">Game Design</option>
+                            <option value="4">ART</option>
+                            <option value="5">Tester</option>
+                            <option value="11">Marketing</option>
+                        </select>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <!--<div style="width:400px; margin: -67px 0px 0px 1060px;">
             <span>Thống kê theo bộ phận</span>
             <multiselect v-model="department" :options="departments" value="2" :multiple="true" placeholder="Vui lòng chọn"
                 track-by="value" label="label">
                 <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
             </multiselect>
-        </div>
-        <div style="width:400px; margin: -59px 0px 0px 1470px;">
+        </div>-->
+        <!--<div style="width:400px; margin: -59px 0px 0px 1470px;">
             <span>Thời gian thống kê</span>
             <date-picker v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian thống kê">
             </date-picker>
@@ -32,7 +61,7 @@
             <button class="btn btn-primary" @click="getReport()"
                 style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê
             </button>
-        </div><br>
+        </div>--><br>
         <div class="card-body" style="margin-top:-30px;">
             <div class="row">
                 <div class="col-lg-12" v-if="option == 1">
@@ -158,20 +187,29 @@
                         <tr>
                             <td><b>Tỉ lệ hoàn thành(công việc)</b></td>
                             <td>:</td>
-                            <td style="text-align:right">{{ formatNumber((taskSummary.total_complete)*100 / (taskSummary.total_task)) }} &emsp;&ensp;&nbsp; %</td>
-                            <td style="text-align:right">{{ formatNumber((taskSummary.total_complete_gd)*100 / (taskSummary.total_task_gd)) }} &emsp;&ensp;&nbsp; %</td>
-                            <td style="text-align:right">{{ formatNumber((taskSummary.total_complete_art)*100 / (taskSummary.total_task_art)) }} &emsp;&ensp;&nbsp; %</td>
-                            <td style="text-align:right">{{ formatNumber((taskSummary.total_complete_dev)*100 / (taskSummary.total_task_dev)) }} &emsp;&ensp;&nbsp; %</td>
-                            <td style="text-align:right">{{ formatNumber((taskSummary.total_complete_test)*100 / (taskSummary.total_task_test)) }} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-if="taskSummary.total_task !=0">{{ formatNumber((taskSummary.total_complete)*100 / (taskSummary.total_task)) }} &emsp;&ensp;&nbsp; %</td>
+							<td style="text-align:right" v-else>0 &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-if="taskSummary.total_task_gd !=0">{{ formatNumber((taskSummary.total_complete_gd)*100 / (taskSummary.total_task_gd)) }} &emsp;&ensp;&nbsp; %</td>
+							<td style="text-align:right" v-else>0 &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-if="taskSummary.total_task_art != 0">{{ formatNumber((taskSummary.total_complete_art)*100 / (taskSummary.total_task_art)) }} &emsp;&ensp;&nbsp; %</td>
+							<td style="text-align:right" v-else>0 &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-if="taskSummary.total_task_dev != 0">{{ formatNumber((taskSummary.total_complete_dev)*100 / (taskSummary.total_task_dev)) }} &emsp;&ensp;&nbsp; %</td>
+							<td style="text-align:right" v-else>0 &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-if="taskSummary.total_task_test != 0">{{ formatNumber((taskSummary.total_complete_test)*100 / (taskSummary.total_task_test)) }} &emsp;&ensp;&nbsp; %</td>
+							<td style="text-align:right" v-else>0 &emsp;&ensp;&nbsp; %</td>
                         </tr>
                         <tr>
                             <td><b>Tỉ lệ hoàn thành(Trọng số)</b></td>
                             <td>:</td>
-                            <td style="text-align:right">{{ formatNumber((taskSummary.total_weight_complete)*100 / (taskSummary.total_weight)) }} &emsp;&ensp;&nbsp; %</td>
-                            <td style="text-align:right">{{ formatNumber((taskSummary.total_weight_gd_complete)*100 / (taskSummary.total_weight_gd)) }} &emsp;&ensp;&nbsp; %</td>
-                            <td style="text-align:right">{{ formatNumber((taskSummary.total_weight_art_complete)*100 / (taskSummary.total_weight_art)) }} &emsp;&ensp;&nbsp; %</td>
-                            <td style="text-align:right">{{ formatNumber((taskSummary.total_weight_dev_complete)*100 / (taskSummary.total_weight_dev)) }} &emsp;&ensp;&nbsp; %</td>
-                            <td style="text-align:right">{{ formatNumber((taskSummary.total_weight_test_complete)*100 / (taskSummary.total_weight_test)) }} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right">{{taskSummary.total_weight?formatNumber((taskSummary.total_weight_complete)*100 / (taskSummary.total_weight)): 0}} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-if="taskSummary.total_weight_gd !=0">{{formatNumber((taskSummary.total_weight_gd_complete)*100 / (taskSummary.total_weight_gd))}} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-else> 0 &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-if="taskSummary.total_weight_art !=0">{{formatNumber((taskSummary.total_weight_art_complete)*100 / (taskSummary.total_weight_art))}} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-else> 0 &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-if="taskSummary.total_weight_dev !=0">{{formatNumber((taskSummary.total_weight_dev_complete)*100 / (taskSummary.total_weight_dev))}} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-else> 0 &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-if="taskSummary.total_weight_test !=0">{{formatNumber((taskSummary.total_weight_test_complete)*100 / (taskSummary.total_weight_test))}} &emsp;&ensp;&nbsp; %</td>
+                            <td style="text-align:right" v-else> 0 &emsp;&ensp;&nbsp; %</td>
                         </tr>
                     </table>
                 </div>
@@ -186,30 +224,42 @@
                                 <input type="text" name="search" class="form-control mb-2 input-search" v-model="search"
                                     placeholder="Tìm kiếm" v-on:keyup.enter="getReport()">
                             </th>
-                            <th style="vertical-align: middle; width: 9.5%;">Warrior đăng ký</th>
-                            <th style="vertical-align: middle; width: 9.5%;">Tổng số công việc</th>
-                            <th style="vertical-align: middle; width: 9.5%;">Hoàn thành</th>
-                            <th style="vertical-align: middle; width: 9.5%;">Đang làm</th>
-                            <th style="vertical-align: middle; width: 9.5%;">Chưa làm</th>
-                            <th style="vertical-align: middle; width: 9.5%;">Hoàn thành chậm</th>
-                            <th style="vertical-align: middle; width: 9.5%;">Quá hạn</th>
-                            <th style="vertical-align: middle; width: 9.5%;">Trọng số</th>
-                            <th style="vertical-align: middle; width: 9.5%;">Trọng số/Bộ phận</th>
+                            <th style="vertical-align: middle; width: 6.5%;">Warrior đăng ký</th>
+                            <th style="vertical-align: middle; width: 6.5%;">Tổng số công việc</th>
+                            <th style="vertical-align: middle; width: 6.5%;">Hoàn thành</th>
+                            <th style="vertical-align: middle; width: 6.5%;">Hoàn thành chậm</th>
+                            <th style="vertical-align: middle; width: 6.5%;">Đang làm</th>
+                            <th style="vertical-align: middle; width: 6.5%;">Tạm dừng</th>
+                            <th style="vertical-align: middle; width: 6.5%;">Đang chờ</th>
+                            <th style="vertical-align: middle; width: 6.5%;">Chờ feedback</th>
+                            <th style="vertical-align: middle; width: 6.5%;">Làm lại</th>
+                            <th style="vertical-align: middle; width: 6.5%;">Quá hạn</th>
+							<th style="vertical-align: middle; width: 6.5%;">Tỉ lệ công việc</th>
+                            <th style="vertical-align: middle; width: 6.5%;">Trọng số</th>
+                            <th style="vertical-align: middle; width: 6.5%;">Trọng số/dự án</th>
+							<th style="vertical-align: middle; width: 6.5%;">Trọng số/bộ phận</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr v-for="(user, index) in users" :key="index">
-                            <td>{{ user.user_name }}</td>
-                            <td></td>
-                            <td>{{ user.total_task }}</td>
-                            <td>{{ user.total_complete }}</td>
-                            <td>{{ user.total_processing }}</td>
-                            <td>{{ user.total_wait }}</td>
-                            <td>{{ user.total_complete_slow }}</td>
-                            <td>{{ user.total_slow }}</td>
-                            <td>{{ user.total_weight }}</td>
-                            <td>{{ formatNumber(user.rate_weight) }} %</td>
-                        </tr>
+                    <tbody v-for="(user, index) in users" :key="index">
+                        <template v-if="user.warrior_p == project ">
+                            <tr> 
+                                <td>{{ user.user_name }}</td>
+                                <td>Warrior {{ user.warrior }}</td>
+                                <td>{{ user.total_task }}</td>
+                                <td>{{ user.total_complete - user.total_complete_slow  }}</td>
+                                <td>{{ user.total_complete_slow }}</td>
+                                <td>{{ user.total_processing }}</td>
+                                <td>{{ user.total_pause }}</td>
+                                <td>{{ user.total_wait }}</td>
+                                <td>{{ user.total_wait_fb }}</td>
+                                <td>{{ user.total_again }}</td>
+                                <td>{{ user.total_slow }}</td>
+                                <td>{{ formatNumber((user.total_complete)*100/(user.total_task)) }} %</td>
+                                <td>{{ user.total_weight }}</td>
+                                <td>{{ formatNumber((user.total_weight)*100/(taskSummary.total_weight)) }} %</td>
+                                <td>{{ formatNumber(user.rate_weight) }} %</td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
             </div>
@@ -312,10 +362,11 @@ export default {
         async getReport() {
             let params = {
                 search: this.search,
-                project_id: this.project.length? this.project.map(val => val.id): [],
-                task_department: this.department.length? this.department.map(val => val.value): [],
-                start_date: this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD'),
-                end_date: this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : moment().endOf('month').format('YYYY-MM-DD'),
+                project_id: this.project,
+                task_department: this.department,
+                //task_department: this.department.length? this.department.map(val => val.value): [],
+                //start_date: this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD'),
+                //end_date: this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : moment().endOf('month').format('YYYY-MM-DD'),
             }
             const res = await $get('/tasks/get-report', { ...params });
             if (res.code == 200) {

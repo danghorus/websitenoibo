@@ -24,6 +24,7 @@
             <div class="form-group col-lg-4">
                 <label for="project_end_date">Thời gian kết thúc</label>
                 <DatePicker
+                    :disabled-date="disabledBeforeProjectStart"
                     style="width: 100%"
                     v-model="project.project_end_date"
                     value-type="format"
@@ -97,6 +98,7 @@ export default {
         return {
             project: {},
             values: [],
+            project_start_date:'',
         }
     },
     created() {
@@ -105,6 +107,14 @@ export default {
         }
     },
     methods: {
+
+        disabledBeforeProjectStart(date) {
+        const project_start = new Date(this.project.project_start_date);
+        project_start.setHours(0, 0, 0, 0);
+
+        return date < project_start;
+        },
+
         async getDetailProject() {
             const res = await $get(`/projects/${this.projectId}/get_detail`);
             if (res.code == 200) {

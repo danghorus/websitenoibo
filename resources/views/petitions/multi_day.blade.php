@@ -62,6 +62,24 @@
                         <label for="">Loại nghỉ phép</label>
                     </div>
                     <div class="form-floating mb-3">
+                        <select class="form-control" name="type_paid">
+                            <option value="0">Nghỉ không lương</option>
+                            <option value="1">Nghỉ có lương</option>
+                        </select>
+                        <label for="">Hình thức nghỉ</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <select class="form-control" name="type_law">
+                            <option value="1">Nghỉ không lương</option>
+                            <option value="2">Nghỉ có lương</option>
+                            <option value="3">Nghỉ không lương</option>
+                            <option value="4">Nghỉ có lương</option>
+                            <option value="5">Nghỉ không lương</option>
+                            <option value="6">Nghỉ có lương</option>
+                        </select>
+                        <label for="">Hình thức nghỉ</label>
+                    </div>
+                    <div class="form-floating mb-3">
                         <input class="form-control" id="multidayfrom" name="date_from" type="date" />
                         <script>
                             document.getElementById('multidayfrom').value = new Date().toISOString().substring(0, 10);
