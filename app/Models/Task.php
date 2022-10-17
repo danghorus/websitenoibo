@@ -23,22 +23,18 @@ class Task extends Model
     ];
 
     public const ARR_STATUS = [
-      0 => 'Đã quá hạn',
+      0 => 'Mới tạo',
       1 => 'Đang chờ',
       2 => 'Đang tiến hành',
       3 => 'Tạm dừng',
-      4 => 'Hoàn thành',
-      5 => 'Chờ feedback',
-      6 => 'Làm lại'
+      4 => 'Hoàn thành'
     ];
 
-    public const TASK_SLOW = 0;
+    public const TASK_NEW = 0;
     public const TASK_WAITING = 1;
     public const TASK_PROCESSING = 2;
     public const TASK_PAUSE = 3;
     public const TASK_COMPLETED = 4;
-    public const TASK_FEEDBACK = 5;
-    public const TASK_AGAIN = 6;
 
     protected $table = 'tasks';
 

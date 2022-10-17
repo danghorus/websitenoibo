@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Project;
 use App\Models\Department;
 use Illuminate\Http\Request;
 
@@ -19,9 +18,8 @@ class DepartmentController extends Controller
     {
         $departments = Department::latest()->paginate(50);
         $users = User::all();
-        $projects = Project::all();
 
-        return view('settings.index',compact('settings','users','projects'));
+        return view('settings.index',compact('settings','users'));
     }
 
     /**
@@ -32,8 +30,7 @@ class DepartmentController extends Controller
     public function create()
     {
         $users = User::all();
-        $projects = Project::all();
-        return view('settings.index',compact('users','projects'));
+        return view('settings.index',compact('users'));
     }
 
     /**
@@ -50,10 +47,9 @@ class DepartmentController extends Controller
 
         Department::create($request->all());
         $users = User::all();
-        $projects = Project::all();
 
 
-        return redirect()->route('settings.index', compact('users','projects'))
+        return redirect()->route('settings.index', compact('users'))
                         ->with('success','Petition created successfully.');
     }
 

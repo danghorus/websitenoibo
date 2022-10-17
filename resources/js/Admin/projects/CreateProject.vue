@@ -98,7 +98,6 @@ export default {
         return {
             project: {},
             values: [],
-            project_start_date:'',
         }
     },
     created() {
@@ -109,10 +108,10 @@ export default {
     methods: {
 
         disabledBeforeProjectStart(date) {
-        const project_start = new Date(this.project.project_start_date);
-        project_start.setHours(0, 0, 0, 0);
+            const project_start = new Date(this.project.project_start_date);
+            project_start.setHours(0, 0, 0, 0);
 
-        return date < project_start;
+            return date < project_start;
         },
 
         async getDetailProject() {

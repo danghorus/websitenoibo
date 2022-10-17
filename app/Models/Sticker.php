@@ -11,7 +11,7 @@ class Sticker extends Model
     protected $fillable = [
         'id',
         'sticker_name',
-        'level_1',
+		'level_1',
         'level_2',
         'level_3',
         'level_4',

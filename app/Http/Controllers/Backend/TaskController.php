@@ -9,7 +9,6 @@ use App\Models\Sticker;
 use App\Models\Task;
 use App\Models\TaskUser;
 use App\Models\User;
-use App\Models\Warrior;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -69,22 +68,14 @@ class TaskController extends Controller
 
             $value->department_label = $value->task_department? Task::DEPARTMENTS[$value->task_department]: '';
 
-            if ($value->status == 0) {
+            if (($value->status == 0 || $value->status == 1) && (strtotime($value->end_time) < time())) {
                 $value->status_title = 'Đã quá hạn';
-            } elseif ($value->status == 1) {
-                $value->status_title = 'Đang chờ';
-            } elseif ($value->status == 2) {
-                $value->status_title = 'Đang làm';
-            } elseif ($value->status == 1) {
-                $value->status_title = 'Tạm dừng';
-            } elseif ($value->status == 4 && (((strtotime($value->real_end_time) - strtotime($value->end_time))/3600 - $value->time_pause) > $value->time )) {
+            } elseif ($value->status == 4 && (strtotime($value->real_end_time) > strtotime($value->end_time))) {
                 $value->status_title = 'Hoàn thành chậm';
-            } elseif ($value->status == 4 && (((strtotime($value->real_end_time) - strtotime($value->end_time))/3600 - $value->time_pause) < $value->time )) {
-                $value->status_title = 'Hoàn thành';
-            } elseif ($value->status == 5) {
+            }elseif ($value->status == 5) {
                 $value->status_title = 'Chờ feedback';
-            } elseif ($value->status == 6) {
-                $value->status_title = 'Làm lại';
+            }elseif ($value->status == 6) {
+                $value->status_title = 'làm lại';
             } else {
                 $value->status_title = $value->status >= 0 ? Task::ARR_STATUS[$value->status]: '';
             }
@@ -152,6 +143,25 @@ class TaskController extends Controller
         }
         $tasks = $builder->get();
 
+        foreach ($tasks as $task) {
+            $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
+
+            if (($task->status == 0 || $task->status == 1) && (strtotime($task->end_time) < time())) {
+                $task->status_title = 'Đã quá hạn';
+            } elseif ($task->status == 4 && (strtotime($task->real_end_time) > strtotime($task->end_time))) {
+                $task->status_title = 'Hoàn thành chậm';
+
+            } elseif ($task->status == 5) {
+                $task->status_title = 'Chờ feedback';
+
+            }
+            elseif ($task->status == 6) {
+                $task->status_title = 'Làm lại';
+
+            } else {
+                $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
+            }
+        }
 
         return [
             'code' => 200,
@@ -172,8 +182,8 @@ class TaskController extends Controller
         $task->time = $taskInfo['time'] ?? null;
         $task->end_time = $taskInfo['end_time'] ?? null;
         $task->description = $taskInfo['description'] ?? '';
-        $task->task_priority = isset($taskInfo['task_priority']) && $taskInfo['task_priority'] ? $taskInfo['task_priority']['priority_label']: null;
-        $task->task_sticker = isset($taskInfo['task_sticker']) && $taskInfo['task_sticker'] ?$taskInfo['task_sticker']['sticker_name']: null;
+        $task->task_priority = isset($taskInfo['task_priority']) && $taskInfo['task_priority'] ? $taskInfo['task_priority']['id']: null;
+        $task->task_sticker = isset($taskInfo['task_sticker']) && $taskInfo['task_sticker'] ?$taskInfo['task_sticker']['id']: null;
         $task->task_department = isset($taskInfo['task_department']) && $taskInfo['task_department']? $taskInfo['task_department']['value']: null;
         $task->weight = $taskInfo['weight'] ?? null;
         $task->project_id = isset($taskInfo['project_id']) && $taskInfo['project_id'] ?$taskInfo['project_id']['id']: null;
@@ -184,7 +194,7 @@ class TaskController extends Controller
 
         if ($task->task_predecessor) {
             $taskPredecessor = Task::find($task->task_predecessor);
-            $task->status = $taskPredecessor && $taskPredecessor->status == Task::TASK_COMPLETED? Task::TASK_WAITING: Task::TASK_WAITING;
+            $task->status = $taskPredecessor && $taskPredecessor->status == Task::TASK_COMPLETED? Task::TASK_WAITING: Task::TASK_NEW;
         } else {
             $task->status = Task::TASK_WAITING;
         }
@@ -240,24 +250,12 @@ class TaskController extends Controller
         if ($newTasks) {
             $newTasks->department_label = $newTasks->task_department? Task::DEPARTMENTS[$newTasks->task_department]: '';
 
-            if ($task->status == 0) {
-                $task->status_title = 'Đã quá hạn';
-            } elseif ($task->status == 1) {
-                $task->status_title = 'Đang chờ';
-            } elseif ($task->status == 2) {
-                $task->status_title = 'Đang làm';
-            } elseif ($task->status == 1) {
-                $task->status_title = 'Tạm dừng';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) > $task->time )) {
-                $task->status_title = 'Hoàn thành chậm';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) < $task->time )) {
-                $task->status_title = 'Hoàn thành';
-            } elseif ($task->status == 5) {
-                $task->status_title = 'Chờ feedback';
-            } elseif ($task->status == 6) {
-                $task->status_title = 'Làm lại';
+            if (($newTasks->status == 0 || $newTasks->status == 1) && (strtotime($newTasks->end_time) < time())) {
+                $newTasks->status_title = 'Đã quá hạn';
+            } elseif ($newTasks->status == 4 && (strtotime($newTasks->real_end_time) > strtotime($newTasks->end_time))) {
+                $newTasks->status_title = 'Hoàn thành chậm';
             } else {
-                $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
+                $newTasks->status_title = $newTasks->status >= 0 ? Task::ARR_STATUS[$newTasks->status]: '';
             }
             $newTasks->fullname = $newTasks->taskUser? $newTasks->taskUser->fullname: '';
             $newTasks->_hasChildren = false;
@@ -306,8 +304,8 @@ class TaskController extends Controller
         $task->time = $taskInfo['time'] ?? null;
         $task->end_time = $taskInfo['end_time'] ?? null;
         $task->description = $taskInfo['description'] ?? '';
-        $task->task_priority = isset($taskInfo['task_priority']) && $taskInfo['task_priority'] ? $taskInfo['task_priority']['priority_label']: null;
-        $task->task_sticker = isset($taskInfo['task_sticker']) && $taskInfo['task_sticker'] ?$taskInfo['task_sticker']['sticker_name']: null;
+        $task->task_priority = isset($taskInfo['task_priority']) && $taskInfo['task_priority'] ? $taskInfo['task_priority']['id']: null;
+        $task->task_sticker = isset($taskInfo['task_sticker']) && $taskInfo['task_sticker'] ?$taskInfo['task_sticker']['id']: null;
         $task->task_department = isset($taskInfo['task_department']) && $taskInfo['task_department']? $taskInfo['task_department']['value']: null;
         $task->weight = $taskInfo['weight'] ?? null;
         $task->project_id = isset($taskInfo['project_id']) && $taskInfo['project_id'] ?$taskInfo['project_id']['id']: null;
@@ -317,7 +315,7 @@ class TaskController extends Controller
 
         if (isset($taskInfo['task_predecessor']) && $task->task_predecessor != $taskInfo['task_predecessor']) {
             $taskPredecessor = Task::find($taskInfo['task_predecessor']);
-            $task->status = $taskPredecessor && $taskPredecessor->status == Task::TASK_COMPLETED? Task::TASK_WAITING: Task::TASK_WAITING;
+            $task->status = $taskPredecessor && $taskPredecessor->status == Task::TASK_COMPLETED? Task::TASK_WAITING: Task::TASK_NEW;
         }
 
         $task->task_predecessor = isset($taskInfo['task_predecessor']) && $taskInfo['task_predecessor'] ?$taskInfo['task_predecessor']['id']: null;
@@ -360,32 +358,25 @@ class TaskController extends Controller
         if ($newTasks) {
             $newTasks->department_label = $newTasks->task_department? Task::DEPARTMENTS[$newTasks->task_department]: '';
 
-            if ($task->status == 0) {
-                $task->status_title = 'Đã quá hạn';
-            } elseif ($task->status == 1) {
-                $task->status_title = 'Đang chờ';
-            } elseif ($task->status == 2) {
-                $task->status_title = 'Đang làm';
-            } elseif ($task->status == 1) {
-                $task->status_title = 'Tạm dừng';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) > $task->time )) {
-                $task->status_title = 'Hoàn thành chậm';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) < $task->time )) {
-                $task->status_title = 'Hoàn thành';
-            } elseif ($task->status == 5) {
-                $task->status_title = 'Chờ feedback';
-            } elseif ($task->status == 6) {
-                $task->status_title = 'Làm lại';
-            } else {
-                $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
+            if (($newTasks->status == 0 || $newTasks->status == 1) && (strtotime($newTasks->end_time) < time())) {
+                $newTasks->status_title = 'Đã quá hạn';
+            } elseif ($newTasks->status == 4 && (strtotime($newTasks->real_end_time) > strtotime($newTasks->end_time))) {
+                $newTasks->status_title = 'Hoàn thành chậm';
+            }elseif ($newTasks->status == 5) {
+                $newTasks->status_title = 'Chờ feedback';
+            }elseif ($newTasks->status == 6) {
+                $newTasks->status_title = 'Làm lại';
+            }			else {
+                $newTasks->status_title = $newTasks->status >= 0 ? Task::ARR_STATUS[$newTasks->status]: '';
             }
             $newTasks->fullname = $newTasks->taskUser? $newTasks->taskUser->fullname: '';
             $totalChild = Task::query()->where('task_parent', '=', $taskId)->count();
-            if ($changeParent) {
+            //$newTasks->_hasChildren = $totalChild > 0;
+            //$newTasks->_children = [];
+            if($changeParent){
                 $newTasks->_hasChildren = $totalChild > 0;
-                $newTasks->_children = [];
+                $newTasks->_chilfren = [];
             }
-
         }
 
         if ($changeParent) {
@@ -412,10 +403,22 @@ class TaskController extends Controller
             'arr_new_parent' => array_reverse($arrNewParent),
         ];
     }
+    public function all_task(Request $request)
+    {
+        $projectId = 14;
+
+        $tasks = Task::query()->where('project_id','=',$projectId)->select(['id', 'task_name'])->get();
+
+        return [
+            'code' => 200,
+            'data' => $tasks
+        ];
+    }
 
     public function getAll(Request $request) {
         $projectId = $request->input('project_id');
         $taskParent = $request->input('task_parent');
+
         $taskId = $request->input('task_id');
 
         $builder = Task::query()
@@ -575,7 +578,7 @@ class TaskController extends Controller
             ->where('tt.valid','=',1)
             ->selectRaw('p.project_name');
 
-        $builder->join('projects as p', 'tt.project_id', '=', 'p.id')
+        $builder->join('projects as p', 'tt.project_id', '=', 'p.id')->orderBy('start_time')
         ->where('task_performer', '=', Auth::id());
          if ($taskPerformer && $taskPerformer > 0) {
             $builder->where('tt.task_performer', '=', $taskPerformer);
@@ -585,92 +588,83 @@ class TaskController extends Controller
             $builder->where('project_id', '=', $filters['project_id']);
         }
 
-        if (isset($filters['status']) && $filters['status'] > 1) {
+        if (isset($filters['status'])) {
             $builder->where('status', '=', $filters['status']);
         }
 
-        $tasks = $builder->where('tt.valid','=',1)->get();
+        $tasks = $builder->get();
 
-
-        $totalTaskSlow = 0;
-        $totalTaskWait = 0;
         $totalTaskProcessing = 0;
         $totalTaskPause = 0;
         $totalTaskComplete = 0;
-        $totalWaitFeedback = 0;
-         $totalTaskAgain = 0;
+         $totalWaitFeedback = 0;
 
-        foreach ($tasks as $task ) {
-                if ($task->status == 0) {
-                    $task->status_title = 'Đã quá hạn';
-                } elseif ($task->status == 1) {
-                    $task->status_title = 'Đang chờ';
-                } elseif ($task->status == 2) {
-                    $task->status_title = 'Đang làm';
-                } elseif ($task->status == 1) {
-                    $task->status_title = 'Tạm dừng';
-                } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) > $task->time )) {
-                    $task->status_title = 'Hoàn thành chậm';
-                } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) < $task->time )) {
-                    $task->status_title = 'Hoàn thành';
-                } elseif ($task->status == 5) {
-                    $task->status_title = 'Chờ feedback';
-                } elseif ($task->status == 6) {
-                    $task->status_title = 'Làm lại';
-                } else {
-                    $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
-                }
-                if( $task->valid == 1){
-                    switch ($task->status) {
-                        case 0:
-                            $totalTaskSlow++;
-                            break;
-                        case 1:
-                            $totalTaskWait++;
-                            break;
-                        case 2:
-                            $totalTaskProcessing++;
-                            break;
-                        case 3:
-                            $totalTaskPause++;
-                            break;
-                        case 4:
-                            $totalTaskComplete++;
-                            break;
-                        case 5:
-                            $totalWaitFeedback++;
-                            break;
-                        case 6:
-                            $totalTaskAgain++;
-                            break;
-                    }
-                }
-                $task->time_real = 0;
-
-                if ($task->status == 4 || $task->status == 3 || $task->status == 5 || $task->status == 6) {
-                    $task->time_real = $task->real_end_time?
-                        round(((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600 - $task->time_pause), 2): 0;
-
-                } else if ($task->status == 2){
-                    $task->time_real = round(((time() - strtotime($task->real_start_time))/3600 - $task->time_pause), 2);
-                }
+        foreach ($tasks as $task) {
+            if ($task->status == 0) {
+                $task->status_title = 'Đã quá hạn';
+            } elseif ($task->status == 1) {
+                $task->status_title = 'Đang chờ';
+            } elseif ($task->status == 2) {
+                $task->status_title = 'Đang làm';
+            } elseif ($task->status == 1) {
+                $task->status_title = 'Tạm dừng';
+            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) > $task->time )) {
+                $task->status_title = 'Hoàn thành chậm';
+            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) < $task->time )) {
+                $task->status_title = 'Hoàn thành';
+            } elseif ($task->status == 5) {
+                $task->status_title = 'Chờ feedback';
+            } elseif ($task->status == 6) {
+                $task->status_title = 'Làm lại';
+            } else {
+                $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
             }
 
-            return [
-                'code' => 200,
-                'tasks' => $tasks,
-                'summary' => [
-                    'total' => count($tasks),
-                    'total_slow' => $totalTaskSlow,
-                    'total_wait' => $totalTaskWait,
-                    'total_processing' => $totalTaskProcessing,
-                    'total_pause' => $totalTaskPause,
-                    'total_complete' => $totalTaskComplete,
-                    'total_wait_fb' => $totalWaitFeedback,
-                    'total_again' => $totalTaskAgain,
-                    
-                ]
-            ];
+            switch ($task->status) {
+                case 0:
+                    $totalTaskProcessing++;
+                    break;
+                case 1:
+                    $totalTaskProcessing++;
+                    break;
+                case 2:
+                    $totalTaskProcessing++;
+                    break;
+                case 3:
+                    $totalTaskPause++;
+                    break;
+                case 4:
+                    $totalTaskComplete++;
+                    break;
+                case 5:
+                    $totalWaitFeedback++;
+                    break;
+                case 6:
+                    $totalTaskProcessing++;
+                    break;
+            }
+            $task->time_real = 0;
+            $task->time_now = date('Y-m-d', strtotime(now()));
+
+            if ($task->status == 4 || $task->status == 3 || $task->status == 5 || $task->status == 6) {
+                $task->time_real = $task->real_end_time?
+                    round(((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600 - $task->time_pause), 2): 0;
+
+            } else if ($task->status == 2){
+                $task->time_real = round(((time() - strtotime($task->real_start_time))/3600 - $task->time_pause), 2);
+            }
+        }
+
+        return [
+            'code' => 200,
+            'tasks' => $tasks,
+            'summary' => [
+                'total' => count($tasks),
+                'total_processing' => $totalTaskProcessing,
+                'total_pause' => $totalTaskPause,
+                'total_complete' => $totalTaskComplete,
+            ]
+        ];
     }
 
     public function ListWork(Request $request) {
@@ -806,6 +800,124 @@ class TaskController extends Controller
         ];
     }
 
+	public function ListWorkDone(Request $request) {
+         $filters = $request->all();
+        $projectId = $request->input('project_id');
+        $startTime = $request->input('start_time');
+        $taskPerformer = $request->input('task_performer');
+        $taskDepartment = $request->input('task_department');
+
+        $builder = DB::table('tasks', 'tt')
+			->where('tt.status', '=', 4)
+			->where('tt.task_department', '!=', null)
+			->where('tt.valid', '=', 1)
+			->select('tt.*')
+            ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child")
+            ->selectRaw('p.project_name, u.fullname');
+        $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
+        $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
+
+        //$builder = DB::table('tasks', 'tt')->select('tt.*')
+        //   ->selectRaw('p.project_name');
+
+        //$builder->join('projects as p', 'tt.project_id', '=', 'p.id');
+
+
+        if ($startTime && $startTime != '') {
+            $builder->whereDate('tt.start_time', '=', $startTime);
+        }
+        if ($projectId > 0) {
+            $builder->where('tt.project_id', '=',$projectId);
+        }
+
+        if ($taskPerformer && $taskPerformer > 0) {
+            $builder->where('tt.task_performer', '=', $taskPerformer);
+        }
+
+        if ($taskDepartment && $taskDepartment > 0) {
+            $builder->where('tt.task_department', '=', $taskDepartment);
+        }
+
+        if (isset($filters['project_id']) && $filters['project_id'] > 0) {
+            $builder->where('project_id', '=', $filters['project_id']);
+        }
+
+        if (isset($filters['departments']) && $filters['departments'] > 0) {
+            $builder->where('task_department', '=', $filters['departments']);
+        }
+
+        if (isset($filters['status']) && $filters['status'] > 1) {
+            $builder->where('status', '=', $filters['status']);
+        }
+
+        $tasks = $builder->get();
+
+        $totalTaskProcessing = 0;
+        $totalTaskPause = 0;
+        $totalTaskComplete = 0;
+        $totalWaitFeedback= 0;
+
+        foreach ($tasks as $task) {
+            $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
+            if (($task->status == 0 || $task->status == 1) && (strtotime($task->end_time) < time())) {
+                $task->status_title = 'Nhanh chóng làm việc';
+            }elseif ($task->status == 4 && ((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600 - $task->time_pause) < $task->time) {
+                $task->status_title = 'Hoàn thành';
+            }elseif ($task->status == 4 && ((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600 - $task->time_pause) > $task->time) {
+                $task->status_title = 'Hoàn thành chậm';
+            }elseif ($task->status == 5) {
+                $task->status_title = 'Chờ feedback';
+            }elseif ($task->status == 6) {
+                $task->status_title = 'Làm lại';
+            } else {
+                $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
+            }
+
+            switch ($task->status) {
+                case 0:
+                    $totalTaskProcessing++;
+                    break;
+                case 1:
+                    $totalTaskProcessing++;
+                    break;
+                case 2:
+                    $totalTaskProcessing++;
+                    break;
+                case 3:
+                    $totalTaskPause++;
+                    break;
+                case 4:
+                    $totalTaskComplete++;
+                    break;
+                case 5:
+                    $totalWaitFeedback++;
+                    break;
+                case 6:
+                    $totalTaskProcessing++;
+                    break;
+            }
+            $task->time_real = 0;
+
+            if ($task->status == 4 || $task->status == 3 || $task->status == 5 || $task->status == 6) {
+                $task->time_real = $task->real_end_time?
+                    round(((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600 - $task->time_pause), 8): 0;
+            } else if ($task->status == Task::TASK_PROCESSING){
+                $task->time_real = round(((time() - strtotime($task->real_start_time))/3600 - $task->time_pause), 8);
+            }
+        }
+
+        return [
+            'code' => 200,
+            'tasks' => $tasks,
+            'summary' => [
+                'total' => count($tasks),
+                'total_processing' => $totalTaskProcessing,
+                'total_pause' => $totalTaskPause,
+                'total_complete' => $totalTaskComplete,
+            ]
+        ];
+    }
+
     public function listTasks(Request $request) {
         $filters = $request->all();
 
@@ -830,22 +942,10 @@ class TaskController extends Controller
         $totalWaitFeedback= 0;
 
         foreach ($tasks as $task) {
-            if ($task->status == 0) {
+            if (($task->status == 0 || $task->status == 1) && (strtotime($task->end_time) < time())) {
                 $task->status_title = 'Đã quá hạn';
-            } elseif ($task->status == 1) {
-                $task->status_title = 'Đang chờ';
-            } elseif ($task->status == 2) {
-                $task->status_title = 'Đang làm';
-            } elseif ($task->status == 1) {
-                $task->status_title = 'Tạm dừng';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) > $task->time )) {
+            } elseif ($task->status == 4 && (strtotime($task->real_end_time) > strtotime($task->end_time))) {
                 $task->status_title = 'Hoàn thành chậm';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) < $task->time )) {
-                $task->status_title = 'Hoàn thành';
-            } elseif ($task->status == 5) {
-                $task->status_title = 'Chờ feedback';
-            } elseif ($task->status == 6) {
-                $task->status_title = 'Làm lại';
             } else {
                 $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
             }
@@ -901,7 +1001,7 @@ class TaskController extends Controller
         $task = Task::find($taskId);
 
         if($status == 5){
-            $task->progress = 100;
+            $task->progress  = 100;
         }
 
         switch ($task->status) {
@@ -954,26 +1054,24 @@ class TaskController extends Controller
             'message' => 'Cập nhật thành công'
         ];
     }
-	
+
 	public function changeProgress($taskId, Request $request) {
         $progress = $request->input('progress');
 
         $task = Task::find($taskId);
-        if($progress >= 0 && $progress <=100){
 
-            $task->progress = $progress;
+        $task->progress = $progress;
 
-            if($progress == 100){
-                $task->status = 5;
-            }
-
-            $task->save();
-
-            return [
-                'code' => 200,
-                'message' => 'Cập nhật thành công'
-            ];
+        if($progress == 100){
+            $task->status = 5;
         }
+
+        $task->save();
+
+        return [
+            'code' => 200,
+            'message' => 'Cập nhật thành công'
+        ];
     }
 
     public function changeTaskName($taskId, Request $request) {
@@ -996,7 +1094,7 @@ class TaskController extends Controller
         $task = Task::find($taskId);
 
         $task->time = $time;
-        
+
         $task->save();
 
         return [
@@ -1004,7 +1102,7 @@ class TaskController extends Controller
             'message' => 'Cập nhật thành công'
         ];
     }
-    public function changePause($taskId, Request $request) {
+	public function changePause($taskId, Request $request) {
         $pause = $request->input('time_pause');
 
         $task = Task::find($taskId);
@@ -1024,7 +1122,7 @@ class TaskController extends Controller
         $task = Task::find($taskId);
 
         $task->start_time = $start_time;
-        
+
         $task->save();
 
         return [
@@ -1038,7 +1136,35 @@ class TaskController extends Controller
         $task = Task::find($taskId);
 
         $task->task_department = $task_department;
-        
+
+        $task->save();
+
+        return [
+            'code' => 200,
+            'message' => 'Cập nhật thành công'
+        ];
+    }
+    public function changeProject($taskId, Request $request) {
+        $task_project = $request->input('project_id');
+
+        $task = Task::find($taskId);
+
+        $task->project_id = $task_project;
+
+        $task->save();
+
+        return [
+            'code' => 200,
+            'message' => 'Cập nhật thành công'
+        ];
+    }
+    public function changeParent($taskId, Request $request) {
+        $task_parent = $request->input('task_parent');
+
+        $task = Task::find($taskId);
+
+        $task->task_parent = $task_parent;
+
         $task->save();
 
         return [
@@ -1047,12 +1173,12 @@ class TaskController extends Controller
         ];
     }
     public function changePerformer($taskId, Request $request) {
-        $task_performer = $request->input('task_performer');
+        $task_performer = $request->input('task_performer');;
 
         $task = Task::find($taskId);
 
         $task->task_performer = $task_performer;
-        
+
         $task->save();
 
         return [
@@ -1061,13 +1187,12 @@ class TaskController extends Controller
         ];
     }
     public function changeWeight($taskId, Request $request) {
-
-        $weight = $request->input('weight');
+        $weight = $request->input('weight');;
 
         $task = Task::find($taskId);
 
         $task->weight = $weight;
-        
+
         $task->save();
 
         return [
@@ -1075,18 +1200,17 @@ class TaskController extends Controller
             'message' => 'Cập nhật thành công'
         ];
     }
-    public function changeSticker($taskId, Request $request) {
+	public function changeSticker($taskId, Request $request) {
         $sticker = $request->input('task_sticker');
 
         $task = Task::find($taskId);
-
+        
         $priority = 'level_'.$task->task_priority;
-        if($task->task_priority != null){
-            $weight = DB::table('stickers as s')->where('sticker_name', '=', $sticker)->value($priority);
-        } else{
-            $weight = 0;
-        }
-
+		if($task->task_priority != null){
+			$weight = DB::table('stickers as s')->where('sticker_name', '=', $sticker)->value($priority);
+		}else{
+			$weight = 0;
+		}
         $task->task_sticker = $sticker;
 
         $task->weight = $weight;
@@ -1128,8 +1252,8 @@ class TaskController extends Controller
         $department = $filter['task_department']? explode(',', $filter['task_department']): [];
         $project = $filter['project_id']? explode(',', $filter['project_id']): [];
         $taskSummaryQuery = DB::table('tasks as t')->where('valid','=', '1')
-            //->join('warriors as w', 't.task_performer', '=', 'w.user_id') ->select('t.*','w.warrior')
-            ->selectRaw("COUNT(t.id)")
+           ->selectRaw("COUNT(t.id)")
+            //->selectRaw("COUNT(t.task_department) total_task")
             ->selectRaw("SUM(IF (t.task_department != '', 1, 0)) total_task")
             ->selectRaw("SUM(IF (t.status = 1 AND t.task_performer > 0, 1, 0)) total_wait")
             ->selectRaw("SUM(IF (t.status = 2, 1, 0)) total_processing ")
@@ -1195,26 +1319,18 @@ class TaskController extends Controller
             ->selectRaw("SUM(IF (t.task_department = 5 && t.status = 4, t.weight, 0)) total_weight_test_complete");
 
 
-        $usersQuery = User::query()->leftJoin('warriors as w', 'users.id', '=', 'w.user_id')->select('users.*', 'w.warrior','w.project_id');
-        $task = DB::table('tasks as t')->where('valid','=', '1')
-        ->leftJoin('warriors as w', 't.project_id', '=', 'w.project_id')->select('t.*', 'w.warrior');
+        $usersQuery = User::query();
 
-        $summaryQuery = DB::table('tasks as t')->where('t.valid','=',1)
-            ->leftJoin('warriors as w', 't.project_id', '=', 'w.project_id')->select('t.*', 'w.warrior')
-            ->select('t.task_department')
+        $summaryQuery = DB::table('tasks as t')->select('t.task_department')
             ->selectRaw("SUM(t.weight) total_weight")
             ->selectRaw("COUNT(t.id) total_task");
 
-        //$summaryQuery->leftJoin('warriors as w', 'tasks.project_id', '=', 'w.project_id')->select('tasks.*', 'w.warrior');
-        
 
         if (isset($filter['search']) && $filter['search']) {
             $search = $filter['search'];
             $taskSummaryQuery->join('users as u', 't.task_performer', '=', 'u.id');
-            $taskSummaryQuery->join('warriors as w', 't.task_performer', '=', 'w.user_id');
             $taskSummaryQuery->where('u.fullname', 'LIKE', "%$search%");
             $summaryQuery->join('users as u', 't.task_performer', '=', 'u.id');
-            $summaryQuery->join('warriors as w', 't.project_id', '=', 'w.project_id');
             $summaryQuery->where('u.fullname', 'LIKE', "%$search%");
 
             $usersQuery->where('fullname', 'LIKE', "%$search%");
@@ -1274,8 +1390,6 @@ class TaskController extends Controller
         foreach ($users as $user) {
 
             if ($user->task && count($user->task) > 0) {
-                $warrior_p =$user->project_id;
-                $warrior = $user->warrior;
                 $totalTask = 0;
                 $totalComplete = 0;
                 $totalProcessing = 0;
@@ -1325,8 +1439,6 @@ class TaskController extends Controller
                 $result[] = [
                     'id' => $user->id,
                     'user_name' => $user->fullname,
-                    'warrior' => $warrior,
-                    'warrior_p' => $warrior_p,
                     'department' => $user->department,
                     'total_task' => $totalTask,
                     'total_complete' => $totalComplete,
@@ -1374,24 +1486,12 @@ class TaskController extends Controller
         if ($newTasks) {
             $newTasks->department_label = $newTasks->task_department? Task::DEPARTMENTS[$newTasks->task_department]: '';
 
-            if ($task->status == 0) {
-                $task->status_title = 'Đã quá hạn';
-            } elseif ($task->status == 1) {
-                $task->status_title = 'Đang chờ';
-            } elseif ($task->status == 2) {
-                $task->status_title = 'Đang làm';
-            } elseif ($task->status == 1) {
-                $task->status_title = 'Tạm dừng';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) > $task->time )) {
-                $task->status_title = 'Hoàn thành chậm';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) < $task->time )) {
-                $task->status_title = 'Hoàn thành';
-            } elseif ($task->status == 5) {
-                $task->status_title = 'Chờ feedback';
-            } elseif ($task->status == 6) {
-                $task->status_title = 'Làm lại';
+            if (($newTasks->status == 0 || $newTasks->status == 1) && (strtotime($newTasks->end_time) < time())) {
+                $newTasks->status_title = 'Đã quá hạn';
+            } elseif ($newTasks->status == 4 && (strtotime($newTasks->real_end_time) > strtotime($newTasks->end_time))) {
+                $newTasks->status_title = 'Hoàn thành chậm';
             } else {
-                $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
+                $newTasks->status_title = $newTasks->status >= 0 ? Task::ARR_STATUS[$newTasks->status]: '';
             }
             $newTasks->fullname = $newTasks->taskUser? $newTasks->taskUser->fullname: '';
             $totalChild = Task::query()->where('task_parent', '=', $newTaskId)->count();
@@ -1406,69 +1506,45 @@ class TaskController extends Controller
             'arr_parent' => array_reverse($arrParent),
         ];
     }
-    public function copyClone($taskId) {
-        $task = Task::query()->with(['children' => function ($q) {
-            $q->where('valid', '=', 1);
-        }])->where('id', '=', $taskId)->first();
 
-        $newTaskId = Task::taskChildrent([$task], $task->task_parent);
+    public function new_task(Request $request) {
 
-        $tasks = Task::query()->with(['parent'])->where('id', '=', $taskId)->get();
-        $arrParent = [];
-        foreach ($tasks as $value) {
-            if ($value->parent) {
-                $item = $value->parent;
-                while ($item) {
-                    $arrParent[] = $item->id;
-                    $item = $item->parent;
-                }
-            }
-        }
-        $performer = Auth::user()->id;
+        $task = new Task();
 
-        $newTasks = Task::query()->with(['taskUser'])->where('id', '=', $newTaskId)->first();
-        if ($newTasks) {
-            $newTasks->department_label = $newTasks->task_department? Task::DEPARTMENTS[$newTasks->task_department]: '';
+        $userId = Auth::user()->id;
+        $Department = Auth::user()->department;
 
-            if ($task->status == 0) {
-                $task->status_title = 'Đã quá hạn';
-            } elseif ($task->status == 1) {
-                $task->status_title = 'Đang chờ';
-            } elseif ($task->status == 2) {
-                $task->status_title = 'Đang làm';
-            } elseif ($task->status == 1) {
-                $task->status_title = 'Tạm dừng';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) > $task->time )) {
-                $task->status_title = 'Hoàn thành chậm';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) < $task->time )) {
-                $task->status_title = 'Hoàn thành';
-            } elseif ($task->status == 5) {
-                $task->status_title = 'Chờ feedback';
-            } elseif ($task->status == 6) {
-                $task->status_title = 'Làm lại';
-            } else {
-                $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
-            }
-            $newTasks->task_performer= 1;
-            $newTasks->fullname = $newTasks->taskUser? $newTasks->taskUser->fullname: '';
-            $newTasks->task_name = $newTasks->taskUser? $newTasks->taskUser->fullname: '';
-            $totalChild = Task::query()->where('task_parent', '=', $newTaskId)->count();
-            $newTasks->_hasChildren = $totalChild > 0;
-            $newTasks->_children = [];
-        }
+        $task->task_name = 'Click để thay đổi nội dung';
+        $task->task_code ='';
+        $task->start_time = date('Y-m-d', strtotime(now()));
+        $task->time =null;
+        $task->end_time =null;
+        $task->description = '';
+        $task->task_priority = null;
+        $task->task_sticker = null;
+        $task->task_department = $Department;
+        $task->weight = null;
+        $task->project_id = null;
+        $task->task_predecessor = null;
+        $task->task_parent = null;
+        $task->task_performer = $userId;
+        $task->status= 1;
+        $task->project_id = 15;
+
+        $task->save();
+
+        $newTasks = Task::query()->with(['taskUser'])->where('id', '=', $task->id)->first();
 
         return [
             'code' => 200,
-            'message' => 'Copy thành công',
+            'message' => 'Thêm mới thành công',
             'new_task' => $newTasks,
-            'arr_parent' => array_reverse($arrParent),
         ];
     }
 
     public function invalidTasks() {
         $users = User::all();
-        $projects= Project::all();
-        return view('projects.invalid_tasks', compact('users','projects'));
+        return view('projects.invalid_tasks', compact('users'));
     }
 
     public function invalid(Request $request) {

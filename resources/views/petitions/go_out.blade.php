@@ -1,8 +1,8 @@
- <div class="modal fade" id="exampleModal_goOut" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="exampleModal_goOut" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
      <div class="modal-dialog" role="document">
         <div class="modal-content" style="width:100%;">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">Ra ngoài</h3>
+                <h3 class="modal-title" id="exampleModalLabel">Tạo yêu cầu ra ngoài</h3>
                 <button type="button" class="close" data-bs-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -21,9 +21,15 @@
 
 
             <div class="modal-body">
-                <form action="{{ route('petitions.store') }}" method="POST">
+                <form action="{{ route('petitions.store') }}" method="POST" id="GoOut">
                     @csrf
-
+					<div class="form-check" style="font-size:24px;">
+                        <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            <b>Đã được quản lý trực tiếp duyệt</b>
+                        </label>
+                    </div>
+					</br>
                     <?php
                     if(Auth::user()->permission == 0) {
                     ?>
@@ -33,13 +39,13 @@
                         <label for="">Họ và tên:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="user_id" type="text" value="{{ Auth::user()->id }}" hidden/>
+                        <input class="form-control" name="user_id" id="usernameGoLate" type="text" value="{{ Auth::user()->id }}" hidden/>
                         <label for="">Mã nhân viên:</label>
                     </div>
                     <?php } else {?>
 
                         <div class="form-floating mb-3">
-                            <select class="form-control" id="user_fullname" name="user_id">
+                            <select class="form-control" id="usernameGoLate" name="user_id">
                                 <option selected disabled value>Chọn nhân viên</option>
                                 @foreach($users as $user)
                                     <?php
@@ -50,8 +56,9 @@
                                 @endforeach
                             </select>
                             <label for="user_fullname">Họ và tên:</label>
+							<div id="vmsgGoLate1" style="color:brown; margin: 10px;"></div>
                         </div>
-                        
+
                     <?php } ?>
 
                     <div class="form-floating mb-3">
@@ -66,22 +73,56 @@
                         <label for="">Chọn ngày:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="time_from" type="time" value="08:00"/>
+                        <input class="form-control" name="time_from" type="time" value="09:00"/>
                         <label for="">Thời gian từ:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="time_to" type="time" value="09:00"/>
+                        <input class="form-control" name="time_to" type="time" value="11:00"/>
                         <label for="">Đến:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" name="petition_reason" type="text" style="height:100px;"></textarea>
+                        <textarea class="form-control" name="petition_reason" id="petition_reasonGoLate" type="text" style="height:100px;"></textarea>
                         <label for="">Lý do:</label>
+						<div id="vmsgGoLate2" style="color:brown; margin: 10px;"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" >Tạo yêu cầu</button>
+                       <div class="btn_check">
+                            <button type="submit" class="btn btn-primary" >Tạo yêu cầu</button>
+                        </div>
                     </div>
                 </form>
+				<script>
+                    $(".btn_check").hide();
+                    $(".form-check-input").click(function() {
+                        if($(this).is(":checked")) {
+                            $(".btn_check").show();
+                        } else {
+                            $(".btn_check").hide();
+                        }
+                    });
+
+					$(document).ready(function() {
+                    $("#GoLate").submit(function() {
+                        var query1 = document.getElementById('usernameGoLate');
+                        if (query1.value == "") {
+                        $('#vmsgGoLate1').html("* Vui lòng chọn người tạo yêu cầu")
+                        return false;
+                        }
+                        return true;
+                    })
+                    });
+                    $(document).ready(function() {
+                    $("#GoLate").submit(function() {
+                        var query2 = document.getElementById('petition_reasonGoLate');
+                        if (query2.value == "") {
+                        $('#vmsgGoLate2').html("* Vui lòng nhập lí do")
+                        return false;
+                        }
+                        return true;
+                    })
+                    });
+                </script>
             </div>
         </div>
      </div>

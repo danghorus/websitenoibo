@@ -148,6 +148,24 @@
                                 <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
                                     sớm: {{ time.about_early }})</div>
                             </template>
+							<template v-else-if="time.petition_type == 9 && time.holiday != 1">
+                                <b style="color:black;">Ra ngoài ({{time.go_out}} phút)</b>
+                                <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
+                                    time.checkout:'-:-' }}</div>
+                                <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
+                                    Đi sớm: {{ time.go_early }} -)</div>
+                                <div v-if="time.go_early_0 > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
+                                    muộn: {{ time.about_late }})</div>
+                                <div v-if="time.go_early_0 > 0 && time.about_early > 0">(Đi sớm: {{ time.go_early }} -
+                                    Về
+                                    sớm: {{ time.about_early }})</div>
+                                <div v-if="time.go_late_0  > 0 && time.checkout =='-:-'">(<b style="color:black;">
+                                        Đi muộn: {{ time.go_late }}</b> -)</div>
+                                <div v-if="time.go_late  > 0 && time.about_late > 0">(Đi muộn: {{ time.go_late }} - Về
+                                    muộn: {{ time.about_late }})</div>
+                                <div v-if="time.go_late  > 0 && time.about_early > 0">(Đi muộn: {{ time.go_late }} - Về
+                                    sớm: {{ time.about_early }})</div>
+                            </template>
                             <template v-else-if="time.petition_type == 2 && time.type_leave == 1 && time.holiday != 1">
                                 <b>Nghỉ buổi sáng</b>
                                 <div v-if="time.checkin == ''"></div>
@@ -275,7 +293,7 @@
             </div>-->
         </div>
         <div>
-            <div ref="modalDetail" data-bs-backdrop="static" data-bs-keyboard="false" class="modal" tabindex="-1" role="dialog">
+            <div ref="modalDetail" class="modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document" style="  max-width: 80%;">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -352,6 +370,9 @@ export default {
         this.getTimeKeepings();
     },
     methods: {
+		changeOption(){
+            this.getReport();
+        },
         async getTimeKeepings() {
             let params = {
                 option: this.option,

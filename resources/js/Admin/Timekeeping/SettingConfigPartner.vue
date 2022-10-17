@@ -2,14 +2,14 @@
     <div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="camera-tab" data-toggle="tab" href="#camera" aria-controls="camera"
-                    @click="getDevices()">
-                    <span class="nav-text">Quản lý Camera</span>
+                <a class="nav-link active" id="face-tab" data-toggle="tab" href="#face" @click="getUsers()">
+                    <span class="nav-text">Quản lý FaceId</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="face-tab" data-toggle="tab" href="#face" @click="getUsers()">
-                    <span class="nav-text">Quản lý FaceId</span>
+                <a class="nav-link" id="camera-tab" data-toggle="tab" href="#camera" aria-controls="camera"
+                    @click="getDevices()">
+                    <span class="nav-text">Quản lý Camera</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -20,7 +20,7 @@
             </li>
         </ul>
         <div class="tab-content mt-5" id="myTabContent">
-            <div class="tab-pane" id="face" role="tabpanel" aria-labelledby="face-tab">
+            <div class="tab-pane fade show active" id="face" role="tabpanel" aria-labelledby="face-tab">
                 <button class="btn btn-primary" @click="syncUsers()"
                     style="position: absolute; right: 20px; top: 155px">Đồng bộ người dùng</button>
                 <table class="table">
@@ -77,7 +77,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane fade show active" id="camera" role="tabpanel" aria-labelledby="camera-tab">
+            <div class="tab-pane" id="camera" role="tabpanel" aria-labelledby="camera-tab">
                 <div>
                     <button class="btn btn-primary" @click="syncDevice()"
                         style="position: absolute; right: 20px; top: 155px">Đồng bộ thiết bị</button>
@@ -172,7 +172,6 @@ export default {
     created() {
         this.getUsers();
         this.getConfig();
-        this.getDevices();
     },
     methods: {
         async connectHanet() {

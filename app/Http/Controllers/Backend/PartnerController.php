@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Project;
 use App\Services\PartnerService;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -110,7 +109,6 @@ class PartnerController extends Controller
     {
         $data = $request->all();
         $users = User::all();
-        $projects = Project::all();
 
         $places = $this->partnerService->getPlaces();
 

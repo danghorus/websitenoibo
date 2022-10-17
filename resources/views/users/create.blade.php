@@ -110,17 +110,17 @@
                                                     <div class="col-md-8">
                                                         <select id="department" type="text" class="form-control @error('department') is-invalid @enderror"
                                                             name="department" value="{{ old('department') }}" required autocomplete="department">
-                                                                        <option value="1">Admin</option>
-                                                                        <option value="2">Dev</option>
-                                                                        <option value="3">Game design</option>
-                                                                        <option value="4">Art</option>
-                                                                        <option value="5">Tester</option>
-                                                                        <option value="6">Điều hành</option>
-                                                                        <option value="7">Hành chính nhân sự</option>
-                                                                        <option value="8">Kế toán</option>
-                                                                        <option value="9">Phân tích dữ liệu</option>
-                                                                        <option value="10">Support</option>
-                                                                        <option value="11">Marketing</option>
+                                                                        <option value="Admin">Admin</option>
+                                                                        <option value="Dev">Dev</option>
+                                                                        <option value="Game design">Game design</option>
+                                                                        <option value="Art">Art</option>
+                                                                        <option value="Tester">Tester</option>
+                                                                        <option value="Điều hành">Điều hành</option>
+                                                                        <option value="Hành chính nhân sự">Hành chính nhân sự</option>
+                                                                        <option value="Kế toán">Kế toán</option>
+                                                                        <option value="Phân tích dữ liệu">Phân tích dữ liệu</option>
+                                                                        <option value="Support">Support</option>
+                                                                        <option value="Marketing">Marketing</option>
                                                                     </select>
                                                         @error('department')
                                                             <span class="invalid-feedback" role="alert">

@@ -15,8 +15,8 @@
                         <th scope="col">Thao tác</th>
                     </tr>
                 </thead>
-                <tr v-for=" (item, index) in listTaskTimeLine" :key="item" style="font-size:14px;">
-                    <td scope="row">{{ index + 1 }}</td>
+                <tr v-for="item in listTaskTimeLine" :key="item.id" style="font-size:14px;">
+                    <td scope="row">{{ item.id + 1 }}</td>
                     <td scope="row">{{ item.task_name }}</td>
                     <td>{{ item.start_time }}</td>
                     <td>{{ item.time }}</td>

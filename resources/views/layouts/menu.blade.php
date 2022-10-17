@@ -94,6 +94,27 @@
 .dropdown:hover .nav-link{background-color: #eeeded;}
 .nav-item:hover {background-color: #eeeded;}
 
+.nav-link {
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.notification:hover {
+  background: red;
+}
+
+.nav-link .badge {
+  position: absolute;
+  top: 0px;
+  right: -2px;
+  padding: 1px 5px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
+
 </style>
 
 </head>
@@ -108,15 +129,20 @@
             <!-- Sidebar Toggle-->
             <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px;">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul onclick="myFunction(event)" class="navbar-nav mr-auto" style="font-size:16px;" id="">
+                    <ul class="navbar-nav mr-auto" style="font-size:16px;" id="">
                         <li class="nav-item">
                             <a class="nav-link" href="{{url('/home') }}">Trang chủ</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/petitions') }}">Yêu cầu</a>
-                        </li>
                          <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/proposals') }}">Yêu cầu(clone)</a>
+                            <a class="nav-link" href="{{ url('/petitions') }}">
+                                <span>Yêu cầu</span>
+                                 <?php if( (Auth::user()->permission == 1 || Auth::user()->permission == 2 || Auth::user()->permission == 3) && count($petitions1) > 0){ ?>
+                                <span class="badge">{{count($petitions1)}}</span>
+                                <?php }  ?>
+								<?php if( Auth::user()->permission == 0 && count($petitions01) > 0){ ?>
+                                <span class="badge">{{count($petitions01)}}</span>
+                                <?php } ?>
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/users') }}">Nhân sự</a>
@@ -150,16 +176,13 @@
                     </ul>
                     @extends('petitions.create')
                     @extends('petitions.go_late')
-                    @extends('petitions.go_out')
+                    @extends('petitions.go_Out')
                     @extends('petitions.quit')
                     @extends('petitions.in_day_am')
                     @extends('petitions.in_day_pm')
                     @extends('petitions.in_day')
                     @extends('petitions.multi_day')
-                    @extends('petitions.OT_AM')
-                    @extends('petitions.OT_PM')
                     @extends('petitions.OT')
-                    @extends('petitions.MultiOT')
                     @extends('petitions.OTWar')
                     @extends('petitions.warrior')
                     <script>

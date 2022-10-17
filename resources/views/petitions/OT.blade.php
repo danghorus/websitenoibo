@@ -1,8 +1,8 @@
- <div class="modal fade" id="exampleModal_OT" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ <div class="modal fade"  data-bs-backdrop="static" data-bs-keyboard="false"  id="exampleModal_OT" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
      <div class="modal-dialog" role="document">
         <div class="modal-content" style="width:100%;">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">ĐKLC một ngày</h3>
+                <h3 class="modal-title" id="exampleModalLabel">Đăng ký làm thêm</h3>
                 <button type="button" class="close" data-bs-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -21,7 +21,7 @@
 
 
             <div class="modal-body">
-                <form action="{{ route('petitions.store') }}" method="POST">
+                <form action="{{ route('petitions.store') }}" method="POST" id="OverTime">
                     @csrf
 
                     <?php
@@ -33,13 +33,13 @@
                         <label for="">Họ và tên:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="user_id" type="text" value="{{ Auth::user()->id }}" hidden/>
+                        <input class="form-control" name="user_id" id="username_ot" type="text" value="{{ Auth::user()->id }}" hidden/>
                         <label for="">Mã nhân viên:</label>
                     </div>
                     <?php } else {?>
 
                        <div class="form-floating mb-3">
-                            <select class="form-control" id="user_fullname" name="user_id">
+                            <select class="form-control" id="username_ot" name="user_id">
                                 <option selected disabled value>Chọn nhân viên</option>
                                 @foreach($users as $user)
                                     <?php
@@ -50,16 +50,14 @@
                                 @endforeach
                             </select>
                             <label for="user_fullname">Họ và tên:</label>
+							<div id="vmsg_ot1" style="color:brown; margin: 10px;"></div>
+							
                         </div>
                     <?php } ?>
 
                     <div class="form-floating mb-3">
                         <input class="form-control" name="petition_type" type="text" value="5" hidden/>
                         <label for="">Loại yêu cầu</label>
-                    </div>
-                     <div class="form-floating mb-3">
-                        <input class="form-control" name="type_OT" type="text" value="3" hidden/>
-                        <label for="">Loại ĐKLC</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" id="OT_from" name="date_from" type="date" />
@@ -77,14 +75,37 @@
                         <label for="">Đến:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" name="petition_reason" type="text" style="height:100px;"></textarea>
+                        <textarea class="form-control" name="petition_reason" id="petition_reason_ot" type="text" style="height:100px;"></textarea>
                         <label for="">Nội dung công việc triển khai:</label>
+						<div id="vmsg_ot2" style="color:brown; margin: 10px;"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" >Tạo yêu cầu</button>
                     </div>
                 </form>
+				<script>
+					$(document).ready(function() {
+                    $("#OverTime").submit(function() {
+                        var query1 = document.getElementById('username_ot');
+                        if (query1.value == "") {
+                        $('#vmsg_ot1').html("* Vui lòng chọn người tạo yêu cầu")
+                        return false; 
+                        }
+                        return true; 
+                    })
+                    });
+                    $(document).ready(function() {
+                    $("#OverTime").submit(function() {
+                        var query2 = document.getElementById('petition_reason_ot');
+                        if (query2.value == "") {
+                        $('#vmsg_ot2').html("* Vui lòng nhập nội dung công việc sẽ triển khai")
+                        return false; 
+                        }
+                        return true; 
+                    })
+                    });
+                </script>
             </div>
         </div>
      </div>

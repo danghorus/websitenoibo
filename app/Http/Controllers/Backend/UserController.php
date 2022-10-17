@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
-use App\Models\Project;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\Petition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,11 +23,13 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = User::all();
-        $projects = Project::all();
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
         if ($request->has('search')) {
             $users = User::where('fullname', 'like', "%{$request->search}%")->get();
         }
-        return view('users.index', compact('users', 'projects'));
+        return view('users.index', compact('users','petitions1', 'petitions01'));
     }
 
     /**
@@ -35,8 +40,10 @@ class UserController extends Controller
     public function create()
     {
         $users = User::all();
-        $projects = Project::all();
-        return view('users.create',compact('users','projects'));
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        return view('users.create',compact('users','petitions1', 'petitions01'));
     }
 
     /**
@@ -86,9 +93,11 @@ class UserController extends Controller
         ]);
 
         $users = User::all();
-        $projects = Project::all();
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
 
-        return redirect()->route('users.index',compact('users', 'projects'))->with('message', 'User Register Succesfully');
+        return redirect()->route('users.index',compact('users','petitions1', 'petitions01'))->with('message', 'User Register Succesfully');
 
     }
 
@@ -101,8 +110,10 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $users = User::all();
-        $projects = Project::all();
-        return view('users.edit', compact('user','projects', 'users'));
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        return view('users.edit', compact('user', 'users','petitions1', 'petitions01'));
     }
 
     /**
@@ -148,7 +159,7 @@ class UserController extends Controller
 
     public function all_user()
     {
-        $users = User::query()->select(['id', 'fullname', 'user_code', 'place_id'])->where('user_status', '=', 1)->get();
+        $users = User::query()->select(['id', 'fullname', 'user_code', 'place_id'])->get();
 
         return [
             'code' => 200,
@@ -158,7 +169,7 @@ class UserController extends Controller
 
     public function all_user_by_group()
     {
-        $users = User::query()->select(['id', 'fullname', 'user_code', 'place_id', 'department'])->where('user_status', '=', 1)->get();
+        $users = User::query()->select(['id', 'fullname', 'user_code', 'place_id', 'department'])->get();
 
         $newUsers = [];
 

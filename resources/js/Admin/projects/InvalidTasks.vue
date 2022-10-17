@@ -23,7 +23,7 @@
                 <td>{{ item.d_fullname }}</td>
                 <td>
                     <div style="display: flex">
-                        <button class="btn btn-danger" @click="deleteTask(item.id)">Xóa</button> &ensp;
+                        <button class="btn btn-danger" @click="deleteTask(item.id)">Xóa</button>
                         <button class="btn btn-primary" @click="restoreTask(item.id)">Khôi phuc</button>
                     </div>
                 </td>

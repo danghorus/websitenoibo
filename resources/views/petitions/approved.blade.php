@@ -2,70 +2,70 @@
 
 @section('content')
 
-<style>
-    table {
-        background: #fff;
-        border: 1px solid #999999;
-    }
+    <style>
+        table {
+            background: #fff;
+            border: 1px solid #999999;
+        }
 
-    table thead tr th {
-        padding: 10px;
-        border: 1px solid #9b9b9b;
-        color: #000;
-    }
+        table thead tr th {
+            padding: 10px;
+            border: 1px solid #9b9b9b;
+            color: #000;
+        }
 
-    table.table-striped tbody tr:nth-of-type(odd) {
-        background: #f9f9f9;
-    }
+        table.table-striped tbody tr:nth-of-type(odd) {
+            background: #f9f9f9;
+        }
 
 
-    .text-left {
-        text-align: left!important;
-    }
+        .text-left {
+            text-align: left!important;
+        }
 
-    table tr td {
-        padding: 0px 0px;
-        border: 1px solid #999999;
-    }
+        table tr td {
+            padding: 0px 0px;
+            border: 1px solid #999999;
+        }
 
-    table.result-point tr td .fa {
-        font-size: 20px;
-        position: absolute;
-        right: 20px;
-    }
+        table.result-point tr td .fa {
+            font-size: 20px;
+            position: absolute;
+            right: 20px;
+        }
 
-    table tr td {
-        padding: 10px 10px;
-        border: 1px solid #999999;
-    }
-</style>
-<script>
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
-</script>
-<style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
+        table tr td {
+            padding: 10px 10px;
+            border: 1px solid #999999;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
 
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-</style>
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
 
     <div id="layoutSidenav_content" style=" margin-top:-20px;">
         <main>
@@ -90,36 +90,36 @@ tr:nth-child(even) {
                                 <input type="date" name="search" class="form-control mb-2" id="inlineFormInput" >
                             </li>-->
                             <li>
-                                
+
                             </li>
                             <li>
                                 <input class="form-control mb-2" id="myInput" type="text" placeholder="Search.."\
-                                style="width:100%; border-radius:0px 0px 0px 0px;">
-                                <select class="form-control" id="yourAge">
+                                       style="width:100%; border-radius:0px 0px 0px 0px;">
+                                <!--<select class="form-control" id="yourAge">
                                     <option value="Đi muộn về sớm">Đi muộn về sớm</option>
                                     <option value="Nghỉ phép">Nghỉ phép</option>
                                     <option value="3">Nghỉ việc</option>
                                     <option value="4">Thay đổi giờ công</option>
                                     <option value="5">Đăng ký làm thêm</option>
                                     <option value="6">Đăng ký nỗ lực</option>
-                                </select>
+                                </select>-->
                             </li>
                             <script>
                                 var input = document.getElementById("myInput");
                                 var sel1 = document.getElementById("yourAge");
 
-                                    sel1.onclick = function(){
-                                        sel1 = document.getElementById("yourAge");
-                                        var selected = sel1.options[sel1.selectedIndex].value;
-                                        input = document.getElementById("myInput");
-                                        input.value=selected;
-                                        };
+                                sel1.onclick = function(){
+                                    sel1 = document.getElementById("yourAge");
+                                    var selected = sel1.options[sel1.selectedIndex].value;
+                                    input = document.getElementById("myInput");
+                                    input.value=selected;
+                                };
                             </script>
                         </ul>
                         <ul class="navbar-nav" style="float:right; margin: -50px 0px 0px 0px;">
                             <li class="nav-item dropdown">
-                                    <button class="btn btn-success dropdown-toggle" type="button"
-                                    data-bs-toggle="dropdown" data-bs-auto-close="true">Tạo yêu cầu</button>
+                                <button class="btn btn-success dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown" data-bs-auto-close="true">Tạo yêu cầu</button>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_goLate">Đi muộn/về sớm</a></li>
                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_goOut">Đăng ký ra ngoài</a></li>
@@ -143,26 +143,26 @@ tr:nth-child(even) {
                                             <li><a class="dropdown-item" data-bs-toggle="modal"  data-bs-target="#exampleModal_multiDay">Nhiều ngày</a></li>
                                         </ul>
                                     </li>
-                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_quit">Nghỉ việc</a></li>
+                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_quit">Nghỉ việc</a></li>
                                 </ul>
                             </li>
                         </ul>
-                           
+
                         <script >
                             $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
-                            if (!$(this).next().hasClass('show')) {
-                                $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
-                            }
-                            var $subMenu = $(this).next('.dropdown-menu');
-                            $subMenu.toggleClass('show');
+                                if (!$(this).next().hasClass('show')) {
+                                    $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
+                                }
+                                var $subMenu = $(this).next('.dropdown-menu');
+                                $subMenu.toggleClass('show');
 
 
-                            $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
-                                $('.dropdown-submenu .show').removeClass('show');
+                                $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+                                    $('.dropdown-submenu .show').removeClass('show');
+                                });
+
+                                return false;
                             });
-
-                            return false;
-                        });
                         </script>
                         <div class="tab-content" id="myTabContent">
                             <!-- Start Yeu Cau Can Duyet -->
@@ -184,26 +184,6 @@ tr:nth-child(even) {
                                     @foreach ($petitions as $petition )
                                         <?php if( Auth::user()->permission == 0 && Auth::user()->fullname == $petition->user_fullname) { ?>
                                         <tbody id="myTable">
-                                            <tr>
-                                            <td>John</td>
-                                            <td>Doe</td>
-                                            <td>john@example.com</td>
-                                            <td>1</td>
-                                            <td>2</td>
-                                            <td>3</td>
-                                            <td>4</td>
-                                            <td>5</td>
-                                            </tr>
-                                            <tr>
-                                            <td>Dang</td>
-                                            <td>Bui</td>
-                                            <td>dangbn@example.com</td>
-                                            <td>6</td>
-                                            <td>7</td>
-                                            <td>8</td>
-                                            <td>9</td>
-                                            <td>10</td>
-                                            </tr>
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             <td>{{ $petition->id }}</td>
@@ -304,15 +284,15 @@ tr:nth-child(even) {
                                         </tr>
                                         </tbody>
                                         <?php } ?>
-                                        <?php 
-                                            $date = date("m-Y", time());
-                                            $date_from = date("m-Y", strtotime($petition->date_from));
-                                            if( (Auth::user()->permission == 1 || Auth::user()->permission == 2 || Auth::user()->permission == 3)){ ?>
+                                        <?php
+                                        $date = date("m-Y", time());
+                                        $date_from = date("m-Y", strtotime($petition->date_from));
+                                        if( (Auth::user()->permission == 1 || Auth::user()->permission == 2 || Auth::user()->permission == 3)){ ?>
                                         <tbody id="myTable">
                                         <tr>
                                             <td style="text-align: center;">{{ ++$i }}</td>
                                             <td style="text-align: center;">{{ $petition->id }}</td>
-                                            <!--<td>{{ $petition->user_fullname }}</td>-->
+                                        <!--<td>{{ $petition->user_fullname }}</td>-->
                                             <td>
                                                 @foreach($users as $user)
                                                     <?php if($petition->user_id == $user->id){
@@ -432,47 +412,7 @@ tr:nth-child(even) {
                                     @endforeach
                                 </table>
                             </div>
-                            <!--End Yeu Cau Can Duyet-->    
-                            Rooms:
-                            <select id="room-filter">
-                            <option value="">Show All</option>
-                            <option value="1">1 Room</option>
-                            <option value="2">2 Rooms</option>
-                            <option value="3">3 Rooms</option>
-                            </select>
-
-                            <div class="card text-left" data-rooms="1">
-                            <div class="card-body d-flex" id="content-card">
-                                <h2>Shack</h2>
-                                <p class="main-text">1 room</p>
-                            </div>
-                            </div>
-
-                            <div class="card text-left" data-rooms="1">
-                            <div class="card-body d-flex" id="content-card">
-                                <h2>Second Shack</h2>
-                                <p class="main-text">1 room</p>
-                            </div>
-                            </div>
-
-                            <div class="card text-left" data-rooms="3">
-                            <div class="card-body d-flex" id="content-card">
-                                <h2>Bungalo</h2>
-                                <p class="main-text">3 rooms</p>
-                            </div>
-                            </div>    
-                            <script>
-                                $('#room-filter').on('change', function() {
-                            const numRooms = $(this).val();
-                            $('.card').each(function() {
-                                if (numRooms && numRooms != $(this).data('rooms')) {
-                                $(this).slideUp();
-                                } else {
-                                $(this).slideDown();
-                                }
-                            });
-                            });
-                            </script>      
+                            <!--End Yeu Cau Can Duyet-->
                         </div>
                     </form>
                 </div>

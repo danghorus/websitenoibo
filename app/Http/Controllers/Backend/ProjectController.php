@@ -7,6 +7,9 @@ use App\Models\Project;
 use App\Models\ProjectUser;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\Petition;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -14,40 +17,58 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         $users = User::all();
-        $projects = Project::all();
-        return view('projects.index', compact('users','projects'));
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        return view('projects.index', compact('users','petitions1', 'petitions01'));
     }
 
     public function my_work(Request $request)
     {
         $users = User::all();
-        $projects = Project::all();
-        return view('projects.my_work', compact('users','projects'));
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        return view('projects.my_work',  compact('users','petitions1', 'petitions01'));
     }
     public function list_work(Request $request)
     {
         $users = User::all();
-        $projects = Project::all();
-        return view('projects.list_work', compact('users','projects'));
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        return view('projects.list_work',  compact('users','petitions1', 'petitions01'));
+    }
+	
+	public function list_work_done(Request $request)
+    {
+        $users = User::all();
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        return view('projects.list_work_done',  compact('users','petitions1', 'petitions01'));
     }
 
     public function report(Request $request)
     {
         $users = User::all();
-        $projects = Project::all();
-        return view('projects.report', compact('users','projects'));
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        return view('projects.report',  compact('users','petitions1', 'petitions01'));
     }
 
     public function warrior(Request $request)
     {
         $users = User::all();
-        $projects = Project::all();
-        return view('projects.warrior', compact('users','projects'));
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        return view('projects.warrior',  compact('users','petitions1', 'petitions01'));
     }
 
     public function getAll(Request $request) {
-        
-        $projects = Project::query() ->select(['id', 'project_name', 'project_start_date', 'project_end_date'])->get();
+        $projects = Project::query()->where('id', '!=', 15)->select(['id', 'project_name', 'project_start_date', 'project_end_date'])->get();
 
         return [
             'projects' => $projects

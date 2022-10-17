@@ -3,7 +3,7 @@
 @section('content')
 <br>
 <div id="layoutSidenav_content" style=" margin-top:-20px;">
-<!--<style type="text/css">
+<style type="text/css">
 #popup-giua-man-hinh .headerContainer,#popup-giua-man-hinh .bodyContainer,#popup-giua-man-hinh .footerContainer{
     max-width:960px;margin:0 auto;background:#FFF}
 #popup-giua-man-hinh .padding{padding:0px}
@@ -14,43 +14,28 @@
 #popup-giua-man-hinh .popUpBannerContent{position:fixed;top:20%; left: 40%;}
 #popup-giua-man-hinh .closeButton{color:red;text-decoration:none;font-size:18px}
 #popup-giua-man-hinh a.closeButton{float:right}
-
 </style>
 <?php if(count($petitions)>0 && Auth::user()->permission == 1 ){ ?>
     <div id="popup-giua-man-hinh">
         <div class="popUpBannerBox">
             <div class="popUpBannerInner">
                 <div class="popUpBannerContent">
-                    <p><a href="#" class="closeButton">Bỏ qua</a></p>
-  
+                    <p><a href="#" class="closeButton">Đóng</a></p>
+<!-- CODE HIỂN THỊ QUẢNG CÁO -->    
                     <div class="card bg-success text-white" style="width:400px; height:200px;">
                         <div class="card-body">
-                            <b id="tc"> THÔNG BÁO</b>
-                            </br></br>
-                            <?php if(count($petitions)>0){ ?>
-                                <nav>
-                                    <i>
-                                        Bạn có <b style="color:red">{{count($petitions)}}</b> yêu cầu cần duyệt.
-                                    </i>
-                                    <a class="small text-white"  href="{{ url('/petitions') }}">Xem chi tiết</a>
-                                </nav>
-                            <?php }?>
-                            </br>
-                            <?php if(count($tasks) >0){ ?>
-                                <nav>
-                                    <i>
-                                        Bạn có <b style="color:red">{{count($tasks)}}</b> công việc cần Feedback.
-                                    </i>
-                                    <a class="small text-white"  href="{{ url('/list_work') }}">Xem chi tiết</a>
-                                </nav>
-                            <?php }?>
+                            <b id="tc"> YÊU CẦU</b>
+                            <nav><i>
+                                    Số lượng yêu cầu cần duyệt: {{count($petitions)}}
+                                </i>
+                            </nav>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white " href="{{ url('/home') }}">Trang chủ</a>
+                            <a class="small text-white stretched-link" href="{{route('petitions.index')}}">Xem chi tiết</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
-
+<!-- END HIỂN THỊ QUẢNG CÁO -->
             </div>
         </div>
     </div>
@@ -72,7 +57,7 @@
     });
     </script>
 </div>
-<?php }?>-->
+<?php }?>
                 <main>
                     <div class="container-fluid px-4">
                         <div class="row">
@@ -131,36 +116,6 @@
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
-                            </div>
-                            <h3>Thông tin của bạn</h3>
-                            <div class="col-6">
-                                <h5>Công việc</h5>
-                                <table>
-                                    <thead>
-                                        <tr style="text-align:center;">
-                                            <th>Tổng số công việc của bạn</th>
-                                            <td>:</td>
-                                            <td> {{count($myTask)}}</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $i=0;?>
-                                        @foreach ($users as $key => $user)
-                                            <?php
-                                            if($user->user_status == 1) {
-                                            ?>
-                                            <tr style="text-align:center;">
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                            <?php } ?>
-                                        @endforeach
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>

@@ -8,73 +8,58 @@
                 :call-children="getChildTask"
             >
                 <template slot="toggle-children-icon" slot-scope="props"><span style="cursor: pointer"> [{{ props.expanded ? '-' : '+' }}] </span></template>
-                <template slot="name" slot-scope="props" style="width: 300px">
-                    <input style="width:400px; border:0px;"  @change="changeTaskName($event, props.row.id)" v-model="props.row.task_name">
+                <template slot="name" slot-scope="props">
+                    <input style="width:400px; border:0px;font-size:12px;"  @change="changeTaskName($event, props.row.id)" v-model="props.row.task_name">
                 </template>
 
                 <template slot="start_time_label" slot-scope="props">
+                    <template v-if="props.row.weight != null || props.row.time != null">
                     <div style="display: flex">
-                         <input style="width:100%; border:0px;"  @change="changeStartTime($event, props.row.id)" v-model="props.row.start_time">
+                        <input type="date" style="width:100%; border:0px; font-size:12px;"  @change="changeStartTime($event, props.row.id)" v-model="props.row.start_time">
                     </div>
+                    </template>
                 </template>
 
-                 <template slot="time_label" slot-scope="props">
+                <template slot="time_label" slot-scope="props">
                     <div style="display: flex">
-                         <input style="width:100%; border:0px;"  @change="changeTime($event, props.row.id)" v-model="props.row.time">
+                        <input style="width:100%; border:0px; font-size:12px;"  @change="changeTime($event, props.row.id)" v-model="props.row.time">
                     </div>
                 </template>
 
                 <template slot="weight_label" slot-scope="props">
                     <div style="display: flex">
-                         <input style="width:100%; border:0px;"  @change="changeWeight($event, props.row.id)" v-model="props.row.weight">
-                    </div>
-                </template>
-                <template slot="sticker" slot-scope="scope">
-                    <div style="display: flex">
-                        <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                            @change="changeSticker($event, scope.row.id)" v-model="scope.row.task_sticker">
-                            <option value="">Bỏ chọn</option>
-                            <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">{{sticker.sticker_name}}</option>
-                        </select>
-                    </div>
-                </template>
-                <template slot="priority" slot-scope="scope">
-                    <div style="display: flex">
-                        <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                            @change="changePerformer($event, scope.row.id)" v-model="scope.row.task_priority">
-                            <option v-for="(priority, index) in priorities" :key="index" :value="priority.priority_label">Level {{priority.priority_label}}</option>
-                        </select>
+                        <input style="width:100%; border:0px; font-size:12px;"  @change="changeWeight($event, props.row.id)" v-model="props.row.weight">
                     </div>
                 </template>
 
                 <template slot="task_department_label" slot-scope="scope">
-                    <div style="display: flex">
-                        <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                    <div style="display: flex; font-size:12px;">
+                        <select style="font-size:12px;" class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changeDepartment($event, scope.row.id)" v-model="scope.row.task_department">
-                                <option value="2">Dev</option>
-                                <option value="3">Game Design</option>
-                                <option value="4">Art</option>
-                                <option value="5">Tester</option>
+                            <option value="2" >Dev</option>
+                            <option value="3">Game Design</option>
+                            <option value="4">Art</option>
+                            <option value="5">Tester</option>
                         </select>
                     </div>
                 </template>
-
-                <template slot="task_performer_label" slot-scope="scope">
-                    <div style="display: flex">
+                <template  slot="task_performer_label" slot-scope="scope">
+                    <div style="display: flex; font-size:12px;">
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                            @change="changePerformer($event, scope.row.id)" v-model="scope.row.task_performer">
+                                @change="changePerformer($event, scope.row.id)" v-model="scope.row.task_performer">
+							<option v-if="scope.row.task_performer != null" :value="null">Bỏ chọn</option>
                             <option v-for="(user, index) in users" :key="index" :value="user.id">{{user.fullname}}</option>
                         </select>
                     </div>
                 </template>
-                 <template slot="progress_label" slot-scope="props">
+                <template slot="progress_label" slot-scope="props">
                     <div style="display: flex">
-                         <input style="width:100%; border:0px;"  @change="changePerformer($event, props.row.id)" v-model="props.row.progress">
+                        <input style="width:40px; border:0px; font-size:12px;"  @change="changePerformer($event, props.row.id)" v-model="props.row.progress">
                     </div>
                 </template>
 
                 <template slot="man" slot-scope="props">
-                    <div style="display: flex">
+                    <div style="display: flex; font-size:12px;">
                         <p @click="showModalEditTask(props.row.id)">
                             <i class="fas fa-pencil-alt" style="cursor: pointer" />
                         </p>
@@ -90,7 +75,7 @@
                     </div>
 
                 </template>
-                <template slot="status_template" scope="scope">
+                <template slot="status_template" scope="scope" style="font-size:12px;">
                     <template v-if="scope.row.task_department!=null">
                     <div v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3) ">
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example"
@@ -101,22 +86,21 @@
                             <option value="3" >Tạm dừng</option>
                             <option value="5" >Chờ feedback</option>
                             <option value="6" >Làm lại</option>
-                            <option value="4" >Hoàn thành
-                            </option>
+                            <option value="4" >Hoàn thành</option>
                         </select>
                     </div>
                     <div v-else>
-                        <p>{{ scope.row.status_title }}</p>
+                        <p style="font-size:12px;">{{ scope.row.status_title }}</p>
                     </div>
                     </template>
                 </template>
-                <template slot="progress_template" scope="props">
+                <template style="font-size:12px;" slot="progress_template" scope="props">
                     <template v-if="props.row.task_department!=null">
-                            <p>{{ props.row.progress_label }}</p>
+                            <p>{{ props.row.progress_lable }}</p>
                     </template>
                 </template>
                 <template slot="no-rows">Không có dữ liệu</template>
-                <template slot="toggle-children-icon" slot-scope="props"> <span style="cursor: pointer"> [{{ props.expanded ? '-' : '+' }}] </span></template>
+
             </vue-ads-table>
             <div ref="modalConfirm" class="modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document" style=" max-width: 30%;">
@@ -156,6 +140,24 @@
                     </div>
                 </div>
             </div>
+            <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document" style=" max-width: 60%;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Thêm mới Công việc</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                    @click="closeModalCreateTask()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <create-task v-if="showModalCreate" :users="users" :groupUsers="groupUsers"
+                                         :projectId="projectId" :priorities="priorities" :stickers="stickers" :projects="projects"
+                                         :taskParentId="parentId" @handleCreateTask="handleCreateTask" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -183,6 +185,7 @@ export default {
         };
 
         return {
+            //start_time:now(),
             classes: classes,
             showModal: false,
             showTimeline: true,
@@ -195,7 +198,6 @@ export default {
             columns: [
                 {
                     title: '',
-                    property: '',
                 },
                 {
                     title: 'Công việc',
@@ -210,14 +212,6 @@ export default {
                     property: 'time_label',
                 },
                 {
-                    title: 'Loại CV',
-                    property: 'sticker',
-                },
-                {
-                    title: 'Cấp độ',
-                    property: 'priority',
-                },
-                {
                     title: 'Trọng số',
                     property: 'weight_label',
                 },
@@ -229,7 +223,7 @@ export default {
                     title: 'Người thực hiện',
                     property: 'task_performer_label',
                 },
-				{
+                {
                     title: 'Tiến độ',
                     property: 'progress_label',
                 },
@@ -560,70 +554,7 @@ export default {
                 }
             }
         },
-        async changeSticker(e, taskId) {
-
-            const res = await $post(`/tasks/change-sticker/${taskId}`, {task_sticker: e.target.value });
-
-            if (res.code == 200) {
-                toastr.success(res.message);
-            //this.$emit('getAllTasks');
-            }
-        },
-        async changePriority(e, taskId) {
-            const res = await $post(`/tasks/change-priority/${taskId}`, { task_priority: e.target.value });
-
-            if (res.code == 200) {
-                toastr.success(res.message);
-                //this.getListWorks();
-            }
-        },
-
     },
-    watch: {
-        /*'task.time': function (newVal) {
-            if (newVal > 0 && this.task.start_time_day) {
-                let dateTime = moment(this.task.start_time_day).add(newVal, 'h').toDate();
-                this.task.end_time = moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
-            }
-        },
-        'task.start_time_day': function (newVal) {
-            if (newVal && this.task.time) {
-                let dateTime = moment(newVal).add(this.task.time, 'h').toDate();
-                this.task.end_time = moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
-            }
-        },*/
-        'task.task_sticker': function (newVal) {
-            if (newVal && this.task.task_priority) {
-                let dateTime = moment(this.task.start_time_day).add(newVal, 'h').toDate();
-                this.task.end_time = moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
-            }
-        },
-        'task.task_priority': function (newVal) {
-            if (newVal && this.task.task_sticker) {
-                let dateTime = moment(newVal).add(this.task.time, 'h').toDate();
-                this.task.end_time = moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
-            }
-        },
-        /*'task.task_name': function (newVal) {
-            if (newVal) {
-                let arrTaskName = newVal.split(' ');
-                let taskCode = '';
-                arrTaskName.forEach(item => {
-                    taskCode = taskCode + item.charAt(0);
-                })
-
-                this.task.task_code = taskCode.toUpperCase();
-            } else {
-                this.task.task_code = '';
-            }
-        },*/
-        /*'tasks': function (newVal) {
-            if (this.taskParentId && this.count === 0) {
-                this.task.task_parent = _.find(newVal, {id: parseInt(this.taskParentId)});
-                this.count = this.count + 1;
-            }
-        },*/
-    }
 };
 </script>
 

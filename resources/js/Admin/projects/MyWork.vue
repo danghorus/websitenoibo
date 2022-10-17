@@ -23,6 +23,7 @@
                                 <option value="3">Tạm dừng</option>
                                 <option value="5">Chờ feedback</option>
                                 <option value="6">Làm lại</option>
+								<option value="4" v-if="option2 == 3">Hoàn thành</option>
                             </select>
                         </div>
                     </li>
@@ -34,14 +35,14 @@
                     <li class="nav-item">
                         <button class="btn btn-outline-info" @click="ShowInfoMyWork()" type="button" data-toggle="collapse"
                             data-target="#collapseExample_1" aria-expanded="false" aria-controls="collapseExample"
-                            style="margin-top: 38px"> Thông tin công việc
+                            style="margin-top:  38px"> Thông tin thời gian
                         </button>
                         <div class="col-lg">
                             <div class="collapse info-my-work" id="collapseExample_1" v-if="showInfoMyWork">
                                 <div>
-                                    <h4 style="margin: 20px 0px 10px 150px;">Thông tin làm việc</h4>
                                     <table style="width:100%; border: 0px" class="my-work">
-                                        <!--<tr>
+                                        <h4 style="margin: 20px 0px 20px 130px;">Thông tin làm việc</h4>
+                                        <tr>
                                             <td><b>Warrior đăng ký</b></td>
                                             <td>:</td>
                                             <td>Warrior 3</td>
@@ -55,47 +56,26 @@
                                             <td><b>Thời gian làm việc trong ngày</b></td>
                                             <td>:</td>
                                             <td>12 tiếng</td>
-                                        </tr>-->
-                                        <tr>
-                                            <td width="300px"><b>Tổng số công việc</b></td>
-                                            <td>:</td>
-                                            <td>{{ summary.total }} &emsp; công việc</td>
                                         </tr>
                                         <tr>
-                                            <td><b>Quá hạn</b></td>
+                                            <td><b>Tổng số công việc của bạn</b></td>
                                             <td>:</td>
-                                            <td  v-if=" summary.total_slow >0 "><b style="color:red;">{{ summary.total_slow }}</b>&emsp; công việc</td>
-                                            <td  v-else>{{ summary.total_slow }} &emsp; công việc</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Đang chờ</b></td>
-                                            <td>:</td>
-                                            <td>{{ summary.total_wait }} &emsp; công việc</td>
+                                            <td>{{ summary.total }}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Đang làm</b></td>
                                             <td>:</td>
-                                            <td>{{ summary.total_processing }} &emsp; công việc</td>
+                                            <td>{{ summary.total_processing }}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Tạm dừng</b></td>
                                             <td>:</td>
-                                            <td>{{ summary.total_pause }} &emsp; công việc</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Chờ feedback</b></td>
-                                            <td>:</td>
-                                            <td>{{ summary.total_wait_fb }} &emsp; công việc</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Làm lại</b></td>
-                                            <td>:</td>
-                                            <td>{{ summary.total_again }} &emsp; công việc</td>
+                                            <td>{{ summary.total_pause }}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Hoàn thành</b></td>
                                             <td>:</td>
-                                            <td>{{ summary.total_complete }} &emsp; công việc</td>
+                                            <td>{{ summary.total_complete }}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -114,6 +94,10 @@
                 <option value="1">Chưa hoàn thành</option>
                 <option value="2">Đã hoàn thành</option>
             </select>&emsp;
+            <p @click="NewTask()">
+                <button class="btn btn-success btn-sm" 
+                style="height:35px; font-size:15px; margin: -40px 0px 0px 300px;">Thêm mới</button>
+            </p>
             <!--<button class="btn btn-outline-secondary" @click="handleShowFilter()" type="button" data-toggle="collapse"
                 data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample1"
                 style="float:right; margin:  -35px 10px 0px 0px;">
@@ -125,13 +109,16 @@
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
                         <th scope="col" width="700px">Tên công việc</th>
-                        <th scope="col" width="10%">Bắt đầu</th>
-                        <th scope="col" width="10%">Thời lượng (Giờ)</th>
-                        <th scope="col" width="10%">Thời lượng thực tế (Giờ)</th>
-                        <th scope="col" width="10%">Trọng số</th>
-						<th scope="col" width="10%">Tiến độ</th>
-                        <th scope="col" width="10%">Trạng thái</th>
-                        <th scope="col" width="10%">Thao tác</th>
+                        <th scope="col" width="10%">Dự án</th>
+                        <th scope="col" width="10%">Công việc cha</th>
+                        <th scope="col" width="7%">Bộ phận</th>
+                        <th scope="col" width="6%">Bắt đầu</th>
+                        <th scope="col" width="3%">Thời lượng (Giờ)</th>
+                        <th scope="col" width="6%">Kết thúc</th>
+                        <th scope="col" width="3%">Thời lượng thực tế (Giờ)</th>
+                        <th scope="col" width="3%">Trọng số</th>
+						<th scope="col" width="4%">Tiến độ</th>
+                        <th scope="col" width="8%">Trạng thái</th>
                         <th scope="col" width="10%">Thao tác</th>
                     </tr>
                 </thead>
@@ -139,21 +126,54 @@
                     <template v-if="option2 == 1 && item.status != 4">
                         <tr>
                             <td>{{index + 1 }}</td>
-                            <td scope="row" style="text-align:left;">{{ item.task_name }}</td>
-                            <!--<td style="text-align:left;">{{ item.task_parent }}
-                            </td>-->
-                            <td>{{ item.start_time }}</td>
+                            <td scope="row" style="text-align:left;">
+                                <div style="display: flex; font-size:12px;">
+                                    <input style="width:100%; border:0px;" @change="changeTaskName($event, item.id)" v-model="item.task_name">
+                                    <p >
+                                        <i class="fas fa-info-circle" style="font-size:16px; margin-top: 15px; cursor: pointer" />
+                                    </p>
+                                </div>
+                            </td>
+                            <td style="text-align:left;">
+                                <select class="form-select"  @change="changeProject($event, item.id)" v-model="item.project_id">
+                                    <option value="15" disabled>Chọn dự án</option>
+                                    <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
+                                </select>
+                            </td>
+                            <td style="text-align:left;">
+                                <select class="form-select" @change="changeParent($event, item.id)" v-model="item.task_parent">
+                                    <option value="" disabled>Lựa chọn</option>
+                                    <option v-for="(task, index) in list_task" :key="index" :value="task.id">{{task.task_name}}</option>
+                                </select>
+                            </td>
+                            <td style="text-align:left;">
+                                <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                    @change="changeDepartment($event, item.id)" v-model="item.task_department">
+                                    <option value="null" disabled >Lựa chọn</option>
+                                    <option value="2">Dev</option>
+                                    <option value="3">Game Design</option>
+                                    <option value="4">Art</option>
+                                    <option value="5">Tester</option>
+                                </select>
+                            </td>
+                            <td v-if="item.start_time < item.time_now"><b style="color:#a60000;">{{ item.start_time }}</b></td>
+                            <td v-if="item.start_time == item.time_now"><b style="color:orange;">{{ item.start_time }}</b></td>
+                            <td v-if="item.start_time > item.time_now">>{{ item.start_time }}</td>
+                            <td v-if="item.start_time == null">{{ item.start_time }}</td>
                             <td>{{ item.time }}</td>
-                            <!--<td>{{ item.end_time }}</td>
-                            <td>{{ item.real_start_time }}</td>-->
-                            <td>{{ item.time_real}}</td>
+                            <td>
+                                <div class="form-group p-2">
+                                    <select class="form-select" @change="changeOption()" v-model="performer" style="width:200px">
+                                        <option value="0" selected="selected">Tất cả</option>
+                                        <option v-for="(user, index) in users" :key="index" :value="user.id">{{user.fullname}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>{{ item.real_time}}</td>
                             <td>{{ item.weight}}</td>
 							<td>
-                                <input type="number" min="0" step="1" max="100" style="width: 100%;border:0px; background-color:#F8F9FA"
-                                 @change="changeProgress($event, item.id)" v-model="item.progress">
+                                <input type="number" style="width: 100%; border:0px;" min="0" max="100" @change="changeProgress($event, item.id)" v-model="item.progress">
                             </td>
-                            <!--<td>{{ item.real_end_time }}</td>-->
-                            <!--<td>{{ item.status_title }}</td>-->
                             <td v-if="item.status == 0" style="background-color:red">Đã quá hạn</td>
                             <td v-else-if="item.status == 1" style="background-color:white">Đang chờ</td>
                             <td v-else-if="item.status == 2" style="background-color:#008080">Đang làm</td>
@@ -178,19 +198,6 @@
                                     <option value="4" v-if="item.status == 4"> Hoàn thành</option>
                                 </select>
                             </td>
-                            <td>
-                                <div style="display: flex">
-                                    <p @click="showModalEditTask(item.id)">
-                                        <button class="btn btn-primary btn-sm" style="height:20px; font-size:10px;">Sửa</button>
-                                    </p> &ensp;
-                                    <p @click="deleteTask(item.id)">
-                                        <button class="btn btn-danger btn-sm" style="height:20px; font-size:10px;">Xoá</button>
-                                    </p>&ensp;
-                                    <p @click="copyTask(item.id)">
-                                        <button class="btn btn-success btn-sm" style="height:20px; font-size:10px;">Copy</button>
-                                    </p>
-                                </div>
-                            </td>
                         </tr>
                     </template>
                     <template v-if="option2 == 2 && item.status == 4">
@@ -203,11 +210,10 @@
                             <td>{{ item.time }}</td>
                             <!--<td>{{ item.end_time }}</td>
                             <td>{{ item.real_start_time }}</td>-->
-                            <td>{{ item.time_real}}</td>
+                            <td>{{ item.real_time}}</td>
                             <td>{{ item.weight}}</td>
-                            <td style="width: 100%; border:0px; background-color: #F9F9F9;">
-                                <input type="number" style="width: 100%; border:0px; background-color: #F9F9F9;" min="0" max="100" 
-                                @change="changeProgress($event, item.id)" v-model="item.progress">
+                            <td>
+                                <input type="number" style="width: 100%; border:0px;" min="0" max="100" @change="changeProgress($event, item.id)" v-model="item.progress">
                             </td>
                             <!--<td>{{ item.real_end_time }}</td>-->
                             <!--<td>{{ item.status_title }}</td>-->
@@ -302,20 +308,48 @@ export default {
             toggle: false,
             show: false,
             list: [],
+            list_task: [],
             showModal: false,
             showMyWork: true,
             showFilter: false,
             showInfoMyWork: false,
             projects: [],
+            project_id: '',
+            task_parent: '',
             project: 0,
             summary: ''
         }
     },
     created() {
+        this.getAllUser();
         this.getMyWorks();
         this.getProjects();
+        this.getAllTasks();
     },
     methods: {
+        async getAllUser() {
+            const res = await $get('/user/all_user');
+            if (res.code == 200) {
+                this.users = res.data;
+            }
+        },
+        async getAllTasks() {
+            
+            const res = await $get('/tasks/all_task');
+
+            if (res.code == 200) {
+                this.list_task = res.data;
+            }
+        },
+        handleGetTasks(res) {
+            this.closeModalCreateTask_Parent()
+            this.closeModalCreateTask();
+            if (this.projectId > 0) {
+                this.bus.$emit('submit', _.cloneDeep(res))
+            } else {
+                this.getTaskTimeLine();
+            }
+        },
 
         handleShowFilter() {
             this.showFilter = !this.showFilter
@@ -367,20 +401,43 @@ export default {
 
             this.projects = res.projects
         },
-        async deleteTask(id) {
-            const res = await $post(`/tasks/delete/${id}`);
+        async NewTask() {
+            const res = await $get('/tasks/new_task');
 
             if (res.code == 200) {
-                toastr.success('Xóa thành công');
+                toastr.success('Thêm mới thành công');
                 this.getMyWorks();
             }
         },
-
-        async copyTask(id) {
-            const res = await $get(`/tasks/copyClone/${id}`);
+        async changeTaskName(e, taskId) {
+            const res = await $post(`/tasks/change-task_name/${taskId}`, { task_name: e.target.value });
 
             if (res.code == 200) {
-                toastr.success('Thêm mới công việc');
+                toastr.success(res.message);
+                this.getMyWorks();
+            }
+        },
+        async changeProject(e, taskId) {
+            const res = await $post(`/tasks/change-project/${taskId}`, { project_id: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getMyWorks();
+            }
+        },
+        async changeDepartment(e, taskId) {
+            const res = await $post(`/tasks/change-department/${taskId}`, { task_department: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getMyWorks();
+            }
+        },
+        async changeParent(e, taskId) {
+            const res = await $post(`/tasks/change-parent/${taskId}`, { task_parent: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
                 this.getMyWorks();
             }
         },
@@ -389,7 +446,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 table table-bordered mt-5 {
     background: #fff;
     border: 1px solid #999999;
@@ -452,25 +508,11 @@ table.my-work td {
     border: 2px;
 }
 
- #notify {
-    margin-top: 5px;
-    padding: 10px;
-    font-size: 12px;
-    width: 100%;
-    color: #fff;
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-  }
-  #notify.error {
-    background-color: #DD2C00;
-  }
-
-  input:invalid {
-  color: red;
+.modal-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
-
-
 </style>

@@ -21,11 +21,11 @@
 
 
             <div class="modal-body">
-                <form action="{{ route('petitions.store') }}" method="POST">
+                <form action="{{ route('petitions.store') }}" method="POST" id="Holiday">
                     @csrf
 
                     <div class="form-floating mb-3">
-                        <select class="form-control" id="user_fullname" name="user_id">
+                        <select class="form-control" id="userlname" name="user_id">
                             <option selected disabled value>Chọn nhân viên</option>
                             @foreach($users as $user)
                                 <?php
@@ -36,6 +36,7 @@
                             @endforeach
                         </select>
                         <label for="user_fullname">Họ và tên:</label>
+						<div id="vmsg1" style="color:brown; margin: 10px;"></div>
                     </div>
 
                     <div class="form-floating mb-3" hidden>
@@ -49,8 +50,9 @@
                         <label for="">Vui lòng chọn ngày:</label>
                     </div>
                     <div class="form-floating mb-3" hidden>
-                        <input class="form-control" name="petition_reason" type="text" style="height:100px;" value="5">
+                        <input class="form-control" name="petition_reason" id="petition_reason" type="text" style="height:100px;" value="5">
                         <label for="">Lý do:</label>
+						<div id="vmsg2" style="color:brown; margin: 10px;"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

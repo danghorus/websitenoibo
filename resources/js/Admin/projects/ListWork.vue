@@ -78,11 +78,11 @@
                 style="width:99%; margin: 0px 0px 0px 10px">
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
-                        <th scope="col" width="40px">STT</th>
-                        <th scope="col" width="610px" sortKey="name" defaultSort="desc">Tên công việc</th>
-                        <th scope="col" width="120px">Bắt đầu</th>
+                        <th scope="col">STT</th>
+                        <th scope="col" width="610px">Tên công việc</th>
+                        <th scope="col" width="80px">Bắt đầu</th>
                         <th scope="col" width="80px">Thời lượng (Giờ)</th>
-                        <th scope="col" width="80px">Thời lượng thực tế (Giờ)</th>
+                        <th scope="col" width="120px">Thời lượng thực tế (Giờ)</th>
                         <th scope="col" width="120px">Thời gian tạm dừng</th>
                         <th scope="col" width="120px">Loại công việc</th>
                         <th scope="col" >Cấp độ công việc</th>
@@ -91,23 +91,22 @@
                         <th scope="col" width="100px">Bộ phận</th>
                         <th scope="col" width="145px">Trạng thái</th>
                         <th scope="col" width="125px">Thao tác</th>
-                        <th scope="col" width="17px"></th>
                     </tr>
                 </thead>
-                <tbody >
-                    <tr v-for="(item, index) in list" :key="item.id"  style="text-align:center;">
-                        <td width="40px">{{ index +1 }}</td>
+                <tbody v-for="(item, index) in list" :key="item.id" >
+                    <tr style="text-align:center;">
+                        <td>{{ index +1 }}</td>
                         <td scope="row" style="text-align:left;">
-                            <input style="width:600px; border:0px;"  @change="changeTaskName($event, item.id)" v-model="item.task_name">
+                            <input style="width:100%; border:0px;"  @change="changeTaskName($event, item.id)" v-model="item.task_name">
                         </td>
                         <!--<td>{{ item.start_time }}</td>-->
                         <td>
-                            <input type="date" style="width: 110px; border:0px;" @change="changeStartTime($event, item.id)" v-model="item.start_time">
+                            <input type="date" style="width: 80%; border:0px;" @change="changeStartTime($event, item.id)" v-model="item.start_time">
                         </td>
-                        <td><input style="width:70px; border:0px; text-align:right;"  @change="changeTime($event, item.id)" v-model="item.time"></td>
-                        <td style="width:80px; text-align:right;">{{ item.time_real}}</td>
-                        <td style="width:80px; text-align:right;">
-                            <input style="width:80px; border:0px; text-align:right;" @change="changePause($event, item.id)" v-model="item.time_pause">
+                        <td><input style="width:100%; border:0px; text-align:right;"  @change="changeTime($event, item.id)" v-model="item.time"></td>
+                        <td style=" text-align:right;">{{ item.time_real}}</td>
+                        <td style=" text-align:right;">
+                            <input style="width:100%; border:0px; text-align:right;" @change="changePause($event, item.id)" v-model="item.time_pause">
                         </td>
                         <td>
                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
@@ -193,8 +192,8 @@ export default {
     data() {
         return {
             search:'',
-            option: 5,
-            option1: 1,
+            option: 10,
+            option1: 2,
             option2: 1,
             performer: 0,
             project: 0,
@@ -248,10 +247,16 @@ export default {
                 this.stickers = res.data;
             }
         },
+        async getAllSticker() {
+            const res = await $get('/stickers/get_all');
+            if (res.code == 200) {
+                this.stickers = res.data;
+            }
+        },
         async getProjects() {
             const res = await $get('/projects/get_all');
 
-            this.projects = res.projects;
+            this.projects = res.projects
         },
         async getAllUser() {
             const res = await $get('/user/all_user');
@@ -459,28 +464,5 @@ table.my-work td {
     z-index: 9;
     background: #c5c5c5;
     border: 2px;
-}
-
-
-table {
-    table-layout: fixed;
-}
-
-th,
-
-td {
-    padding: 0px 0px;
-    border: 1px solid #000;
-}
-
-thead {
-    background: #f9f9f9;
-    display: table;
-}
-
-tbody {
-    height: 820px;
-    overflow: auto;
-    display: block;
 }
 </style>

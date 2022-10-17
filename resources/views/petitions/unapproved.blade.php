@@ -2,43 +2,43 @@
 
 @section('content')
 
-<style>
-    table {
-        background: #fff;
-        border: 1px solid #999999;
-    }
+    <style>
+        table {
+            background: #fff;
+            border: 1px solid #999999;
+        }
 
-    table thead tr th {
-        padding: 10px;
-        border: 1px solid #9b9b9b;
-        color: #000;
-    }
+        table thead tr th {
+            padding: 10px;
+            border: 1px solid #9b9b9b;
+            color: #000;
+        }
 
-    table.table-striped tbody tr:nth-of-type(odd) {
-        background: #f9f9f9;
-    }
+        table.table-striped tbody tr:nth-of-type(odd) {
+            background: #f9f9f9;
+        }
 
 
-    .text-left {
-        text-align: left!important;
-    }
+        .text-left {
+            text-align: left!important;
+        }
 
-    table tr td {
-        padding: 0px 0px;
-        border: 1px solid #999999;
-    }
+        table tr td {
+            padding: 0px 0px;
+            border: 1px solid #999999;
+        }
 
-    table.result-point tr td .fa {
-        font-size: 20px;
-        position: absolute;
-        right: 20px;
-    }
+        table.result-point tr td .fa {
+            font-size: 20px;
+            position: absolute;
+            right: 20px;
+        }
 
-    table tr td {
-        padding: 10px 10px;
-        border: 1px solid #999999;
-    }
-</style>
+        table tr td {
+            padding: 10px 10px;
+            border: 1px solid #999999;
+        }
+    </style>
 
     <div id="layoutSidenav_content" style=" margin-top:-20px;">
         <main>
@@ -62,8 +62,8 @@
                         </ul>
                         <ul class="navbar-nav" style="float:right; margin: -50px 0px 0px 0px;">
                             <li class="nav-item dropdown">
-                                    <button class="btn btn-success dropdown-toggle" type="button"
-                                    data-bs-toggle="dropdown" data-bs-auto-close="true">Tạo yêu cầu</button>
+                                <button class="btn btn-success dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown" data-bs-auto-close="true">Tạo yêu cầu</button>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_goLate">Đi muộn/về sớm</a></li>
                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_goOut">Đăng ký ra ngoài</a></li>
@@ -87,26 +87,26 @@
                                             <li><a class="dropdown-item" data-bs-toggle="modal"  data-bs-target="#exampleModal_multiDay">Nhiều ngày</a></li>
                                         </ul>
                                     </li>
-                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_quit">Nghỉ việc</a></li>
+                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_quit">Nghỉ việc</a></li>
                                 </ul>
                             </li>
                         </ul>
-                           
+
                         <script >
                             $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
-                            if (!$(this).next().hasClass('show')) {
-                                $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
-                            }
-                            var $subMenu = $(this).next('.dropdown-menu');
-                            $subMenu.toggleClass('show');
+                                if (!$(this).next().hasClass('show')) {
+                                    $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
+                                }
+                                var $subMenu = $(this).next('.dropdown-menu');
+                                $subMenu.toggleClass('show');
 
 
-                            $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
-                                $('.dropdown-submenu .show').removeClass('show');
+                                $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+                                    $('.dropdown-submenu .show').removeClass('show');
+                                });
+
+                                return false;
                             });
-
-                            return false;
-                        });
                         </script>
                         <div class="tab-content" id="myTabContent">
                             <!-- Start Yeu Cau Can Duyet -->
@@ -233,7 +233,7 @@
                                         <tr>
                                             <td style="text-align: center;">{{ ++$i }}</td>
                                             <td style="text-align: center;">{{ $petition->id }}</td>
-                                            <!--<td>{{ $petition->user_fullname }}</td>-->
+                                        <!--<td>{{ $petition->user_fullname }}</td>-->
                                             <td>
                                                 @foreach($users as $user)
                                                     <?php if($petition->user_id == $user->id){
@@ -353,7 +353,7 @@
                                     @endforeach
                                 </table>
                             </div>
-                            <!--End Yeu Cau Can Duyet-->              
+                            <!--End Yeu Cau Can Duyet-->
                         </div>
                     </form>
                 </div>

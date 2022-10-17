@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Project;
+use App\Models\Petition;
 use App\Models\Warrior;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,22 +20,22 @@ class WarriorController extends Controller
     public function index()
     {
         $petitions = Warrior::latest()->paginate(50);
-        $projects = Project::all();
         $users = User::all();
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
 
-        return view('projects.warrior',compact('petitions','users', 'projects'));
+        return view('projects.warrior',compact('petitions','users', 'petitions1', 'petitions01'));
     }
 
     public function warrior(Request $request)
     {
-
-        $warriors = DB::table('warriors', 'w')->select('w.*')->get();
-
-        return [
-            'code' => 200,
-            'fullname' => $warriors->user_fullname,
-            'warrior' => $warriors->warrior,
-        ];
+        $petitions = Warrior::latest()->paginate(50);
+        $users = User::all();
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        return view('projects.warrior', compact('petitions','users', 'petitions1', 'petitions01'));
     }
 
     /**
@@ -46,8 +46,10 @@ class WarriorController extends Controller
     public function create()
     {
         $users = User::all();
-        $projects = Project::all();
-        return view('petitions.index',compact('users', 'projects'));
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        return view('petitions.index',compact('users', 'petitions1', 'petitions01'));
     }
 
     /**
@@ -63,11 +65,13 @@ class WarriorController extends Controller
         ]);
 
         Warrior::create($request->all());
-        $projects = Project::all();
         $users = User::all();
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
 
 
-        return redirect()->route('petitions.index', compact('users', 'projects'))
+        return redirect()->route('petitions.index', compact('users', 'petitions1', 'petitions01'))
                         ->with('success','Petition created successfully.');
     }
 

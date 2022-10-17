@@ -7,10 +7,10 @@ import ListRequest from "./Admin/Request/ListRequest";
 import Index from "./Admin/projects/Index";
 import MyWork from "./Admin/projects/MyWork";
 import ListWork from "./Admin/projects/ListWork";
+import ListWorkDone from "./Admin/projects/ListWorkDone";
 import Project_Report from "./Admin/projects/Report";
 import Project_Warrior from "./Admin/projects/Warrior";
 import InvalidTasks from "./Admin/projects/InvalidTasks";
-import ListProposal from "./Admin/Proposal/ListProposal";
 
 export const routes = [
     {
@@ -53,6 +53,11 @@ export const routes = [
         name: "ListWork",
         component: ListWork
     },
+	{
+        path: "/list_work_done",
+        name: "ListWorkDone",
+        component: ListWorkDone
+    },
     {
         path: "/project-report",
         name: "Project_Report",
@@ -67,10 +72,5 @@ export const routes = [
         path: "/invalid_tasks",
         name: "Invalid Tasks",
         component: InvalidTasks
-    },
-    {
-        path: "/proposals",
-        name: "List Proposal",
-        component: ListProposal
     }
 ];

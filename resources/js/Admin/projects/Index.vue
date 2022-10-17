@@ -10,17 +10,16 @@
                             <i v-if="projectId" class="fas fa-pencil-alt" style="font-size: 25px; cursor: pointer" />
                         </h4>
                     </div>
-                    <div class="col-lg-12" style="margin: 0 0 30px -10px;">
-                        
-                        <div class="input-seach float-right" >
-                            <DatePicker  @change="changeOption()" style="width: 25%;height: 30px;" v-model="startTime" value-type="format" type="date"
-                                placeholder="Select time"></DatePicker>
-                            &ensp;
-                            <input @input="changeOption()" class="input-elevated" style="width:250px;" type="text" placeholder="Search" v-model="search">
-                            &ensp;
+                    <div class="col-lg-6" style="margin: 0 0 20px -10px;">
+                        <div class="input-seach float-right">
+                            <input class="input-elevated" type="text" placeholder="Search" v-model="search">
+                            <button class="btn btn-outline-secondary border-btn-search"
+                                    @click="showTimeline? getTaskTimeLine(): getAllTasks()" style="width:100px;">
+                                Tìm kiếm
+                            </button> &ensp;
                             <button class="btn-outline-secondary border-search" @click="handleShowFilter()"
                                     type="button" data-toggle="collapse" data-target="#collapseExample"
-                                    aria-expanded="false" aria-controls="collapseExample" style=" width:130px;">
+                                    aria-expanded="false" aria-controls="collapseExample" style="float:right; width:130px;">
                                 <i class="fas fa-filter"></i>
                                 Tạo bộ lọc
                             </button> &ensp;
@@ -42,26 +41,26 @@
                     <div class="form-group p-2">
                         <label for="project_description">Theo dự án</label>
                         <multiselect v-model="searchProjectId" :disabled="!showTimeline" :options="projects" value="id"
-                                     label="project_name" :close-on-select="true" :show-labels="true"
+                                     label="project_name" :close-on-select="false" :show-labels="true"
                                      placeholder="Vui lòng chọn">
                         </multiselect>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo bộ phận</label>
                         <multiselect v-model="taskDepartment" :options="departments" value="value" label="label"
-                                     :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+                                     :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
                         </multiselect>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo người thực hiện</label>
                         <multiselect v-model="taskPerformer" :options="users" value="id" label="fullname"
-                                     :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+                                     :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
                         </multiselect>
                     </div>
                     <div class="form-group p-2">
                         <label for="project_description">Theo trạng thái</label>
                         <multiselect v-model="status" :options="arrStatus" value="value" label="label"
-                                     :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
+                                     :close-on-select="false" :show-labels="true" placeholder="Vui lòng chọn">
                         </multiselect>
                     </div>
                     <div class="float-right p-2">
@@ -82,7 +81,7 @@
 
         </div>
         <div>
-            <div ref="modalCreateTask" data-bs-backdrop="static" data-bs-keyboard="false" class="modal" tabindex="-1" role="dialog">
+            <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document" style=" max-width: 60%;">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -102,7 +101,7 @@
             </div>
         </div>
         <div>
-            <div ref="modalCreate" data-bs-backdrop="static" data-bs-keyboard="false" class="modal" tabindex="-1" role="dialog">
+            <div ref="modalCreate" class="modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document" style=" max-width: 60%;">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -121,7 +120,7 @@
             </div>
         </div>
         <div>
-            <div ref="modalConfigTask" data-bs-backdrop="static" data-bs-keyboard="false" class="modal" tabindex="-1" role="dialog">
+            <div ref="modalConfigTask" class="modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document" style=" max-width: 90%;">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -145,6 +144,7 @@
     import ListProject from "./ListProject";
     import draggable from 'vuedraggable';
     import CreateTask from "./CreateTask";
+    import CreateTask_Parent from "./CreateTask_Parent";
     import CreateProject from "./CreateProject";
     import TimelineTask from "./TimelineTask";
     import ListTask from "./ListTask";
@@ -161,7 +161,6 @@
         data() {
             let localProjectId = localStorage.getItem('project_id') || 0;
             return {
-                searchQuery: null,
                 projectId: localProjectId,
                 searchProjectId: 0,
                 list: [],
@@ -194,27 +193,15 @@
                     { value: 10, label: 'Support' },
                 ],
                 arrStatus: [
-                    { value: 0, label: 'Đã quá hạn' },
+                    { value: 0, label: 'Mới tạo' },
                     { value: 1, label: 'Đang chờ' },
                     { value: 2, label: 'Đang tiến hành' },
                     { value: 3, label: 'Tạm dừng' },
                     { value: 4, label: 'Hoàn thành' },
-                    { value: 5, label: 'Chờ feedback' },
-                    { value: 6, label: 'Làm lại' },
                 ],
                 status: '',
                 currentUser: '',
                 bus: new Vue(),
-            }
-        },
-        computed: {
-            filteredTaskName() {
-                if (this.task_name) {
-                    return this.task_name.filter((item) => {
-                        return item.task_name.match(this.search);
-                    });
-                }
-                return false;
             }
         },
         created() {
@@ -232,15 +219,6 @@
             }
         },
         methods: {
-
-            changeOption() {
-                if (this.projectId > 0) {
-                    this.getInfoProject();
-                    this.getAllTasks();
-                } else {
-                    this.getTaskTimeLine();
-                }
-            },
             async getAllUser() {
                 const res = await $get('/user/all_user');
                 if (res.code == 200) {
@@ -252,39 +230,6 @@
                 if (res.code == 200) {
                     this.groupUsers = res.data;
                 }
-            },
-            async getAllPriority() {
-                const res = await $get('/priorities/get_all');
-                if (res.code == 200) {
-                    this.priorities = res.data;
-                }
-            },
-            async getAllSticker() {
-                const res = await $get('/stickers/get_all');
-                if (res.code == 200) {
-                    this.stickers = res.data;
-                }
-            },
-            async getProjects() {
-                const res = await $get('/projects/get_all');
-
-                this.projects = res.projects;
-            },
-            async getTaskTimeLine() {
-                let filters = {
-                    project_id: this.searchProjectId? this.searchProjectId.id : 0,
-                    search: this.search || '',
-                    start_time: this.startTime || '',
-                    task_performer: this.taskPerformer || 0,
-                    task_department: this.taskDepartment? this.taskDepartment.value : 0,
-                    status: this.status? this.status.value : -1,
-                }
-                const res = await $get('/tasks/timeline', filters);
-
-                if (res.code == 200) {
-                    this.listTaskTimeLine = res.data;
-                }
-                this.showFilter = false;
             },
             showModalCreateTask() {
                 this.showModal = true;
@@ -336,10 +281,41 @@
                 this.getInfoProject();
                 this.closeModalEditProject();
             },
+            async getAllPriority() {
+                const res = await $get('/priorities/get_all');
+                if (res.code == 200) {
+                    this.priorities = res.data;
+                }
+            },
+            async getAllSticker() {
+                const res = await $get('/stickers/get_all');
+                if (res.code == 200) {
+                    this.stickers = res.data;
+                }
+            },
+            async getProjects() {
+                const res = await $get('/projects/get_all');
+
+                this.projects = res.projects
+            },
+            async getTaskTimeLine() {
+                let filters = {
+                    project_id: this.searchProjectId? this.searchProjectId.id : 0,
+                    search: this.search || '',
+                    start_time: this.startTime || '',
+                    task_performer: this.taskPerformer || 0,
+                    task_department: this.taskDepartment? this.taskDepartment.value : 0,
+                    status: this.status? this.status.value : -1,
+                }
+                const res = await $get('/tasks/timeline', filters);
+
+                if (res.code == 200) {
+                    this.listTaskTimeLine = res.data;
+                }
+            },
             handleShowTimeline() {
                 this.showTimeline = true;
                 this.projectId = 0;
-                this.showFilter = false;
             },
             async getAllTasks() {
 
@@ -358,7 +334,6 @@
                     this.list = res.data;
                     this.currentUser = res.currentUser;
                 }
-                this.showFilter = false;
             },
             handleGetTasks(res) {
                 this.closeModalCreateTask_Parent()

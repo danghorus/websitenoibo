@@ -228,7 +228,7 @@ export default {
     },
     created() {
         //this.getAllPriority();
-       // this.getAllSticker();
+        //this.getAllSticker();
     },
     methods: {
         handleCreatePriority() {

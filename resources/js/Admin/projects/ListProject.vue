@@ -1,10 +1,13 @@
 <template>
     <div class="col-lg-2 list-project">
-        <p style="font-size: 32px;">
-            <i class="fas fa-terminal p-1" style="border: 3px solid #212529; border-radius: 6px" />
-            Danh sách dự án 
-            <a role="button" class="btn-create" @click="showModalCreate()">Tạo mới dự án</a>
-        </p>
+		<li class="pointer project-title" style="display: flex">
+			<p style="font-size: 26px;">
+				<i class="fas fa-terminal p-1" style="border: 3px solid #212529; border-radius: 6px" />Danh sách dự án
+			</p> &ensp;&ensp;
+			<p style="font-size: 26px">
+				<a style="text-decoration: none" role="button" class="btn-create" @click="showModalCreate()">+</a>
+			</p>
+		</li>
         <div class="pl-3">
             <li class="pointer project-title" @click="showTimeline()">
                 <p>Công việc trong ngày</p>
@@ -27,7 +30,7 @@
             </li>
         </div>
         <div>
-            <div ref="modalCreate" data-bs-backdrop="static" data-bs-keyboard="false" class="modal" tabindex="-1" role="dialog">
+            <div ref="modalCreate" class="modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document" style=" max-width: 60%;">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -87,7 +90,6 @@ export default {
         }
     },
     created() {
-        this.getProjects();
     },
     methods: {
         async getProjects() {
