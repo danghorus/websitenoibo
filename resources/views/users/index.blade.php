@@ -137,7 +137,43 @@ table tr td img {
                                         <td scope="col" width="8%" >{{ $user->phone }}</td>
                                         <td scope="col" width="10%">{{ $user->email }}</td>
                                         <td scope="col" width="8.05%" >{{ $user->birthday }}</td>
-                                        <td scope="col" width="6%" >{{ $user->department }}</td>
+                                        <td scope="col" width="6%" >
+                                            <?php 
+                                            if($user->department == 1){
+                                                echo "Admin";
+                                            }
+                                            else if($user->department == 2){
+                                                echo "Dev";
+                                            }
+                                            else if($user->department == 3){
+                                                echo "Game Design";
+                                            }
+                                            else if($user->department == 4){
+                                                echo "Art";
+                                            }
+                                            else if($user->department == 5){
+                                                echo "Tester";
+                                            }
+                                            else if($user->department == 6){
+                                                echo "Điều hành";
+                                            }
+                                            else if($user->department == 7){
+                                                echo "Hành chính nhân sự";
+                                            }
+                                            else if($user->department == 8){
+                                                echo "Kế toán";
+                                            }
+                                            else if($user->department == 9){
+                                                echo "Phân tích dữ liệu";
+                                            }
+                                            else if($user->department == 10){
+                                                echo "Support";
+                                            }
+                                            else if($user->department == 11){
+                                                echo "Marketing";
+                                            }
+                                            ?>
+                                         </td>
                                         <td scope="col" width="7%" >{{ $user->position }}</td>
                                         <td scope="col" width="8%" >
                                         <?php 
