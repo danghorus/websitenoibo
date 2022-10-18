@@ -5,6 +5,7 @@
             <select  @change="changeOption()" class="form-select col-lg-2" style="position: absolute; left: 25px; top: 105px; width:220px; height:34px;"
             v-model="option2">
 				<option value="3">Tất cả</option>
+                <option value="10">Mới tạo</option>
                 <option value="1">Chưa hoàn thành</option>
                 <option value="5">Chờ feedback</option>
                 <option value="2">Đã hoàn thành</option>
@@ -332,6 +333,14 @@ export default {
                 this.summary = res.summary
             }
         },
+        async changeProject(e, taskId) {
+            const res = await $post(`/tasks/change-project/${taskId}`, { project_id: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
         async changeStatus(e, taskId) {
             const res = await $post(`/tasks/change-status/${taskId}`, { status: e.target.value });
 
@@ -415,6 +424,14 @@ export default {
         },
         async changePriority(e, taskId) {
             const res = await $post(`/tasks/change-priority/${taskId}`, { task_priority: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changeWeight(e, taskId) {
+            const res = await $post(`/tasks/change-weight/${taskId}`, { weight: e.target.value });
 
             if (res.code == 200) {
                 toastr.success(res.message);

@@ -576,10 +576,11 @@ class TaskController extends Controller
         $Status2 = $request->input('status2');
 
         $builder = DB::table('tasks', 'tt')->select('tt.*')
-            ->where('tt.valid','=',1)
-            ->selectRaw('p.project_name');
+            ->where('tt.valid','=',1);
+            //->selectRaw('p.project_name');
 
-        $builder->join('projects as p', 'tt.project_id', '=', 'p.id')->orderBy('start_time')
+        $builder//->join('projects as p', 'tt.project_id', '=', 'p.id')
+        ->orderBy('start_time')
         ->where('task_performer', '=', Auth::id());
          if ($taskPerformer && $taskPerformer > 0) {
             $builder->where('tt.task_performer', '=', $taskPerformer);
@@ -691,9 +692,11 @@ class TaskController extends Controller
             ->whereNotNull( 'tt.task_department')
             //->where('tt.task_department', '=', $department)
             ->select('tt.*')
-            ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child")
-            ->selectRaw('p.project_name, u.fullname');
-        $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
+            ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child");
+            //->selectRaw('p.project_name, u.fullname');
+        if( $Status2 != 10){
+            $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
+        }
         $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
 
 
@@ -735,6 +738,8 @@ class TaskController extends Controller
             $builder->where('status', '=', 4);
         }else if($Status2 == 5){
             $builder->where('status', '=', 5);
+        }else if($Status2 == 10){
+            $builder->where('project_id', '=', null);
         }
 
         $tasks = $builder->get();
@@ -1568,7 +1573,7 @@ class TaskController extends Controller
         $task->task_parent = null;
         $task->task_performer = $userId;
         $task->status= 1;
-        $task->project_id = 15;
+        $task->project_id = null;
 
         $task->save();
 
@@ -1610,6 +1615,14 @@ class TaskController extends Controller
     public function invalidDelete($taskId, Request $request) {
         $tasks = Task::query()->with(['childrenInvalid'])->where('id', '=', $taskId)->first();
         Task::deleteTaskChildren([$tasks]);
+        return [
+            'code' => 200,
+            'message' => 'Thành công'
+        ];
+    }
+    public function DeleteTask($taskId, Request $request) {
+        $tasks = Task::query()->where('id', '=', $taskId)->first();
+        $tasks->delete();
         return [
             'code' => 200,
             'message' => 'Thành công'

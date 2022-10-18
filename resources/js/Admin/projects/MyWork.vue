@@ -110,8 +110,8 @@
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
                         <th scope="col" width="700px">Tên công việc</th>
-                        <th scope="col" width="10%">Dự án</th>
-                        <th scope="col" width="10%">Công việc cha</th>
+                        <!--<th scope="col" width="10%">Dự án</th>
+                        <th scope="col" width="10%">Công việc cha</th>-->
                         <th scope="col" width="7%">Bộ phận</th>
                         <th scope="col" width="6%">Bắt đầu</th>
                         <th scope="col" width="3%">Thời lượng (Giờ)</th>
@@ -119,6 +119,7 @@
                         <th scope="col" width="3%">Thời lượng thực tế (Giờ)</th>
 						<th scope="col" width="4%">Tiến độ</th>
                         <th scope="col" width="8%">Trạng thái</th>
+                        <th scope="col" width="10%">Cập nhật trạng thái</th>
                         <th scope="col" width="10%">Thao tác</th>
                     </tr>
                 </thead>
@@ -133,26 +134,26 @@
                                 </p>
                             </div>
                         </td>
-                        <td style="text-align:left;">
+                        <!--<td style="text-align:left;">
                             <select class="form-select"  @change="changeProject($event, item.id)" v-model="item.project_id">
                                 <option value="1" disabled>Chọn dự án</option>
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
                             </select>
-                        </td>
+                        </td>-->
                         <!--<td style="text-align:left;">
                             <select class="form-select" @change="changeParent($event, item.id)" v-model="item.task_parent">
                                 <option value="" disabled>Lựa chọn</option>
                                 <option v-for="(task, index) in list_task" :key="index" :value="task.id">{{task.task_name}}</option>
                             </select>
                         </td>-->
-                        <td>
+                        <!--<td>
                             <treeselect
                                 :options="list"
                                 :load-options="loadOptions"
                                 loadingText="Loading..."
                                 v-model="item.task_parent"
                             />
-                        </td>
+                        </td>-->
                         <td style="text-align:left;">
                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changeDepartment($event, item.id)" v-model="item.task_department">
@@ -225,6 +226,9 @@
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
                                 <option value="4" v-if="item.status == 4"> Hoàn thành</option>
                             </select>
+                        </td>
+                        <td>
+                            <button style="height: 25px;font-size:12px;" class="btn btn-danger" @click="deleteTask($event, item.id)">Xóa</button>
                         </td>
                     </tr>
                 </tbody>
@@ -432,6 +436,14 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
+                this.getMyWorks();
+            }
+        },
+        async deleteTask(e, taskId) {
+            const res = await $post(`/tasks/delete/${taskId}`, { task_parent: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success('Xóa thành công');
                 this.getMyWorks();
             }
         },
