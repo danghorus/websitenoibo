@@ -88,10 +88,11 @@
                 </ul>
             </nav>
             <h4 style=" margin: -30px 0px 0px 24px">Danh sách công việc</h4>
-            <select class="form-select col-lg-2"
+            <select @change="changeOption()" class="form-select col-lg-2"
                     style="position: absolute; left: 25px; top: 105px; width:220px; height:34px;" v-model="option2">
 				<option value="3">Tất cả</option>
                 <option value="1">Chưa hoàn thành</option>
+                <option value="5">Chờ feedback</option>
                 <option value="2">Đã hoàn thành</option>
             </select>&emsp;
             <p @click="NewTask()">
@@ -116,176 +117,116 @@
                         <th scope="col" width="3%">Thời lượng (Giờ)</th>
                         <th scope="col" width="6%">Kết thúc</th>
                         <th scope="col" width="3%">Thời lượng thực tế (Giờ)</th>
-                        <th scope="col" width="3%">Trọng số</th>
 						<th scope="col" width="4%">Tiến độ</th>
                         <th scope="col" width="8%">Trạng thái</th>
                         <th scope="col" width="10%">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody v-for="(item, index) in list" :key="item.id" style="text-align:center;">
-                    <template v-if="option2 == 1 && item.status != 4">
-                        <tr>
-                            <td>{{index + 1 }}</td>
-                            <td scope="row" style="text-align:left;">
-                                <div style="display: flex; font-size:12px;">
-                                    <input style="width:100%; border:0px;" @change="changeTaskName($event, item.id)" v-model="item.task_name">
-                                    <p >
-                                        <i class="fas fa-info-circle" style="font-size:16px; margin-top: 15px; cursor: pointer" />
-                                    </p>
-                                </div>
-                            </td>
-                            <td style="text-align:left;">
-                                <select class="form-select"  @change="changeProject($event, item.id)" v-model="item.project_id">
-                                    <option value="15" disabled>Chọn dự án</option>
-                                    <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
-                                </select>
-                            </td>
-                            <td style="text-align:left;">
-                                <select class="form-select" @change="changeParent($event, item.id)" v-model="item.task_parent">
-                                    <option value="" disabled>Lựa chọn</option>
-                                    <option v-for="(task, index) in list_task" :key="index" :value="task.id">{{task.task_name}}</option>
-                                </select>
-                            </td>
-                            <td style="text-align:left;">
-                                <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                                    @change="changeDepartment($event, item.id)" v-model="item.task_department">
-                                    <option value="null" disabled >Lựa chọn</option>
-                                    <option value="2">Dev</option>
-                                    <option value="3">Game Design</option>
-                                    <option value="4">Art</option>
-                                    <option value="5">Tester</option>
-                                </select>
-                            </td>
-                            <td v-if="item.start_time < item.time_now"><b style="color:#a60000;">{{ item.start_time }}</b></td>
-                            <td v-if="item.start_time == item.time_now"><b style="color:orange;">{{ item.start_time }}</b></td>
-                            <td v-if="item.start_time > item.time_now">>{{ item.start_time }}</td>
-                            <td v-if="item.start_time == null">{{ item.start_time }}</td>
-                            <td>{{ item.time }}</td>
-                            <td>
-                                <div class="form-group p-2">
-                                    <select class="form-select" @change="changeOption()" v-model="performer" style="width:200px">
-                                        <option value="0" selected="selected">Tất cả</option>
-                                        <option v-for="(user, index) in users" :key="index" :value="user.id">{{user.fullname}}</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td>{{ item.real_time}}</td>
-                            <td>{{ item.weight}}</td>
-							<td>
-                                <input type="number" style="width: 100%; border:0px;" min="0" max="100" @change="changeProgress($event, item.id)" v-model="item.progress">
-                            </td>
-                            <td v-if="item.status == 0" style="background-color:red">Đã quá hạn</td>
-                            <td v-else-if="item.status == 1" style="background-color:white">Đang chờ</td>
-                            <td v-else-if="item.status == 2" style="background-color:#008080">Đang làm</td>
-                            <td v-else-if="item.status == 3" style="background-color:orange">Tạm dừng</td>
-                            <td v-else-if="item.status == 5" style="background-color:#ff8080">Chờ feedback</td>
-                            <td v-else-if=" item.status==6" style="background-color:#ff0000">Làm lại</td>
-                            <td v-else-if="item.status_title == 'Hoàn thành chậm'" style="background-color:gray">Hoàn thành chậm
-                            </td>
-                            <td v-else-if="item.status_title == 'Hoàn thành'" style="background-color:green">Hoàn thành</td>
-                            <td>
-                                <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                                    @change="changeStatus($event, item.id)" v-model="item.status">
-                                    <option value="0" v-if="item.status == 0" :disabled="item.status == 0">Đang Chờ</option>
-                                    <option value="1" v-if="item.status == 1">Đang Chờ</option>
-                                    <option value="2" :disabled="item.status == 2 || item.status == 4">Đang tiến hành</option>
-                                    <option value="3"
-                                        :disabled="item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6">
-                                        Tạm dừng</option>
-                                    <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
-                                        feedback</option>
-                                    <option value="6" v-if="item.status == 6">Làm lại</option>
-                                    <option value="4" v-if="item.status == 4"> Hoàn thành</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </template>
-                    <template v-if="option2 == 2 && item.status == 4">
-                        <tr>
-                            <td>{{index + 1 }}</td>
-                            <td scope="row" style="text-align:left;">{{ item.task_name }}</td>
-                            <!--<td style="text-align:left;">{{ item.task_parent }}
-                            </td>-->
-                            <td>{{ item.start_time }}</td>
-                            <td>{{ item.time }}</td>
-                            <!--<td>{{ item.end_time }}</td>
-                            <td>{{ item.real_start_time }}</td>-->
-                            <td>{{ item.real_time}}</td>
-                            <td>{{ item.weight}}</td>
-                            <td>
-                                <input type="number" style="width: 100%; border:0px;" min="0" max="100" @change="changeProgress($event, item.id)" v-model="item.progress">
-                            </td>
-                            <!--<td>{{ item.real_end_time }}</td>-->
-                            <!--<td>{{ item.status_title }}</td>-->
-                            <td v-if="item.status == 0" style="background-color:red">Đã quá hạn</td>
-                            <td v-else-if="item.status == 1" style="background-color:white">Đang chờ</td>
-                            <td v-else-if="item.status == 2" style="background-color:#008080">Đang làm</td>
-                            <td v-else-if="item.status == 3" style="background-color:orange">Tạm dừng</td>
-                            <td v-else-if="item.status == 5" style="background-color:#ff8080">Chờ feedback</td>
-                            <td v-else-if=" item.status==6" style="background-color:#ff0000">Làm lại</td>
-                            <td v-else-if="item.status_title == 'Hoàn thành chậm'" style="background-color:gray">Hoàn thành chậm
-                            </td>
-                            <td v-else-if="item.status_title == 'Hoàn thành'" style="background-color:green">Hoàn thành</td>
-                            <td>
-                                <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                                        @change="changeStatus($event, item.id)" v-model="item.status">
-                                    <option value="0" v-if="item.status == 0" :disabled="item.status == 0">Đang Chờ</option>
-                                    <option value="1" v-if="item.status == 1">Đang Chờ</option>
-                                    <option value="2" :disabled="item.status == 2 || item.status == 4">Đang tiến hành</option>
-                                    <option value="3"
-                                            :disabled="item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6">
-                                        Tạm dừng</option>
-                                    <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
-                                        feedback</option>
-                                    <option value="6" v-if="item.status == 6">Làm lại</option>
-                                    <option value="4" v-if="item.status == 4"> Hoàn thành</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </template>
-					<template v-if="option2 == 3">
-                        <tr>
-                            <td>{{index + 1 }}</td>
-                            <td scope="row" style="text-align:left;">{{ item.task_name }}</td>
-                            <!--<td style="text-align:left;">{{ item.task_parent }}
-                            </td>-->
-                            <td>{{ item.start_time }}</td>
-                            <td>{{ item.time }}</td>
-                            <!--<td>{{ item.end_time }}</td>
-                            <td>{{ item.real_start_time }}</td>-->
-                            <td>{{ item.time_real}}</td>
-                            <td>{{ item.weight}}</td>
-                            <td>
-                                <input type="number" style="width: 100%; border:0px;" min="0" max="100" @change="changeProgress($event, item.id)" v-model="item.progress">
-                            </td>
-                            <!--<td>{{ item.real_end_time }}</td>-->
-                            <!--<td>{{ item.status_title }}</td>-->
-                            <td v-if="item.status == 0" style="background-color:red">Đã quá hạn</td>
-                            <td v-else-if="item.status == 1" style="background-color:white">Đang chờ</td>
-                            <td v-else-if="item.status == 2" style="background-color:#008080">Đang làm</td>
-                            <td v-else-if="item.status == 3" style="background-color:orange">Tạm dừng</td>
-                            <td v-else-if="item.status == 5" style="background-color:#ff8080">Chờ feedback</td>
-                            <td v-else-if=" item.status==6" style="background-color:#ff0000">Làm lại</td>
-                            <td v-else-if="item.status_title == 'Hoàn thành chậm'" style="background-color:gray">Hoàn thành chậm
-                            </td>
-                            <td v-else-if="item.status_title == 'Hoàn thành'" style="background-color:green">Hoàn thành</td>
-                            <td>
-                                <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                                        @change="changeStatus($event, item.id)" v-model="item.status">
-                                    <option value="0" v-if="item.status == 0" :disabled="item.status == 0">Đang Chờ</option>
-                                    <option value="1" v-if="item.status == 1">Đang Chờ</option>
-                                    <option value="2" :disabled="item.status == 2 || item.status == 4">Đang tiến hành</option>
-                                    <option value="3"
-                                            :disabled="item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6">
-                                        Tạm dừng</option>
-                                    <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
-                                        feedback</option>
-                                    <option value="6" v-if="item.status == 6">Làm lại</option>
-                                    <option value="4" v-if="item.status == 4"> Hoàn thành</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </template>
+                    <tr>
+                        <td>{{index + 1 }}</td>
+                        <td scope="row" style="text-align:left;">
+                            <div style="display: flex; font-size:12px;">
+                                <input style="width:100%; border:0px;" @change="changeTaskName($event, item.id)" v-model="item.task_name">
+                                <p >
+                                    <i class="fas fa-info-circle" style="font-size:16px; margin-top: 15px; cursor: pointer" />
+                                </p>
+                            </div>
+                        </td>
+                        <td style="text-align:left;">
+                            <select class="form-select"  @change="changeProject($event, item.id)" v-model="item.project_id">
+                                <option value="1" disabled>Chọn dự án</option>
+                                <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
+                            </select>
+                        </td>
+                        <!--<td style="text-align:left;">
+                            <select class="form-select" @change="changeParent($event, item.id)" v-model="item.task_parent">
+                                <option value="" disabled>Lựa chọn</option>
+                                <option v-for="(task, index) in list_task" :key="index" :value="task.id">{{task.task_name}}</option>
+                            </select>
+                        </td>-->
+                        <td>
+                            <treeselect
+                                :options="list"
+                                :load-options="loadOptions"
+                                loadingText="Loading..."
+                                v-model="item.task_parent"
+                            />
+                        </td>
+                        <td style="text-align:left;">
+                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                @change="changeDepartment($event, item.id)" v-model="item.task_department">
+                                <option value="null" disabled >Lựa chọn</option>
+                                <option value="2">Dev</option>
+                                <option value="3">Game Design</option>
+                                <option value="4">Art</option>
+                                <option value="5">Tester</option>
+                            </select>
+                        </td>
+                        <td>
+                            <!--<DatePicker
+                                @change="changeStartTime($event, item.id)"
+                                style="width: 150px"
+                                v-model="item.start_time"
+                                value-type="format"
+                                type="date"
+                                placeholder="Select time">
+                            </DatePicker>-->
+                            <input 
+                                type="date" 
+                                style="width: 80%; border:0px;" 
+                                @change="changeStartTime($event, item.id)"
+                                v-model="item.start_time"
+                            >
+                        </td>
+                        <td>{{ item.time }}</td>
+                        <td>
+                            <input 
+                                type="date" 
+                                style="width: 80%; border:0px;" 
+                                @change="changeEndTime($event, item.id)"
+                                v-model="item.end_time"
+                            >
+                        </td>
+                        <td style=" text-align:right;">
+                            <input 
+                                style="width:100%; border:0px; text-align:right;" 
+                                @change="changeRealTime($event, item.id)"
+                                v-model="item.real_time">
+                        </td>
+                        <td>
+                            <input 
+                            type="number" 
+                            style="width: 100%; border:0px;" 
+                            min="0" max="100" 
+                            @change="changeProgress($event, item.id)" 
+                            v-model="item.progress">
+                        </td>
+                        <td v-if="item.status == 0" style="background-color:red">Đã quá hạn</td>
+                        <td v-else-if="item.status == 1" style="background-color:white">Đang chờ</td>
+                        <td v-else-if="item.status == 2" style="background-color:#008080">Đang làm</td>
+                        <td v-else-if="item.status == 3" style="background-color:orange">Tạm dừng</td>
+                        <td v-else-if="item.status == 5" style="background-color:#ff8080">Chờ feedback</td>
+                        <td v-else-if=" item.status==6" style="background-color:#ff0000">Làm lại</td>
+                        <td v-else-if="item.status_title == 'Hoàn thành chậm'" style="background-color:gray">Hoàn thành chậm
+                        </td>
+                        <td v-else-if="item.status_title == 'Hoàn thành'" style="background-color:green">Hoàn thành</td>
+                        <td>
+                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                @change="changeStatus($event, item.id)" v-model="item.status">
+                                <option value="0" v-if="item.status == 0" :disabled="item.status == 0">Đang Chờ</option>
+                                <option value="1" v-if="item.status == 1">Đang Chờ</option>
+                                <option value="2" :disabled="item.status == 2 || item.status == 4">Đang tiến hành</option>
+                                <option value="3"
+                                    :disabled="item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6">
+                                    Tạm dừng</option>
+                                <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
+                                    feedback</option>
+                                <option value="6" v-if="item.status == 6">Làm lại</option>
+                                <option value="4" v-if="item.status == 4"> Hoàn thành</option>
+                            </select>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -296,11 +237,13 @@
 
 import {$get, $post} from "../../ultis";
 import Multiselect from 'vue-multiselect';
+import Treeselect from '@riophae/vue-treeselect';
+import DatePicker from 'vue2-datepicker';
 
 export default {
     name: "MyWork",
     el: '#infoMyWork',
-    components: { Multiselect },
+    components: { Multiselect, Treeselect, DatePicker },
     data() {
         return {
             option: 10,
@@ -327,6 +270,29 @@ export default {
         this.getAllTasks();
     },
     methods: {
+        changeOption() {
+            this.getMyWorks();
+        },
+        async loadOptions({ action, parentNode, callback }) {
+            const res = await $get('/tasks/get_all', { project_id: this.projectId, task_parent: parentNode.id })
+
+            if (res.code == 200) {
+                parentNode.children = res.data;
+            }
+        },
+        async getTaskByProject(projectId, taskId) {
+            const res = await $get('/tasks/get_all', { project_id: projectId, task_id: taskId ?? 0 })
+
+            if (res.code == 200) {
+                this.tasks = res.data;
+                if (taskId) {
+                    this.task.task_parent = taskId;
+                }
+            }
+        },
+        changeTaskParent(e) {
+            this.task.task_parent = e;
+        },
         async getAllUser() {
             const res = await $get('/user/all_user');
             if (res.code == 200) {
@@ -366,6 +332,10 @@ export default {
 
             if (this.option && this.option != 10) {
                 params.status = this.option;
+            }
+
+            if (this.option2 && this.option2 != 3) {
+                params.status2 = this.option2;
             }
 
             if (this.project && this.project > 0) {
@@ -409,6 +379,30 @@ export default {
                 this.getMyWorks();
             }
         },
+        async changeStartTime(e, taskId) {
+            const res = await $post(`/tasks/change-start_time/${taskId}`, { start_time: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getMyWorks();
+            }
+        },
+        async changeEndTime(e, taskId) {
+            const res = await $post(`/tasks/change-end_time/${taskId}`, { end_time: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getMyWorks();
+            }
+        },
+        async changeRealTime(e, taskId) {
+            const res = await $post(`/tasks/change-real_time/${taskId}`, { real_time: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getMyWorks();
+            }
+        },
         async changeTaskName(e, taskId) {
             const res = await $post(`/tasks/change-task_name/${taskId}`, { task_name: e.target.value });
 
@@ -441,6 +435,28 @@ export default {
                 this.getMyWorks();
             }
         },
+    },
+    watch: {
+        'tasks': function (newVal) {
+             if (this.taskParentId && this.count === 0) {
+                 this.task.task_parent = _.find(newVal, {id: parseInt(this.taskParentId)});
+                 this.count = this.count + 1;
+             }
+        },
+        'task.project_id': function (newVal) {
+            if (newVal.id) {
+                this.getTaskByProject(newVal.id, 0);
+            }
+        },
+         'projects': function (newVal) {
+             if (this.projectId) {
+                 this.task.project_id = _.find(newVal, {id: parseInt(this.projectId)});
+                 this.getTaskByProject(this.projectId);
+             }
+        },
+        'taskParentId': function (newVal) {
+            console.log(newVal, 'new val');
+        }
     }
 }
 </script>

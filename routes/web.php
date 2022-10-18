@@ -140,6 +140,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('tasks/change-progress/{id}', [TaskController::class, 'changeProgress']);
     Route::post('tasks/change-task_name/{id}', [TaskController::class, 'changeTaskName']);
     Route::post('tasks/change-start_time/{id}', [TaskController::class, 'changeStartTime']);
+    Route::post('tasks/change-end_time/{id}', [TaskController::class, 'changeEndTime']);
     Route::post('tasks/change-time/{id}', [TaskController::class, 'changeTime']);
     Route::post('tasks/change-real_time/{id}', [TaskController::class, 'changeRealTime']);
 	Route::post('tasks/change-pause/{id}', [TaskController::class, 'changePause']);

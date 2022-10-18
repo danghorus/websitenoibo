@@ -6,6 +6,7 @@
             v-model="option2">
 				<option value="3">Tất cả</option>
                 <option value="1">Chưa hoàn thành</option>
+                <option value="5">Chờ feedback</option>
                 <option value="2">Đã hoàn thành</option>
             </select>
             <nav class="navbar navbar-expand-lg" style="margin-top:-45px;float:right;">
@@ -79,18 +80,20 @@
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
-                        <th scope="col" width="610px">Tên công việc</th>
+                        <th scope="col" width="500px">Tên công việc</th>
+                        <th scope="col" width="200px">Dự án</th>
+                        <th scope="col" width="300px">Công việc cha</th>
                         <th scope="col" width="80px">Bắt đầu</th>
-                        <th scope="col" width="80px">Thời lượng (Giờ)</th>
-                        <th scope="col" width="120px">Thời lượng thực tế (Giờ)</th>
-                        <th scope="col" width="120px">Thời gian tạm dừng</th>
+                        <th scope="col" width="60px">Thời lượng (Giờ)</th>
+                        <th scope="col" width="80px">Kết thúc</th>
+                        <th scope="col" width="60px">Thời lượng thực tế (Giờ)</th>
                         <th scope="col" width="120px">Loại công việc</th>
                         <th scope="col" >Cấp độ công việc</th>
                         <th scope="col" width="50px">Trọng số</th>
                         <th scope="col" width="200px">Người thực hiện</th>
                         <th scope="col" width="100px">Bộ phận</th>
-                        <th scope="col" width="145px">Trạng thái</th>
-                        <th scope="col" width="125px">Thao tác</th>
+                        <th scope="col" width="40px">Tiến độ</th>
+                        <th scope="col" width="145px">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody v-for="(item, index) in list" :key="item.id" >
@@ -99,14 +102,31 @@
                         <td scope="row" style="text-align:left;">
                             <input style="width:100%; border:0px;"  @change="changeTaskName($event, item.id)" v-model="item.task_name">
                         </td>
-                        <!--<td>{{ item.start_time }}</td>-->
+                        <td style="text-align:left;">
+                            <select class="form-select" @change="changeProject($event, item.id)" v-model="item.project_id">
+                                <option value="1" disabled>Chọn dự án</option>
+                                <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
+                            </select>
+                        </td>
+                        <!--<td style="text-align:left;">
+                            <select class="form-select" @change="changeParent($event, item.id)" v-model="item.task_parent">
+                                <option value="" disabled>Lựa chọn</option>
+                                <option v-for="(task, index) in list_task" :key="index" :value="task.id">{{task.task_name}}</option>
+                            </select>
+                        </td>-->
+                        <td>
+                            <treeselect :options="list" :load-options="loadOptions" loadingText="Loading..." v-model="item.task_parent" />
+                        </td>
                         <td>
                             <input type="date" style="width: 80%; border:0px;" @change="changeStartTime($event, item.id)" v-model="item.start_time">
                         </td>
                         <td><input style="width:100%; border:0px; text-align:right;"  @change="changeTime($event, item.id)" v-model="item.time"></td>
-                        <td style=" text-align:right;">{{ item.time_real}}</td>
+                        <td>
+                            <input type="date" style="width: 80%; border:0px;" @change="changeEndTime($event, item.id)"
+                                v-model="item.end_time">
+                        </td>
                         <td style=" text-align:right;">
-                            <input style="width:100%; border:0px; text-align:right;" @change="changePause($event, item.id)" v-model="item.time_pause">
+                            <input style="width:100%; border:0px; text-align:right;" @change="changeRealTime($event, item.id)" v-model="item.real_time">
                         </td>
                         <td>
                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
@@ -146,7 +166,7 @@
                                 </select>
                             </div>
                         </td>
-                        <td v-if="item.status == 0" style="background-color:red">Đã quá hạn</td>
+                        <!--<td v-if="item.status == 0" style="background-color:red">Đã quá hạn</td>
                         <td v-else-if="item.status == 1" style="background-color:white">Đang chờ</td>
                         <td v-else-if="item.status == 2" style="background-color:#008080">Đang làm</td>
                         <td v-else-if="item.status == 3" style="background-color:orange">Tạm dừng</td>
@@ -154,15 +174,16 @@
                         <td v-else-if="item.status == 6" style="background-color:#ff0000">Làm lại</td>
                         <td v-else-if="item.status_title == 'Hoàn thành chậm'" style="background-color:gray">Hoàn thành
                             chậm</td>
-                        <td v-else-if="item.status_title == 'Hoàn thành'" style="background-color:green">Hoàn thành</td>
+                        <td v-else-if="item.status_title == 'Hoàn thành'" style="background-color:green">Hoàn thành</td>-->
+                        <td>{{item.progress}}</td>
                         <td>
                             <div style="display: flex">
                                 <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                     @change="changeStatus($event, item.id)" v-model="item.status">
                                     <option value="1" >Đang chờ</option>
                                     <option value="2" >Đang tiến hành</option>
-                                    <option value="3" >Lựa chọn</option>
-                                    <option value="5" >Lựa chọn</option>
+                                    <option value="3" >Tạm dừng</option>
+                                    <option value="5" >Chờ feedback</option>
                                     <option value="6" >Làm lại </option>
                                     <option value="4" >Hoàn thành </option>
                                     <option value="0">Đã quá hạn</option>
@@ -182,11 +203,12 @@ import { $get, $post } from "../../ultis";
 import Multiselect from 'vue-multiselect';
 import CreateTask from "./CreateTask";
 import DatePicker from 'vue2-datepicker';
+import Treeselect from '@riophae/vue-treeselect';
 import 'vue2-datepicker/index.css';
 
 export default {
     name: "ListWork",
-    components: {DatePicker, Multiselect, CreateTask },
+    components: { DatePicker, Multiselect, CreateTask, Treeselect },
     props: ['projectId', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
         'startTime', 'taskPerformer', 'task_performer', 'taskDepartment', 'status', 'list', 'currentUser'],
     data() {
@@ -334,6 +356,14 @@ export default {
                 this.getListWorks();
             }
         },
+        async changeEndTime(e, taskId) {
+            const res = await $post(`/tasks/change-end_time/${taskId}`, { end_time: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
         async changeTime(e, taskId) {
             const res = await $post(`/tasks/change-time/${taskId}`, { time: e.target.value });
 
@@ -344,6 +374,14 @@ export default {
         },
         async changePause(e, taskId) {
             const res = await $post(`/tasks/change-pause/${taskId}`, { time_pause: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changeRealTime(e, taskId) {
+            const res = await $post(`/tasks/change-real_time/${taskId}`, { real_time: e.target.value });
 
             if (res.code == 200) {
                 toastr.success(res.message);

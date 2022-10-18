@@ -573,6 +573,7 @@ class TaskController extends Controller
     public function myTasks(Request $request) {
         $filters = $request->all();
         $taskPerformer = $request->input('task_performer');
+        $Status2 = $request->input('status2');
 
         $builder = DB::table('tasks', 'tt')->select('tt.*')
             ->where('tt.valid','=',1)
@@ -590,6 +591,14 @@ class TaskController extends Controller
 
         if (isset($filters['status'])) {
             $builder->where('status', '=', $filters['status']);
+        }
+        
+        if ($Status2 == 1) {
+            $builder->where('status', '!=', 4)->where('status', '!=', 5);
+        }else if($Status2 == 2){
+            $builder->where('status', '=', 4);
+        }else if($Status2 == 5){
+            $builder->where('status', '=', 5);
         }
 
         $tasks = $builder->get();
@@ -721,9 +730,11 @@ class TaskController extends Controller
             $builder->where('task_name', 'LIKE', "%$search%");
         }
         if ($Status2 == 1) {
-            $builder->where('status', '!=', 4);
+            $builder->where('status', '!=', 4)->where('status', '!=', 5);
         }else if($Status2 == 2){
             $builder->where('status', '=', 4);
+        }else if($Status2 == 5){
+            $builder->where('status', '=', 5);
         }
 
         $tasks = $builder->get();
@@ -1122,6 +1133,34 @@ class TaskController extends Controller
         $task = Task::find($taskId);
 
         $task->start_time = $start_time;
+
+        $task->save();
+
+        return [
+            'code' => 200,
+            'message' => 'Cập nhật thành công'
+        ];
+    }
+    public function changeEndTime($taskId, Request $request) {
+        $end_time = $request->input('end_time');
+
+        $task = Task::find($taskId);
+
+        $task->end_time = $end_time;
+
+        $task->save();
+
+        return [
+            'code' => 200,
+            'message' => 'Cập nhật thành công'
+        ];
+    }
+    public function changeRealTime($taskId, Request $request) {
+        $real_time = $request->input('real_time');
+
+        $task = Task::find($taskId);
+
+        $task->real_time = $real_time;
 
         $task->save();
 

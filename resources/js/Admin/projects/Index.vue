@@ -142,9 +142,7 @@
 
 <script>
     import ListProject from "./ListProject";
-    import draggable from 'vuedraggable';
     import CreateTask from "./CreateTask";
-    import CreateTask_Parent from "./CreateTask_Parent";
     import CreateProject from "./CreateProject";
     import TimelineTask from "./TimelineTask";
     import ListTask from "./ListTask";
