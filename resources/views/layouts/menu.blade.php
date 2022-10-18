@@ -158,12 +158,14 @@
                             <a class="nav-link">Công việc</a>
                             <div class="dropdown-content">
                                 <a class="dropdown-item" href="{{ url('/projects') }}">Dự án</a>
+                                <a class="dropdown-item" href="{{ url('/list_work') }}">Việc bộ phận</a>
                                 <a class="dropdown-item" href="{{ url('/my_work') }}">Việc của tôi</a>
                                 <a class="dropdown-item" href="{{ url('/project-report') }}">Thống kê</a>
-                                <a class="dropdown-item" href="{{ url('/warrior') }}">Warrior đăng ký</a>
+
+                                <!--<a class="dropdown-item" href="{{ url('/warrior') }}">Warrior đăng ký</a>-->
                             </div>
                         </li>
-                        <li class="nav-item dropdown">
+                        <!--<li class="nav-item dropdown">
                             <a class="nav-link">Lương thưởng</a>
                             <div class="dropdown-content">
                                 <a class="dropdown-item" href="{{ url('/time-keeping-wage') }}">Lương công việc</a>
@@ -172,7 +174,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/settings') }}">Cấu hình</a>
-                        </li>
+                        </li>-->
                     </ul>
                     @extends('petitions.create')
                     @extends('petitions.go_late')
