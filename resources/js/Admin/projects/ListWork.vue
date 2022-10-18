@@ -38,7 +38,7 @@
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo bộ phận</label>
-                            <select  @change="changeOption()" class="form-select" v-model="option1" style="width:200px"> 
+                            <select  @change="changeOption()" class="form-select" v-model="option1" style="width:200px">
                                 <option value="1" >Tất cả</option>
                                 <option value="2" >Dev</option>
                                 <option value="3" > Game design</option>
@@ -110,15 +110,19 @@
                             </select>
                         </td>
                         <td>
-                            <treeselect 
-                                :options="tasks" 
-                                :load-options="loadOptions" 
-                                loadingText="Loading..." 
-                                v-model="item.task_parent" 
+                            <treeselect
+                                :options="tasks"
+                                @open="getTaskByProject(item.project_id)"
+                                :load-options="loadOptions"
+                                loadingText="Loading..."
+                                v-model="item.task_parent"
                             />
                         </td>
                         <td>
-                            <input type="date" style="width: 80%; border:0px;" @change="changeStartTime($event, item.id)" v-model="item.start_time">
+                            <DatePicker style="width: 100%" v-model="item.start_time" value-type="format" type="date"
+                                        placeholder="Select time" @change="changeStartTime($event, item.id)">
+                            </DatePicker>
+<!--                            <input type="date" style="width: 80%; border:0px;" @change="changeStartTime($event, item.id)" v-model="item.start_time">-->
                         </td>
                         <td><input style="width:100%; border:0px; text-align:right;"  @change="changeTime($event, item.id)" v-model="item.time"></td>
                         <td>
@@ -187,7 +191,7 @@ import Multiselect from 'vue-multiselect';
 import CreateTask from "./CreateTask";
 import DatePicker from 'vue2-datepicker';
 import Treeselect from '@riophae/vue-treeselect';
-import '@riophae/vue-treeselect/dist/vue-treeselect.css'; 
+import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 import 'vue2-datepicker/index.css';
 
 export default {
@@ -238,16 +242,8 @@ export default {
 
         this.getAllUser();
         this.getListWorks();
-        if (this.taskId) {
-            this.getInfoTask();
-        } else {
-            if (this.projectId) {
-                this.task.project_id = _.find(this.projects, { id: parseInt(this.projectId) });
-                this.getTaskByProject(this.projectId, this.taskParentId ?? 0);
-            } else {
-                this.task.project_id = '';
-            }
-        }
+
+        // this.getTaskByProject(3);
     },
     methods: {
 
@@ -343,7 +339,7 @@ export default {
             if (this.project && this.project != 0) {
                 params.project_id = this.project;
             }
-    
+
             if (this.performer && this.performer != 0) {
                 params.task_performer = this.performer;
             }
@@ -386,7 +382,7 @@ export default {
             }
         },
         async changeStartTime(e, taskId) {
-            const res = await $post(`/tasks/change-start_time/${taskId}`, { start_time: e.target.value });
+            const res = await $post(`/tasks/change-start_time/${taskId}`, { start_time: e });
 
             if (res.code == 200) {
                 toastr.success(res.message);
