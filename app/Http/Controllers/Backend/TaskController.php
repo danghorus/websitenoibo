@@ -739,7 +739,7 @@ class TaskController extends Controller
         }else if($Status2 == 5){
             $builder->where('status', '=', 5);
         }else if($Status2 == 10){
-            $builder->where('project_id', '=', null);
+            $builder->where('project_id', '=', 1);
         }
 
         $tasks = $builder->get();
@@ -1573,7 +1573,7 @@ class TaskController extends Controller
         $task->task_parent = null;
         $task->task_performer = $userId;
         $task->status= 1;
-        $task->project_id = null;
+        $task->project_id = 1;
 
         $task->save();
 

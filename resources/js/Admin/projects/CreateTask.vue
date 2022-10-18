@@ -110,6 +110,15 @@
                 :load-options="loadOptions"
                 loadingText="Loading..."
                 v-model="task.task_parent"
+                :clearable="clearable"
+                :searchable="searchable"
+                :disabled="disabled"
+                :open-on-click="openOnClick"
+                :open-on-focus="openOnFocus"
+                :clear-on-select="clearOnSelect"
+                :close-on-select="closeOnSelect"
+                :always-open="alwaysOpen"
+                :append-to-body="appendToBody"
             />
 <!--            <multiselect v-model="task.task_parent" @input="changeTaskParent($event)" :disabled="task.project_id == 0"-->
 <!--                :options="tasks" value="id" label="label" :close-on-select="true" :show-labels="true"-->

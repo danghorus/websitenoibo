@@ -14,7 +14,7 @@
                 <ul class="navbar-nav mr-auto" style="font-size:16px;" >
                     <li class="nav-item">
                         <div class="form-group p-2">
-                            <label for="project_description" style="font-size:12px;">Nhập tên công việc</label></br>
+                            <label for="project_description" style="font-size:12px;">Nhập tên công việc</label>
                             <input @input="changeOption()" class="form-control" style="width:250px;height:33px;font-size:14px" type="text" placeholder="Tên công việc" v-model="search">
                         </div>
                     </li>
@@ -109,14 +109,13 @@
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
                             </select>
                         </td>
-                        <!--<td style="text-align:left;">
-                            <select class="form-select" @change="changeParent($event, item.id)" v-model="item.task_parent">
-                                <option value="" disabled>Lựa chọn</option>
-                                <option v-for="(task, index) in list_task" :key="index" :value="task.id">{{task.task_name}}</option>
-                            </select>
-                        </td>-->
                         <td>
-                            <treeselect :options="list" :load-options="loadOptions" loadingText="Loading..." v-model="item.task_parent" />
+                            <treeselect 
+                                :options="tasks" 
+                                :load-options="loadOptions" 
+                                loadingText="Loading..." 
+                                v-model="item.task_parent" 
+                            />
                         </td>
                         <td>
                             <input type="date" style="width: 80%; border:0px;" @change="changeStartTime($event, item.id)" v-model="item.start_time">
@@ -142,14 +141,6 @@
                             </select>
                         </td>
                         <td> <input style="width:100%; border:0px;"  @change="changeWeight($event, item.id)" v-model="item.weight"></td>
-                        <!--<td>
-                            <div @change="changePerformer($event, item.id)">
-                                <multiselect v-model="item.task_performer" 
-                                    :options="users" value="id" label="fullname"
-                                    :close-on-select="true" :show-labels="true" placeholder="Vui lòng chọn">
-                                </multiselect>
-                            </div>
-                        </td>-->
                         <td>
                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changePerformer($event, item.id)" v-model="item.task_performer">
@@ -167,15 +158,6 @@
                                 </select>
                             </div>
                         </td>
-                        <!--<td v-if="item.status == 0" style="background-color:red">Đã quá hạn</td>
-                        <td v-else-if="item.status == 1" style="background-color:white">Đang chờ</td>
-                        <td v-else-if="item.status == 2" style="background-color:#008080">Đang làm</td>
-                        <td v-else-if="item.status == 3" style="background-color:orange">Tạm dừng</td>
-                        <td v-else-if="item.status == 5" style="background-color:#ff8080">Chờ feedback</td>
-                        <td v-else-if="item.status == 6" style="background-color:#ff0000">Làm lại</td>
-                        <td v-else-if="item.status_title == 'Hoàn thành chậm'" style="background-color:gray">Hoàn thành
-                            chậm</td>
-                        <td v-else-if="item.status_title == 'Hoàn thành'" style="background-color:green">Hoàn thành</td>-->
                         <td>{{item.progress}}</td>
                         <td>
                             <div style="display: flex">
@@ -205,6 +187,7 @@ import Multiselect from 'vue-multiselect';
 import CreateTask from "./CreateTask";
 import DatePicker from 'vue2-datepicker';
 import Treeselect from '@riophae/vue-treeselect';
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'; 
 import 'vue2-datepicker/index.css';
 
 export default {
@@ -214,6 +197,10 @@ export default {
         'startTime', 'taskPerformer', 'task_performer', 'taskDepartment', 'status', 'list', 'currentUser'],
     data() {
         return {
+            task: {
+                project_id: ''
+            },
+            tasks: [],
             search:'',
             option: 10,
             option1: 2,
@@ -223,7 +210,7 @@ export default {
             startTime: '',
             toggle: false,
             show: false,
-            list: [],
+            //list: [],
             showModal: false,
             showListWork: true,
             showFilter: false,
@@ -251,6 +238,16 @@ export default {
 
         this.getAllUser();
         this.getListWorks();
+        if (this.taskId) {
+            this.getInfoTask();
+        } else {
+            if (this.projectId) {
+                this.task.project_id = _.find(this.projects, { id: parseInt(this.projectId) });
+                this.getTaskByProject(this.projectId, this.taskParentId ?? 0);
+            } else {
+                this.task.project_id = '';
+            }
+        }
     },
     methods: {
 
@@ -258,6 +255,37 @@ export default {
             this.getListWorks();
         },
 
+        async getInfoTask() {
+            const res = await $get(`/tasks/detail/${this.taskId}`);
+
+            if (res.code == 200) {
+                this.task = res.data;
+                this.values = res.user_related;
+                this.getTaskByProject(this.task.project_id.id, this.task.task_parent ?? 0);
+            }
+        },
+
+        async loadOptions({ action, parentNode, callback }) {
+            const res = await $get('/tasks/get_all', { project_id: this.projectId, task_parent: parentNode.id })
+
+            if (res.code == 200) {
+                parentNode.children = res.data;
+            }
+        },
+
+        async getTaskByProject(projectId, taskId) {
+            const res = await $get('/tasks/get_all', { project_id: projectId, task_id: taskId ?? 0 })
+
+            if (res.code == 200) {
+                this.tasks = res.data;
+                if (taskId) {
+                    this.task.task_parent = taskId;
+                }
+            }
+        },
+        changeTaskParent(e) {
+            this.task.task_parent = e;
+        },
         async getAllPriority() {
             const res = await $get('/priorities/get_all');
             if (res.code == 200) {
@@ -453,6 +481,16 @@ export default {
 
             this.projects = res.projects
         },
+    },
+    watch: {
+        'task.project_id': function (newVal) {
+            if (newVal.id) {
+                this.getTaskByProject(newVal.id, 0);
+            }
+        },
+        'taskParentId': function (newVal) {
+            console.log(newVal, 'new val');
+        }
     }
 }
 </script>
