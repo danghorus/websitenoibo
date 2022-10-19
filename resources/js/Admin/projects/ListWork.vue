@@ -109,25 +109,40 @@
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
                             </select>
                         </td>
+                        <!--@open="getTaskByProject(item.project_id)"-->
                         <td>
                             <treeselect
                                 :options="tasks"
                                 @open="getTaskByProject(item.project_id)"
+                                @change="changeTaskParent($event, item.id)"
                                 :load-options="loadOptions"
                                 loadingText="Loading..."
                                 v-model="item.task_parent"
                             />
                         </td>
                         <td>
-                            <DatePicker style="width: 100%" v-model="item.start_time" value-type="format" type="date"
-                                        placeholder="Select time" @change="changeStartTime($event, item.id)">
+                            <DatePicker 
+                                style="width: 120px" 
+                                v-model="item.start_time" 
+                                value-type="format" 
+                                type="date"
+                                placeholder="Select time" 
+                                @change="changeStartTime($event, item.id)">
                             </DatePicker>
 <!--                            <input type="date" style="width: 80%; border:0px;" @change="changeStartTime($event, item.id)" v-model="item.start_time">-->
                         </td>
                         <td><input style="width:100%; border:0px; text-align:right;"  @change="changeTime($event, item.id)" v-model="item.time"></td>
                         <td>
-                            <input type="date" style="width: 80%; border:0px;" @change="changeEndTime($event, item.id)"
-                                v-model="item.end_time">
+                            <DatePicker 
+                                style="width: 120px" 
+                                v-model="item.end_time" 
+                                value-type="format" 
+                                type="date" 
+                                placeholder="Select time"
+                                @change="changeEndTime($event, item.id)">
+                            </DatePicker>
+                            <!--<input type="date" style="width: 80%; border:0px;" @change="changeEndTime($event, item.id)"
+                                v-model="item.end_time">-->
                         </td>
                         <td style=" text-align:right;">
                             <input style="width:100%; border:0px; text-align:right;" @change="changeRealTime($event, item.id)" v-model="item.real_time">
@@ -214,7 +229,7 @@ export default {
             startTime: '',
             toggle: false,
             show: false,
-            //list: [],
+            list: [],
             showModal: false,
             showListWork: true,
             showFilter: false,
@@ -244,6 +259,7 @@ export default {
         this.getListWorks();
 
         // this.getTaskByProject(3);
+        //this.getTaskByProject(this.item.project_id.id, this.item.task_parent ?? 0);
     },
     methods: {
 
@@ -365,6 +381,14 @@ export default {
                 this.getListWorks();
             }
         },
+        async changeTaskParent(e, taskId) {
+            const res = await $post(`/tasks/change-task_parent/${taskId}`, { task_parent: e });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
         async changeStatus(e, taskId) {
             const res = await $post(`/tasks/change-status/${taskId}`, { status: e.target.value });
 
@@ -390,7 +414,7 @@ export default {
             }
         },
         async changeEndTime(e, taskId) {
-            const res = await $post(`/tasks/change-end_time/${taskId}`, { end_time: e.target.value });
+            const res = await $post(`/tasks/change-end_time/${taskId}`, { end_time: e });
 
             if (res.code == 200) {
                 toastr.success(res.message);

@@ -164,30 +164,26 @@
                                 <option value="5">Tester</option>
                             </select>
                         </td>
-                        <td>
-                            <!--<DatePicker
-                                @change="changeStartTime($event, item.id)"
-                                style="width: 150px"
-                                v-model="item.start_time"
-                                value-type="format"
+                         <td>
+                            <DatePicker 
+                                style="width: 120px" 
+                                v-model="item.start_time" 
+                                value-type="format" 
                                 type="date"
-                                placeholder="Select time">
-                            </DatePicker>-->
-                            <input 
-                                type="date" 
-                                style="width: 80%; border:0px;" 
-                                @change="changeStartTime($event, item.id)"
-                                v-model="item.start_time"
-                            >
+                                placeholder="Select time" 
+                                @change="changeStartTime($event, item.id)">
+                            </DatePicker>
                         </td>
-                        <td>{{ item.time }}</td>
+                        <td>{{item.time}}</td>
                         <td>
-                            <input 
+                            <DatePicker 
+                                style="width: 120px" 
+                                v-model="item.end_time" 
+                                value-type="format" 
                                 type="date" 
-                                style="width: 80%; border:0px;" 
-                                @change="changeEndTime($event, item.id)"
-                                v-model="item.end_time"
-                            >
+                                placeholder="Select time"
+                                @change="changeEndTime($event, item.id)">
+                            </DatePicker>
                         </td>
                         <td style=" text-align:right;">
                             <input 
@@ -384,7 +380,7 @@ export default {
             }
         },
         async changeStartTime(e, taskId) {
-            const res = await $post(`/tasks/change-start_time/${taskId}`, { start_time: e.target.value });
+            const res = await $post(`/tasks/change-start_time/${taskId}`, { start_time: e });
 
             if (res.code == 200) {
                 toastr.success(res.message);
@@ -392,7 +388,7 @@ export default {
             }
         },
         async changeEndTime(e, taskId) {
-            const res = await $post(`/tasks/change-end_time/${taskId}`, { end_time: e.target.value });
+            const res = await $post(`/tasks/change-end_time/${taskId}`, { end_time: e});
 
             if (res.code == 200) {
                 toastr.success(res.message);
