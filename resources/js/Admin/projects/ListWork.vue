@@ -110,12 +110,12 @@
                             </select>
                         </td>
                         <!--@open="getTaskByProject(item.project_id)"-->
-                        <td>
+                        <td style="width:500px;">
                             <treeselect
                                 :options="tasks"
+                                :load-options="loadOptions"
                                 @open="getTaskByProject(item.project_id)"
                                 @change="changeTaskParent($event, item.id)"
-                                :load-options="loadOptions"
                                 loadingText="Loading..."
                                 v-model="item.task_parent"
                             />
@@ -212,13 +212,10 @@ import 'vue2-datepicker/index.css';
 export default {
     name: "ListWork",
     components: { DatePicker, Multiselect, CreateTask, Treeselect },
-    props: ['projectId', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
+    props: [ 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'search',
         'startTime', 'taskPerformer', 'task_performer', 'taskDepartment', 'status', 'list', 'currentUser'],
     data() {
         return {
-            task: {
-                project_id: ''
-            },
             tasks: [],
             search:'',
             option: 10,
@@ -247,7 +244,7 @@ export default {
             task_performer: '',
             taskDepartment: 0,
             status: '',
-            currentUser: ''
+            currentUser: '',
         }
     },
     created() {
@@ -258,8 +255,7 @@ export default {
         this.getAllUser();
         this.getListWorks();
 
-        // this.getTaskByProject(3);
-        //this.getTaskByProject(this.item.project_id.id, this.item.task_parent ?? 0);
+        // this.getTaskByProject();
     },
     methods: {
 
@@ -267,18 +263,9 @@ export default {
             this.getListWorks();
         },
 
-        async getInfoTask() {
-            const res = await $get(`/tasks/detail/${this.taskId}`);
-
-            if (res.code == 200) {
-                this.task = res.data;
-                this.values = res.user_related;
-                this.getTaskByProject(this.task.project_id.id, this.task.task_parent ?? 0);
-            }
-        },
 
         async loadOptions({ action, parentNode, callback }) {
-            const res = await $get('/tasks/get_all', { project_id: this.projectId, task_parent: parentNode.id })
+            const res = await $get('/tasks/get_all', { project_id: parentNode.project_id, task_parent: parentNode.id })
 
             if (res.code == 200) {
                 parentNode.children = res.data;
@@ -294,9 +281,6 @@ export default {
                     this.task.task_parent = taskId;
                 }
             }
-        },
-        changeTaskParent(e) {
-            this.task.task_parent = e;
         },
         async getAllPriority() {
             const res = await $get('/priorities/get_all');
@@ -382,7 +366,7 @@ export default {
             }
         },
         async changeTaskParent(e, taskId) {
-            const res = await $post(`/tasks/change-task_parent/${taskId}`, { task_parent: e });
+            const res = await $post(`/tasks/change-task_parent/${taskId}`, { task_parent: e.target.value });
 
             if (res.code == 200) {
                 toastr.success(res.message);
@@ -472,14 +456,6 @@ export default {
         },
         async changePriority(e, taskId) {
             const res = await $post(`/tasks/change-priority/${taskId}`, { task_priority: e.target.value });
-
-            if (res.code == 200) {
-                toastr.success(res.message);
-                this.getListWorks();
-            }
-        },
-        async changeWeight(e, taskId) {
-            const res = await $post(`/tasks/change-weight/${taskId}`, { weight: e.target.value });
 
             if (res.code == 200) {
                 toastr.success(res.message);
