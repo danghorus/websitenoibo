@@ -66,9 +66,9 @@
                         <label for="">Loại yêu cầu</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="goLate" name="date_from" type="date" />
+                        <input class="form-control" id="goLate1" name="date_from" type="date" />
                         <script>
-                            document.getElementById('goLate').value = new Date().toISOString().substring(0, 10);
+                            document.getElementById('goLate1').value = new Date().toISOString().substring(0, 10);
                         </script>
                         <label for="">Chọn ngày:</label>
                     </div>

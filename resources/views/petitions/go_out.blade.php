@@ -39,13 +39,13 @@
                         <label for="">Họ và tên:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="user_id" id="usernameGoLate" type="text" value="{{ Auth::user()->id }}" hidden/>
+                        <input class="form-control" name="user_id" id="usernameGoOut" type="text" value="{{ Auth::user()->id }}" hidden/>
                         <label for="">Mã nhân viên:</label>
                     </div>
                     <?php } else {?>
 
                         <div class="form-floating mb-3">
-                            <select class="form-control" id="usernameGoLate" name="user_id">
+                            <select class="form-control" id="usernameGoOut" name="user_id">
                                 <option selected disabled value>Chọn nhân viên</option>
                                 @foreach($users as $user)
                                     <?php
@@ -56,7 +56,7 @@
                                 @endforeach
                             </select>
                             <label for="user_fullname">Họ và tên:</label>
-							<div id="vmsgGoLate1" style="color:brown; margin: 10px;"></div>
+							<div id="vmsgGoOut1" style="color:brown; margin: 10px;"></div>
                         </div>
 
                     <?php } ?>
@@ -81,9 +81,9 @@
                         <label for="">Đến:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" name="petition_reason" id="petition_reasonGoLate" type="text" style="height:100px;"></textarea>
+                        <textarea class="form-control" name="petition_reason" id="petition_reasonGoOut" type="text" style="height:100px;"></textarea>
                         <label for="">Lý do:</label>
-						<div id="vmsgGoLate2" style="color:brown; margin: 10px;"></div>
+						<div id="vmsgGoOut2" style="color:brown; margin: 10px;"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -103,20 +103,20 @@
                     });
 
 					$(document).ready(function() {
-                    $("#GoLate").submit(function() {
-                        var query1 = document.getElementById('usernameGoLate');
+                    $("#GoOut").submit(function() {
+                        var query1 = document.getElementById('usernameGoOut');
                         if (query1.value == "") {
-                        $('#vmsgGoLate1').html("* Vui lòng chọn người tạo yêu cầu")
+                        $('#vmsgGoOut1').html("* Vui lòng chọn người tạo yêu cầu")
                         return false;
                         }
                         return true;
                     })
                     });
                     $(document).ready(function() {
-                    $("#GoLate").submit(function() {
-                        var query2 = document.getElementById('petition_reasonGoLate');
+                    $("#GoOut").submit(function() {
+                        var query2 = document.getElementById('petition_reasonGoOut');
                         if (query2.value == "") {
-                        $('#vmsgGoLate2').html("* Vui lòng nhập lí do")
+                        $('#vmsgGoOut2').html("* Vui lòng nhập lí do")
                         return false;
                         }
                         return true;

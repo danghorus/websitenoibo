@@ -39,13 +39,13 @@
                         <label for="">Họ và tên:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="user_id" id="username_inday" type="text" value="{{ Auth::user()->id }}" hidden/>
+                        <input class="form-control" name="user_id" id="usernameInDay" type="text" value="{{ Auth::user()->id }}" hidden/>
                         <label for="">Mã nhân viên:</label>
                     </div>
                     <?php } else {?>
 
                        <div class="form-floating mb-3">
-                            <select class="form-control" id="username_inday" name="user_id">
+                            <select class="form-control" id="usernameInDay" name="user_id">
                                 <option selected disabled value>Chọn nhân viên</option>
                                 @foreach($users as $user)
                                     <?php
@@ -56,7 +56,7 @@
                                 @endforeach
                             </select>
                             <label for="user_fullname">Họ và tên:</label>
-							<div id="vmsginday1" style="color:brown; margin: 10px;"></div>
+							<div id="vmsgInDay1" style="color:brown; margin: 10px;"></div>
                         </div>
                     <?php } ?>
 
@@ -76,9 +76,9 @@
                         <label for="">Hình thức nghỉ phép:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="inday" name="date_from" type="date" />
+                        <input class="form-control" id="inday1" name="date_from" type="date" />
                         <script>
-                            document.getElementById('inday').value = new Date().toISOString().substring(0, 10);
+                            document.getElementById('inday1').value = new Date().toISOString().substring(0, 10);
                         </script>
                         <label for="">Chọn ngày xin nghỉ phép:</label>
                     </div>
@@ -113,10 +113,10 @@
                     });
 
 					$(document).ready(function() {
-                    $("InDay").submit(function() {
-                        var query1 = document.getElementById('username_inday');
+                    $("#InDay").submit(function() {
+                        var query1 = document.getElementById('usernameInDay');
                         if (query1.value == "") {
-                        $('#vmsginday1').html("* Vui lòng chọn người tạo yêu cầu")
+                        $('#vmsgInDay1').html("* Vui lòng chọn người tạo yêu cầu")
                         return false;
                         }
                         return true;

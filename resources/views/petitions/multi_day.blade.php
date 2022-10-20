@@ -120,7 +120,7 @@
                     });
 
 					$(document).ready(function() {
-                    $("Multi").submit(function() {
+                    $("#Multi").submit(function() {
                         var query1 = document.getElementById('u');
                         if (query1.value == "") {
                         $('#vmsgu').html("* Vui lòng chọn người tạo yêu cầu")
