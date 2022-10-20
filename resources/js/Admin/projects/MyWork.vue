@@ -110,8 +110,8 @@
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
                         <th scope="col" width="700px">Tên công việc</th>
-                        <!--<th scope="col" width="10%">Dự án</th>
-                        <th scope="col" width="10%">Công việc cha</th>-->
+                        <th scope="col" width="10%">Dự án</th>
+                        <!--<th scope="col" width="10%">Công việc cha</th>-->
                         <th scope="col" width="7%">Bộ phận</th>
                         <th scope="col" width="6%">Bắt đầu</th>
                         <th scope="col" width="3%">Thời lượng (Giờ)</th>
@@ -134,12 +134,12 @@
                                 </p>
                             </div>
                         </td>
-                        <!--<td style="text-align:left;">
+                        <td style="text-align:left;">
                             <select class="form-select"  @change="changeProject($event, item.id)" v-model="item.project_id">
                                 <option value="1" disabled>Chọn dự án</option>
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
                             </select>
-                        </td>-->
+                        </td>
                         <!--<td style="text-align:left;">
                             <select class="form-select" @change="changeParent($event, item.id)" v-model="item.task_parent">
                                 <option value="" disabled>Lựa chọn</option>
