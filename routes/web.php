@@ -150,7 +150,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('tasks/change-priority/{id}', [TaskController::class, 'changePriority']);
     Route::post('tasks/change-weight/{id}', [TaskController::class, 'changeWeight']);
     Route::post('tasks/change-project/{id}', [TaskController::class, 'changeProject']);
-    Route::post('tasks/change-parent{id}', [TaskController::class, 'changeParent']);
+    Route::post('tasks/change-task_parent{id}', [TaskController::class, 'changeTaskParent']);
 
     Route::get('tasks/get-report', [TaskController::class, 'getReport']);
     Route::get('tasks/copy/{id}', [TaskController::class, 'copy']);

@@ -68,7 +68,7 @@ class ProjectController extends Controller
     }
 
     public function getAll(Request $request) {
-        $projects = Project::query()->where('id', '!=', 15)->select(['id', 'project_name', 'project_start_date', 'project_end_date'])->get();
+        $projects = Project::query()->where('id', '!=', 1)->select(['id', 'project_name', 'project_start_date', 'project_end_date'])->get();
 
         return [
             'projects' => $projects

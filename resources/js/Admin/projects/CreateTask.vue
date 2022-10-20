@@ -205,7 +205,7 @@ export default {
 
             if(res.code == 200) {
                 this.task = res.data;
-                this.values = res.user_related;
+                this.values = res.users_related;
                 this.getTaskByProject(this.task.project_id.id, this.task.task_parent ?? 0);
             }
         },

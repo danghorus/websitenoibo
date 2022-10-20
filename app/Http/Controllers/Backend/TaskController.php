@@ -739,7 +739,7 @@ class TaskController extends Controller
         }else if($Status2 == 5){
             $builder->where('status', '=', 5);
         }else if($Status2 == 10){
-            $builder->where('project_id', '=', 1);
+            $builder->where('project_id', '=', 1)->orWhere('task_parent', '=', null)->where('task_performer', '!=', null);
         }
 
         $tasks = $builder->get();
@@ -1202,7 +1202,8 @@ class TaskController extends Controller
             'message' => 'Cập nhật thành công'
         ];
     }
-    public function changeParent($taskId, Request $request) {
+    public function changeTaskParent($taskId, Request $request) {
+        
         $task_parent = $request->input('task_parent');
 
         $task = Task::find($taskId);

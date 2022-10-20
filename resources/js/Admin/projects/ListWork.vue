@@ -103,22 +103,36 @@
                         <td scope="row" style="text-align:left;">
                             <input style="width:100%; border:0px;"  @change="changeTaskName($event, item.id)" v-model="item.task_name">
                         </td>
-                        <td style="text-align:left;">
-                            <select class="form-select" @change="changeProject($event, item.id)" v-model="item.project_id">
+                        <td style="text-align:left; font-size: 12px;">
+                            <!--<select class="form-select" @change="changeProject($event, item.id)" v-model="item.project_id">
                                 <option value="1" disabled>Chọn dự án</option>
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
-                            </select>
+                            </select>-->
+                            <multiselect
+                            size="12px"
+                            v-model="item.project_id" 
+                            :options="projects" 
+                            value="id" 
+                            label="project_name"
+                            :close-on-select="true" 
+                            :show-labels="true" 
+                            placeholder="Vui lòng chọn"
+                            @select="changeProject($event ,item.id)">
+            </multiselect>
                         </td>
                         <!--@open="getTaskByProject(item.project_id)"-->
                         <td style="width:500px;">
-                            <treeselect
-                                :options="tasks"
-                                :load-options="loadOptions"
-                                @open="getTaskByProject(item.project_id)"
-                                @change="changeTaskParent($event, item.id)"
-                                loadingText="Loading..."
-                                v-model="item.task_parent"
-                            />
+                            <div>
+                                <treeselect
+                                    :options="tasks"
+                                    :load-options="loadOptions"
+                                    @open="getTaskByProject(item.project_id)"
+                                    @select="changeTaskParent($event ,item.id)"
+                                    loadingText="Loading..."
+                                    v-model="item.task_parent"
+                                    :show-count="true"
+                                />
+                            </div>
                         </td>
                         <td>
                             <DatePicker 
@@ -129,7 +143,6 @@
                                 placeholder="Select time" 
                                 @change="changeStartTime($event, item.id)">
                             </DatePicker>
-<!--                            <input type="date" style="width: 80%; border:0px;" @change="changeStartTime($event, item.id)" v-model="item.start_time">-->
                         </td>
                         <td><input style="width:100%; border:0px; text-align:right;"  @change="changeTime($event, item.id)" v-model="item.time"></td>
                         <td>
@@ -141,8 +154,6 @@
                                 placeholder="Select time"
                                 @change="changeEndTime($event, item.id)">
                             </DatePicker>
-                            <!--<input type="date" style="width: 80%; border:0px;" @change="changeEndTime($event, item.id)"
-                                v-model="item.end_time">-->
                         </td>
                         <td style=" text-align:right;">
                             <input style="width:100%; border:0px; text-align:right;" @change="changeRealTime($event, item.id)" v-model="item.real_time">
@@ -161,10 +172,21 @@
                         </td>
                         <td> <input style="width:100%; border:0px;"  @change="changeWeight($event, item.id)" v-model="item.weight"></td>
                         <td>
-                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                            <!--<select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changePerformer($event, item.id)" v-model="item.task_performer">
                                 <option v-for="(user, index) in users" :key="index" :value="user.id">{{user.fullname}}</option>
-                            </select>
+                            </select>-->
+                            <multiselect 
+                                v-model="item.task_performer" 
+                                :options="users" 
+                                value="id" 
+                                label="fullname" 
+                                :close-on-select="true"
+                                :show-labels="true" 
+                                placeholder="Vui lòng chọn"
+                                @select="changePerformer($event ,item.id)"
+                                >
+                            </multiselect>
                         </td>
                         <td>
                             <div style="display: flex">
@@ -208,6 +230,7 @@ import DatePicker from 'vue2-datepicker';
 import Treeselect from '@riophae/vue-treeselect';
 import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 import 'vue2-datepicker/index.css';
+import _ from "lodash";
 
 export default {
     name: "ListWork",
@@ -237,6 +260,7 @@ export default {
             showModalEdit: false,
             taskEditId: 0,
             users: [],
+            values: [],
             groupUsers: [],
             priorities: [],
             stickers: [],
@@ -286,12 +310,6 @@ export default {
             const res = await $get('/priorities/get_all');
             if (res.code == 200) {
                 this.priorities = res.data;
-            }
-        },
-        async getAllSticker() {
-            const res = await $get('/stickers/get_all');
-            if (res.code == 200) {
-                this.stickers = res.data;
             }
         },
         async getAllSticker() {
@@ -358,7 +376,7 @@ export default {
             }
         },
         async changeProject(e, taskId) {
-            const res = await $post(`/tasks/change-project/${taskId}`, { project_id: e.target.value });
+            const res = await $post(`/tasks/change-project/${taskId}`, { project_id: e.id });
 
             if (res.code == 200) {
                 toastr.success(res.message);
@@ -366,7 +384,7 @@ export default {
             }
         },
         async changeTaskParent(e, taskId) {
-            const res = await $post(`/tasks/change-task_parent/${taskId}`, { task_parent: e.target.value });
+            const res = await $post(`/tasks/change-task_parent/${taskId}`, { task_parent: e.id });
 
             if (res.code == 200) {
                 toastr.success(res.message);
@@ -437,8 +455,16 @@ export default {
                 this.getListWorks();
             }
         },
-        async changePerformer(e, taskId) {
+        async changePerformer1(e, taskId) {
             const res = await $post(`/tasks/change-performer/${taskId}`, { task_performer: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changePerformer(e, taskId) {
+            const res = await $post(`/tasks/change-performer/${taskId}`, { task_performer: e.id });
 
             if (res.code == 200) {
                 toastr.success(res.message);
@@ -469,13 +495,6 @@ export default {
                 toastr.success(res.message);
                 this.getListWorks();
             }
-        },
-
-
-        async getProjects() {
-            const res = await $get('/projects/get_all');
-
-            this.projects = res.projects
         },
     },
     watch: {
