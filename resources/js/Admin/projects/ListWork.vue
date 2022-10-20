@@ -104,11 +104,11 @@
                             <input style="width:100%; border:0px;"  @change="changeTaskName($event, item.id)" v-model="item.task_name">
                         </td>
                         <td style="text-align:left; font-size: 12px;">
-                            <!--<select class="form-select" @change="changeProject($event, item.id)" v-model="item.project_id">
+                            <select class="form-select" @change="changeProject($event, item.id)" v-model="item.project_id">
                                 <option value="1" disabled>Chọn dự án</option>
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
-                            </select>-->
-                            <multiselect
+                            </select>
+                            <!--<multiselect
                             size="12px"
                             v-model="item.project_id" 
                             :options="projects" 
@@ -118,7 +118,7 @@
                             :show-labels="true" 
                             placeholder="Vui lòng chọn"
                             @select="changeProject($event ,item.id)">
-            </multiselect>
+                            </multiselect>-->
                         </td>
                         <!--@open="getTaskByProject(item.project_id)"-->
                         <td style="width:500px;">
@@ -172,11 +172,11 @@
                         </td>
                         <td> <input style="width:100%; border:0px;"  @change="changeWeight($event, item.id)" v-model="item.weight"></td>
                         <td>
-                            <!--<select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changePerformer($event, item.id)" v-model="item.task_performer">
                                 <option v-for="(user, index) in users" :key="index" :value="user.id">{{user.fullname}}</option>
-                            </select>-->
-                            <multiselect 
+                            </select>
+                            <!--<multiselect 
                                 v-model="item.task_performer" 
                                 :options="users" 
                                 value="id" 
@@ -186,7 +186,7 @@
                                 placeholder="Vui lòng chọn"
                                 @select="changePerformer($event ,item.id)"
                                 >
-                            </multiselect>
+                            </multiselect>-->
                         </td>
                         <td>
                             <div style="display: flex">
@@ -455,7 +455,7 @@ export default {
                 this.getListWorks();
             }
         },
-        async changePerformer1(e, taskId) {
+        async changePerformer(e, taskId) {
             const res = await $post(`/tasks/change-performer/${taskId}`, { task_performer: e.target.value });
 
             if (res.code == 200) {
@@ -463,7 +463,7 @@ export default {
                 this.getListWorks();
             }
         },
-        async changePerformer(e, taskId) {
+        async changePerformer1(e, taskId) {
             const res = await $post(`/tasks/change-performer/${taskId}`, { task_performer: e.id });
 
             if (res.code == 200) {

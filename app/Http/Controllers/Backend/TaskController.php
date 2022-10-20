@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Petition;
 use App\Models\Priority;
 use App\Models\Project;
 use App\Models\Sticker;
@@ -739,7 +740,7 @@ class TaskController extends Controller
         }else if($Status2 == 5){
             $builder->where('status', '=', 5);
         }else if($Status2 == 10){
-            $builder->where('project_id', '=', 1)->orWhere('task_parent', '=', null)->where('task_performer', '!=', null);
+            $builder->Where('task_parent', '=', null)->where('task_performer', '!=', null);
         }
 
         $tasks = $builder->get();
@@ -1589,7 +1590,10 @@ class TaskController extends Controller
 
     public function invalidTasks() {
         $users = User::all();
-        return view('projects.invalid_tasks', compact('users'));
+        $petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        return view('projects.invalid_tasks', compact('users','petitions1', 'petitions01'));
     }
 
     public function invalid(Request $request) {
