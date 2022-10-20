@@ -103,7 +103,7 @@
                         <td scope="row" style="text-align:left;">
                             <input style="width:100%; border:0px;"  @change="changeTaskName($event, item.id)" v-model="item.task_name">
                         </td>
-                        <td style="text-align:left; font-size: 12px;">
+                        <td style="text-align:left">
                             <select class="form-select" @change="changeProject($event, item.id)" v-model="item.project_id">
                                 <option value="1" disabled>Chọn dự án</option>
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
@@ -210,7 +210,7 @@
                                     <option value="5" >Chờ feedback</option>
                                     <option value="6" >Làm lại </option>
                                     <option value="4" >Hoàn thành </option>
-                                    <option value="0">Đã quá hạn</option>
+                                    <option value="0" >Đã quá hạn</option>
                                 </select>
                             </div>
                         </td>
@@ -246,6 +246,7 @@ export default {
             option2: 1,
             performer: 0,
             project: 0,
+            project_id: '',
             startTime: '',
             toggle: false,
             show: false,
@@ -277,6 +278,7 @@ export default {
         this.getAllSticker();
 
         this.getAllUser();
+        this.getGroupUsers();
         this.getListWorks();
 
         // this.getTaskByProject();
@@ -324,9 +326,16 @@ export default {
             this.projects = res.projects
         },
         async getAllUser() {
+
             const res = await $get('/user/all_user');
             if (res.code == 200) {
                 this.users = res.data;
+            }
+        },
+        async getGroupUsers() {
+            const res = await $get('/user/all_user_by_group');
+            if (res.code == 200) {
+                this.groupUsers = res.data;
             }
         },
         handleShowFilter() {
@@ -376,7 +385,15 @@ export default {
             }
         },
         async changeProject(e, taskId) {
-            const res = await $post(`/tasks/change-project/${taskId}`, { project_id: e.id });
+            const res = await $post(`/tasks/change-project/${taskId}`, { project_id: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changePerformer(e, taskId) {
+            const res = await $post(`/tasks/change-performer/${taskId}`, { task_performer: e.target.value });
 
             if (res.code == 200) {
                 toastr.success(res.message);
@@ -449,22 +466,6 @@ export default {
         },
         async changeDepartment(e, taskId) {
             const res = await $post(`/tasks/change-department/${taskId}`, { task_department: e.target.value });
-
-            if (res.code == 200) {
-                toastr.success(res.message);
-                this.getListWorks();
-            }
-        },
-        async changePerformer(e, taskId) {
-            const res = await $post(`/tasks/change-performer/${taskId}`, { task_performer: e.target.value });
-
-            if (res.code == 200) {
-                toastr.success(res.message);
-                this.getListWorks();
-            }
-        },
-        async changePerformer1(e, taskId) {
-            const res = await $post(`/tasks/change-performer/${taskId}`, { task_performer: e.id });
 
             if (res.code == 200) {
                 toastr.success(res.message);
