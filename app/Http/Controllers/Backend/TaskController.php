@@ -1105,6 +1105,20 @@ class TaskController extends Controller
             'message' => 'Cập nhật thành công'
         ];
     }
+    public function changeDescription($taskId, Request $request) {
+        $description = $request->input('description');
+
+        $task = Task::find($taskId);
+
+        $task->description = $description;
+
+        $task->save();
+
+        return [
+            'code' => 200,
+            'message' => 'Cập nhật thành công'
+        ];
+    }
     public function changeTime($taskId, Request $request) {
         $time = $request->input('time');
 

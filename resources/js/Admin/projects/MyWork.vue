@@ -43,21 +43,6 @@
                                     <table style="width:100%; border: 0px" class="my-work">
                                         <h4 style="margin: 20px 0px 20px 130px;">Thông tin làm việc</h4>
                                         <tr>
-                                            <td><b>Warrior đăng ký</b></td>
-                                            <td>:</td>
-                                            <td>Warrior 3</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Warrior hiện tại</b></td>
-                                            <td>:</td>
-                                            <td>Warrior 3</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Thời gian làm việc trong ngày</b></td>
-                                            <td>:</td>
-                                            <td>12 tiếng</td>
-                                        </tr>
-                                        <tr>
                                             <td><b>Tổng số công việc của bạn</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total }}</td>
@@ -129,16 +114,47 @@
                         <td scope="row" style="text-align:left;">
                             <div style="display: flex; font-size:12px;">
                                 <input style="width:100%; border:0px;" @change="changeTaskName($event, item.id)" v-model="item.task_name">
-                                <p >
-                                    <i class="fas fa-info-circle" style="font-size:16px; margin-top: 15px; cursor: pointer" />
-                                </p>
+                                    <p @click="showModalEditTask(item.id)">
+                                        <i class="fas fa-info-circle" style="font-size:16px; margin-top: 15px; cursor: pointer" />
+                                    </p>
+                            </div>
+                            <div data-bs-backdrop="static" data-bs-keyboard="false" ref="modalUpdateTask" class="modal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document" style=" max-width: 60%;">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Thông tin công việc</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                                @click="closeModalEditTask()">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <textarea style="width:1000px; border:5px; height:500px" @change="changeDescription($event, item.id)" v-model="item.description">
+                                            </textarea>
+                                            <!--<editor api-key="0pn43qeafddiqh81a9ba9c5abtfey57b1m07tfsa05gir4s3" v-model="task.description" :init="{
+                                                height: 200,
+                                                menubar: false,
+                                                plugins: [
+                                                    'advlist autolink lists link image charmap print preview anchor',
+                                                    'searchreplace visualblocks code fullscreen',
+                                                    'insertdatetime media table paste code help wordcount'
+                                                ],
+                                                    toolbar:
+                                                    'undo redo | formatselect | bold italic backcolor | \
+                                                    alignleft aligncenter alignright alignjustify | \
+                                                    bullist numlist outdent indent | removeformat | help'
+                                                }" 
+                                            />-->
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                         <td style="text-align:left;">
                             <select class="form-select"  @change="changeProject($event, item.id)" v-model="item.project_id">
                                 <option value="1" disabled>Chọn dự án</option>
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
-                            </select>
+                        </select>
                         </td>
                         <!--<td style="text-align:left;">
                             <select class="form-select" @change="changeParent($event, item.id)" v-model="item.task_parent">
@@ -239,7 +255,6 @@ import {$get, $post} from "../../ultis";
 import Multiselect from 'vue-multiselect';
 import Treeselect from '@riophae/vue-treeselect';
 import DatePicker from 'vue2-datepicker';
-
 export default {
     name: "MyWork",
     el: '#infoMyWork',
@@ -253,6 +268,7 @@ export default {
             list: [],
             list_task: [],
             showModal: false,
+            showModalEdit: false,
             showMyWork: true,
             showFilter: false,
             showInfoMyWork: false,
@@ -315,6 +331,17 @@ export default {
             } else {
                 this.getTaskTimeLine();
             }
+        },
+
+        showModalEditTask(id) {
+            this.showModalEdit = true;
+            $(this.$refs.modalUpdateTask).modal('show');
+            this.taskEditId = id;
+        },
+        closeModalEditTask() {
+            $(this.$refs.modalUpdateTask).modal('hide');
+            this.showModalEdit = false;
+            this.taskEditId = 0;
         },
 
         handleShowFilter() {
@@ -405,6 +432,14 @@ export default {
         },
         async changeTaskName(e, taskId) {
             const res = await $post(`/tasks/change-task_name/${taskId}`, { task_name: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getMyWorks();
+            }
+        },
+        async changeDescription(e, taskId) {
+            const res = await $post(`/tasks/change-description/${taskId}`, { description: e.target.value });
 
             if (res.code == 200) {
                 toastr.success(res.message);
