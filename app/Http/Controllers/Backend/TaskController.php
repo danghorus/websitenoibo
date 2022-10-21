@@ -753,7 +753,7 @@ class TaskController extends Controller
         }else if($Status2 == 5){
             $builder->where('status', '=', 5);
         }else if($Status2 == 10){
-            $builder->Where('task_parent', '=', null)->where('task_performer', '!=', null);
+            $builder->where('task_performer', '!=', null)->Where('task_parent', '=', null);
         }
 
         $tasks = $builder->get();

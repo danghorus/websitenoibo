@@ -106,6 +106,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('projects/delete/{id}', [ProjectController::class, 'delete']);
     Route::get('projects/{id}/get_detail', [ProjectController::class, 'getDetail']);
     Route::get('project-report', [ProjectController::class, 'report']);
+    Route::get('project-report_clone', [ProjectController::class, 'reportClone']);
     Route::get('warrior', [WarriorController::class, 'warrior']);
 
     //Priority
@@ -151,7 +152,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('tasks/change-priority/{id}', [TaskController::class, 'changePriority']);
     Route::post('tasks/change-weight/{id}', [TaskController::class, 'changeWeight']);
     Route::post('tasks/change-project/{id}', [TaskController::class, 'changeProject']);
-    Route::post('tasks/change-task_parent{id}', [TaskController::class, 'changeTaskParent']);
+    Route::post('tasks/change-task_parent/{id}', [TaskController::class, 'changeTaskParent']);
 
     Route::get('tasks/get-report', [TaskController::class, 'getReport']);
     Route::get('tasks/copy/{id}', [TaskController::class, 'copy']);
