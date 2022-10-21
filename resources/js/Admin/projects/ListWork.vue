@@ -15,14 +15,20 @@
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px;">Nhập tên công việc</label>
-                            <input @input="changeOption()" class="form-control" style="width:250px;height:33px;font-size:14px" type="text" placeholder="Tên công việc" v-model="search">
+                            <input @input="changeOption()" class="form-control" style="width:220px;height:33px;font-size:14px" type="text" placeholder="Tên công việc" v-model="search">
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="form-group p-2">
-                            <label for="project_description" style="font-size:12px">Theo ngày bắt đầu</label>
-                            <DatePicker style="width: 100%" v-model="startTime" value-type="format" type="date"
-                                placeholder="Select time" @change="changeOption()">
+                        <div class="form-group p-1">
+                            <DatePicker style="width: 100%; margin-top: 33px" v-model="startTime" value-type="format" type="date"
+                                placeholder="Ngày bắt đầu" @change="changeOption()">
+                            </DatePicker>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="form-group p-1">
+                            <DatePicker style="width: 100%; margin-top: 33px" v-model="endTime" value-type="format" type="date" 
+                            placeholder="Ngày kết thúc" @change="changeOption()">
                             </DatePicker>
                         </div>
                     </li>
@@ -57,7 +63,7 @@
                             </select>
                         </div>
                     </li>
-                    <li v-if="option2 == 1" class="nav-item">
+                    <li v-if="option2 == 1 || option2 == 10" class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo trạng thái</label>
                             <select  @change="changeOption()" class="form-select" v-model="option" style="width:200px">
@@ -101,7 +107,14 @@
                     <tr style="text-align:center;">
                         <td>{{ index +1 }}</td>
                         <td scope="row" style="text-align:left;">
-                            <input style="width:100%; border:0px;"  @change="changeTaskName($event, item.id)" v-model="item.task_name">
+                            <div style="display: flex; font-size:12px;">
+                            <textarea style="width:100%; border:0px;   word-wrap:break-word; resize: none;"
+                                @change="changeTaskName($event, item.id)" v-model="item.task_name">
+                            </textarea>
+                            <p @click="showModalEditTask(item.id)">
+                                <i class="fas fa-info-circle" style="font-size:16px; margin-top: 15px; cursor: pointer" />
+                            </p>
+                            </div>
                         </td>
                         <td style="text-align:left">
                             <select class="form-select" @change="changeProject($event, item.id)" v-model="item.project_id">
@@ -217,6 +230,26 @@
                     </tr>
                 </tbody>
             </table>
+            <div>
+                <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document" style=" max-width: 60%;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Tạo mới Công việc</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                    @click="closeModalCreateTask()">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <create-task v-if="showModal" :users="users" :groupUsers="groupUsers" :priorities="priorities"
+                                    :stickers="stickers" :projects="projects" :projectId="projectId"
+                                    @handleCreateTask="handleCreateTask" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -236,7 +269,7 @@ export default {
     name: "ListWork",
     components: { DatePicker, Multiselect, CreateTask, Treeselect },
     props: [ 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'search',
-        'startTime', 'taskPerformer', 'task_performer', 'taskDepartment', 'status', 'list', 'currentUser'],
+        'startTime','endTime', 'taskPerformer', 'task_performer', 'taskDepartment', 'status', 'list', 'currentUser'],
     data() {
         return {
             tasks: [],
@@ -248,6 +281,7 @@ export default {
             project: 0,
             project_id: '',
             startTime: '',
+            endTime: '',
             toggle: false,
             show: false,
             list: [],
@@ -345,6 +379,17 @@ export default {
             this.showInfoListWork = !this.showInfoListWork
         },
 
+        showModalEditTask(id) {
+            this.showModalEdit = true;
+            $(this.$refs.modalUpdateTask).modal('show');
+            this.taskEditId = id;
+        },
+        closeModalEditTask() {
+            $(this.$refs.modalUpdateTask).modal('hide');
+            this.showModalEdit = false;
+            this.taskEditId = 0;
+        },
+
         filterTask() {
             this.getListWorks();
         },
@@ -372,6 +417,9 @@ export default {
             }
             if (this.startTime) {
                 params.start_time = this.startTime ;
+            }
+            if (this.endTime) {
+                params.end_time = this.endTime ;
             }
             if(this.search){
                 params.search = this.search || '';

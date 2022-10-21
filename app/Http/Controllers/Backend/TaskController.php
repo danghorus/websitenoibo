@@ -682,6 +682,7 @@ class TaskController extends Controller
         $filters = $request->all();
         $projectId = $request->input('project_id');
         $startTime = $request->input('start_time');
+        $endTime = $request->input('end_time');
         $search = $request->input('search');
         $taskPerformer = $request->input('task_performer');
         $taskDepartment = $request->input('task_department');
@@ -703,6 +704,9 @@ class TaskController extends Controller
 
         if ($startTime && $startTime != '') {
             $builder->whereDate('tt.start_time', '=', $startTime);
+        }
+         if ($endTime && $endTime != '') {
+            $builder->whereDate('tt.end_time', '=', $endTime);
         }
         if ($projectId > 0) {
             $builder->where('tt.project_id', '=',$projectId);
@@ -1396,6 +1400,13 @@ class TaskController extends Controller
             $usersQuery->where('fullname', 'LIKE', "%$search%");
         }
 
+        if(isset($filter['start_date']) && $filter['end_date']){
+
+            $taskSummaryQuery->where('t.start_time', '>=', $filter['start_date'])->where('t.end_time', '<=', $filter['end_date']);
+
+            $summaryQuery->where('t.start_time', '>=', $filter['start_date'])->where('t.end_time', '<=', $filter['end_date']);
+        }
+
 
         if (isset($filter['project_id']) && $filter['project_id']) {
 
@@ -1427,7 +1438,13 @@ class TaskController extends Controller
             if (isset($filter['task_department']) && $filter['task_department']) {
                 $q->whereIn('task_department', $department);
             }
+             if(isset($filter['start_date']) && isset($filter['end_date'])){
+
+             $q->where('start_time', '>=', $filter['start_date'])->where('end_time', '<=', $filter['end_date']);
+            }
+
             $q->where('valid', '=', 1);
+
         }])->get();
         $summaryQuery->where('valid', '=', 1);
         $summary = $summaryQuery->groupBy('task_department')
