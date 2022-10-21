@@ -4,6 +4,20 @@
             <nav class="navbar navbar-expand-lg" style="margin-top:-20px; float:right;">
                 <ul class="navbar-nav mr-auto" style="font-size:16px;" >
                     <li class="nav-item">
+                        <div class="form-group p-1">
+                            <DatePicker style="width: 100%; margin-top: 35px" v-model="startTime" value-type="format" type="date"
+                                placeholder="Ngày bắt đầu" @change="changeOption()">
+                            </DatePicker>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="form-group p-1">
+                            <DatePicker style="width: 100%; margin-top: 35px" v-model="endTime" value-type="format" type="date"
+                                placeholder="Ngày kết thúc" @change="changeOption()">
+                            </DatePicker>
+                        </div>
+                    </li>
+                    <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo dự án</label>
                             <select  class="form-select" @click="filterTask()" v-model="project" style="width:250px">
@@ -81,7 +95,7 @@
                 <option value="2">Đã hoàn thành</option>
             </select>&emsp;
             <p @click="NewTask()">
-                <button class="btn btn-success btn-sm" 
+                <button v-if="option2 == 1 || option2 == 3" class="btn btn-success btn-sm" 
                 style="height:35px; font-size:15px; margin: -40px 0px 0px 300px;">Thêm mới</button>
             </p>
             <!--<button class="btn btn-outline-secondary" @click="handleShowFilter()" type="button" data-toggle="collapse"
@@ -114,7 +128,7 @@
                         <td scope="row" style="text-align:left;">
                             <div style="display: flex; font-size:12px;">
                                 <input style="width:100%; border:0px;" @change="changeTaskName($event, item.id)" v-model="item.task_name">
-                                    <p @click="showModalEditTask(item.id)">
+                                    <p @click="showModalEditTask($event, item.id)">
                                         <i class="fas fa-info-circle" style="font-size:16px; margin-top: 15px; cursor: pointer" />
                                     </p>
                             </div>
@@ -129,22 +143,7 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <textarea style="width:1000px; border:5px; height:500px" @change="changeDescription($event, item.id)" v-model="item.description">
-                                            </textarea>
-                                            <!--<editor api-key="0pn43qeafddiqh81a9ba9c5abtfey57b1m07tfsa05gir4s3" v-model="task.description" :init="{
-                                                height: 200,
-                                                menubar: false,
-                                                plugins: [
-                                                    'advlist autolink lists link image charmap print preview anchor',
-                                                    'searchreplace visualblocks code fullscreen',
-                                                    'insertdatetime media table paste code help wordcount'
-                                                ],
-                                                    toolbar:
-                                                    'undo redo | formatselect | bold italic backcolor | \
-                                                    alignleft aligncenter alignright alignjustify | \
-                                                    bullist numlist outdent indent | removeformat | help'
-                                                }" 
-                                            />-->
+                                            123
                                         </div>
                                     </div>
                                 </div>
@@ -227,12 +226,11 @@
                         <td>
                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changeStatus($event, item.id)" v-model="item.status">
-                                <option value="0" v-if="item.status == 0" :disabled="item.status == 0">Đang Chờ</option>
+                                <option value="0" v-if="item.status == 0" :disabled="item.status == 0"><p>Đang Chờ</p></option>
                                 <option value="1" v-if="item.status == 1">Đang Chờ</option>
                                 <option value="2" :disabled="item.status == 2 || item.status == 4">Đang tiến hành</option>
-                                <option value="3"
-                                    :disabled="item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6">
-                                    Tạm dừng</option>
+                                <option value="3" style="color: orange"
+                                    :disabled="item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6">Tạm dừng</option>
                                 <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
                                     feedback</option>
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
@@ -255,10 +253,11 @@ import {$get, $post} from "../../ultis";
 import Multiselect from 'vue-multiselect';
 import Treeselect from '@riophae/vue-treeselect';
 import DatePicker from 'vue2-datepicker';
+import CreateTask_Parent from './CreateTask_Parent.vue';
 export default {
     name: "MyWork",
     el: '#infoMyWork',
-    components: { Multiselect, Treeselect, DatePicker },
+    components: { CreateTask_Parent ,Multiselect, Treeselect, DatePicker },
     data() {
         return {
             option: 10,
@@ -276,7 +275,9 @@ export default {
             project_id: '',
             task_parent: '',
             project: 0,
-            summary: ''
+            summary: '',
+            startTime: '',
+            endTime: '',
         }
     },
     created() {
@@ -367,6 +368,13 @@ export default {
 
             if (this.project && this.project > 0) {
                 params.project_id = this.project;
+            }
+
+            if (this.startTime) {
+                params.start_time = this.startTime;
+            }
+            if (this.endTime) {
+                params.end_time = this.endTime;
             }
 
             const res = await $get('/my-tasks', params);

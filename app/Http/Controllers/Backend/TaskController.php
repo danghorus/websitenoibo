@@ -575,6 +575,8 @@ class TaskController extends Controller
         $filters = $request->all();
         $taskPerformer = $request->input('task_performer');
         $Status2 = $request->input('status2');
+        $startTime = $request->input('start_time');
+        $endTime = $request->input('end_time');
 
         $builder = DB::table('tasks', 'tt')->select('tt.*')
             ->where('tt.valid','=',1);
@@ -585,6 +587,13 @@ class TaskController extends Controller
         ->where('task_performer', '=', Auth::id());
          if ($taskPerformer && $taskPerformer > 0) {
             $builder->where('tt.task_performer', '=', $taskPerformer);
+        }
+
+         if ($startTime && $startTime != '') {
+            $builder->whereDate('tt.start_time', '=', $startTime);
+        }
+         if ($endTime && $endTime != '') {
+            $builder->whereDate('tt.end_time', '=', $endTime);
         }
 
         if (isset($filters['project_id']) && $filters['project_id'] > 0) {
