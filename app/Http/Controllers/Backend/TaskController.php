@@ -696,13 +696,12 @@ class TaskController extends Controller
         $taskPerformer = $request->input('task_performer');
         $taskDepartment = $request->input('task_department');
         $Status2 = $request->input('status2');
-        //$department = Auth::user()->department;
+        $department = Auth::user()->department;
 
         $builder = DB::table('tasks', 'tt')
             ->where('tt.valid', '=', 1)
             ->orderBy('start_time')->orderBy('id', 'DESC')
             ->whereNotNull( 'tt.task_department')
-            //->where('tt.task_department', '=', $department)
             ->select('tt.*')
             ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child");
             //->selectRaw('p.project_name, u.fullname');
@@ -715,9 +714,6 @@ class TaskController extends Controller
         if ($startTime && $endTime) {
             $builder->whereDate('tt.start_time', '>=', $startTime)->whereDate('tt.start_time', '<=', $endTime);
         }
-        //if ($endTime && $endTime != '') {
-        //    $builder->whereDate('tt.end_time', '=', $endTime);
-        //}
         if ($projectId > 0) {
             $builder->where('tt.project_id', '=',$projectId);
         }
@@ -725,20 +721,16 @@ class TaskController extends Controller
         if ($taskPerformer && $taskPerformer > 0) {
             $builder->where('tt.task_performer', '=', $taskPerformer);
         }
+        if ($taskDepartment == 12) {
+            $builder->where('tt.task_department', '=', $department);
+        }
 
-        if ($taskDepartment && $taskDepartment > 0) {
+        if ($taskDepartment && $taskDepartment != 12 ) {
             $builder->where('tt.task_department', '=', $taskDepartment);
         }
 
         if (isset($filters['project_id']) && $filters['project_id'] > 0) {
             $builder->where('project_id', '=', $filters['project_id']);
-        }
-
-        if (isset($filters['departments']) && $filters['departments'] > 0) {
-            $builder->where('task_department', '=', $filters['departments']);
-        }
-        if (isset($filters['performer'])) {
-            $builder->where('task_performer', '=', $filters['performer']);
         }
 
         if (isset($filters['status'])) {

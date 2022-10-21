@@ -58,6 +58,7 @@
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo bộ phận</label>
                             <select  @change="changeOption()" class="form-select" v-model="option1" style="width:160px">
+                                <option value="12" disabled>Lựa chọn</option>
                                 <option value="1" >Tất cả</option>
                                 <option value="2" >Dev</option>
                                 <option value="3" > Game design</option>
@@ -189,6 +190,16 @@
                                 @change="changeSticker($event, item.id)" v-model="item.task_sticker">
                                 <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">{{sticker.sticker_name}}</option>
                             </select>
+                            <!--<multiselect 
+                            v-model="item.task_sticker" 
+                            :options="stickers" 
+                            value="sticker_name" 
+                            label="sticker_name" 
+                            :close-on-select="true"
+                            :show-labels="true" 
+                            placeholder="Chọn"  
+                            @select="changeSticker($event ,item.id)">
+                        </multiselect>-->
                         </td>
                         <td>
                              <select class="form-select form-select-sm" aria-label=".form-select-sm example"
@@ -290,7 +301,7 @@ export default {
             dateRange: '',
             search:'',
             option: 10,
-            option1: 2,
+            option1:12,
             option2: 10,
             performer: 0,
             project: 0,
@@ -319,6 +330,7 @@ export default {
             taskDepartment: 0,
             status: '',
             currentUser: '',
+            task_sticker:'',
         }
     },
     created() {
@@ -552,7 +564,7 @@ export default {
         },
         async changeSticker(e, taskId) {
 
-            const res = await $post(`/tasks/change-sticker/${taskId}`, {task_sticker: e.target.value });
+            const res = await $post(`/tasks/change-sticker/${taskId}`, { task_sticker: e.target.value });
 
             if (res.code == 200) {
                 toastr.success(res.message);
