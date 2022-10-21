@@ -10,7 +10,11 @@
                 <option value="5">Chờ feedback</option>
                 <option value="2">Đã hoàn thành</option>
             </select>
-            <nav class="navbar navbar-expand-lg" style="margin-top:-45px;float:right;">
+            <p @click="NewTask()">
+                <button class="btn btn-success btn-sm"
+                    style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới</button>
+            </p>
+            <nav class="navbar navbar-expand-lg" style="margin-top:-95px;float:right;">
                 <ul class="navbar-nav mr-auto" style="font-size:16px;" >
                     <li class="nav-item">
                         <div class="form-group p-2">
@@ -35,7 +39,7 @@
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo dự án</label>
-                            <select  class="form-select"  @change="changeOption()" v-model="project" style="width:200px">
+                            <select  class="form-select"  @change="changeOption()" v-model="project" style="width:160px">
                                 <option value="0" selected="selected">Tất cả</option>
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
                             </select>
@@ -44,20 +48,20 @@
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo bộ phận</label>
-                            <select  @change="changeOption()" class="form-select" v-model="option1" style="width:200px">
+                            <select  @change="changeOption()" class="form-select" v-model="option1" style="width:160px">
                                 <option value="1" >Tất cả</option>
                                 <option value="2" >Dev</option>
                                 <option value="3" > Game design</option>
                                 <option value="4" >Art</option>
                                 <option value="5" >Tester</option>
-                                <option value="9" >Phân tích dữ liệu</option>
+                                <option value="11" >Marketing</option>
                             </select>
                         </div>
                     </li>
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Người thực hiện</label>
-                            <select class="form-select" @change="changeOption()" v-model="performer"  style="width:200px">
+                            <select class="form-select" @change="changeOption()" v-model="performer"  style="width:160px">
                                 <option value="0" selected="selected">Tất cả</option>
                                 <option v-for="(user, index) in users" :key="index" :value="user.id">{{user.fullname}}</option>
                             </select>
@@ -66,7 +70,7 @@
                     <li v-if="option2 == 1 || option2 == 10" class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo trạng thái</label>
-                            <select  @change="changeOption()" class="form-select" v-model="option" style="width:200px">
+                            <select  @change="changeOption()" class="form-select" v-model="option" style="width:160px">
                                 <option value="10">Tất cả</option>
                                 <option value="0">Quá hạn</option>
                                 <option value="1">Đang chờ </option>
@@ -209,6 +213,7 @@
                                         <option value="3">Game Design</option>
                                         <option value="4">Art</option>
                                         <option value="5">Tester</option>
+                                        <option value="11">Marketing</option>
                                 </select>
                             </div>
                         </td>
@@ -275,7 +280,7 @@ export default {
             tasks: [],
             search:'',
             option: 10,
-            option1: 1,
+            option1: 2,
             option2: 10,
             performer: 0,
             project: 0,
@@ -338,8 +343,16 @@ export default {
             if (res.code == 200) {
                 this.tasks = res.data;
                 if (taskId) {
-                    this.task.task_parent = taskId;
+                    this.item.task_parent = taskId;
                 }
+            }
+        },
+        async NewTask() {
+            const res = await $get('/tasks/list_new_task');
+
+            if (res.code == 200) {
+                toastr.success('Thêm mới thành công');
+                this.getListWorks();
             }
         },
         async getAllPriority() {

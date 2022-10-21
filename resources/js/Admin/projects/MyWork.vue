@@ -173,10 +173,11 @@
                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changeDepartment($event, item.id)" v-model="item.task_department">
                                 <option value="null" disabled >Lựa chọn</option>
-                                <option value="2">Dev</option>
-                                <option value="3">Game Design</option>
-                                <option value="4">Art</option>
-                                <option value="5">Tester</option>
+                                <option value="2"> Dev</option>
+                                <option value="3"> Game Design</option>
+                                <option value="4"> Art</option>
+                                <option value="5"> Tester</option>
+                                <option value="11"> Marketing</option>
                             </select>
                         </td>
                          <td>

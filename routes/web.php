@@ -158,6 +158,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('tasks/copy/{id}', [TaskController::class, 'copy']);
     Route::get('tasks/delete/{id}', [TaskController::class, 'deleteTask']);
     Route::get('tasks/new_task', [TaskController::class, 'new_task']);
+    Route::get('tasks/list_new_task', [TaskController::class, 'list_new_task']);
     Route::get('tasks/invalid', [TaskController::class, 'invalid']);
     Route::get('/tasks/delete/{id}/invalid', [TaskController::class, 'invalidDelete']);
     Route::get('/tasks/restore/{id}', [TaskController::class, 'restore']);
