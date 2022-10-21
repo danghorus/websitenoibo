@@ -80,11 +80,11 @@
                                     <div class="card-body">
                                         <b id="tc">DỰ ÁN</b>
                                         <nav><i id="notetc">
-                                                Số lượng dự án: {{count($works)}}
+                                                Số lượng dự án: {{count($projects)}}
                                             </i></nav>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="{{route('works.index')}}">Xem chi tiết</a>
+                                        <a class="small text-white stretched-link" href="{{ url('/projects') }}">Xem chi tiết</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>

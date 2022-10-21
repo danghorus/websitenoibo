@@ -161,6 +161,8 @@
                                 <a class="dropdown-item" href="{{ url('/list_work') }}">Việc bộ phận</a>
                                 <a class="dropdown-item" href="{{ url('/my_work') }}">Việc của tôi</a>
                                 <a class="dropdown-item" href="{{ url('/project-report') }}">Thống kê</a>
+                                <a class="dropdown-item" href="{{ url('/project-report_clone') }}">Thống kê Clone</a>
+
 
                                 <!--<a class="dropdown-item" href="{{ url('/warrior') }}">Warrior đăng ký</a>-->
                             </div>

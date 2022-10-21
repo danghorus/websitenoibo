@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
-use App\Models\Work;
+use App\Models\Project;
 use App\Models\Petition;
 
 use Illuminate\Support\Facades\Auth;
@@ -30,13 +30,13 @@ class HomeController extends Controller
     public function index()
     {
         $users = User::where('user_status', 1)->get() ;
-        $works = Work::all();
+        $projects = Project::all();
         $petitions = Petition::where('petition_status', 1)->get();
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
 
-        return view('home', compact('users', 'works', 'petitions', 'petitions1', 'petitions01'));
+        return view('home', compact('users', 'projects', 'petitions', 'petitions1', 'petitions01'));
     }
 
 }
