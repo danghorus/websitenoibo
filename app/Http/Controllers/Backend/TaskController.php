@@ -712,12 +712,12 @@ class TaskController extends Controller
         $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
 
 
-        if ($startTime && $startTime != '') {
-            $builder->whereDate('tt.start_time', '=', $startTime);
+        if ($startTime && $endTime) {
+            $builder->whereDate('tt.start_time', '>=', $startTime)->whereDate('tt.start_time', '<=', $endTime);
         }
-         if ($endTime && $endTime != '') {
-            $builder->whereDate('tt.end_time', '=', $endTime);
-        }
+        //if ($endTime && $endTime != '') {
+        //    $builder->whereDate('tt.end_time', '=', $endTime);
+        //}
         if ($projectId > 0) {
             $builder->where('tt.project_id', '=',$projectId);
         }

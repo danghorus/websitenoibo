@@ -19,10 +19,19 @@
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px;">Nhập tên công việc</label>
-                            <input @input="changeOption()" class="form-control" style="width:220px;height:33px;font-size:14px" type="text" placeholder="Tên công việc" v-model="search">
+                            <input @input="changeOption()" class="form-control" 
+                            style="margin-top:3px;width:220px;height:33px;font-size:14px" type="text" placeholder="Tên công việc" v-model="search">
                         </div>
                     </li>
                     <li class="nav-item">
+                        <div class="form-group p-2">
+                            <label for="project_description" style="font-size:12px;">Chọn khoảng thời gian</label>
+                            <date-picker style="margin-top:3px; width: 100%;" v-model="dateRange" type="date" 
+                            range placeholder="Vui lòng chọn khoảng thời gian"  @change="changeOption()">
+                            </date-picker>
+                        </div>
+                    </li>
+                    <!--<li class="nav-item">
                         <div class="form-group p-1">
                             <DatePicker style="width: 100%; margin-top: 33px" v-model="startTime" value-type="format" type="date"
                                 placeholder="Ngày bắt đầu" @change="changeOption()">
@@ -35,7 +44,7 @@
                             placeholder="Ngày kết thúc" @change="changeOption()">
                             </DatePicker>
                         </div>
-                    </li>
+                    </li>-->
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo dự án</label>
@@ -278,6 +287,7 @@ export default {
     data() {
         return {
             tasks: [],
+            dateRange: '',
             search:'',
             option: 10,
             option1: 2,
@@ -407,7 +417,14 @@ export default {
             this.getListWorks();
         },
         async getListWorks() {
+
             let params = {};
+
+
+            if (this.dateRange) {
+                params.start_time = this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD');
+                params.end_time = this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : moment().endOf('month').format('YYYY-MM-DD');
+            }
 
             if (this.option && this.option != 10) {
                 params.status = this.option;
@@ -428,12 +445,12 @@ export default {
             if (this.performer && this.performer != 0) {
                 params.task_performer = this.performer;
             }
-            if (this.startTime) {
-                params.start_time = this.startTime ;
-            }
-            if (this.endTime) {
-                params.end_time = this.endTime ;
-            }
+            //if (this.startTime) {
+            //    params.start_time = this.startTime ;
+            //}
+            //if (this.endTime) {
+            //    params.end_time = this.endTime ;
+            //}
             if(this.search){
                 params.search = this.search || '';
             }
