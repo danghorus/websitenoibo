@@ -112,14 +112,16 @@
                         <th scope="col" width="10%">Dự án</th>
                         <!--<th scope="col" width="10%">Công việc cha</th>-->
                         <th scope="col" width="7%">Bộ phận</th>
+                        <th scope="col" width="150px">Loại công việc</th>
+                        <th scope="col" width="150px">Cấp độ công việc</th>
                         <th scope="col" width="6%">Bắt đầu</th>
                         <th scope="col" width="3%">Thời lượng (Giờ)</th>
                         <th scope="col" width="6%">Kết thúc</th>
                         <th scope="col" width="3%">Thời lượng thực tế (Giờ)</th>
 						<th scope="col" width="4%">Tiến độ</th>
-                        <th scope="col" width="8%">Trạng thái</th>
-                        <th scope="col" width="10%">Cập nhật trạng thái</th>
-                        <th scope="col" width="10%">Thao tác</th>
+                        <th scope="col" width="150px">Trạng thái</th>
+                        <th scope="col" width="150px">Cập nhật trạng thái</th>
+                        <th scope="col" width="100px">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody v-for="(item, index) in list" :key="item.id" style="text-align:center;">
@@ -178,6 +180,20 @@
                                 <option value="4"> Art</option>
                                 <option value="5"> Tester</option>
                                 <option value="11"> Marketing</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                @change="changeSticker($event, item.id)" v-model="item.task_sticker">
+                                <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">{{sticker.sticker_name}}
+                                </option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                @change="changePriority($event, item.id)" v-model="item.task_priority">
+                                <option v-for="(priority, index) in priorities" :key="index" :value="priority.priority_label">Level
+                                    {{priority.priority_label}}</option>
                             </select>
                         </td>
                          <td>
@@ -259,6 +275,7 @@ export default {
     name: "MyWork",
     el: '#infoMyWork',
     components: { CreateTask_Parent ,Multiselect, Treeselect, DatePicker },
+    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'status', 'list',],
     data() {
         return {
             option: 10,
@@ -285,6 +302,8 @@ export default {
         this.getAllUser();
         this.getMyWorks();
         this.getProjects();
+        this.getAllPriority();
+        this.getAllSticker();
         this.getAllTasks();
     },
     methods: {
@@ -315,6 +334,18 @@ export default {
             const res = await $get('/user/all_user');
             if (res.code == 200) {
                 this.users = res.data;
+            }
+        },
+        async getAllPriority() {
+            const res = await $get('/priorities/get_all');
+            if (res.code == 200) {
+                this.priorities = res.data;
+            }
+        },
+        async getAllSticker() {
+            const res = await $get('/stickers/get_all');
+            if (res.code == 200) {
+                this.stickers = res.data;
             }
         },
         async getAllTasks() {
@@ -461,6 +492,23 @@ export default {
             if (res.code == 200) {
                 toastr.success(res.message);
                 this.getMyWorks();
+            }
+        },
+        async changeSticker(e, taskId) {
+
+            const res = await $post(`/tasks/change-sticker/${taskId}`, { task_sticker: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
+            }
+        },
+        async changePriority(e, taskId) {
+            const res = await $post(`/tasks/change-priority/${taskId}`, { task_priority: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getListWorks();
             }
         },
         async changeDepartment(e, taskId) {
