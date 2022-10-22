@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <!--<div id="app" :class="{darkmode: dark == 'yes'}">-->
         <div class="mt-4">
-            <h4 style="margin: -30px 0px 0px 25px;">Danh sách công việc</h4>
+            <h3 style="margin: -30px 0px 0px 25px;">Danh sách công việc</h3>
             <select  @change="changeOption()" class="form-select col-lg-2" style="position: absolute; left: 25px; top: 105px; width:220px; height:34px;"
             v-model="option2">
 				<option value="3">Tất cả</option>
@@ -14,6 +14,15 @@
                 <button class="btn btn-success btn-sm"
                     style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới</button>
             </p>
+            <div class="row">
+                <div class="toggle slide">
+                    <input id="c" type="checkbox" @click="dark == 'no' ? dark = 'yes' : dark = 'no'" />
+                    <label id="bt" for="c">
+                        <div class="card slide"></div>
+                    </label>
+                </div>
+                </figure>
+            </div>
             <nav class="navbar navbar-expand-lg" style="margin-top:-95px;float:right;">
                 <ul class="navbar-nav mr-auto" style="font-size:16px;" >
                     <li class="nav-item">
@@ -114,6 +123,7 @@
                         <th scope="col" width="200px">Người thực hiện</th>
                         <th scope="col" width="100px">Bộ phận</th>
                         <th scope="col" width="40px">Tiến độ</th>
+                        <th scope="col" width="145px">Trạng thái</th>
                         <th scope="col" width="145px">Thao tác</th>
                     </tr>
                 </thead>
@@ -252,6 +262,10 @@
                                 </select>
                             </div>
                         </td>
+                        <td>
+                            <button style="height: 25px;font-size:12px;" class="btn btn-danger"
+                                @click="deleteTask($event, item.id)">Xóa</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -297,6 +311,7 @@ export default {
         'startTime','endTime', 'taskPerformer', 'task_performer', 'taskDepartment', 'status', 'list', 'currentUser'],
     data() {
         return {
+            dark: 'no',
             tasks: [],
             dateRange: '',
             search:'',
@@ -587,6 +602,14 @@ export default {
                 this.getListWorks();
             }
         },
+        async deleteTask(e, taskId) {
+            const res = await $post(`/tasks/delete/${taskId}`, { task_parent: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success('Xóa thành công');
+                this.getListWorks();
+            }
+        },
     },
     watch: {
         'task.project_id': function (newVal) {
@@ -664,4 +687,171 @@ table.my-work td {
     background: #c5c5c5;
     border: 2px;
 }
+
+/*
+* {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: verdana;
+    font-size: 16px;
+}
+
+#app {
+    background: #e7ecff;
+    width: 100%;
+    height: 100vh;
+    transition: 0.3s ease-in;
+}
+
+#app.darkmode {
+    background: #333;
+    transition: 0.3s ease-in;
+}
+
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-start: 1;
+    grid-gap: 25px;
+    margin: auto;
+}
+
+/* -------- Button Dark / Light ------- */
+/*figure {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.toggle {
+    display: flex;
+    position: relative;
+    width: 7.5rem;
+    height: 2.5rem;
+    background: white;
+    border-radius: 6px;
+    align-self: center;
+    user-select: none;
+    margin: 2rem;
+    box-shadow: 0 15px 20px -10px #b3c9fa;
+    transition: 0.2s ease-in;
+}
+
+.darkmode .toggle {
+    box-shadow: 0 15px 20px -10px #181818;
+    transition: 0.2s ease-in;
+}
+
+.toggle:after,
+.toggle:before {
+    flex: 1;
+    text-align: center;
+    line-height: 2.5rem;
+}
+
+.toggle:after {
+    content: "Light";
+}
+
+.toggle:before {
+    content: "Dark";
+}
+
+#c {
+    display: none;
+}
+
+#bt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    perspective: 1000;
+    cursor: pointer;
+}
+
+.card {
+    position: relative;
+    background: #599cff;
+    border-radius: 6px;
+    transition: 0.4s;
+    width: 50%;
+    height: 2.5rem;
+    pointer-events: none;
+}
+
+input:checked+label .card {
+    background: #272727;
+    border-radius: 6px;
+}
+
+.slide .card {
+    transform: translate(0);
+}
+
+.slide input:checked+label .card {
+    transform: translateX(3.75rem);
+}
+
+/* -------- End button Dark / Light ------- */
+
+/*
+.cards {
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    min-width: 160px;
+    height: 100px;
+    transition: 0.2s ease !important;
+    box-shadow: 0 15px 20px -10px #b3bdfa;
+}
+
+.darkmode .cards {
+    box-shadow: 0 25px 15px -15px #242424;
+}
+
+.darkmode .cards:not(.not) {
+    background: #222;
+    transition: 0.3s ease-in;
+    box-shadow: 0 25px 15px -15px #242424;
+}
+
+.cards span {
+    padding: 0 1rem;
+    transition: 0.4s ease-in;
+}
+
+.darkmode .cards:not(.not) span {
+    color: white;
+}
+
+@media (max-width: 600px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 380px) {
+    .grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}*/
 </style>
