@@ -36,6 +36,7 @@
                     <div style="display: flex; font-size:12px;">
                         <select style="font-size:12px;" class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changeDepartment($event, scope.row.id)" v-model="scope.row.task_department">
+                            <option v-if="scope.row.task_department != 0" value="0">Bỏ chọn</option>
                             <option value="2" >Dev</option>
                             <option value="3">Game Design</option>
                             <option value="4">Art</option>
@@ -47,7 +48,7 @@
                     <div style="display: flex; font-size:12px;">
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changePerformer($event, scope.row.id)" v-model="scope.row.task_performer">
-							<option v-if="scope.row.task_performer != null" :value="null">Bỏ chọn</option>
+							<option v-if="scope.row.task_performer != 0" :value="0">Bỏ chọn</option>
                             <option v-for="(user, index) in users" :key="index" :value="user.id">{{user.fullname}}</option>
                         </select>
                     </div>
@@ -80,6 +81,7 @@
                     <div v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3) ">
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changeStatus($event, scope.row.id)" v-model="scope.row.status">
+                            <option v-if="scope.row.status != 20" value="20">Bỏ chọn</option>
                             <option value="0" >Quá hạn</option>
                             <option value="1" >Đang Chờ</option>
                             <option value="2" >Đang tiến hành</option>

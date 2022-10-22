@@ -1026,48 +1026,53 @@ class TaskController extends Controller
         if($status == 5){
             $task->progress  = 100;
         }
+        if($status == 20){
+            $task->status = null;
 
-        switch ($task->status) {
-            case 0:
-                $task->status = $status;
-                break;
-            case 1:
-                $task->status = $status;
-                $task->real_start_time = date('Y-m-d H:i:s', time());
-                break;
-            case 2:
-                $task->status = $status;
-                $task->real_end_time = date('Y-m-d H:i:s', time());
-                /*if ($status == 4) {
-                    Task::query()->where('task_predecessor', '=', $taskId)->update([
-                        'status' => 1
-                    ]);
-                }*/
-                break;
-            case 3:
-                $task->status = $status;
-                $pause = (time() - strtotime($task->real_end_time))/3600;
-                $task->time_pause += $pause;
-                $task->real_end_time = date('Y-m-d H:i:s', time());
-                break;
-            case 4:
-                $task->status = $status;
-                $pause = (time() - strtotime($task->real_end_time))/3600;
-                $task->time_pause += $pause;
-                $task->real_end_time = date('Y-m-d H:i:s', time());
-                break;
-            case 5:
-                $task->status = $status;
-                $pause = (time() - strtotime($task->real_end_time))/3600;
-                $task->time_pause += $pause;
-                $task->real_end_time = date('Y-m-d H:i:s', time());
-                break;
-            case 6:
-                $task->status = $status;
-                $pause = (time() - strtotime($task->real_end_time))/3600;
-                $task->time_pause += $pause;
-                $task->real_end_time = date('Y-m-d H:i:s', time());
-                break;
+        } else {
+
+            switch ($task->status) {
+                case 0:
+                    $task->status = $status;
+                    break;
+                case 1:
+                    $task->status = $status;
+                    $task->real_start_time = date('Y-m-d H:i:s', time());
+                    break;
+                case 2:
+                    $task->status = $status;
+                    $task->real_end_time = date('Y-m-d H:i:s', time());
+                    /*if ($status == 4) {
+                        Task::query()->where('task_predecessor', '=', $taskId)->update([
+                            'status' => 1
+                        ]);
+                    }*/
+                    break;
+                case 3:
+                    $task->status = $status;
+                    $pause = (time() - strtotime($task->real_end_time))/3600;
+                    $task->time_pause += $pause;
+                    $task->real_end_time = date('Y-m-d H:i:s', time());
+                    break;
+                case 4:
+                    $task->status = $status;
+                    $pause = (time() - strtotime($task->real_end_time))/3600;
+                    $task->time_pause += $pause;
+                    $task->real_end_time = date('Y-m-d H:i:s', time());
+                    break;
+                case 5:
+                    $task->status = $status;
+                    $pause = (time() - strtotime($task->real_end_time))/3600;
+                    $task->time_pause += $pause;
+                    $task->real_end_time = date('Y-m-d H:i:s', time());
+                    break;
+                case 6:
+                    $task->status = $status;
+                    $pause = (time() - strtotime($task->real_end_time))/3600;
+                    $task->time_pause += $pause;
+                    $task->real_end_time = date('Y-m-d H:i:s', time());
+                    break;
+            }
         }
 
         $task->save();
@@ -1199,9 +1204,11 @@ class TaskController extends Controller
         $task_department = $request->input('task_department');
 
         $task = Task::find($taskId);
-
-        $task->task_department = $task_department;
-
+        if ( $task_department == 0){
+            $task->task_department = null;
+        } else {
+            $task->task_department = $task_department;
+        }
         $task->save();
 
         return [
@@ -1243,7 +1250,11 @@ class TaskController extends Controller
 
         $task = Task::find($taskId);
 
-        $task->task_performer = $task_performer;
+         if ( $task_performer == 0){
+            $task->task_performer = null;
+        } else {
+            $task->task_performer = $task_performer;
+        }
 
         $task->save();
 

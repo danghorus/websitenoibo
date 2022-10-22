@@ -113,7 +113,7 @@
                         <!--<th scope="col" width="10%">Công việc cha</th>-->
                         <th scope="col" width="7%">Bộ phận</th>
                         <th scope="col" width="150px">Loại công việc</th>
-                        <th scope="col" width="150px">Cấp độ công việc</th>
+                        <!--<th scope="col" width="150px">Cấp độ công việc</th>-->
                         <th scope="col" width="6%">Bắt đầu</th>
                         <th scope="col" width="3%">Thời lượng (Giờ)</th>
                         <th scope="col" width="6%">Kết thúc</th>
@@ -188,14 +188,24 @@
                                 <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">{{sticker.sticker_name}}
                                 </option>
                             </select>
+                        <!--<multiselect 
+                            v-model="item.task_sticker" 
+                            :options="stickers" 
+                            value="id" 
+                            label="sticker_name" 
+                            :close-on-select="true"
+                            :show-labels="true" 
+                            placeholder="Vui lòng chọn"  
+                            @select="changeSticker($event ,item.id)">
+                        </multiselect>-->
                         </td>
-                        <td>
+                        <!--<td>
                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changePriority($event, item.id)" v-model="item.task_priority">
                                 <option v-for="(priority, index) in priorities" :key="index" :value="priority.priority_label">Level
                                     {{priority.priority_label}}</option>
                             </select>
-                        </td>
+                        </td>-->
                          <td>
                             <DatePicker 
                                 style="width: 120px" 
@@ -275,7 +285,7 @@ export default {
     name: "MyWork",
     el: '#infoMyWork',
     components: { CreateTask_Parent ,Multiselect, Treeselect, DatePicker },
-    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'status', 'list',],
+    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'status', 'list', 'task_sticker',],
     data() {
         return {
             option: 10,
@@ -296,6 +306,7 @@ export default {
             summary: '',
             startTime: '',
             endTime: '',
+            task_performer: '',
         }
     },
     created() {
