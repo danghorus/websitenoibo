@@ -1,5 +1,6 @@
 <template>
     <!--<div id="app" :class="{darkmode: dark == 'yes'}">-->
+    <div>
         <div class="mt-4">
             <h3 style="margin: -30px 0px 0px 25px;">Danh sách công việc</h3>
             <select  @change="changeOption()" class="form-select col-lg-2" style="position: absolute; left: 25px; top: 105px; width:220px; height:34px;"
@@ -132,7 +133,11 @@
                         <td>{{ index +1 }}</td>
                         <td scope="row" style="text-align:left;">
                             <div style="display: flex; font-size:12px;">
-                            <textarea style="width:100%; border:0px;   word-wrap:break-word; resize: none;"
+                            <textarea v-if="item.task_name == 'Click để thay đổi nội dung'" 
+                                style=" font-weight: bold; font-size:16px; width:100%; border:0px; word-wrap:break-word; resize: none;"
+                                @change="changeTaskName($event, item.id)" v-model="item.task_name">
+                            </textarea>
+                            <textarea v-else style="width:100%; border:0px; word-wrap:break-word; resize: none;"
                                 @change="changeTaskName($event, item.id)" v-model="item.task_name">
                             </textarea>
                             <p @click="showModalEditTask(item.id)">

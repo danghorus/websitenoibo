@@ -129,7 +129,13 @@
                         <td>{{index + 1 }}</td>
                         <td scope="row" style="text-align:left;">
                             <div style="display: flex; font-size:12px;">
-                                <input style="width:100%; border:0px;" @change="changeTaskName($event, item.id)" v-model="item.task_name">
+                                <textarea v-if="item.task_name == 'Click để thay đổi nội dung'"
+                                    style=" font-weight: bold; font-size:16px; width:100%; border:0px; word-wrap:break-word; resize: none;"
+                                    @change="changeTaskName($event, item.id)" v-model="item.task_name">
+                                </textarea>
+                                <textarea v-else style="width:100%; border:0px; word-wrap:break-word; resize: none;"
+                                    @change="changeTaskName($event, item.id)" v-model="item.task_name">
+                                </textarea>
                                     <p @click="showModalEditTask($event, item.id)">
                                         <i class="fas fa-info-circle" style="font-size:16px; margin-top: 15px; cursor: pointer" />
                                     </p>

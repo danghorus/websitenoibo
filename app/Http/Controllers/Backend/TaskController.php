@@ -579,11 +579,11 @@ class TaskController extends Controller
         $endTime = $request->input('end_time');
 
         $builder = DB::table('tasks', 'tt')->select('tt.*')
-            ->where('tt.valid','=',1);
+            ->where('tt.valid','=',1)
+            ->orderBy('start_time')->orderBy('id', 'DESC');
             //->selectRaw('p.project_name');
 
         $builder//->join('projects as p', 'tt.project_id', '=', 'p.id')
-        ->orderBy('start_time')
         ->where('task_performer', '=', Auth::id());
          if ($taskPerformer && $taskPerformer > 0) {
             $builder->where('tt.task_performer', '=', $taskPerformer);
@@ -1606,7 +1606,7 @@ class TaskController extends Controller
 
         $task->task_name = 'Click để thay đổi nội dung';
         $task->task_code ='';
-        $task->start_time = date('Y-m-d', strtotime(now()));
+        $task->start_time = null;//date('Y-m-d', strtotime(now()));
         $task->time =null;
         $task->end_time =null;
         $task->description = '';
