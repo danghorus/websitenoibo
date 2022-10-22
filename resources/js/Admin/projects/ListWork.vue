@@ -15,7 +15,7 @@
                 <button class="btn btn-success btn-sm"
                     style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới</button>
             </p>
-            <div class="row">
+            <!--<div class="row">
                 <div class="toggle slide">
                     <input id="c" type="checkbox" @click="dark == 'no' ? dark = 'yes' : dark = 'no'" />
                     <label id="bt" for="c">
@@ -23,7 +23,7 @@
                     </label>
                 </div>
                 </figure>
-            </div>
+            </div>-->
             <nav class="navbar navbar-expand-lg" style="margin-top:-95px;float:right;">
                 <ul class="navbar-nav mr-auto" style="font-size:16px;" >
                     <li class="nav-item">
