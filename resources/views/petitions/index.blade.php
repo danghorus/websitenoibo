@@ -62,7 +62,43 @@
                                    href="#content-refuse" role="tab" aria-controls="content-refuse" aria-selected="true">
                                     Từ chối </a>
                             </li>
+                            <li style="margin-left: 20px;">
+                                <input class ="form-control" id="myInput" type="text" placeholder="Search.."\
+                                       style="width:100%; border-radius:0px 0px 0px 0px;">
+                            </li>
+                            <li style="margin-left: 20px;">
+                                <input class ="form-control" id="myInput1" type="month" placeholder="Search..">
+                            </li>
                         </ul>
+                        <!--<script>
+                           $(document).ready(function(){
+                            $("#myInput1").on("change", function() {
+                                let value = $(this).val().toLowerCase();
+                                console.log(value)
+                                $("#myTable tr").filter(function() {
+                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                });
+                            });
+                            });
+                        </script>-->
+                        <script>
+                            $(document).ready(function(){
+                                $("#myInput1").on("change", function() {
+                                    let value = $(this).val().toLowerCase();
+                                    console.log(value)
+                                    $("#myTable tr").filter(function() {
+                                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                    });
+                                });
+                                $("#myInput").on("keyup", function() {
+                                    var value = $(this).val().toLowerCase();
+                                    $("#myTable tr").filter(function() {
+                                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                    });
+                                });
+                            });
+                        </script>
+                        
                         <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_petition"
                                 style="float:right; margin:-45px 0px 0px 0px;">Tạo yêu cầu</button>-->
                                 <ul class="navbar-nav" style="float:right; margin:-50px 0px 0px 0px;">
@@ -124,8 +160,9 @@
                                     @foreach ($petitions as $petition )
                                         <?php if( $petition->petition_status == 1) { ?>
                                         <?php if( Auth::user()->permission == 0 && Auth::user()->fullname == $petition->user_fullname) { ?>
-                                        <tbody>
+                                        <tbody id="myTable">
                                         <tr>
+                                             <td hidden>{{ $petition->date_from }}</td>
                                             <td>{{ ++$i }}</td>
                                             <td>{{ $petition->type_approved }}</td>
                                             <td>{{ $petition->user_fullname }}</td>
@@ -227,8 +264,9 @@
                                         </tbody>
                                         <?php } ?>
                                         <?php if( Auth::user()->permission == 1 || Auth::user()->permission == 2 || Auth::user()->permission == 3 ){ ?>
-                                        <tbody style="font-size:16px;">
+                                        <tbody id="myTable" style="font-size:16px;">
                                         <tr>
+                                            <td hidden>{{ $petition->date_from }}</td>
                                             <td style="text-align: center;">{{ ++$i }}</td>
                                             <td style="text-align: center;">{{ $petition->id }}</td>
                                             <!--<td>{{ $petition->user_fullname }}</td>-->
@@ -389,8 +427,9 @@
                                     @foreach ($petitions as $petition)
                                         <?php if( $petition->petition_status == 2) { ?>
                                         <?php if( Auth::user()->permission == 0 && Auth::user()->fullname == $petition->user_fullname) { ?>
-                                        <tbody >
+                                        <tbody id="myTable" >
                                         <tr>
+                                            <td hidden>{{ $petition->date_from }}</td>
                                             <td style="text-align: center;">{{ ++$i }}</td>
                                             <td style="text-align: center;">{{ $petition->id }}</td>
                                             <td>
@@ -500,8 +539,9 @@
                                         </tbody>
                                         <?php } ?>
                                         <?php if( Auth::user()->permission == 1 || Auth::user()->permission == 2 || Auth::user()->permission == 3 ){ ?>
-                                        <tbody>
+                                        <tbody id="myTable">
                                         <tr>
+                                            <td hidden>{{ $petition->date_from }}</td>
                                             <td style="text-align: center;">{{ ++$i }}</td>
                                             <td style="text-align: center;">{{ $petition->id }}</td>
                                             <td>
@@ -638,8 +678,9 @@
                                     @foreach ($petitions as $petition)
                                         <?php if( $petition->petition_status == 0) { ?>
                                         <?php if( Auth::user()->permission == 0 && Auth::user()->fullname == $petition->user_fullname) { ?>
-                                        <tbody>
+                                        <tbody id="myTable">
                                         <tr>
+                                            <td hidden>{{ $petition->date_from }}</td>
                                             <td style="text-align: center;">{{ ++$i }}</td>
                                             <td style="text-align: center;">{{ $petition->id }}</td>
                                             <td>
@@ -751,8 +792,9 @@
                                         </tbody>
                                         <?php } ?>
                                         <?php if(Auth::user()->permission == 1 || Auth::user()->permission == 2 || Auth::user()->permission == 3 ){ ?>
-                                        <tbody>
+                                        <tbody id="myTable">
                                         <tr>
+                                            <td hidden>{{ $petition->date_from }}</td>
                                             <td style="text-align: center;">{{ ++$i }}</td>
                                             <td style="text-align: center;">{{ $petition->id }}</td>
                                             <td>
