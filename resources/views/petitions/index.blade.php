@@ -62,46 +62,35 @@
                                    href="#content-refuse" role="tab" aria-controls="content-refuse" aria-selected="true">
                                     Từ chối </a>
                             </li>
-                            <li style="margin-left: 20px;">
-                                <input class ="form-control" id="myInput" type="text" placeholder="Search.."\
-                                       style="width:100%; border-radius:0px 0px 0px 0px;">
+                            <li style="margin-left: 25px;">
+                                <input class ="form-control" id="searchText" type="text" placeholder="Search.."\
+                                       style="width:150%; border-radius:5px;">
                             </li>
-                            <li style="margin-left: 20px;">
-                                <input class ="form-control" id="myInput1" type="month" placeholder="Search..">
+                            <li style="margin-left: 47%;">
+                                <input class ="form-control" id="searchMonth" name="searchMonth" type="month"
+                                    style="width:120%; border-radius:5px;">
                             </li>
                         </ul>
-                        <!--<script>
-                           $(document).ready(function(){
-                            $("#myInput1").on("change", function() {
-                                let value = $(this).val().toLowerCase();
-                                console.log(value)
-                                $("#myTable tr").filter(function() {
-                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                                });
-                            });
-                            });
-                        </script>-->
                         <script>
                             $(document).ready(function(){
-                                $("#myInput1").on("change", function() {
+                                $("#searchMonth").on("change", function() {
                                     let value = $(this).val().toLowerCase();
                                     console.log(value)
                                     $("#myTable tr").filter(function() {
                                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                                     });
                                 });
-                                $("#myInput").on("keyup", function() {
+                                $("#searchText").on("keyup", function() {
                                     var value = $(this).val().toLowerCase();
+                                    console.log(value)
                                     $("#myTable tr").filter(function() {
                                         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                                     });
                                 });
                             });
                         </script>
-                        
-                        <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_petition"
-                                style="float:right; margin:-45px 0px 0px 0px;">Tạo yêu cầu</button>-->
-                                <ul class="navbar-nav" style="float:right; margin:-50px 0px 0px 0px;">
+                                            
+                                <ul class="navbar-nav" style="float:right; margin:-42px 0px 0px 0px;">
                                     <li class="nav-item dropdown">
                                          <button class="btn btn-success dropdown-toggle" type="button"
                                          data-bs-toggle="dropdown" data-bs-auto-close="true">Tạo yêu cầu</button>
