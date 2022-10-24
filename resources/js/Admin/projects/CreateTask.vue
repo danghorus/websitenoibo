@@ -162,6 +162,7 @@ export default {
     props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'taskId', 'projectId', 'taskParentId'],
     data() {
         return {
+            taskId:'',
             option:1,
             task: {
                 project_id: ''
@@ -205,7 +206,7 @@ export default {
 
             if(res.code == 200) {
                 this.task = res.data;
-                this.values = res.users_related;
+                this.values = res.user_related;
                 this.getTaskByProject(this.task.project_id.id, this.task.task_parent ?? 0);
             }
         },
@@ -221,14 +222,6 @@ export default {
                 toastr.error('Vui lòng nhập tên công việc');
                 return false;
             }
-            /*f (!this.task.start_time) {
-                toastr.error('Vui lòng nhập thời gian thực hiện');
-                return false;
-            }
-            if (!this.task.time) {
-                toastr.error('Vui lòng nhập thời lượng');
-                return false;
-            }*/
             if (this.task.project_id == 0 || !this.task.project_id) {
                 toastr.error('Vui lòng chọn dự án');
                 return false;

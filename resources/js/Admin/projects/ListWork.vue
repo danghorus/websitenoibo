@@ -112,14 +112,14 @@
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
                         <th scope="col" width="500px">Tên công việc</th>
-                        <th scope="col" width="200px">Dự án</th>
-                        <th scope="col" width="300px">Công việc cha</th>
+                        <th scope="col" width="120px">Loại công việc</th>
+                        <th scope="col">Cấp độ công việc</th>
+                        <th scope="col" width="150px">Dự án</th>
+                        <th scope="col" width="200px">Công việc cha</th>
                         <th scope="col" width="80px">Bắt đầu</th>
                         <th scope="col" width="60px">Thời lượng (Giờ)</th>
                         <th scope="col" width="80px">Kết thúc</th>
                         <th scope="col" width="60px">Thời lượng thực tế (Giờ)</th>
-                        <th scope="col" width="120px">Loại công việc</th>
-                        <th scope="col" >Cấp độ công việc</th>
                         <th scope="col" width="50px">Trọng số</th>
                         <th scope="col" width="200px">Người thực hiện</th>
                         <th scope="col" width="100px">Bộ phận</th>
@@ -144,6 +144,30 @@
                                 <i class="fas fa-info-circle" style="font-size:16px; margin-top: 15px; cursor: pointer" />
                             </p>
                             </div>
+                        </td>
+                        <td>
+                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                @change="changeSticker($event, item.id)" v-model="item.task_sticker">
+                                <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">{{sticker.sticker_name}}
+                                </option>
+                            </select>
+                            <!--<multiselect 
+                                v-model="item.task_sticker" 
+                                :options="stickers" 
+                                value="sticker_name" 
+                                label="sticker_name" 
+                                :close-on-select="true"
+                                :show-labels="true" 
+                                placeholder="Chọn"  
+                                @select="changeSticker($event ,item.id)">
+                            </multiselect>-->
+                        </td>
+                        <td>
+                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                @change="changePriority($event, item.id)" v-model="item.task_priority">
+                                <option v-for="(priority, index) in priorities" :key="index" :value="priority.priority_label">Level
+                                    {{priority.priority_label}}</option>
+                            </select>
                         </td>
                         <td style="text-align:left">
                             <select class="form-select" @change="changeProject($event, item.id)" v-model="item.project_id">
@@ -199,28 +223,6 @@
                         </td>
                         <td style=" text-align:right;">
                             <input style="width:100%; border:0px; text-align:right;" @change="changeRealTime($event, item.id)" v-model="item.real_time">
-                        </td>
-                        <td>
-                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                                @change="changeSticker($event, item.id)" v-model="item.task_sticker">
-                                <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">{{sticker.sticker_name}}</option>
-                            </select>
-                            <!--<multiselect 
-                            v-model="item.task_sticker" 
-                            :options="stickers" 
-                            value="sticker_name" 
-                            label="sticker_name" 
-                            :close-on-select="true"
-                            :show-labels="true" 
-                            placeholder="Chọn"  
-                            @select="changeSticker($event ,item.id)">
-                        </multiselect>-->
-                        </td>
-                        <td>
-                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                                @change="changePriority($event, item.id)" v-model="item.task_priority">
-                                <option v-for="(priority, index) in priorities" :key="index" :value="priority.priority_label">Level {{priority.priority_label}}</option>
-                            </select>
                         </td>
                         <td> <input style="width:100%; border:0px;"  @change="changeWeight($event, item.id)" v-model="item.weight"></td>
                         <td>
@@ -294,7 +296,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>s
     </div>
 </template>
 
