@@ -81,8 +81,8 @@
 
         </div>
         <div>
-            <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document" style=" max-width: 60%;">
+            <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog" role="document" style=" max-width: 60%;" data-bs-backdrop="static" data-bs-keyboard="false">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Tạo mới Công việc</h5>
@@ -101,8 +101,8 @@
             </div>
         </div>
         <div>
-            <div ref="modalCreate" class="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document" style=" max-width: 60%;">
+            <div ref="modalCreate" class="modal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog" role="document" style=" max-width: 60%;" data-bs-backdrop="static" data-bs-keyboard="false">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Sửa dự án</h5>
@@ -120,8 +120,8 @@
             </div>
         </div>
         <div>
-            <div ref="modalConfigTask" class="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document" style=" max-width: 90%;">
+            <div ref="modalConfigTask" class="modal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog" role="document" style=" max-width: 90%;" data-bs-backdrop="static" data-bs-keyboard="false">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Cấu hình</h5>
