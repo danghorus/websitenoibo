@@ -39,6 +39,7 @@
                     </td>
                 </tr>
             </table>
+            <Paginate v-model="paginate" :pagechange="onPageChange"></Paginate>
         </div>
         <div ref="modalConfirm" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document" style=" max-width: 30%;">
@@ -86,11 +87,12 @@
 
 import {$post, $get} from "../../ultis";
 import CreateTask from "./CreateTask";
+import Paginate from "../../components/Paginate";
 
 export default {
     name: "TimelineTask",
-    components: {CreateTask},
-    props: ['listTaskTimeLine', 'users', 'groupUsers', 'priorities', 'stickers', 'projects'],
+    components: {CreateTask, Paginate},
+    props: ['listTaskTimeLine', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'paginate'],
     data() {
         return {
             list: [],
@@ -146,6 +148,9 @@ export default {
         handleGetTasks() {
             this.closeModalEditTask();
             this.$emit('getTaskTimeLine');
+        },
+        onPageChange(page) {
+            this.$emit('getTaskTimeLine', page);
         }
     }
 }

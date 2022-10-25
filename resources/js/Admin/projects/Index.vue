@@ -69,9 +69,9 @@
                                 @click="showTimeline? getTaskTimeLine(): getAllTasks()">Áp dụng</button>
                     </div>
                 </div>
-                <timeline-task v-if="showTimeline" :listTaskTimeLine="listTaskTimeLine" :users="users"
+                <timeline-task v-if="showTimeline" :listTaskTimeLine="listTaskTimeLine" :users="users" :paginate="paginate"
                                :groupUsers="groupUsers" :priorities="priorities" :stickers="stickers" :projects="projects"
-                               @getTaskTimeLine="getTaskTimeLine()" />
+                               @getTaskTimeLine="getTaskTimeLine" />
                 <list-task v-else :project-id="projectId" :users="users" :groupUsers="groupUsers"
                            :priorities="priorities" :stickers="stickers" :projects="projects"
                            :searchProjectId="searchProjectId" :search="search" :startTime="startTime"
@@ -200,6 +200,7 @@
                 status: '',
                 currentUser: '',
                 bus: new Vue(),
+                paginate: []
             }
         },
         created() {
@@ -296,7 +297,8 @@
 
                 this.projects = res.projects
             },
-            async getTaskTimeLine() {
+            async getTaskTimeLine(page) {
+                console.log(page, 'page');
                 let filters = {
                     project_id: this.searchProjectId? this.searchProjectId.id : 0,
                     search: this.search || '',
@@ -304,11 +306,13 @@
                     task_performer: this.taskPerformer || 0,
                     task_department: this.taskDepartment? this.taskDepartment.value : 0,
                     status: this.status? this.status.value : -1,
+                    page: page ?? 1
                 }
                 const res = await $get('/tasks/timeline', filters);
 
                 if (res.code == 200) {
                     this.listTaskTimeLine = res.data;
+                    this.paginate = res.paginate;
                 }
             },
             handleShowTimeline() {

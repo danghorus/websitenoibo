@@ -142,7 +142,7 @@ class TaskController extends Controller
         if ($search && $search != '') {
             $builder->where('tt.task_name', 'LIKE', "%$search%");
         }
-        $tasks = $builder->get();
+        $tasks = $builder->paginate(20, ['*'], 'page', $request->input('page') ?? 1);
 
         foreach ($tasks as $task) {
             $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
@@ -166,7 +166,11 @@ class TaskController extends Controller
 
         return [
             'code' => 200,
-            'data' => $tasks
+            'data' => $tasks->items(),
+            'paginate' => [
+                'currentPage' => $tasks->currentPage(),
+                'lastPage' => $tasks->lastPage(),
+            ]
         ];
     }
 
@@ -603,7 +607,7 @@ class TaskController extends Controller
         if (isset($filters['status'])) {
             $builder->where('status', '=', $filters['status']);
         }
-        
+
         if ($Status2 == 1) {
             $builder->where('status', '!=', 4)->where('status', '!=', 5);
         }else if($Status2 == 2){
@@ -1150,7 +1154,7 @@ class TaskController extends Controller
         $task = Task::find($taskId);
 
         $task->time_pause = $pause;
-        
+
         $task->save();
 
         return [
@@ -1231,7 +1235,7 @@ class TaskController extends Controller
         ];
     }
     public function changeTaskParent($taskId, Request $request) {
-        
+
         $task_parent = $request->input('task_parent');
 
         $task = Task::find($taskId);
@@ -1281,7 +1285,7 @@ class TaskController extends Controller
         $sticker = $request->input('task_sticker');
 
         $task = Task::find($taskId);
-        
+
         $priority = 'level_'.$task->task_priority;
 		if($task->task_priority != null){
 			$weight = DB::table('stickers as s')->where('sticker_name', '=', $sticker)->value($priority);
@@ -1291,7 +1295,7 @@ class TaskController extends Controller
         $task->task_sticker = $sticker;
 
         $task->weight = $weight;
-     
+
         $task->save();
 
         return [
@@ -1311,7 +1315,7 @@ class TaskController extends Controller
         $weight = DB::table('stickers as s')->where('sticker_name', '=', $sticker)->value($priority_level);
 
         $task->task_priority = $priority;
-        
+
         $task->weight = $weight;
 
         $task->save();
