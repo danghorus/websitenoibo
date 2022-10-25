@@ -56,7 +56,7 @@
                                 @endforeach
                             </select>
                             <label for="user_fullname">Họ và tên:</label>
-							<div id="vmsgu" style="color:brown; margin: 10px;"></div>
+							<div id="vmsgMulti1" style="color:brown; margin: 10px;"></div>
                         </div>
                     <?php } ?>
 
@@ -100,7 +100,7 @@
                     <div class="form-floating mb-3">
                         <textarea class="form-control" name="petition_reason" id="petition_reason_multi" type="text" style="height:100px;"></textarea>
                         <label for="">Lý do:</label>
-						<div id="vmsg_multi2" style="color:brown; margin: 10px;"></div>
+						<div id="vmsgMulti2" style="color:brown; margin: 10px;"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -123,7 +123,7 @@
                     $("#Multi").submit(function() {
                         var query1 = document.getElementById('u');
                         if (query1.value == "") {
-                        $('#vmsgu').html("* Vui lòng chọn người tạo yêu cầu")
+                        $('#vmsgMulti1').html("* Vui lòng chọn người tạo yêu cầu")
                         return false;
                         }
                         return true;
@@ -133,7 +133,7 @@
                     $("#Multi").submit(function() {
                         var query2 = document.getElementById('petition_reason_multi');
                         if (query2.value == "") {
-                        $('#vmsg_multi2').html("* Vui lòng nhập lí do")
+                        $('#vmsgMulti2').html("* Vui lòng nhập lí do")
                         return false;
                         }
                         return true;

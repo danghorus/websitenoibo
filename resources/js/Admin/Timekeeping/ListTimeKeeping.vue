@@ -293,8 +293,8 @@
             </div>-->
         </div>
         <div>
-            <div ref="modalDetail" class="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document" style="  max-width: 80%;">
+            <div ref="modalDetail" class="modal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog" role="document" style="  max-width: 80%;" data-bs-backdrop="static" data-bs-keyboard="false">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Chi tiết chấm công: {{userName}} - Ngày {{ time.day }}</h5>
@@ -312,8 +312,8 @@
             </div>
         </div>
         <div>
-            <div ref="modal" class="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document" style=" max-width: 80%;">
+            <div ref="modal" class="modal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog" role="document" style=" max-width: 80%;" data-bs-backdrop="static" data-bs-keyboard="false">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Cấu hình chấm công</h5>

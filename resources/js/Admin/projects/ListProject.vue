@@ -30,8 +30,8 @@
             </li>
         </div>
         <div>
-            <div ref="modalCreate" class="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document" style=" max-width: 60%;">
+            <div ref="modalCreate" class="modal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog" role="document" style=" max-width: 60%;" data-bs-backdrop="static" data-bs-keyboard="false">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Tạo mới dự án</h5>

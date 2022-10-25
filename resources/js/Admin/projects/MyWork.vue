@@ -90,6 +90,7 @@
             <select @change="changeOption()" class="form-select col-lg-2"
                     style="position: absolute; left: 25px; top: 105px; width:220px; height:34px;" v-model="option2">
 				<option value="3">Tất cả</option>
+                <option value="10">Việc hôm nay</option>
                 <option value="1">Chưa hoàn thành</option>
                 <option value="5">Chờ feedback</option>
                 <option value="2">Đã hoàn thành</option>
@@ -109,10 +110,10 @@
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
                         <th scope="col" width="700px">Tên công việc</th>
+                        <th scope="col" width="150px">Loại công việc</th>
                         <th scope="col" width="10%">Dự án</th>
                         <!--<th scope="col" width="10%">Công việc cha</th>-->
                         <th scope="col" width="7%">Bộ phận</th>
-                        <th scope="col" width="150px">Loại công việc</th>
                         <!--<th scope="col" width="150px">Cấp độ công việc</th>-->
                         <th scope="col" width="6%">Bắt đầu</th>
                         <th scope="col" width="3%">Thời lượng (Giờ)</th>
@@ -157,6 +158,23 @@
                                 </div>
                             </div>
                         </td>
+                        <td>
+                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                @change="changeSticker($event, item.id)" v-model="item.task_sticker">
+                                <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">{{sticker.sticker_name}}
+                                </option>
+                            </select>
+                            <!--<multiselect 
+                                v-model="item.task_sticker" 
+                                :options="stickers" 
+                                value="id" 
+                                label="sticker_name" 
+                                :close-on-select="true"
+                                :show-labels="true" 
+                                placeholder="Vui lòng chọn"  
+                                @select="changeSticker($event ,item.id)">
+                            </multiselect>-->
+                        </td>
                         <td style="text-align:left;">
                             <select class="form-select"  @change="changeProject($event, item.id)" v-model="item.project_id">
                                 <option value="1" disabled>Chọn dự án</option>
@@ -187,23 +205,6 @@
                                 <option value="5"> Tester</option>
                                 <option value="11"> Marketing</option>
                             </select>
-                        </td>
-                        <td>
-                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                                @change="changeSticker($event, item.id)" v-model="item.task_sticker">
-                                <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">{{sticker.sticker_name}}
-                                </option>
-                            </select>
-                        <!--<multiselect 
-                            v-model="item.task_sticker" 
-                            :options="stickers" 
-                            value="id" 
-                            label="sticker_name" 
-                            :close-on-select="true"
-                            :show-labels="true" 
-                            placeholder="Vui lòng chọn"  
-                            @select="changeSticker($event ,item.id)">
-                        </multiselect>-->
                         </td>
                         <!--<td>
                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
@@ -295,7 +296,7 @@ export default {
     data() {
         return {
             option: 10,
-            option2: 1,
+            option2: 10,
             toggle: false,
             show: false,
             list: [],
