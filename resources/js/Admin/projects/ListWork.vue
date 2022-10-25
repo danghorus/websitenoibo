@@ -6,6 +6,7 @@
             <select  @change="changeOption()" class="form-select col-lg-2" style="position: absolute; left: 25px; top: 105px; width:220px; height:34px;"
             v-model="option2">
 				<option value="3">Tất cả</option>
+                <option value="15">Việc hôm nay</option>
                 <option value="10">Mới tạo</option>
                 <option value="1">Chưa hoàn thành</option>
                 <option value="5">Chờ feedback</option>
@@ -324,7 +325,7 @@ export default {
             search:'',
             option: 10,
             option1:12,
-            option2: 10,
+            option2: 15,
             performer: 0,
             project: 0,
             project_id: '',

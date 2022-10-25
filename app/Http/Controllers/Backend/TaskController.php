@@ -611,6 +611,9 @@ class TaskController extends Controller
         }else if($Status2 == 5){
             $builder->where('status', '=', 5);
         }
+        else if($Status2 == 10){
+            $builder->where('start_time', '=', date('Y-m-d', time()));
+        }
 
         $tasks = $builder->get();
 
@@ -747,6 +750,9 @@ class TaskController extends Controller
             $builder->where('status', '=', 5);
         }else if($Status2 == 10){
             $builder->where('task_performer', '!=', null)->Where('task_parent', '=', null);
+        }
+        else if($Status2 == 15){
+            $builder->where('start_time', '!=', date('Y-m-d', time()));
         }
 
         $tasks = $builder->get();
@@ -1606,7 +1612,7 @@ class TaskController extends Controller
 
         $task->task_name = 'Click để thay đổi nội dung';
         $task->task_code ='';
-        $task->start_time = null;//date('Y-m-d', strtotime(now()));
+        $task->start_time = date('Y-m-d', strtotime(now()));
         $task->time =null;
         $task->end_time =null;
         $task->description = '';
@@ -1640,7 +1646,7 @@ class TaskController extends Controller
 
         $task->task_name = 'Click để thay đổi nội dung';
         $task->task_code ='';
-        $task->start_time = null;//date('Y-m-d', strtotime(now()));
+        $task->start_time = date('Y-m-d', strtotime(now()));
         $task->time =null;
         $task->end_time =null;
         $task->description = '';

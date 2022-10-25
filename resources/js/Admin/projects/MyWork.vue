@@ -90,6 +90,7 @@
             <select @change="changeOption()" class="form-select col-lg-2"
                     style="position: absolute; left: 25px; top: 105px; width:220px; height:34px;" v-model="option2">
 				<option value="3">Tất cả</option>
+                <option value="10">Việc hôm nay</option>
                 <option value="1">Chưa hoàn thành</option>
                 <option value="5">Chờ feedback</option>
                 <option value="2">Đã hoàn thành</option>
@@ -295,7 +296,7 @@ export default {
     data() {
         return {
             option: 10,
-            option2: 1,
+            option2: 10,
             toggle: false,
             show: false,
             list: [],
