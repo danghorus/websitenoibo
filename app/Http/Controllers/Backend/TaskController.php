@@ -711,9 +711,9 @@ class TaskController extends Controller
             ->whereNotNull( 'tt.task_department')
             ->select('tt.*')
             ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child");
-        if( $Status2 != 10){
-            $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
-        }
+        //if( $Status2 != 10){
+        //    $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
+        //}
         $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
 
 
