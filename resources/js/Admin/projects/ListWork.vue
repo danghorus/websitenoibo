@@ -317,7 +317,7 @@ export default {
             search:'',
             option: 10,
             option1:12,
-            option2: 10,
+            option2: 3,
             performer: 0,
             project: 0,
             project_id: '',
@@ -359,8 +359,8 @@ export default {
     },
     methods: {
 
-        changeOption(){
-            this.getListWorks();
+        changeOption(page){
+            this.getListWorks(page);
         },
 
         async loadOptions({ action, parentNode, callback }) {
@@ -493,7 +493,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+                this.paginate = res.paginate;
             }
         },
         async changePerformer(e, taskId) {
@@ -501,7 +501,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+               this.paginate = res.paginate;
             }
         },
         async changeTaskParent(e, taskId) {
@@ -509,7 +509,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+               this.paginate = res.paginate;
             }
         },
         async changeStatus(e, taskId) {
@@ -517,7 +517,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+               this.paginate = res.paginate;
             }
         },
         async changeTaskName(e, taskId) {
@@ -525,7 +525,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+               this.paginate = res.paginate;
             }
         },
         async changeStartTime(e, taskId) {
@@ -533,7 +533,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+               this.paginate = res.paginate;
             }
         },
         async changeEndTime(e, taskId) {
@@ -541,7 +541,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+               this.paginate = res.paginate;
             }
         },
         async changeTime(e, taskId) {
@@ -549,7 +549,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+               this.paginate = res.paginate;
             }
         },
         async changePause(e, taskId) {
@@ -557,7 +557,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+               this.paginate = res.paginate;
             }
         },
         async changeRealTime(e, taskId) {
@@ -565,7 +565,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+               this.paginate = res.paginate;
             }
         },
         async changeDepartment(e, taskId) {
@@ -573,7 +573,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+               this.paginate = res.paginate;
             }
         },
         async changeSticker(e, taskId) {
@@ -582,7 +582,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+                this.paginate = res.paginate;
             }
         },
         async changePriority(e, taskId) {
@@ -590,7 +590,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+                this.paginate = res.paginate;
             }
         },
         async changeWeight(e, taskId) {
@@ -598,7 +598,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
+               this.paginate = res.paginate;
             }
         },
         async deleteTask(e, taskId) {
@@ -606,7 +606,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success('Xóa thành công');
-                this.getListWorks();
+               this.paginate = res.paginate;
             }
         },
     },
