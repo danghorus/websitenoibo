@@ -104,6 +104,7 @@
                 style="float:right; margin:  -35px 10px 0px 0px;">
                  Tạo bộ lọc
             </button>-->
+            <Paginate style="margin: -10px 0px 0px 10px" v-model="paginate" :pagechange="onPageChange"></Paginate>
             <table class="table-striped table-responsive table-hover result-point"
                 style="width:99%; margin: 0px 0px 0px 10px">
                 <thead class="point-table-head">
@@ -273,10 +274,12 @@
                         </td>
                         <td>
                             <button style="height: 25px;font-size:12px;" class="btn btn-danger" @click="deleteTask($event, item.id)">Xóa</button>
+                            <!--<button class="btn btn-success" style="height:20px; font-size:10px;" @click="copyMyWork($event, item.id)">Copy</button>-->
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <Paginate style="margin: 0px 0px 0px 10px" v-model="paginate" :pagechange="onPageChange"></Paginate>
         </div>
     </div>
 </template>
@@ -284,6 +287,7 @@
 <script>
 
 import {$get, $post} from "../../ultis";
+import Paginate from "../../components/Paginate";
 import Multiselect from 'vue-multiselect';
 import Treeselect from '@riophae/vue-treeselect';
 import DatePicker from 'vue2-datepicker';
@@ -291,10 +295,11 @@ import CreateTask_Parent from './CreateTask_Parent.vue';
 export default {
     name: "MyWork",
     el: '#infoMyWork',
-    components: { CreateTask_Parent ,Multiselect, Treeselect, DatePicker },
-    props: ['users', 'groupUsers', 'priorities', 'stickers', 'projects', 'status', 'list', 'task_sticker',],
+    components: { CreateTask_Parent, Multiselect, Treeselect, DatePicker, Paginate },
+    props: ['paginate', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'status', 'list', 'task_sticker',],
     data() {
         return {
+            paginate: [],
             option: 10,
             option2: 10,
             toggle: false,
@@ -405,8 +410,11 @@ export default {
             this.getMyWorks();
             this.showFilter = false;
         },
-        async getMyWorks() {
-            let params = {};
+        async getMyWorks(page) {
+            console.log(page, 'page');
+            let params = {
+                page: page ?? 1
+            };
 
             if (this.option && this.option != 10) {
                 params.status = this.option;
@@ -431,8 +439,12 @@ export default {
 
             if (res.code == 200) {
                 this.list = res.tasks;
+                this.paginate = res.paginate;
                 this.summary = res.summary
             }
+        },
+        onPageChange(page) {
+            this.getMyWorks(page);
         },
         async changeStatus(e, taskId) {
             const res = await $post(`/tasks/change-status/${taskId}`, {status: e.target.value});
@@ -550,6 +562,14 @@ export default {
 
             if (res.code == 200) {
                 toastr.success('Xóa thành công');
+                this.getMyWorks();
+            }
+        },
+        async copyMyWork(id) {
+            const res = await $get(`/tasks/copyMyWork/${id}`);
+
+            if (res.code == 200) {
+                toastr.success('Copy thành công');
                 this.getMyWorks();
             }
         },

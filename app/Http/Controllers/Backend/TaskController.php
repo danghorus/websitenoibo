@@ -581,6 +581,7 @@ class TaskController extends Controller
         $Status2 = $request->input('status2');
         $startTime = $request->input('start_time');
         $endTime = $request->input('end_time');
+        $perPage = 20;//$request->input('per_page');
 
         $builder = DB::table('tasks', 'tt')->select('tt.*')
             ->where('tt.valid','=',1)
@@ -619,12 +620,12 @@ class TaskController extends Controller
             $builder->where('start_time', '=', date('Y-m-d', time()));
         }
 
-        $tasks = $builder->get();
+        $tasks = $builder->paginate( $perPage , ['*'], 'page', $request->input('page') ?? 1);
 
         $totalTaskProcessing = 0;
         $totalTaskPause = 0;
         $totalTaskComplete = 0;
-         $totalWaitFeedback = 0;
+        $totalWaitFeedback = 0;
 
         foreach ($tasks as $task) {
             if ($task->status == 0) {
@@ -684,7 +685,11 @@ class TaskController extends Controller
 
         return [
             'code' => 200,
-            'tasks' => $tasks,
+            'tasks' => $tasks->items(),
+            'paginate' => [
+                'currentPage' => $tasks->currentPage(),
+                'lastPage' => $tasks->lastPage(),
+            ],
             'summary' => [
                 'total' => count($tasks),
                 'total_processing' => $totalTaskProcessing,
@@ -703,6 +708,7 @@ class TaskController extends Controller
         $taskPerformer = $request->input('task_performer');
         $taskDepartment = $request->input('task_department');
         $Status2 = $request->input('status2');
+        $perPage = 20;//$request->input('per_page');
         $department = Auth::user()->department;
 
         $builder = DB::table('tasks', 'tt')
@@ -758,7 +764,7 @@ class TaskController extends Controller
             $builder->where('start_time', '!=', date('Y-m-d', time()));
         }
         
-        $tasks = $builder->paginate( 20 , ['*'], 'page', $request->input('page') ?? 1);
+        $tasks = $builder->paginate( $perPage , ['*'], 'page', $request->input('page') ?? 1);
 
         foreach ($tasks as $task) {
             $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
@@ -1459,7 +1465,7 @@ class TaskController extends Controller
 
         $task->task_name = 'Click để thay đổi nội dung';
         $task->task_code ='';
-        $task->start_time = date('Y-m-d', strtotime(now()));
+        $task->start_time = null;//date('Y-m-d', strtotime(now()));
         $task->time =null;
         $task->end_time =null;
         $task->description = '';
@@ -1493,7 +1499,7 @@ class TaskController extends Controller
 
         $task->task_name = 'Click để thay đổi nội dung';
         $task->task_code ='';
-        $task->start_time = date('Y-m-d', strtotime(now()));
+        $task->start_time = null;//date('Y-m-d', strtotime(now()));
         $task->time =null;
         $task->end_time =null;
         $task->description = '';

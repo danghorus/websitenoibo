@@ -96,6 +96,7 @@
                     </li>
                 </ul>
             </nav>
+            <Paginate style="margin: -10px 0px 0px 10px" v-model="paginate" :pagechange="onPageChange"></Paginate>
             <table class="table-striped table-responsive table-hover result-point"
                 style="width:99%; margin: 0px 0px 0px 10px">
                 <thead class="point-table-head">
@@ -103,7 +104,7 @@
                         <th scope="col">STT</th>
                         <th scope="col" width="500px">Tên công việc</th>
                         <th scope="col" width="120px">Loại công việc</th>
-                        <th scope="col">Cấp độ công việc</th>
+                        <th scope="col" >Cấp độ công việc</th>
                         <th scope="col" width="150px">Dự án</th>
                         <th scope="col" width="200px">Công việc cha</th>
                         <th scope="col" width="80px">Bắt đầu</th>
@@ -266,7 +267,7 @@
                     </tr>
                 </tbody>
             </table>
-            <Paginate v-model="paginate" :pagechange="onPageChange" ></Paginate>
+            <Paginate style="margin: 0px 0px 0px 10px" v-model="paginate" :pagechange="onPageChange" ></Paginate>
             <div>
                 <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document" style=" max-width: 60%;">
@@ -598,15 +599,15 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-               this.paginate = res.paginate;
+                this.paginate = res.paginate;
             }
         },
-        async deleteTask(e, taskId) {
+        async deleteTask( e, taskId, page) {
             const res = await $post(`/tasks/delete/${taskId}`, { task_parent: e.target.value });
 
             if (res.code == 200) {
                 toastr.success('Xóa thành công');
-               this.paginate = res.paginate;
+                this.getListWorks(page = res.paginate);
             }
         },
     },
