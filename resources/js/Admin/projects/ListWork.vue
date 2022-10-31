@@ -1,6 +1,4 @@
-<template>
-    <!--<div id="app" :class="{darkmode: dark == 'yes'}">-->
-    <div>
+<template>    <div>
         <div class="mt-4">
             <h3 style="margin: -30px 0px 0px 25px;">Danh sách công việc</h3>
             <select  @change="changeOption()" class="form-select col-lg-2" style="position: absolute; left: 25px; top: 105px; width:220px; height:34px;"
@@ -16,15 +14,6 @@
                 <button class="btn btn-success btn-sm"
                     style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới</button>
             </p>
-            <!--<div class="row">
-                <div class="toggle slide">
-                    <input id="c" type="checkbox" @click="dark == 'no' ? dark = 'yes' : dark = 'no'" />
-                    <label id="bt" for="c">
-                        <div class="card slide"></div>
-                    </label>
-                </div>
-                </figure>
-            </div>-->
             <nav class="navbar navbar-expand-lg" style="margin-top:-95px;float:right;">
                 <ul class="navbar-nav mr-auto" style="font-size:16px;" >
                     <li class="nav-item">
@@ -277,6 +266,7 @@
                     </tr>
                 </tbody>
             </table>
+            <Paginate v-model="paginate" :pagechange="onPageChange" ></Paginate>
             <div>
                 <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document" style=" max-width: 60%;">
@@ -297,13 +287,14 @@
                     </div>
                 </div>
             </div>
-        </div>s
+        </div>
     </div>
 </template>
 
 <script>
 
 import { $get, $post } from "../../ultis";
+import Paginate from "../../components/Paginate";
 import Multiselect from 'vue-multiselect';
 import CreateTask from "./CreateTask";
 import DatePicker from 'vue2-datepicker';
@@ -312,20 +303,21 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 import 'vue2-datepicker/index.css';
 import _ from "lodash";
 
+
 export default {
     name: "ListWork",
-    components: { DatePicker, Multiselect, CreateTask, Treeselect },
-    props: [ 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'search',
+    components: { DatePicker, Multiselect, CreateTask, Treeselect, Paginate },
+    props: [, 'paginate', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'search',
         'startTime','endTime', 'taskPerformer', 'task_performer', 'taskDepartment', 'status', 'list', 'currentUser'],
     data() {
         return {
-            dark: 'no',
+            paginate: [],
             tasks: [],
             dateRange: '',
             search:'',
             option: 10,
             option1:12,
-            option2: 15,
+            option2: 10,
             performer: 0,
             project: 0,
             project_id: '',
@@ -364,15 +356,12 @@ export default {
         this.getAllUser();
         this.getGroupUsers();
         this.getListWorks();
-
-        // this.getTaskByProject();
     },
     methods: {
 
         changeOption(){
             this.getListWorks();
         },
-
 
         async loadOptions({ action, parentNode, callback }) {
             const res = await $get('/tasks/get_all', { project_id: parentNode.project_id, task_parent: parentNode.id })
@@ -451,10 +440,13 @@ export default {
         filterTask() {
             this.getListWorks();
         },
-        async getListWorks() {
+        async getListWorks(page) {
 
-            let params = {};
+            console.log(page, 'page');
 
+            let params = {
+                page: page ?? 1
+            };
 
             if (this.dateRange) {
                 params.start_time = this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD');
@@ -480,12 +472,6 @@ export default {
             if (this.performer && this.performer != 0) {
                 params.task_performer = this.performer;
             }
-            //if (this.startTime) {
-            //    params.start_time = this.startTime ;
-            //}
-            //if (this.endTime) {
-            //    params.end_time = this.endTime ;
-            //}
             if(this.search){
                 params.search = this.search || '';
             }
@@ -494,9 +480,14 @@ export default {
 
             if (res.code == 200) {
                 this.list = res.tasks;
-                this.summary = res.summary
+                this.paginate = res.paginate;    
             }
         },
+
+        onPageChange(page) {
+            this.getListWorks(page);
+        },
+
         async changeProject(e, taskId) {
             const res = await $post(`/tasks/change-project/${taskId}`, { project_id: e.target.value });
 

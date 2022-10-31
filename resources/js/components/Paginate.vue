@@ -2,9 +2,12 @@
   <ul class="pagination" v-if="value.lastPage>1">
     <li class="page-item" @click="changePage(1)"><a href="javascript:;" class="page-link">‹‹</a></li>
     <li class="page-item" @click="prevPage()"><a href="javascript:;" class="page-link">‹</a></li>
-    <li v-for="page in getPages()" @click="changePage(page.key)" :class="page.class"><a class="page-link"
-                                                                                        href="javascript:;"
-                                                                                        v-text="page.key"></a></li>
+    <li v-for="page in getPages()" :key="page" @click="changePage(page.key)" :class="page.class" >
+      <a class="page-link"
+        href="javascript:;"
+        v-text="page.key">
+      </a>
+    </li>
     <li class="page-item" @click="nextPage()"><a class="page-link" href="javascript:;">›</a></li>
     <li class="page-item" @click="changePage(value.lastPage)"><a class="page-link" href="javascript:;">››</a></li>
   </ul>

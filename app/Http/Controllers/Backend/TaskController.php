@@ -106,6 +106,7 @@ class TaskController extends Controller
         $taskPerformer = $request->input('task_performer');
         $taskDepartment = $request->input('task_department');
         $taskStatus = $request->input('status');
+        $perPage = $request->input('per_page');
 
         $builder = DB::table('tasks', 'tt')->select('tt.*')
             ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child")
@@ -124,7 +125,6 @@ class TaskController extends Controller
             $builder->whereDate('tt.start_time', '=', $startTime);
         } else {
             $builder->whereDate('tt.start_time', '<=', date('Y-m-d', time()));
-            //$builder->whereDate('tt.end_time', '>=', date('Y-m-d', time()));
         }
 
         if ($taskPerformer && $taskPerformer > 0) {
@@ -142,7 +142,7 @@ class TaskController extends Controller
         if ($search && $search != '') {
             $builder->where('tt.task_name', 'LIKE', "%$search%");
         }
-        $tasks = $builder->paginate(20, ['*'], 'page', $request->input('page') ?? 1);
+        $tasks = $builder->paginate( 30 , ['*'], 'page', $request->input('page') ?? 1);
 
         foreach ($tasks as $task) {
             $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
@@ -711,7 +711,6 @@ class TaskController extends Controller
             ->whereNotNull( 'tt.task_department')
             ->select('tt.*')
             ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child");
-            //->selectRaw('p.project_name, u.fullname');
         if( $Status2 != 10){
             $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
         }
@@ -743,7 +742,7 @@ class TaskController extends Controller
         if (isset($filters['status'])) {
             $builder->where('status', '=', $filters['status']);
         }
-         if ($search && $search != '') {
+        if ($search && $search != '') {
             $builder->where('task_name', 'LIKE', "%$search%");
         }
         if ($Status2 == 1) {
@@ -758,13 +757,8 @@ class TaskController extends Controller
         else if($Status2 == 15){
             $builder->where('start_time', '!=', date('Y-m-d', time()));
         }
-
-        $tasks = $builder->get();
-
-        $totalTaskProcessing = 0;
-        $totalTaskPause = 0;
-        $totalTaskComplete = 0;
-        $totalWaitFeedback= 0;
+        
+        $tasks = $builder->paginate( 20 , ['*'], 'page', $request->input('page') ?? 1);
 
         foreach ($tasks as $task) {
             $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
@@ -776,9 +770,9 @@ class TaskController extends Controller
                 $task->status_title = 'Đang làm';
             } elseif ($task->status == 1) {
                 $task->status_title = 'Tạm dừng';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) > $task->time )) {
+            } elseif ($task->status == 4 && $task->real_time > $task->time ) {
                 $task->status_title = 'Hoàn thành chậm';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) < $task->time )) {
+            } elseif ($task->status == 4 && $task->real_time  < $task->time ) {
                 $task->status_title = 'Hoàn thành';
             } elseif ($task->status == 5) {
                 $task->status_title = 'Chờ feedback';
@@ -788,166 +782,15 @@ class TaskController extends Controller
                 $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
             }
 
-            switch ($task->status) {
-                case 0:
-                    $totalTaskProcessing++;
-                    break;
-                case 1:
-                    $totalTaskProcessing++;
-                    break;
-                case 2:
-                    $totalTaskProcessing++;
-                    break;
-                case 3:
-                    $totalTaskPause++;
-                    break;
-                case 4:
-                    $totalTaskComplete++;
-                    break;
-                case 5:
-                    $totalWaitFeedback++;
-                    break;
-                case 6:
-                    $totalTaskProcessing++;
-                    break;
-            }
-            $task->time_real = 0;
-
-            if ($task->status == 4 || $task->status == 3 || $task->status == 5 || $task->status == 6) {
-                $task->time_real = $task->real_end_time?
-                    round(((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600 - $task->time_pause), 8): 0;
-            } else if ($task->status == Task::TASK_PROCESSING){
-                $task->time_real = round(((time() - strtotime($task->real_start_time))/3600 - $task->time_pause), 8);
-            }
         }
 
         return [
             'code' => 200,
-            'tasks' => $tasks,
-            'summary' => [
-                'total' => count($tasks),
-                'total_processing' => $totalTaskProcessing,
-                'total_pause' => $totalTaskPause,
-                'total_complete' => $totalTaskComplete,
-            ]
-        ];
-    }
-
-	public function ListWorkDone(Request $request) {
-         $filters = $request->all();
-        $projectId = $request->input('project_id');
-        $startTime = $request->input('start_time');
-        $taskPerformer = $request->input('task_performer');
-        $taskDepartment = $request->input('task_department');
-
-        $builder = DB::table('tasks', 'tt')
-			->where('tt.status', '=', 4)
-			->where('tt.task_department', '!=', null)
-			->where('tt.valid', '=', 1)
-			->select('tt.*')
-            ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child")
-            ->selectRaw('p.project_name, u.fullname');
-        $builder->join('projects as p', 'tt.project_id', '=', 'p.id');
-        $builder->join('users as u', 'tt.task_performer', '=', 'u.id', 'left');
-
-        //$builder = DB::table('tasks', 'tt')->select('tt.*')
-        //   ->selectRaw('p.project_name');
-
-        //$builder->join('projects as p', 'tt.project_id', '=', 'p.id');
-
-
-        if ($startTime && $startTime != '') {
-            $builder->whereDate('tt.start_time', '=', $startTime);
-        }
-        if ($projectId > 0) {
-            $builder->where('tt.project_id', '=',$projectId);
-        }
-
-        if ($taskPerformer && $taskPerformer > 0) {
-            $builder->where('tt.task_performer', '=', $taskPerformer);
-        }
-
-        if ($taskDepartment && $taskDepartment > 0) {
-            $builder->where('tt.task_department', '=', $taskDepartment);
-        }
-
-        if (isset($filters['project_id']) && $filters['project_id'] > 0) {
-            $builder->where('project_id', '=', $filters['project_id']);
-        }
-
-        if (isset($filters['departments']) && $filters['departments'] > 0) {
-            $builder->where('task_department', '=', $filters['departments']);
-        }
-
-        if (isset($filters['status']) && $filters['status'] > 1) {
-            $builder->where('status', '=', $filters['status']);
-        }
-
-        $tasks = $builder->get();
-
-        $totalTaskProcessing = 0;
-        $totalTaskPause = 0;
-        $totalTaskComplete = 0;
-        $totalWaitFeedback= 0;
-
-        foreach ($tasks as $task) {
-            $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
-            if (($task->status == 0 || $task->status == 1) && (strtotime($task->end_time) < time())) {
-                $task->status_title = 'Nhanh chóng làm việc';
-            }elseif ($task->status == 4 && ((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600 - $task->time_pause) < $task->time) {
-                $task->status_title = 'Hoàn thành';
-            }elseif ($task->status == 4 && ((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600 - $task->time_pause) > $task->time) {
-                $task->status_title = 'Hoàn thành chậm';
-            }elseif ($task->status == 5) {
-                $task->status_title = 'Chờ feedback';
-            }elseif ($task->status == 6) {
-                $task->status_title = 'Làm lại';
-            } else {
-                $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
-            }
-
-            switch ($task->status) {
-                case 0:
-                    $totalTaskProcessing++;
-                    break;
-                case 1:
-                    $totalTaskProcessing++;
-                    break;
-                case 2:
-                    $totalTaskProcessing++;
-                    break;
-                case 3:
-                    $totalTaskPause++;
-                    break;
-                case 4:
-                    $totalTaskComplete++;
-                    break;
-                case 5:
-                    $totalWaitFeedback++;
-                    break;
-                case 6:
-                    $totalTaskProcessing++;
-                    break;
-            }
-            $task->time_real = 0;
-
-            if ($task->status == 4 || $task->status == 3 || $task->status == 5 || $task->status == 6) {
-                $task->time_real = $task->real_end_time?
-                    round(((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600 - $task->time_pause), 8): 0;
-            } else if ($task->status == Task::TASK_PROCESSING){
-                $task->time_real = round(((time() - strtotime($task->real_start_time))/3600 - $task->time_pause), 8);
-            }
-        }
-
-        return [
-            'code' => 200,
-            'tasks' => $tasks,
-            'summary' => [
-                'total' => count($tasks),
-                'total_processing' => $totalTaskProcessing,
-                'total_pause' => $totalTaskPause,
-                'total_complete' => $totalTaskComplete,
-            ]
+            'tasks' => $tasks->items(),
+            'paginate' => [
+                'currentPage' => $tasks->currentPage(),
+                'lastPage' => $tasks->lastPage(),
+            ],
         ];
     }
 
