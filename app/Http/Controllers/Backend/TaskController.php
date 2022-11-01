@@ -1550,7 +1550,7 @@ class TaskController extends Controller
         $builder->where('tt.valid', '=', 0);
 
 
-        $tasks = $builder->get();
+        $tasks = $builder->paginate( 50 , ['*'], 'page', $request->input('page') ?? 1);
 
         foreach ($tasks as $key => $value) {
             $value->department_label = $value->task_department ? Task::DEPARTMENTS[$value->task_department] : '';
@@ -1558,7 +1558,11 @@ class TaskController extends Controller
 
         return [
             'code' => 200,
-            'data' => $tasks
+            'data' => $tasks->items(),
+            'paginate' => [
+                'currentPage' => $tasks->currentPage(),
+                'lastPage' => $tasks->lastPage(),
+            ],
         ];
     }
 
