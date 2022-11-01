@@ -761,7 +761,7 @@ class TaskController extends Controller
             $builder->where('task_performer', '!=', null)->Where('task_parent', '=', null);
         }
         else if($Status2 == 15){
-            $builder->where('start_time', '!=', date('Y-m-d', time()));
+            $builder->where('start_time', '=', date('Y-m-d', time()));
         }
         
         $tasks = $builder->paginate( $perPage , ['*'], 'page', $request->input('page') ?? 1);

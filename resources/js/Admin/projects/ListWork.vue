@@ -1,7 +1,7 @@
 <template>    <div>
         <div class="mt-4">
             <h3 style="margin: -30px 0px 0px 25px;">Danh sách công việc</h3>
-            <select  @change="changeOption()" class="form-select col-lg-2" style="position: absolute; left: 25px; top: 105px; width:220px; height:34px;"
+            <select  @change="changeOption()" class="form-select col-lg-2" style="position: absolute; left: 25px; top: 110px; width:220px; height:34px;"
             v-model="option2">
 				<option value="3">Tất cả</option>
                 <option value="15">Việc hôm nay</option>
@@ -10,11 +10,9 @@
                 <option value="5">Chờ feedback</option>
                 <option value="2">Đã hoàn thành</option>
             </select>
-            <p @click="NewTask()">
-                <button class="btn btn-success btn-sm"
+                <button class="btn btn-success btn-sm" @click="NewTask()"
                     style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới</button>
-            </p>
-            <nav class="navbar navbar-expand-lg" style="margin-top:-95px;float:right;">
+            <nav class="navbar navbar-expand-lg" style="margin-top:-55px;float:right;">
                 <ul class="navbar-nav mr-auto" style="font-size:16px;" >
                     <li class="nav-item">
                         <div class="form-group p-2">
@@ -96,9 +94,9 @@
                     </li>
                 </ul>
             </nav>
-            <Paginate style="margin: -10px 0px 0px 10px" v-model="paginate" :pagechange="onPageChange"></Paginate>
+            <Paginate style=" margin:10px 0px 0px 10px;" v-model="paginate" :pagechange="onPageChange"></Paginate>
             <table class="table-striped table-responsive table-hover result-point"
-                style="width:99%; margin: 0px 0px 0px 10px">
+                style="width:99%; margin: 10px 0px 0px 10px">
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
@@ -267,7 +265,7 @@
                     </tr>
                 </tbody>
             </table>
-            <Paginate style="margin: 0px 0px 0px 10px" v-model="paginate" :pagechange="onPageChange" ></Paginate>
+            <Paginate style="float:right; padding: 10px;" v-model="paginate" :pagechange="onPageChange" ></Paginate>
             <div>
                 <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document" style=" max-width: 60%;">
@@ -362,6 +360,7 @@ export default {
 
         changeOption(page){
             this.getListWorks(page);
+            this.getAllUser(page);
         },
 
         async loadOptions({ action, parentNode, callback }) {
@@ -409,7 +408,13 @@ export default {
         },
         async getAllUser() {
 
-            const res = await $get('/user/all_user');
+            let params = {};
+
+            if (this.option1 && this.option1 != 1) {
+                params.task_department = this.option1;
+            }
+
+            const res = await $get('/user/all_user', params);
             if (res.code == 200) {
                 this.users = res.data;
             }

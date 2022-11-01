@@ -97,7 +97,7 @@ class UserController extends Controller
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
 
-        return redirect()->route('users.index',compact('users','petitions1', 'petitions01'))->with('message', 'User Register Succesfully');
+        return redirect()->route('users.index',compact('users','petitions1', 'petitions01'))->with('message', 'User Register Successfully');
 
     }
 
@@ -139,7 +139,7 @@ class UserController extends Controller
             'user_status' => $request->user_status,
         ]);
 
-        return redirect()->route('users.index', compact('user'))->with('message', 'User Updated Succesfully');
+        return redirect()->route('users.index', compact('user'))->with('message', 'User Updated Successfully');
     }
 
     /**
@@ -154,13 +154,47 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('message', 'You are deleting yourself.');
         }
         $user->delete();
-        return redirect()->route('users.index')->with('message', 'User Deleted Succesfully');
+        return redirect()->route('users.index')->with('message', 'User Deleted Successfully');
     }
 
-    public function all_user()
+    public function all_user(Request $request)
     {
-        $users = User::query()->select(['id', 'fullname', 'user_code', 'place_id'])->get();
+        $department = $request->input('task_department');
 
+        $AuthDepartment = Auth::user()->department;
+
+        $builder = User::query()->select(['id', 'fullname', 'department', 'user_code', 'place_id']);
+        if($department == 12){
+            $builder->where('department', '=', $AuthDepartment);
+        }else if($department != null){
+           $builder->where('department', '=', $department);
+        }else{
+            $builder;
+        }
+        $users = $builder->get();
+        
+        return [
+            'code' => 200,
+            'data' => $users
+        ];
+    }
+
+    public function user(Request $request)
+    {
+        $department = $request->input('task_department');
+
+        $AuthDepartment = Auth::user()->department;
+
+        $builder = User::query()->select(['id', 'fullname', 'department', 'user_code', 'place_id']);
+        if($department == 12){
+            $builder->where('department', '=', $AuthDepartment);
+        }else if($department != null){
+           $builder->where('department', '=', $department);
+        }else{
+            $builder;
+        }
+        $users = $builder->get();
+        
         return [
             'code' => 200,
             'data' => $users
@@ -174,11 +208,44 @@ class UserController extends Controller
         $newUsers = [];
 
         foreach ($users as $user) {
+            if($user->department == 1){
+                $user->department_lable = "Admin";
+            }
+            else if($user->department == 2){
+                $user->department_lable = "Dev";
+            }
+            else if($user->department == 3){
+                $user->department_lable = "Game Design";
+            }
+            else if($user->department == 4){
+                $user->department_lable = "Art";
+            }
+            else if($user->department == 5){
+                $user->department_lable = "Tester";
+            }
+            else if($user->department == 6){
+                $user->department_lable = "Điều hành";
+            }
+            else if($user->department == 7){
+                $user->department_lable = "Hành chính nhân sự";
+            }
+            else if($user->department == 8){
+                $user->department_lable = "Kế toán";
+            }
+            else if($user->department == 9){
+                $user->department_lable = "Phân tích dữ liệu";
+            }
+            else if($user->department == 10){
+                $user->department_lable = "Support";
+            }
+            else if($user->department == 11){
+                $user->department_lable = "Marketing";
+            }
             if (isset($newUsers[$user->department])) {
                 $newUsers[$user->department]['values'][] = $user;
             } else {
                 $newUsers[$user->department] = [
-                    'department' => $user->department,
+                    'department' => $user->department_lable,
                     'values' => []
                 ];
             }
