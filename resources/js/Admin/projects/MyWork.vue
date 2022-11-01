@@ -104,7 +104,7 @@
                 style="float:right; margin:  -35px 10px 0px 0px;">
                  Tạo bộ lọc
             </button>-->
-            <Paginate style="margin: -10px 0px 0px 10px" v-model="paginate" :pagechange="onPageChange"></Paginate>
+            <Paginate style="margin: 0px 0px 0px 10px" v-model="paginate" :pagechange="onPageChange"></Paginate>
             <table class="table-striped table-responsive table-hover result-point"
                 style="width:99%; margin: 0px 0px 0px 10px">
                 <thead class="point-table-head">
@@ -451,7 +451,8 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getMyWorks();
+                
+                this.paginate = res.paginate;
             }
         },
 		async changeProgress(e, taskId) {
@@ -459,7 +460,8 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getMyWorks();
+                
+                this.paginate = res.paginate;
             }
         },
 
@@ -481,7 +483,8 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getMyWorks();
+                
+                this.paginate = res.paginate;
             }
         },
         async changeEndTime(e, taskId) {
@@ -489,7 +492,8 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getMyWorks();
+                
+                this.paginate = res.paginate;
             }
         },
         async changeRealTime(e, taskId) {
@@ -497,7 +501,8 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getMyWorks();
+                
+                this.paginate = res.paginate;
             }
         },
         async changeTaskName(e, taskId) {
@@ -505,7 +510,8 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getMyWorks();
+                
+                this.paginate = res.paginate;
             }
         },
         async changeDescription(e, taskId) {
@@ -513,7 +519,8 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getMyWorks();
+                
+                this.paginate = res.paginate;
             }
         },
         async changeProject(e, taskId) {
@@ -521,7 +528,8 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getMyWorks();
+                
+                this.paginate = res.paginate;
             }
         },
         async changeSticker(e, taskId) {
@@ -546,7 +554,8 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getMyWorks();
+                
+                this.paginate = res.paginate;
             }
         },
         async changeParent(e, taskId) {
@@ -554,7 +563,8 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getMyWorks();
+                
+                this.paginate = res.paginate;
             }
         },
         async deleteTask(e, taskId) {
