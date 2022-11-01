@@ -61,7 +61,7 @@ class TaskController extends Controller
             $builder->whereDate('start_time', '=', $startTime);
         }
 
-        $tasks = $builder->get();
+        $tasks = $builder->paginate( 20 , ['*'], 'page', $request->input('page') ?? 1);
 
         foreach ($tasks as $key => $value) {
             $indexKey = (int)$key + 1;
@@ -93,7 +93,11 @@ class TaskController extends Controller
 
         return [
             'code' => 200,
-            'data' => $tasks,
+            'data' => $tasks->items(),
+            'paginate' => [
+                'currentPage' => $tasks->currentPage(),
+                'lastPage' => $tasks->lastPage(),
+            ],
             'currentUser' => Auth::user()
         ];
     }
@@ -816,7 +820,7 @@ class TaskController extends Controller
             $builder->where('status', '=', $filters['status']);
         }
 
-        $tasks = $builder->get();
+         $tasks = $builder->paginate( 20, ['*'], 'page', $request->input('page') ?? 1);
 
         $totalTaskProcessing = 0;
         $totalTaskPause = 0;
@@ -867,7 +871,11 @@ class TaskController extends Controller
 
         return [
             'code' => 200,
-            'tasks' => $tasks,
+            'tasks' => $tasks->items(),
+            'paginate' => [
+                'currentPage' => $tasks->currentPage(),
+                'lastPage' => $tasks->lastPage(),
+            ],
             'summary' => [
                 'total' => count($tasks),
                 'total_processing' => $totalTaskProcessing,

@@ -72,7 +72,7 @@
                 <timeline-task v-if="showTimeline" :listTaskTimeLine="listTaskTimeLine" :users="users" :paginate="paginate"
                                :groupUsers="groupUsers" :priorities="priorities" :stickers="stickers" :projects="projects"
                                @getTaskTimeLine="getTaskTimeLine" />
-                <list-task v-else :project-id="projectId" :users="users" :groupUsers="groupUsers"
+                <list-task v-else :project-id="projectId" :users="users" :paginate="paginate" :groupUsers="groupUsers"
                            :priorities="priorities" :stickers="stickers" :projects="projects"
                            :searchProjectId="searchProjectId" :search="search" :startTime="startTime"
                            :taskPerformer="taskPerformer" :taskDepartment="taskDepartment" :status="status"
@@ -200,7 +200,8 @@
                 status: '',
                 currentUser: '',
                 bus: new Vue(),
-                paginate: []
+                paginate: [],
+                //paginate_project: []
             }
         },
         created() {
@@ -319,7 +320,8 @@
                 this.showTimeline = true;
                 this.projectId = 0;
             },
-            async getAllTasks() {
+            async getAllTasks(page) {
+                console.log(page, 'page');
 
                 let filters = {
                     project_id: this.projectId,
@@ -329,16 +331,17 @@
                     task_performer: this.taskPerformer || 0,
                     task_department: this.taskDepartment? this.taskDepartment.value : 0,
                     status: this.status? this.status.value : -1,
+                    page: page ?? 1
                 }
                 const res = await $get('/tasks/index', filters);
 
                 if (res.code == 200) {
                     this.list = res.data;
                     this.currentUser = res.currentUser;
+                    this.paginate = res.paginate;
                 }
             },
             handleGetTasks(res) {
-                this.closeModalCreateTask_Parent()
                 this.closeModalCreateTask();
                 if (this.projectId > 0) {
                     this.bus.$emit('submit', _.cloneDeep(res))

@@ -1,13 +1,15 @@
 <template>
     <div>
         <div>
+            <Paginate v-model="paginate" :pagechange="onPageChange"></Paginate>
             <vue-ads-table
                 :columns="columns"
                 :rows="list"
                 :classes="classes"
                 :call-children="getChildTask"
+                :filter = "filter"
             >
-                <template slot="toggle-children-icon" slot-scope="props"><span style="cursor: pointer"> [{{ props.expanded ? '-' : '+' }}] </span></template>
+                <template slot="toggle-children-icon" slot-scope="props"><span style="cursor: pointer;font-size:12px;"> [{{ props.expanded ? '-' : '+' }}] </span></template>
                 <template slot="name" slot-scope="props">
                     <input style="width:400px; border:0px;font-size:12px;"  @change="changeTaskName($event, props.row.id)" v-model="props.row.task_name">
                 </template>
@@ -36,7 +38,7 @@
                     <div style="display: flex; font-size:12px;">
                         <select style="font-size:12px;" class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changeDepartment($event, scope.row.id)" v-model="scope.row.task_department">
-                            <option v-if="scope.row.task_department != 0" value="0">Bỏ chọn</option>
+                            <option v-if="scope.row.task_department != 0 || scope.row.task_department == null" value="0">Bỏ chọn</option>
                             <option value="2" >Dev</option>
                             <option value="3">Game Design</option>
                             <option value="4">Art</option>
@@ -44,11 +46,11 @@
                         </select>
                     </div>
                 </template>
-                <template  slot="task_performer_label" slot-scope="scope">
+                <template v-if="scope.row.task_department != null" slot="task_performer_label" slot-scope="scope">
                     <div style="display: flex; font-size:12px;">
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changePerformer($event, scope.row.id)" v-model="scope.row.task_performer">
-							<option v-if="scope.row.task_performer != 0" :value="0">Bỏ chọn</option>
+							<option v-if="scope.row.task_performer != 0 || scope.row.task_performer == null" :value="0">Bỏ chọn</option>
                             <option v-for="(user, index) in users" :key="index" :value="user.id">{{user.fullname}}</option>
                         </select>
                     </div>
@@ -77,11 +79,11 @@
 
                 </template>
                 <template slot="status_template" scope="scope" style="font-size:12px;">
-                    <template v-if="scope.row.task_department!=null">
+                    <template v-if="scope.row.task_department != null">
                     <div v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3) ">
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changeStatus($event, scope.row.id)" v-model="scope.row.status">
-                            <option v-if="scope.row.status != 20" value="20">Bỏ chọn</option>
+                            <option v-if="scope.row.status != 20 || scope.row.status == null" value="20">Bỏ chọn</option>
                             <option value="0" >Quá hạn</option>
                             <option value="1" >Đang Chờ</option>
                             <option value="2" >Đang tiến hành</option>
@@ -104,6 +106,7 @@
                 <template slot="no-rows">Không có dữ liệu</template>
 
             </vue-ads-table>
+            <Paginate v-model="paginate" :pagechange="onPageChange"></Paginate>
             <div ref="modalConfirm" class="modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document" style=" max-width: 30%;">
                     <div class="modal-content">
@@ -169,11 +172,12 @@ import {$get, $post} from "../../ultis";
 import { VueAdsTable } from 'vue-ads-table-tree';
 import CreateTask from "./CreateTask";
 import _ from "lodash";
+import Paginate from "../../components/Paginate";
 
 export default {
     name: "ListTask",
-    components: { VueAdsTable, CreateTask },
-    props: ['projectId', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
+    components: { VueAdsTable, CreateTask, Paginate },
+    props: ['paginate' , 'projectId', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
         'startTime', 'taskPerformer', 'taskDepartment','progress', 'status', 'list', 'currentUser', 'bus'],
 
     data () {
@@ -198,9 +202,6 @@ export default {
             taskEditId: 0,
             parentId: 0,
             columns: [
-                {
-                    title: '',
-                },
                 {
                     title: 'Công việc',
                     property: 'name',
@@ -556,6 +557,9 @@ export default {
                 }
             }
         },
+        onPageChange(page) {
+            this.$emit('getAllTasks', page);
+        }
     },
 };
 </script>
