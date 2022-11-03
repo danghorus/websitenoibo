@@ -133,7 +133,17 @@ table tr td img {
                                         <td scope="col" width="3.57%">{{++$i }}</td>
                                         <td scope="col" width="7%" >{{ $user->id }}</td>
                                         <td scope="col" width="8%" ><img src="{{asset('image/'.$user->avatar)}}" style="width: 50px; height: 50px; border-radius: 50%;" ></td>
-                                        <td scope="col" width="10%">{{ $user->fullname }}</td>
+                                        <td scope="col" width="10%">
+                                            <?php 
+                                            $this_month = date('m', time());
+                                            $birthday = date('m', strtotime($user->birthday));
+                                            if($this_month ==  $birthday){
+                                                echo '<span style="color:rgb(192, 10, 10);text-align:center;"><b>'.$user->fullname.'</b></span>';
+                                            }else{
+                                                echo $user->fullname;
+                                            }
+                                            ?>
+                                        </td>
                                         <td scope="col" width="8%" >{{ $user->phone }}</td>
                                         <td scope="col" width="10%">{{ $user->email }}</td>
                                         <td scope="col" width="8.05%" >{{ $user->birthday }}</td>
