@@ -23,6 +23,7 @@
             left: 57,5%;
             z-index: 99;
         }
+        
 
     </style>
 
@@ -119,9 +120,10 @@
 
 </head>
 <body>
+    
         <div id="loading">
             <img id="loading-image" src="{{ asset('img/loading_5.gif') }}" alt="" />
-            Loading...
+            Đang tải dữ liệu...
         </div>
         <nav class="sb-topnav navbar navbar-expand navbar" style="background-color:#F8F9FA; ">
             <!-- Navbar Brand-->
@@ -136,7 +138,7 @@
                          <li class="nav-item">
                             <a class="nav-link" href="{{ url('/petitions') }}">
                                 <span>Yêu cầu</span>
-                                 <?php if( (Auth::user()->permission == 1 || Auth::user()->permission == 2 || Auth::user()->permission == 3) && count($petitions1) > 0){ ?>
+                                <?php if( (Auth::user()->permission == 1 || Auth::user()->permission == 2 || Auth::user()->permission == 3) && count($petitions1) > 0){ ?>
                                 <span class="badge">{{count($petitions1)}}</span>
                                 <?php }  ?>
 								<?php if( Auth::user()->permission == 0 && count($petitions01) > 0){ ?>
@@ -145,7 +147,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/users') }}">Nhân sự</a>
+                            <a class="nav-link" href="{{ url('/users') }}">
+                                 <span>Nhân sự</span>
+								 @foreach ($users as $key => $user)
+                                <span class="badge">{{$user->birthday_month}}</span>
+                                 @endforeach
+                            </a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link">Chấm công</a>
