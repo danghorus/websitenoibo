@@ -1479,7 +1479,7 @@ class TaskController extends Controller
 
         $task->task_name = 'Click để thay đổi nội dung';
         $task->task_code ='';
-        $task->start_time = null;//date('Y-m-d', strtotime(now()));
+        $task->start_time = date('Y-m-d', strtotime(now()));//null;
         $task->time =null;
         $task->end_time =null;
         $task->description = '';
