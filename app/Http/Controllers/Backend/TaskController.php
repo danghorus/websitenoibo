@@ -599,10 +599,10 @@ class TaskController extends Controller
         }
 
          if ($startTime && $startTime != '') {
-            $builder->whereDate('tt.start_time', '=', $startTime);
+            $builder->whereDate('tt.start_time', '>=', $startTime);
         }
          if ($endTime && $endTime != '') {
-            $builder->whereDate('tt.end_time', '=', $endTime);
+            $builder->whereDate('tt.start_time', '<=', $endTime);
         }
 
         if (isset($filters['project_id']) && $filters['project_id'] > 0) {
@@ -714,10 +714,12 @@ class TaskController extends Controller
         $Status2 = $request->input('status2');
         $perPage = 20;//$request->input('per_page');
         $department = Auth::user()->department;
+        $now = date('Y-m-d', strtotime(now()));
 
         $builder = DB::table('tasks', 'tt')
             ->where('tt.valid', '=', 1)
-            ->orderBy('start_time')->orderBy('id', 'DESC')
+            ->orderByRaw('start_time DESC')
+            ->orderByRaw('id DESC')
             ->whereNotNull( 'tt.task_department')
             ->select('tt.*')
             ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child");
@@ -734,7 +736,11 @@ class TaskController extends Controller
             $builder->where('tt.project_id', '=',$projectId);
         }
 
-        if ($taskPerformer && $taskPerformer > 0) {
+        if ($taskPerformer == 20) {
+            $builder->where('tt.task_performer', '=', null);
+        }
+
+        if ($taskPerformer && $taskPerformer != 20) {
             $builder->where('tt.task_performer', '=', $taskPerformer);
         }
         if ($taskDepartment == 12) {
