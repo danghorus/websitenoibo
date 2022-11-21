@@ -224,7 +224,13 @@
                                 @change="changeStartTime($event, item.id)">
                             </DatePicker>
                         </td>
-                        <td>{{item.time}}</td>
+                        <td style=" text-align:right;">
+                            <input 
+                                style="width:100%; border:0px; text-align:right;" 
+                                @change="changeTime($event, item.id)"
+                                v-model="item.time"
+                            >
+                        </td>
                         <td>
                             <DatePicker 
                                 style="width: 120px" 
@@ -301,7 +307,7 @@ export default {
         return {
             paginate: [],
             option: 10,
-            option2: 10,
+            option2: 3,
             toggle: false,
             show: false,
             list: [],
@@ -493,6 +499,14 @@ export default {
             if (res.code == 200) {
                 toastr.success(res.message);
                 
+                this.paginate = res.paginate;
+            }
+        },
+        async changeTime(e, taskId) {
+            const res = await $post(`/tasks/change-time/${taskId}`, { time: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
                 this.paginate = res.paginate;
             }
         },
