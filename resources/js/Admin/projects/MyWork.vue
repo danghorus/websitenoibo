@@ -103,12 +103,12 @@
                 <option value="5">Chờ feedback</option>
                 <option value="2">Đã hoàn thành</option>
             </select>&emsp;
-            <p @click="NewTask()">
-                <button v-if="option2 == 1 || option2 == 3" class="btn btn-success btn-sm" 
+            <p>
+                <button @click="NewTask()" v-if="option2 == 1 || option2 == 3" class="btn btn-success btn-sm" 
                 style="height:35px; font-size:15px; margin: -40px 0px 0px 300px;">Thêm mới</button>
             </p>
-            <p @click="NewTaskToday()">
-                <button v-if="option2 == 10" class="btn btn-success btn-sm"
+            <p>
+                <button @click="NewTaskToday()" v-if="option2 == 10" class="btn btn-success btn-sm"
                     style="height:35px; font-size:15px; margin: -72px 0px 0px 300px;">Thêm mới</button>
             </p>
             <!--<button class="btn btn-outline-secondary" @click="handleShowFilter()" type="button" data-toggle="collapse"
