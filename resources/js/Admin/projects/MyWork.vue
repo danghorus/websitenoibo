@@ -49,7 +49,7 @@
                     <li class="nav-item">
                         <button class="btn btn-outline-info" @click="ShowInfoMyWork()" type="button" data-toggle="collapse"
                             data-target="#collapseExample_1" aria-expanded="false" aria-controls="collapseExample"
-                            style="margin-top:  38px"> Thông tin thời gian
+                            style="margin-top:  38px"> Thông tin
                         </button>
                         <div class="col-lg">
                             <div class="collapse info-my-work" id="collapseExample_1" v-if="showInfoMyWork">
@@ -99,6 +99,10 @@
                 <button v-if="option2 == 1 || option2 == 3" class="btn btn-success btn-sm" 
                 style="height:35px; font-size:15px; margin: -40px 0px 0px 300px;">Thêm mới</button>
             </p>
+            <p @click="NewTaskToday()">
+                <button v-if="option2 == 10" class="btn btn-success btn-sm"
+                    style="height:35px; font-size:15px; margin: -72px 0px 0px 300px;">Thêm mới</button>
+            </p>
             <!--<button class="btn btn-outline-secondary" @click="handleShowFilter()" type="button" data-toggle="collapse"
                 data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample1"
                 style="float:right; margin:  -35px 10px 0px 0px;">
@@ -117,7 +121,7 @@
                         <th scope="col" width="7%">Bộ phận</th>
                         <!--<th scope="col" width="150px">Cấp độ công việc</th>-->
                         <th scope="col" width="6%">Bắt đầu</th>
-                        <th scope="col" width="3%">Thời lượng (Giờ)</th>
+                        <th scope="col" width="3%">Thời lượng dự kiến (Giờ)</th>
                         <th scope="col" width="6%">Kết thúc</th>
                         <th scope="col" width="3%">Thời lượng thực tế (Giờ)</th>
 						<th scope="col" width="4%">Tiến độ</th>
@@ -302,12 +306,13 @@ export default {
     name: "MyWork",
     el: '#infoMyWork',
     components: { CreateTask_Parent, Multiselect, Treeselect, DatePicker, Paginate },
-    props: ['paginate', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'status', 'list', 'task_sticker',],
+    props: ['search', 'paginate', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'status', 'list', 'task_sticker',],
     data() {
         return {
+            search:'',
             paginate: [],
             option: 10,
-            option2: 3,
+            option2: 10,
             toggle: false,
             show: false,
             list: [],
@@ -440,6 +445,9 @@ export default {
             if (this.endTime) {
                 params.end_time = this.endTime;
             }
+            if (this.search) {
+                params.search = this.search || '';
+            }
 
             const res = await $get('/my-tasks', params);
 
@@ -458,7 +466,6 @@ export default {
             if (res.code == 200) {
                 toastr.success(res.message);
                 
-                this.paginate = res.paginate;
             }
         },
 		async changeProgress(e, taskId) {
@@ -466,8 +473,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                
-                this.paginate = res.paginate;
+                        
             }
         },
 
@@ -484,13 +490,20 @@ export default {
                 this.getMyWorks();
             }
         },
+        async NewTaskToday() {
+            const res = await $get('/tasks/new_task_today');
+
+            if (res.code == 200) {
+                toastr.success('Thêm mới thành công');
+                this.getMyWorks();
+            }
+        },
         async changeStartTime(e, taskId) {
             const res = await $post(`/tasks/change-start_time/${taskId}`, { start_time: e });
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                
-                this.paginate = res.paginate;
+                             
             }
         },
         async changeEndTime(e, taskId) {
@@ -498,8 +511,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                
-                this.paginate = res.paginate;
+                               
             }
         },
         async changeTime(e, taskId) {
@@ -507,7 +519,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.paginate = res.paginate;
+                
             }
         },
         async changeRealTime(e, taskId) {
@@ -515,8 +527,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                
-                this.paginate = res.paginate;
+
             }
         },
         async changeTaskName(e, taskId) {
@@ -525,7 +536,6 @@ export default {
             if (res.code == 200) {
                 toastr.success(res.message);
                 
-                this.paginate = res.paginate;
             }
         },
         async changeDescription(e, taskId) {
@@ -533,8 +543,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                
-                this.paginate = res.paginate;
+                     
             }
         },
         async changeProject(e, taskId) {
@@ -542,8 +551,7 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                
-                this.paginate = res.paginate;
+                    
             }
         },
         async changeSticker(e, taskId) {
@@ -552,7 +560,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
             }
         },
         async changePriority(e, taskId) {
@@ -560,7 +567,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.getListWorks();
             }
         },
         async changeDepartment(e, taskId) {
@@ -569,7 +575,7 @@ export default {
             if (res.code == 200) {
                 toastr.success(res.message);
                 
-                this.paginate = res.paginate;
+                
             }
         },
         async changeParent(e, taskId) {
@@ -578,15 +584,31 @@ export default {
             if (res.code == 200) {
                 toastr.success(res.message);
                 
-                this.paginate = res.paginate;
+                
             }
         },
+        
         async deleteTask(e, taskId) {
             const res = await $post(`/tasks/delete/${taskId}`, { task_parent: e.target.value });
 
             if (res.code == 200) {
                 toastr.success('Xóa thành công');
-                this.getMyWorks();
+                this.taskId = 0;
+                if (res.arr_parent.length > 0) {
+                    let arrIndex = [];
+                    let listData = _.cloneDeep(this.list);
+                    res.arr_parent.forEach(item => {
+                        let index = _.findIndex(listData, val => val.id === item);
+                        arrIndex.push(index);
+                        listData = listData[index]._children;
+                    });
+                    this.list = this.resetData([...this.list], arrIndex, 0, res.task_id);
+                } else {
+                    let index = _.findIndex(this.list, val => val.id == res.task_id);
+                    this.list.splice(index, 1);
+                }
+                //this.getMyWorks();
+
             }
         },
         async copyMyWork(id) {
@@ -594,7 +616,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success('Copy thành công');
-                this.getMyWorks();
             }
         },
     },

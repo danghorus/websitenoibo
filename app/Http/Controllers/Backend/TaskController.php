@@ -581,6 +581,7 @@ class TaskController extends Controller
 
     public function myTasks(Request $request) {
         $filters = $request->all();
+        $search = $request->input('search');
         $taskPerformer = $request->input('task_performer');
         $Status2 = $request->input('status2');
         $startTime = $request->input('start_time');
@@ -611,6 +612,9 @@ class TaskController extends Controller
 
         if (isset($filters['status'])) {
             $builder->where('status', '=', $filters['status']);
+        }
+        if($search && $search != ''){
+            $builder->where('task_name', 'LIKE', "%$search%");
         }
 
         if ($Status2 == 1) {
@@ -1471,6 +1475,40 @@ class TaskController extends Controller
     }
 
     public function new_task(Request $request) {
+
+        $task = new Task();
+
+        $userId = Auth::user()->id;
+        $Department = Auth::user()->department;
+
+        $task->task_name = 'Click để thay đổi nội dung';
+        $task->task_code ='';
+        $task->start_time = null;//date('Y-m-d', strtotime(now()));
+        $task->time =null;
+        $task->end_time =null;
+        $task->description = '';
+        $task->task_priority = null;
+        $task->task_sticker = null;
+        $task->task_department = $Department;
+        $task->weight = null;
+        $task->project_id = null;
+        $task->task_predecessor = null;
+        $task->task_parent = null;
+        $task->task_performer = $userId;
+        $task->status= 1;
+        $task->project_id = 1;
+
+        $task->save();
+
+        $newTasks = Task::query()->with(['taskUser'])->where('id', '=', $task->id)->first();
+
+        return [
+            'code' => 200,
+            'message' => 'Thêm mới thành công',
+            'new_task' => $newTasks,
+        ];
+    }
+    public function new_task_today(Request $request) {
 
         $task = new Task();
 
