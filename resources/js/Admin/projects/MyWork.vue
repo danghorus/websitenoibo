@@ -4,6 +4,14 @@
             <nav class="navbar navbar-expand-lg" style="margin-top:-20px; float:right;">
                 <ul class="navbar-nav mr-auto" style="font-size:16px;" >
                     <li class="nav-item">
+                        <div class="form-group p-2">
+                            <label for="project_description" style="font-size:12px;">Nhập tên công việc</label>
+                            <input @input="changeOption()" class="form-control"
+                                style="margin-top:3px;width:220px;height:33px;font-size:14px" type="text" placeholder="Tên công việc"
+                                v-model="search">
+                        </div>
+                    </li>
+                    <li class="nav-item">
                         <div class="form-group p-1">
                             <DatePicker style="width: 100%; margin-top: 35px" v-model="startTime" value-type="format" type="date"
                                 placeholder="Ngày bắt đầu" @change="changeOption()">
