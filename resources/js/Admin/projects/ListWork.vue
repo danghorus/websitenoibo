@@ -1,31 +1,34 @@
-<template>    <div>
+<template>
+    <div>
         <div class="mt-4">
             <h3 style="margin: -30px 0px 0px 25px;">Danh sách công việc</h3>
-            <select  @change="changeOption()" class="form-select col-lg-2" style="position: absolute; left: 25px; top: 110px; width:220px; height:34px;"
-            v-model="option2">
-				<option value="3">Tất cả</option>
+            <select @change="changeOption()" class="form-select col-lg-2"
+                style="position: absolute; left: 25px; top: 110px; width:220px; height:34px;" v-model="option2">
+                <option value="3">Tất cả</option>
                 <option value="15">Việc hôm nay</option>
                 <option value="10">Mới tạo</option>
                 <option value="1">Chưa hoàn thành</option>
                 <option value="5">Chờ feedback</option>
                 <option value="2">Đã hoàn thành</option>
             </select>
-                <button class="btn btn-success btn-sm" @click="NewTask()"
-                    style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới</button>
+            <button class="btn btn-success btn-sm" @click="NewTask()"
+                style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới
+            </button>
             <nav class="navbar navbar-expand-lg" style="margin-top:-55px;float:right;">
-                <ul class="navbar-nav mr-auto" style="font-size:16px;" >
+                <ul class="navbar-nav mr-auto" style="font-size:16px;">
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px;">Nhập tên công việc</label>
-                            <input @input="changeOption()" class="form-control" 
-                            style="margin-top:3px;width:220px;height:33px;font-size:14px" type="text" placeholder="Tên công việc" v-model="search">
+                            <input @input="changeOption()" class="form-control"
+                                style="margin-top:3px;width:220px;height:33px;font-size:14px" type="text"
+                                placeholder="Tên công việc" v-model="search">
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="option2 != 15">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px;">Chọn khoảng thời gian</label>
-                            <date-picker style="margin-top:3px; width: 100%;" v-model="dateRange" type="date" 
-                            range placeholder="Vui lòng chọn khoảng thời gian"  @change="changeOption()">
+                            <date-picker style="margin-top:3px; width: 100%;" v-model="dateRange" type="date" range
+                                placeholder="Vui lòng chọn khoảng thời gian" @change="changeOption()">
                             </date-picker>
                         </div>
                     </li>
@@ -38,7 +41,7 @@
                     </li>
                     <li class="nav-item">
                         <div class="form-group p-1">
-                            <DatePicker style="width: 100%; margin-top: 33px" v-model="endTime" value-type="format" type="date" 
+                            <DatePicker style="width: 100%; margin-top: 33px" v-model="endTime" value-type="format" type="date"
                             placeholder="Ngày kết thúc" @change="changeOption()">
                             </DatePicker>
                         </div>
@@ -46,39 +49,42 @@
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo dự án</label>
-                            <select  class="form-select"  @change="changeOption()" v-model="project" style="width:160px">
+                            <select class="form-select" @change="changeOption()" v-model="project" style="width:160px">
                                 <option value="0" selected="selected">Tất cả</option>
-                                <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
+                                <option v-for="(project, index) in projects" :key="index" :value="project.id">
+                                    {{ project.project_name }}</option>
                             </select>
                         </div>
                     </li>
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo bộ phận</label>
-                            <select  @change="changeOption()" class="form-select" v-model="option1" style="width:160px">
+                            <select @change="changeOption()" class="form-select" v-model="option1" style="width:160px">
                                 <option value="12" disabled>Lựa chọn</option>
-                                <option value="1" >Tất cả</option>
-                                <option value="2" >Dev</option>
-                                <option value="3" > Game design</option>
-                                <option value="4" >Art</option>
-                                <option value="5" >Tester</option>
-                                <option value="11" >Marketing</option>
+                                <option value="1">Tất cả</option>
+                                <option value="2">Dev</option>
+                                <option value="3"> Game design</option>
+                                <option value="4">Art</option>
+                                <option value="5">Tester</option>
+                                <option value="11">Marketing</option>
                             </select>
                         </div>
                     </li>
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Người thực hiện</label>
-                            <select class="form-select" @change="changeOption()" v-model="performer"  style="width:160px">
+                            <select class="form-select" @change="changeOption()" v-model="performer"
+                                style="width:160px">
                                 <option value="0" selected="selected">Tất cả</option>
-                                <option v-for="(user, index) in users" :key="index" :value="user.id">{{user.fullname}}</option>
+                                <option v-for="(user, index) in users" :key="index" :value="user.id">{{ user.fullname }}
+                                </option>
                             </select>
                         </div>
                     </li>
-                    <li v-if="option2 == 1 || option2 == 10" class="nav-item">
+                    <li v-if="option2 == 1 || option2 == 10 || option2 == 3 || option2 == 15" class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo trạng thái</label>
-                            <select  @change="changeOption()" class="form-select" v-model="option" style="width:160px">
+                            <select @change="changeOption()" class="form-select" v-model="option" style="width:160px">
                                 <option value="10">Tất cả</option>
                                 <option value="0">Quá hạn</option>
                                 <option value="1">Đang chờ </option>
@@ -102,11 +108,11 @@
                         <th scope="col">STT</th>
                         <th scope="col" width="500px">Tên công việc</th>
                         <th scope="col" width="120px">Loại công việc</th>
-                        <th scope="col" >Cấp độ công việc</th>
+                        <th scope="col">Cấp độ công việc</th>
                         <th scope="col" width="150px">Dự án</th>
                         <th scope="col" width="200px">Công việc cha</th>
                         <th scope="col" width="80px">Bắt đầu</th>
-                        <th scope="col" width="60px">Thời lượng (Giờ)</th>
+                        <th scope="col" width="60px">Thời lượng dư kiến (Giờ)</th>
                         <th scope="col" width="80px">Kết thúc</th>
                         <th scope="col" width="60px">Thời lượng thực tế (Giờ)</th>
                         <th scope="col" width="50px">Trọng số</th>
@@ -117,60 +123,65 @@
                         <th scope="col" width="145px">Thao tác</th>
                     </tr>
                 </thead>
-                <tbody v-for="(item, index) in list" :key="item.id" >
+                <tbody v-for="(item, index) in list" :key="item.id">
                     <tr style="text-align:center;">
-                        <td>{{ index +1 }}</td>
+                        <td>{{ index + 1 }}</td>
                         <td scope="row" style="text-align:left;">
                             <div style="display: flex; font-size:12px;">
-                            <textarea v-if="item.task_name == 'Click để thay đổi nội dung'" 
-                                style=" font-weight: bold; font-size:16px; width:100%; border:0px; word-wrap:break-word; resize: none;"
-                                @change="changeTaskName($event, item.id)" v-model="item.task_name">
+                                <textarea v-if="item.task_name == 'Click để thay đổi nội dung'"
+                                    style=" font-weight: bold; font-size:16px; width:100%; border:0px; word-wrap:break-word; resize: none;"
+                                    @change="changeTaskName($event, item.id)" v-model="item.task_name">
                             </textarea>
-                            <textarea v-else style="width:100%; border:0px; word-wrap:break-word; resize: none;"
-                                @change="changeTaskName($event, item.id)" v-model="item.task_name">
+                                <textarea v-else style="width:100%; border:0px; word-wrap:break-word; resize: none;"
+                                    @change="changeTaskName($event, item.id)" v-model="item.task_name">
                             </textarea>
-                            <p @click="showModalEditTask(item.id)">
-                                <i class="fas fa-info-circle" style="font-size:16px; margin-top: 15px; cursor: pointer" />
-                            </p>
+                                <p @click="showModalEditTask(item.id)">
+                                    <i class="fas fa-info-circle"
+                                        style="font-size:16px; margin-top: 15px; cursor: pointer" />
+                                </p>
                             </div>
                         </td>
                         <td>
                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changeSticker($event, item.id)" v-model="item.task_sticker">
-                                <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">{{sticker.sticker_name}}
+                                <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">
+                                    {{ sticker.sticker_name }}
                                 </option>
                             </select>
-                            <!--<multiselect 
-                                v-model="item.task_sticker" 
-                                :options="stickers" 
-                                value="sticker_name" 
-                                label="sticker_name" 
+                            <!--<multiselect
+                                v-model="item.task_sticker"
+                                :options="stickers"
+                                value="sticker_name"
+                                label="sticker_name"
                                 :close-on-select="true"
-                                :show-labels="true" 
-                                placeholder="Chọn"  
+                                :show-labels="true"
+                                placeholder="Chọn"
                                 @select="changeSticker($event ,item.id)">
                             </multiselect>-->
                         </td>
                         <td>
                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changePriority($event, item.id)" v-model="item.task_priority">
-                                <option v-for="(priority, index) in priorities" :key="index" :value="priority.priority_label">Level
-                                    {{priority.priority_label}}</option>
+                                <option v-for="(priority, index) in priorities" :key="index"
+                                    :value="priority.priority_label">Level
+                                    {{ priority.priority_label }}</option>
                             </select>
                         </td>
                         <td style="text-align:left">
-                            <select class="form-select" @change="changeProject($event, item.id)" v-model="item.project_id">
+                            <select class="form-select" @change="changeProject($event, item.id)"
+                                v-model="item.project_id">
                                 <option value="1" disabled>Chọn dự án</option>
-                                <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
+                                <option v-for="(project, index) in projects" :key="index" :value="project.id">
+                                    {{ project.project_name }}</option>
                             </select>
                             <!--<multiselect
                             size="12px"
-                            v-model="item.project_id" 
-                            :options="projects" 
-                            value="id" 
+                            v-model="item.project_id"
+                            :options="projects"
+                            value="id"
                             label="project_name"
-                            :close-on-select="true" 
-                            :show-labels="true" 
+                            :close-on-select="true"
+                            :show-labels="true"
                             placeholder="Vui lòng chọn"
                             @select="changeProject($event ,item.id)">
                             </multiselect>-->
@@ -178,54 +189,43 @@
                         <!--@open="getTaskByProject(item.project_id)"-->
                         <td style="width:500px;">
                             <div>
-                                <treeselect
-                                    :options="tasks"
-                                    :load-options="loadOptions"
+                                <treeselect :options="tasks" :load-options="loadOptions"
                                     @open="getTaskByProject(item.project_id)"
-                                    @select="changeTaskParent($event ,item.id)"
-                                    loadingText="Loading..."
-                                    v-model="item.task_parent"
-                                    :show-count="true"
-                                />
+                                    @select="changeTaskParent($event, item.id)" loadingText="Loading..."
+                                    v-model="item.task_parent" :show-count="true" />
                             </div>
                         </td>
                         <td>
-                            <DatePicker 
-                                style="width: 120px" 
-                                v-model="item.start_time" 
-                                value-type="format" 
-                                type="date"
-                                placeholder="Select time" 
-                                @change="changeStartTime($event, item.id)">
+                            <DatePicker style="width: 120px" v-model="item.start_time" value-type="format" type="date"
+                                placeholder="Select time" @change="changeStartTime($event, item.id)">
                             </DatePicker>
                         </td>
-                        <td><input style="width:100%; border:0px; text-align:right;"  @change="changeTime($event, item.id)" v-model="item.time"></td>
+                        <td><input style="width:100%; border:0px; text-align:right;"
+                                @change="changeTime($event, item.id)" v-model="item.time"></td>
                         <td>
-                            <DatePicker 
-                                style="width: 120px" 
-                                v-model="item.end_time" 
-                                value-type="format" 
-                                type="date" 
-                                placeholder="Select time"
-                                @change="changeEndTime($event, item.id)">
+                            <DatePicker style="width: 120px" v-model="item.end_time" value-type="format" type="date"
+                                placeholder="Select time" @change="changeEndTime($event, item.id)">
                             </DatePicker>
                         </td>
                         <td style=" text-align:right;">
-                            <input style="width:100%; border:0px; text-align:right;" @change="changeRealTime($event, item.id)" v-model="item.real_time">
+                            <input style="width:100%; border:0px; text-align:right;"
+                                @change="changeRealTime($event, item.id)" v-model="item.real_time">
                         </td>
-                        <td> <input style="width:100%; border:0px;"  @change="changeWeight($event, item.id)" v-model="item.weight"></td>
+                        <td> <input style="width:100%; border:0px;" @change="changeWeight($event, item.id)"
+                                v-model="item.weight"></td>
                         <td>
                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changePerformer($event, item.id)" v-model="item.task_performer">
-                                <option v-for="(user, index) in users" :key="index" :value="user.id">{{user.fullname}}</option>
+                                <option v-for="(user, index) in users" :key="index" :value="user.id">{{ user.fullname }}
+                                </option>
                             </select>
-                            <!--<multiselect 
-                                v-model="item.task_performer" 
-                                :options="users" 
-                                value="id" 
-                                label="fullname" 
+                            <!--<multiselect
+                                v-model="item.task_performer"
+                                :options="users"
+                                value="id"
+                                label="fullname"
                                 :close-on-select="true"
-                                :show-labels="true" 
+                                :show-labels="true"
                                 placeholder="Vui lòng chọn"
                                 @select="changePerformer($event ,item.id)"
                                 >
@@ -234,27 +234,27 @@
                         <td>
                             <div style="display: flex">
                                 <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                                        @change="changeDepartment($event, item.id)" v-model="item.task_department">
-                                        <option value="2">Dev</option>
-                                        <option value="3">Game Design</option>
-                                        <option value="4">Art</option>
-                                        <option value="5">Tester</option>
-                                        <option value="11">Marketing</option>
+                                    @change="changeDepartment($event, item.id)" v-model="item.task_department">
+                                    <option value="2">Dev</option>
+                                    <option value="3">Game Design</option>
+                                    <option value="4">Art</option>
+                                    <option value="5">Tester</option>
+                                    <option value="11">Marketing</option>
                                 </select>
                             </div>
                         </td>
-                        <td>{{item.progress}}</td>
+                        <td>{{ item.progress }}</td>
                         <td>
                             <div style="display: flex">
                                 <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                     @change="changeStatus($event, item.id)" v-model="item.status">
-                                    <option value="1" >Đang chờ</option>
-                                    <option value="2" >Đang tiến hành</option>
-                                    <option value="3" >Tạm dừng</option>
-                                    <option value="5" >Chờ feedback</option>
-                                    <option value="6" >Làm lại </option>
-                                    <option value="4" >Hoàn thành </option>
-                                    <option value="0" >Đã quá hạn</option>
+                                    <option value="1">Đang chờ</option>
+                                    <option value="2">Đang tiến hành</option>
+                                    <option value="3">Tạm dừng</option>
+                                    <option value="5">Chờ feedback</option>
+                                    <option value="6">Làm lại </option>
+                                    <option value="4">Hoàn thành </option>
+                                    <option value="0">Đã quá hạn</option>
                                 </select>
                             </div>
                         </td>
@@ -265,7 +265,7 @@
                     </tr>
                 </tbody>
             </table>
-            <Paginate style="float:right; padding: 10px;" v-model="paginate" :pagechange="onPageChange" ></Paginate>
+            <Paginate style="float:right; padding: 10px;" v-model="paginate" :pagechange="onPageChange"></Paginate>
             <div>
                 <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document" style=" max-width: 60%;">
@@ -278,9 +278,9 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <create-task v-if="showModal" :users="users" :groupUsers="groupUsers" :priorities="priorities"
-                                    :stickers="stickers" :projects="projects" :projectId="projectId"
-                                    @handleCreateTask="handleCreateTask" />
+                                <create-task v-if="showModal" :users="users" :groupUsers="groupUsers"
+                                    :priorities="priorities" :stickers="stickers" :projects="projects"
+                                    :projectId="projectId" @handleCreateTask="handleCreateTask" />
                             </div>
                         </div>
                     </div>
@@ -307,16 +307,16 @@ export default {
     name: "ListWork",
     components: { DatePicker, Multiselect, CreateTask, Treeselect, Paginate },
     props: [, 'paginate', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'search',
-        'startTime','endTime', 'taskPerformer', 'task_performer', 'taskDepartment', 'status', 'list', 'currentUser'],
+        'startTime', 'endTime', 'taskPerformer', 'task_performer', 'taskDepartment', 'status', 'list', 'currentUser'],
     data() {
         return {
             paginate: [],
             tasks: [],
             dateRange: '',
-            search:'',
+            search: '',
             option: 10,
-            option1:12,
-            option2: 3,
+            option1: 12,
+            option2: 15,
             performer: 0,
             project: 0,
             project_id: '',
@@ -344,7 +344,7 @@ export default {
             taskDepartment: 0,
             status: '',
             currentUser: '',
-            task_sticker:'',
+            task_sticker: '',
         }
     },
     created() {
@@ -358,7 +358,7 @@ export default {
     },
     methods: {
 
-        changeOption(page){
+        changeOption(page) {
             this.getListWorks(page);
             this.getAllUser(page);
         },
@@ -467,7 +467,7 @@ export default {
                 params.task_department = this.option1;
             }
 
-            if (this.option2 && this.option2 != 3) {
+            if (this.option2) {
                 params.status2 = this.option2;
             }
 
@@ -478,7 +478,7 @@ export default {
             if (this.performer && this.performer != 0) {
                 params.task_performer = this.performer;
             }
-            if(this.search){
+            if (this.search) {
                 params.search = this.search || '';
             }
 
@@ -486,7 +486,7 @@ export default {
 
             if (res.code == 200) {
                 this.list = res.tasks;
-                this.paginate = res.paginate;    
+                this.paginate = res.paginate;
             }
         },
 
@@ -499,7 +499,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.paginate = res.paginate;
             }
         },
         async changePerformer(e, taskId) {
@@ -507,7 +506,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-               this.paginate = res.paginate;
             }
         },
         async changeTaskParent(e, taskId) {
@@ -515,7 +513,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-               this.paginate = res.paginate;
             }
         },
         async changeStatus(e, taskId) {
@@ -523,7 +520,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-               this.paginate = res.paginate;
             }
         },
         async changeTaskName(e, taskId) {
@@ -531,7 +527,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-               this.paginate = res.paginate;
             }
         },
         async changeStartTime(e, taskId) {
@@ -539,7 +534,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-               this.paginate = res.paginate;
             }
         },
         async changeEndTime(e, taskId) {
@@ -547,7 +541,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-               this.paginate = res.paginate;
             }
         },
         async changeTime(e, taskId) {
@@ -555,7 +548,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-               this.paginate = res.paginate;
             }
         },
         async changePause(e, taskId) {
@@ -563,7 +555,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-               this.paginate = res.paginate;
             }
         },
         async changeRealTime(e, taskId) {
@@ -571,7 +562,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-               this.paginate = res.paginate;
             }
         },
         async changeDepartment(e, taskId) {
@@ -579,7 +569,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-               this.paginate = res.paginate;
             }
         },
         async changeSticker(e, taskId) {
@@ -588,7 +577,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.paginate = res.paginate;
             }
         },
         async changePriority(e, taskId) {
@@ -596,7 +584,6 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.paginate = res.paginate;
             }
         },
         async changeWeight(e, taskId) {
@@ -604,10 +591,9 @@ export default {
 
             if (res.code == 200) {
                 toastr.success(res.message);
-                this.paginate = res.paginate;
             }
         },
-        async deleteTask( e, taskId, page) {
+        async deleteTask(e, taskId, page) {
             const res = await $post(`/tasks/delete/${taskId}`, { task_parent: e.target.value });
 
             if (res.code == 200) {

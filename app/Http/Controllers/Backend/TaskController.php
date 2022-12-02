@@ -589,8 +589,8 @@ class TaskController extends Controller
         $perPage = 20;//$request->input('per_page');
 
         $builder = DB::table('tasks', 'tt')->select('tt.*')
-            ->where('tt.valid','=',1)
-            ->orderBy('start_time')->orderBy('id', 'DESC');
+            ->where('tt.valid','=',1);
+            //->orderBy('start_time')->orderBy('id', 'DESC');
             //->selectRaw('p.project_name');
 
         $builder//->join('projects as p', 'tt.project_id', '=', 'p.id')
@@ -617,15 +617,23 @@ class TaskController extends Controller
             $builder->where('task_name', 'LIKE', "%$search%");
         }
 
+
+
         if ($Status2 == 1) {
             $builder->where('status', '!=', 4)->where('status', '!=', 5);
-        }else if($Status2 == 2){
+        }
+        if ($Status2 == 3) {
+            $builder->orderBy('start_time')->orderBy('id', 'DESC');
+        }
+        else if($Status2 == 2) {
             $builder->where('status', '=', 4);
-        }else if($Status2 == 5){
+        }
+        else if($Status2 == 5) {
             $builder->where('status', '=', 5);
         }
-        else if($Status2 == 10){
-            $builder->where('start_time', '=', date('Y-m-d', time()));
+        else if($Status2 == 10) {
+            $builder->where('start_time', '<=', date('Y-m-d', time()))->where('status', '!=', 4)->where('status', '!=', 5)
+            ->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
         }
 
         $tasks = $builder->paginate( $perPage , ['*'], 'page', $request->input('page') ?? 1);
@@ -722,8 +730,8 @@ class TaskController extends Controller
 
         $builder = DB::table('tasks', 'tt')
             ->where('tt.valid', '=', 1)
-            ->orderByRaw('start_time DESC')
-            ->orderByRaw('id DESC')
+            //->orderByRaw('start_time DESC')
+            //->orderByRaw('id DESC')
             ->whereNotNull( 'tt.task_department')
             ->select('tt.*')
             ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child");
@@ -767,15 +775,20 @@ class TaskController extends Controller
         }
         if ($Status2 == 1) {
             $builder->where('status', '!=', 4)->where('status', '!=', 5);
+        }
+        else if ($Status2 == 3) {
+            $builder->orderByRaw('start_time')->orderByRaw('id DESC');
         }else if($Status2 == 2){
             $builder->where('status', '=', 4);
         }else if($Status2 == 5){
-            $builder->where('status', '=', 5);
+            $builder->where('status', '=', 5)
+            ->orderByRaw('start_time DESC')->orderByRaw('id DESC');;
         }else if($Status2 == 10){
             $builder->where('task_performer', '!=', null)->Where('task_parent', '=', null);
         }
         else if($Status2 == 15){
-            $builder->where('start_time', '=', date('Y-m-d', time()));
+            $builder->where('start_time', '<=', date('Y-m-d', time()))->where('status', '!=', 4)->where('status', '!=', 5)
+            ->orderByRaw('start_time DESC')->orderByRaw('id DESC');
         }
         
         $tasks = $builder->paginate( $perPage , ['*'], 'page', $request->input('page') ?? 1);

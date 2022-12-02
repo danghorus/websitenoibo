@@ -101,7 +101,9 @@
                 <option value="10">Việc hôm nay</option>
                 <option value="1">Chưa hoàn thành</option>
                 <option value="5">Chờ feedback</option>
-                <option value="2">Đã hoàn thành</option>
+                <option value="2">Đã hoàn thành</option> 
+
+
             </select>&emsp;
             <p>
                 <button @click="NewTask()" v-if="option2 == 1 || option2 == 3" class="btn btn-success btn-sm" 
@@ -439,7 +441,7 @@ export default {
                 params.status = this.option;
             }
 
-            if (this.option2 && this.option2 != 3) {
+            if (this.option2) {
                 params.status2 = this.option2;
             }
 
