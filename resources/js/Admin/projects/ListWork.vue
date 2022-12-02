@@ -84,7 +84,7 @@
                             </select>
                         </div>
                     </li>
-                    <li v-if="option2 == 1 || option2 == 10 || option2 == 3 || option2 == 15" class="nav-item">
+                    <li v-if="option2 != 2 &&  option2 != 5" class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo trạng thái</label>
                             <select @change="changeOption()" class="form-select" v-model="option" style="width:160px">
@@ -93,8 +93,9 @@
                                 <option value="1">Đang chờ </option>
                                 <option value="2">Đang tiến hành </option>
                                 <option value="3">Tạm dừng</option>
-                                <option value="5">Chờ feedback</option>
+                                <option v-if="option2 != 1" value="5" >Chờ feedback</option>
                                 <option value="6">Làm lại</option>
+                                <option v-if="option2 != 1" value="4" >Hoàn thành</option>
                             </select>
                         </div>
                     </li>

@@ -71,7 +71,7 @@ class TaskController extends Controller
 
             if (($value->status == 0 || $value->status == 1) && (strtotime($value->end_time) < time())) {
                 $value->status_title = 'Đã quá hạn';
-            } elseif ($value->status == 4 && (strtotime($value->real_end_time) > strtotime($value->end_time))) {
+            } elseif ($value->status == 4 && ($value->real_time > $value->time)) {
                 $value->status_title = 'Hoàn thành chậm';
             }elseif ($value->status == 5) {
                 $value->status_title = 'Chờ feedback';
@@ -153,7 +153,7 @@ class TaskController extends Controller
 
             if (($task->status == 0 || $task->status == 1) && (strtotime($task->end_time) < time())) {
                 $task->status_title = 'Đã quá hạn';
-            } elseif ($task->status == 4 && (strtotime($task->real_end_time) > strtotime($task->end_time))) {
+            } elseif ($task->status == 4 && ($task->real_time > $task->time)) {
                 $task->status_title = 'Hoàn thành chậm';
 
             } elseif ($task->status == 5) {
@@ -261,7 +261,7 @@ class TaskController extends Controller
 
             if (($newTasks->status == 0 || $newTasks->status == 1) && (strtotime($newTasks->end_time) < time())) {
                 $newTasks->status_title = 'Đã quá hạn';
-            } elseif ($newTasks->status == 4 && (strtotime($newTasks->real_end_time) > strtotime($newTasks->end_time))) {
+            } elseif ($newTasks->status == 4 && ($newTasks->real_time > $newTasks->time)) {
                 $newTasks->status_title = 'Hoàn thành chậm';
             } else {
                 $newTasks->status_title = $newTasks->status >= 0 ? Task::ARR_STATUS[$newTasks->status]: '';
@@ -369,7 +369,7 @@ class TaskController extends Controller
 
             if (($newTasks->status == 0 || $newTasks->status == 1) && (strtotime($newTasks->end_time) < time())) {
                 $newTasks->status_title = 'Đã quá hạn';
-            } elseif ($newTasks->status == 4 && (strtotime($newTasks->real_end_time) > strtotime($newTasks->end_time))) {
+            } elseif ($newTasks->status == 4 && ($newTasks->real_end_time > $newTasks->time)) {
                 $newTasks->status_title = 'Hoàn thành chậm';
             }elseif ($newTasks->status == 5) {
                 $newTasks->status_title = 'Chờ feedback';
@@ -632,7 +632,9 @@ class TaskController extends Controller
             $builder->where('status', '=', 5);
         }
         else if($Status2 == 10) {
-            $builder->where('start_time', '<=', date('Y-m-d', time()))->where('status', '!=', 4)->where('status', '!=', 5)
+            $builder->where('start_time', '<=', date('Y-m-d', time()))
+            ->where('end_time', '>=', date('Y-m-d', time()))
+            //->where('status', '!=', 4)->where('status', '!=', 5)
             ->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
         }
 
@@ -652,9 +654,9 @@ class TaskController extends Controller
                 $task->status_title = 'Đang làm';
             } elseif ($task->status == 1) {
                 $task->status_title = 'Tạm dừng';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) > $task->time )) {
+            } elseif ($task->status == 4 && ($task->real_time > $task->time ))  {
                 $task->status_title = 'Hoàn thành chậm';
-            } elseif ($task->status == 4 && (((strtotime($task->real_end_time) - strtotime($task->end_time))/3600 - $task->time_pause) < $task->time )) {
+            } elseif ($task->status == 4 && ($task->real_time <= $task->time )) {
                 $task->status_title = 'Hoàn thành';
             } elseif ($task->status == 5) {
                 $task->status_title = 'Chờ feedback';
@@ -787,7 +789,7 @@ class TaskController extends Controller
             $builder->where('task_performer', '!=', null)->Where('task_parent', '=', null);
         }
         else if($Status2 == 15){
-            $builder->where('start_time', '<=', date('Y-m-d', time()))->where('status', '!=', 4)->where('status', '!=', 5)
+            $builder->where('start_time', '<=', date('Y-m-d', time()))->where('end_time', '>=', date('Y-m-d', time()))
             ->orderByRaw('start_time DESC')->orderByRaw('id DESC');
         }
         
@@ -853,7 +855,7 @@ class TaskController extends Controller
         foreach ($tasks as $task) {
             if (($task->status == 0 || $task->status == 1) && (strtotime($task->end_time) < time())) {
                 $task->status_title = 'Đã quá hạn';
-            } elseif ($task->status == 4 && (strtotime($task->real_end_time) > strtotime($task->end_time))) {
+            } elseif ($task->status == 4 && ($task->real_time > $task->time)) {
                 $task->status_title = 'Hoàn thành chậm';
             } else {
                 $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
@@ -1468,7 +1470,7 @@ class TaskController extends Controller
 
             if (($newTasks->status == 0 || $newTasks->status == 1) && (strtotime($newTasks->end_time) < time())) {
                 $newTasks->status_title = 'Đã quá hạn';
-            } elseif ($newTasks->status == 4 && (strtotime($newTasks->real_end_time) > strtotime($newTasks->end_time))) {
+            } elseif ($newTasks->status == 4 && ($newTasks->real_time > $newTasks->time)) {
                 $newTasks->status_title = 'Hoàn thành chậm';
             } else {
                 $newTasks->status_title = $newTasks->status >= 0 ? Task::ARR_STATUS[$newTasks->status]: '';
@@ -1532,7 +1534,7 @@ class TaskController extends Controller
         $task->task_code ='';
         $task->start_time = date('Y-m-d', strtotime(now()));//null;
         $task->time =null;
-        $task->end_time =null;
+        $task->end_time = date('Y-m-d', strtotime(now()));;
         $task->description = '';
         $task->task_priority = null;
         $task->task_sticker = null;
@@ -1600,7 +1602,7 @@ class TaskController extends Controller
         $task->task_code ='';
         $task->start_time = date('Y-m-d', strtotime(now()));
         $task->time =null;
-        $task->end_time =null;
+        $task->end_time =date('Y-m-d', strtotime(now()));
         $task->description = '';
         $task->task_priority = null;
         $task->task_sticker = null;

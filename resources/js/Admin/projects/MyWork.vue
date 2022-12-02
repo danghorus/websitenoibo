@@ -34,7 +34,7 @@
                             </select>
                         </div>
                     </li>
-                    <li v-if="option2 != 2" class="nav-item">
+                    <li v-if="option2 != 2 && option2 !=5" class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo trạng thái</label>
                             <select @click="filterTask()" class="form-select" v-model="option" style="width:250px">
@@ -43,9 +43,9 @@
                                 <option value="1">Đang chờ </option>
                                 <option value="2">Đang làm</option>
                                 <option value="3">Tạm dừng</option>
-                                <option value="5">Chờ feedback</option>
+                                <option v-if="option2 != 1" value="5">Chờ feedback</option>
                                 <option value="6">Làm lại</option>
-								<option value="4" v-if="option2 == 3">Hoàn thành</option>
+								<option v-if="option2 != 1" value="4">Hoàn thành</option>
                             </select>
                         </div>
                     </li>
@@ -57,7 +57,7 @@
                     <li class="nav-item">
                         <button class="btn btn-outline-info" @click="ShowInfoMyWork()" type="button" data-toggle="collapse"
                             data-target="#collapseExample_1" aria-expanded="false" aria-controls="collapseExample"
-                            style="margin-top:  38px"> Thông tin
+                            style="margin-top: 38px"> Thông tin
                         </button>
                         <div class="col-lg">
                             <div class="collapse info-my-work" id="collapseExample_1" v-if="showInfoMyWork">
