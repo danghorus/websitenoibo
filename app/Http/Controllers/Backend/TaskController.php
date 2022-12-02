@@ -620,16 +620,19 @@ class TaskController extends Controller
 
 
         if ($Status2 == 1) {
-            $builder->where('status', '!=', 4)->where('status', '!=', 5);
+            $builder->where('status', '!=', 4)->where('status', '!=', 5)
+            ->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
         }
         if ($Status2 == 3) {
-            $builder->orderBy('start_time')->orderBy('id', 'DESC');
+            $builder->orderBy('start_time')->orderBy('id');
         }
         else if($Status2 == 2) {
-            $builder->where('status', '=', 4);
+            $builder->where('status', '=', 4)
+            ->orderBy('start_time')->orderBy('id');
         }
         else if($Status2 == 5) {
-            $builder->where('status', '=', 5);
+            $builder->where('status', '=', 5)
+            ->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
         }
         else if($Status2 == 10) {
             $builder->where('start_time', '<=', date('Y-m-d', time()))
@@ -776,12 +779,14 @@ class TaskController extends Controller
             $builder->where('task_name', 'LIKE', "%$search%");
         }
         if ($Status2 == 1) {
-            $builder->where('status', '!=', 4)->where('status', '!=', 5);
+            $builder->where('status', '!=', 4)->where('status', '!=', 5)
+            ->orderByRaw('start_time DESC')->orderByRaw('id DESC');
         }
         else if ($Status2 == 3) {
             $builder->orderByRaw('start_time')->orderByRaw('id DESC');
         }else if($Status2 == 2){
-            $builder->where('status', '=', 4);
+            $builder->where('status', '=', 4)
+            ->orderByRaw('start_time')->orderByRaw('id');
         }else if($Status2 == 5){
             $builder->where('status', '=', 5)
             ->orderByRaw('start_time DESC')->orderByRaw('id DESC');
@@ -1307,17 +1312,21 @@ class TaskController extends Controller
 
         if(isset($filter['start_date']) && $filter['end_date']){
 
-            $taskSummaryQuery->where('t.start_time', '>=', $filter['start_date'])->where('t.end_time', '<=', $filter['end_date']);
+            $taskSummaryQuery->where('start_time', '>=', $filter['start_date'])->where('end_time', '<=', $filter['end_date']);
 
             $summaryQuery->where('t.start_time', '>=', $filter['start_date'])->where('t.end_time', '<=', $filter['end_date']);
         }
 
 
         if (isset($filter['project_id']) && $filter['project_id']) {
+            $filter['start_date'] = '2022-01-01';
+            $filter['end_date'] = '2025-12-31';
 
             $taskSummaryQuery->whereIn('t.project_id', $project);
+            //->whereRaw('start_time', '>=', $filter['start_date'])->whereRaw('end_time', '<=', $filter['end_date']);
 
             $summaryQuery->whereIn('t.project_id', $project);
+            //->whereRaw('start_time', '>=', $filter['start_date'])->whereRaw('end_time', '<=', $filter['end_date']);
         }
 
         if (isset($filter['task_department']) && $filter['task_department']) {
@@ -1338,7 +1347,10 @@ class TaskController extends Controller
 
         $users = $usersQuery->with(['task' => function ($q) use ($filter, $project, $department) {
             if (isset($filter['project_id']) && $filter['project_id']) {
-                $q->whereIn('project_id', $project);
+                $filter['start_date'] = '2022-01-01';
+                $filter['end_date'] = '2025-12-31';
+                $q->whereIn('project_id', $project)
+                  ->where('start_time', '>=', $filter['start_date'])->where('end_time', '<=', $filter['end_date']);
             }
             if (isset($filter['task_department']) && $filter['task_department']) {
                 $q->whereIn('task_department', $department);
@@ -1347,7 +1359,6 @@ class TaskController extends Controller
 
              $q->where('start_time', '>=', $filter['start_date'])->where('end_time', '<=', $filter['end_date']);
             }
-
             $q->where('valid', '=', 1);
 
         }])->get();
@@ -1408,7 +1419,7 @@ class TaskController extends Controller
                     if ($value->status == 6) {
                         $totalAgain++;
                     }
-                    if ($value->status == 4 && ((strtotime($value->real_end_time) - strtotime($value->real_start_time)) > ($value->time)*3600)) {
+                    if ($value->status == 4 && ($value->real_time> $value->time)) {
                         $totalCompleteSlow++ ;
                     }
                 }
