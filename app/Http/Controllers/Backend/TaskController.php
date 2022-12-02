@@ -782,7 +782,7 @@ class TaskController extends Controller
             $builder->where('status', '=', 4);
         }else if($Status2 == 5){
             $builder->where('status', '=', 5)
-            ->orderByRaw('start_time DESC')->orderByRaw('id DESC');;
+            ->orderByRaw('start_time DESC')->orderByRaw('id DESC');
         }else if($Status2 == 10){
             $builder->where('task_performer', '!=', null)->Where('task_parent', '=', null);
         }
@@ -1565,6 +1565,40 @@ class TaskController extends Controller
         $task->task_name = 'Click để thay đổi nội dung';
         $task->task_code ='';
         $task->start_time = null;//date('Y-m-d', strtotime(now()));
+        $task->time =null;
+        $task->end_time =null;
+        $task->description = '';
+        $task->task_priority = null;
+        $task->task_sticker = null;
+        $task->task_department = $Department;
+        $task->weight = null;
+        $task->project_id = null;
+        $task->task_predecessor = null;
+        $task->task_parent = null;
+        $task->task_performer = 1;
+        $task->status= 1;
+        $task->project_id = 1;
+
+        $task->save();
+
+        $newTasks = Task::query()->with(['taskUser'])->where('id', '=', $task->id)->first();
+
+        return [
+            'code' => 200,
+            'message' => 'Thêm mới thành công',
+            'new_task' => $newTasks,
+        ];
+    }
+    public function list_new_task_today(Request $request) {
+
+        $task = new Task();
+
+        $userId = Auth::user()->id;
+        $Department = Auth::user()->department;
+
+        $task->task_name = 'Click để thay đổi nội dung';
+        $task->task_code ='';
+        $task->start_time = date('Y-m-d', strtotime(now()));
         $task->time =null;
         $task->end_time =null;
         $task->description = '';

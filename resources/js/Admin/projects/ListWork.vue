@@ -11,7 +11,10 @@
                 <option value="5">Chờ feedback</option>
                 <option value="2">Đã hoàn thành</option>
             </select>
-            <button class="btn btn-success btn-sm" @click="NewTask()"
+            <button v-if="option2 != 15" class="btn btn-success btn-sm" @click="NewTask()"
+                style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới
+            </button>
+            <button v-if="option2 == 15" class="btn btn-success btn-sm" @click="NewTaskToday()"
                 style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới
             </button>
             <nav class="navbar navbar-expand-lg" style="margin-top:-55px;float:right;">
@@ -383,6 +386,14 @@ export default {
         },
         async NewTask() {
             const res = await $get('/tasks/list_new_task');
+
+            if (res.code == 200) {
+                toastr.success('Thêm mới thành công');
+                this.getListWorks();
+            }
+        },
+        async NewTaskToday() {
+            const res = await $get('/tasks/list_new_task_today');
 
             if (res.code == 200) {
                 toastr.success('Thêm mới thành công');
