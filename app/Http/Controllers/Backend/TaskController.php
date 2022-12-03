@@ -647,6 +647,7 @@ class TaskController extends Controller
         $totalTaskPause = 0;
         $totalTaskComplete = 0;
         $totalWaitFeedback = 0;
+        $totalRealtime = 0;
 
         foreach ($tasks as $task) {
             if ($task->status == 0) {
@@ -667,6 +668,11 @@ class TaskController extends Controller
                 $task->status_title = 'Làm lại';
             } else {
                 $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
+            }
+
+            $today = date('Y-m-d', strtotime(now()));
+            if(($task->start_time <= $today) && ($task->end_time >= $today)) {
+                $totalRealtime = $totalRealtime + $task->real_time;
             }
 
             switch ($task->status) {
@@ -713,6 +719,7 @@ class TaskController extends Controller
             ],
             'summary' => [
                 'total' => count($tasks),
+                'totalRealtime' => $totalRealtime,
                 'total_processing' => $totalTaskProcessing,
                 'total_pause' => $totalTaskPause,
                 'total_complete' => $totalTaskComplete,
