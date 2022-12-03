@@ -84,6 +84,11 @@
                                             <td>:</td>
                                             <td>{{ summary.total_complete }}</td>
                                         </tr>
+                                        <tr>
+                                            <td><b>Thời gian làm việc thực tế trong ngày</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalRealtime }}</td>
+                                        </tr>
                                     </table>
                                 </div>
                                 <div class="float-right p-2">
