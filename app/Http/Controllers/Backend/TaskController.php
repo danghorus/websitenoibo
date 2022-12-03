@@ -600,10 +600,10 @@ class TaskController extends Controller
         }
 
          if ($startTime && $startTime != '') {
-            $builder->whereDate('tt.start_time', '>=', $startTime);
+            $builder->whereDate('tt.start_time', '=', $startTime);
         }
          if ($endTime && $endTime != '') {
-            $builder->whereDate('tt.start_time', '<=', $endTime);
+            $builder->whereDate('tt.start_time', '=', $endTime);
         }
 
         if (isset($filters['project_id']) && $filters['project_id'] > 0) {
