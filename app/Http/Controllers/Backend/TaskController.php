@@ -648,6 +648,7 @@ class TaskController extends Controller
         $totalTaskComplete = 0;
         $totalWaitFeedback = 0;
         $totalRealtime = 0;
+        $totalTime = 0;
 
         foreach ($tasks as $task) {
             if ($task->status == 0) {
@@ -673,6 +674,7 @@ class TaskController extends Controller
             $today = date('Y-m-d', strtotime(now()));
             if(($task->start_time <= $today) && ($task->end_time >= $today)) {
                 $totalRealtime = $totalRealtime + $task->real_time;
+                $totalTime = $totalTime + $task->time;
             }
 
             switch ($task->status) {
@@ -720,6 +722,7 @@ class TaskController extends Controller
             'summary' => [
                 'total' => count($tasks),
                 'totalRealtime' => $totalRealtime,
+                'totalTime' => $totalTime,
                 'total_processing' => $totalTaskProcessing,
                 'total_pause' => $totalTaskPause,
                 'total_complete' => $totalTaskComplete,

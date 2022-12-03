@@ -85,6 +85,11 @@
                                             <td>{{ summary.total_complete }}</td>
                                         </tr>
                                         <tr>
+                                            <td><b>Thời gian làm việc dự kiến trong ngày</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalTime }}</td>
+                                        </tr>
+                                        <tr>
                                             <td><b>Thời gian làm việc thực tế trong ngày</b></td>
                                             <td>:</td>
                                             <td>{{ summary.totalRealtime }}</td>
