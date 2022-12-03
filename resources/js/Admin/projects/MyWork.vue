@@ -11,14 +11,14 @@
                                 v-model="search">
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="option2 != 10" class="nav-item">
                         <div class="form-group p-1">
                             <DatePicker style="width: 100%; margin-top: 35px" v-model="startTime" value-type="format" type="date"
                                 placeholder="Ngày bắt đầu" @change="changeOption()">
                             </DatePicker>
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="option2 != 10" class="nav-item">
                         <div class="form-group p-1">
                             <DatePicker style="width: 100%; margin-top: 35px" v-model="endTime" value-type="format" type="date"
                                 placeholder="Ngày kết thúc" @change="changeOption()">
