@@ -8,7 +8,7 @@
                     <option value="1">Theo tuần</option>
                     <option value="3">Tuỳ chỉnh</option>
                 </select>
-                <date-picker v-if="option == 1" v-model="dateRange" type="week" placeholder="Vui lòng chọn tuần để thống kê"
+                <date-picker v-if="option == 1" v-model="dateRange" type="week" :disabled-date="disabledAfterToday" placeholder="Vui lòng chọn tuần để thống kê"
                    @change="getReport()" style="width:300px;position: absolute; right: 140px; top: 3px">
                 </date-picker>
                 <date-picker v-if="option == 2" v-model="dateRange" type="month" placeholder="Vui lòng chọn tháng để thống kê"
@@ -228,6 +228,14 @@ export default {
         this.getReport();
     },
     methods: {
+
+        disabledAfterToday(date) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            return  date > new Date(today.getTime() - 1 * 24 * 3600 * 1000);
+        },
+
 		changeOption(){
             this.getReport();
         },
