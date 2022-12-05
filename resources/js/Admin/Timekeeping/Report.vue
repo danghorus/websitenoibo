@@ -3,12 +3,20 @@
         <div class="card-header" style="height:50px;">
             <h4>Bảng thống kê chấm công</h4>
             <div style="position: absolute; right: 10px; top: 8px">
-                <date-picker v-model="dateRange" type="date" range
-                    placeholder="Vui lòng chọn khoảng thời gian thống kê"></date-picker>
-                <button class="btn btn-primary" @click="getReport()"
-                    style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Thống kê</button>
-                <button v-if=" currentUser.permission == 1" class="btn btn-success" @click="exportData()"
-                    style="height:33px; font-size:14px; margin: -5px 0px 0px 0px">Xuất file Excel</button>
+                <select class="form-select" v-model="option"  @change="getReport()">
+                    <option value="2">Theo tháng</option>
+                    <option value="1">Theo tuần</option>
+                    <option value="3">Tuỳ chỉnh</option>
+                </select>
+                <date-picker v-if="option == 1" v-model="dateRange" type="week" placeholder="Vui lòng chọn tuần để thống kê"
+                   @change="getReport()" style="width:300px;position: absolute; right: 140px; top: 3px">
+                </date-picker>
+                <date-picker v-if="option == 2" v-model="dateRange" type="month" placeholder="Vui lòng chọn tháng để thống kê"
+                    @change="getReport()" style="width:300px;position: absolute; right: 140px; top: 3px">
+                </date-picker>
+                <date-picker v-if="option == 3" v-model="dateRange" type="date" range placeholder="Vui lòng chọn khoảng thời gian thống kê"
+                 @change="getReport()" style="width:300px;position: absolute; right: 140px; top:3px">
+                </date-picker>
             </div>
         </div>
         <div class="card-body table-responsive">
@@ -25,7 +33,7 @@
                         </tr>
                         <tr style=" text-align:center;">
                             <td style=" text-align:left;">Công nghỉ tiêu chuẩn theo công ty: <b>{{
-                                    current.totalHoliday}} </b> công
+                            current.totalHoliday}} </b> công
                             </td>
                             <td style=" text-align:center;">Chuẩn tháng</td>
                             <td style=" text-align:center;">Thực tế</td>
@@ -129,7 +137,7 @@
                             <td style="width:200px;" v-else>{{ user.fullname }}</td>
 
                             <td style=" text-align:center; width:90px;" v-if="user.date_official_new != 0">{{
-                                user.date_official_new}}</td>
+                            user.date_official_new}}</td>
                             <td style=" text-align:center;  width:90px;" v-else><b>Thử việc</b></td>
                             <td style=" text-align:right; width:150px;" v-if="user.date_official_new != 0">
                                 {{ user.totalWorkDateY ? user.totalWorkDateY+" năm":" "}}
@@ -164,11 +172,11 @@
                             <td v-else style="width:90px;"><b style="color:gray;">{{ user.currentWar }}</b></td>
 
                             <td style="width:65px;" v-if="expected.end_date > current.end_date">{{
-                                formatNumber(user.timeHoldWar) }}
+                            formatNumber(user.timeHoldWar) }}
                             </td>
                             <td style="width:65px;" v-if="expected.end_date > current.end_date">{{
-                                formatNumber(user.avgTimeHoldWar)
-                                }}
+                            formatNumber(user.avgTimeHoldWar)
+                            }}
                             </td>
                             <td v-if=" expected.end_date > current.end_date & user.nextWar == 'Warrior 1'" style="width:90px;"><b style="color:green;">{{ user.nextWar }}</b></td>
                             <td v-else-if=" expected.end_date > current.end_date & user.nextWar == 'Warrior 2'" style="width:90px;"><b style="color:orange;">{{ user.nextWar }}</b></td>
@@ -179,7 +187,7 @@
 
 
                             <td style="width:65px;" v-if="expected.end_date > current.end_date">{{
-                                formatNumber(user.timeIncreaseWar) }}
+                            formatNumber(user.timeIncreaseWar) }}
                             </td>
                             <td style="width:65px;" v-if="expected.end_date > current.end_date & user.avgTimeIncreaseWar < 5"><b style="color:green;">{{formatNumber(user.avgTimeIncreaseWar)}}</b></td>
 							<td style="width:65px;" v-else-if="expected.end_date > current.end_date & user.avgTimeIncreaseWar > 5"">{{formatNumber(user.avgTimeIncreaseWar)}}</td>
@@ -206,6 +214,7 @@ export default {
     },
     data() {
         return {
+            option: 2,
             dateRange: '',
             data: [],
             expected: {},
@@ -225,29 +234,47 @@ export default {
         async getReport() {
             let params = {
                 search: this.search ,
-                start_date: this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD'),
-                end_date: this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : moment().endOf('month').format('YYYY-MM-DD'),
+                //time: this.dateRange ? moment(this.dateRange).format('YYYY-MM-DD') : '',
+                //start_date: this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD'),
+                //end_date: this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : moment().endOf('month').format('YYYY-MM-DD'),
+            };
+            if (this.option == 1) {
+                params.start_date = this.dateRange ? moment(this.dateRange).startOf('week').format('YYYY-MM-DD') : moment().startOf('week').format('YYYY-MM-DD');
+                params.end_date = this.dateRange ? moment(this.dateRange).endOf('week').format('YYYY-MM-DD') : moment().endOf('week').format('YYYY-MM-DD');;
             }
-            const res = await $get('/time-keeping/get-report', {...params});
+            if (this.option == 2) {
+                params.start_date = this.dateRange ? moment(this.dateRange).startOf('month').format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD');
+                params.end_date = this.dateRange ? moment(this.dateRange).endOf('month').format('YYYY-MM-DD') : moment().endOf('month').format('YYYY-MM-DD');
+            }
+            if (this.option == 3) {
+                params.start_date = this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD');
+                params.end_date = this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : moment().endOf('month').format('YYYY-MM-DD');
+            }
+
+            const res = await $get('/time-keeping/get-report', params);
             if (res.code == 200) {
                 this.data = res.data.result;
                 this.expected = res.data.expected;
                 this.current = res.data.current;
+            }
+            else {
+                toastr.error('Thời gian chọn để thống kê không hợp lệ, cần chọn ngày bắt đầu nhỏ hơn hoặc bằng ngày hôm nay!');
+                return false;
             }
 
         },
         formatNumber(val) {
             return (Math.round(val * 100) / 100).toFixed(2);
         },
-        async exportData() {
+        //async exportData() {
 
-                let option = this.option;
-                let search = this.search;
-                let time = this.timeSelected? moment(this.timeSelected).format('YYYY-MM-DD'): '';
+        //        let option = this.option;
+        //        let search = this.search;
+        //        let time = this.timeSelected? moment(this.timeSelected).format('YYYY-MM-DD'): '';
             // const res = await $get('/time-keeping/export', {...params});
 
-            window.open("/time-keeping-report/export?option="+option+"&search="+search+"&time="+time,'_blank');
-        }
+        //    window.open("/time-keeping-report/export?option="+option+"&search="+search+"&time="+time,'_blank');
+        //}
     }
 }
 </script>

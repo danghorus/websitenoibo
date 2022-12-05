@@ -1035,7 +1035,7 @@ class TimeKeepingService
                                 $timeGoOut += ($timeTo - $timeFrom);
                             }
                             if ($checkIn !="" && $checkOut !="") {
-                                if ($configDay && ($value->petition_type == 0 || $value->petition_type == 1 || $value->petition_type == 4)) {
+                                if ($configDay && ($value->petition_type == 0 || $value->petition_type == 1 || $value->petition_type == 4 || $value->petition_type == 9)) {
                                     $start = $configDay['start_timeAM'] != '' ? strtotime($value->check_date . ' ' . $configDay['start_timeAM']) : '';
                                     $end = $configDay['end_timePM'] != '' ? strtotime($value->check_date . ' ' . $configDay['end_timePM']) : '';
 
