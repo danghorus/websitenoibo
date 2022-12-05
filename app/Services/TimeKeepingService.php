@@ -1031,6 +1031,11 @@ class TimeKeepingService
                             $timeFrom = strtotime($value->check_date. ' '. $value->time_from);
                             $timeTo = strtotime($value->check_date. ' '. $value->time_to);
                             if($value->petition_type == 9) {
+                                if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' || $labelDay == 'thursday' || $labelDay == 'friday'){
+                                    $totalTimeKeeping ++;
+                                }else if($labelDay == 'saturday'){
+                                    $totalTimeKeeping = $totalTimeKeeping + 1/2;
+                                }
                                 $totalGoOut++;
                                 $timeGoOut += ($timeTo - $timeFrom);
                             }
