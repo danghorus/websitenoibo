@@ -747,7 +747,7 @@ class TaskController extends Controller
             ->where('tt.valid', '=', 1)
             //->orderByRaw('start_time DESC')
             //->orderByRaw('id DESC')
-            ->whereNotNull( 'tt.task_department')
+            //->where( 'tt.task_department', '!=', null)
             ->select('tt.*')
             ->selectRaw("(SELECT count(t.id) total_child FROM tasks as t WHERE t.task_parent = tt.id) total_child");
         //if( $Status2 != 10){
@@ -759,7 +759,10 @@ class TaskController extends Controller
         if ($startTime && $endTime) {
             $builder->whereDate('tt.start_time', '>=', $startTime)->whereDate('tt.start_time', '<=', $endTime);
         }
-        if ($projectId > 0) {
+         if ($projectId == 1) {
+            $builder->where('tt.project_id', '=', null);
+        }
+        if ($projectId > 1) {
             $builder->where('tt.project_id', '=',$projectId);
         }
 
@@ -773,13 +776,12 @@ class TaskController extends Controller
         if ($taskDepartment == 12) {
             $builder->where('tt.task_department', '=', $department);
         }
-
-        if ($taskDepartment && $taskDepartment != 12 ) {
-            $builder->where('tt.task_department', '=', $taskDepartment);
+         if ($taskDepartment == 20) {
+            $builder->where('tt.task_department', '=', null);
         }
 
-        if (isset($filters['project_id']) && $filters['project_id'] > 0) {
-            $builder->where('project_id', '=', $filters['project_id']);
+        if ($taskDepartment && $taskDepartment != 12 && $taskDepartment != 20 ) {
+            $builder->where('tt.task_department', '=', $taskDepartment);
         }
 
         if (isset($filters['status'])) {
@@ -810,6 +812,14 @@ class TaskController extends Controller
         
         $tasks = $builder->paginate( $perPage , ['*'], 'page', $request->input('page') ?? 1);
 
+
+        $totalTaskProcessing = 0;
+        $totalTaskPause = 0;
+        $totalTaskComplete = 0;
+        $totalWaitFeedback = 0;
+        $totalRealtime = 0;
+        $totalTime = 0;
+
         foreach ($tasks as $task) {
             $task->department_label = $task->task_department? Task::DEPARTMENTS[$task->task_department]: '';
             if ($task->status == 0) {
@@ -832,6 +842,46 @@ class TaskController extends Controller
                 $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
             }
 
+
+            $today = date('Y-m-d', strtotime(now()));
+            if(($task->start_time <= $today) && ($task->end_time >= $today)) {
+                $totalRealtime = $totalRealtime + $task->real_time;
+                $totalTime = $totalTime + $task->time;
+            }
+
+            switch ($task->status) {
+                case 0:
+                    $totalTaskProcessing++;
+                    break;
+                case 1:
+                    $totalTaskProcessing++;
+                    break;
+                case 2:
+                    $totalTaskProcessing++;
+                    break;
+                case 3:
+                    $totalTaskPause++;
+                    break;
+                case 4:
+                    $totalTaskComplete++;
+                    break;
+                case 5:
+                    $totalWaitFeedback++;
+                    break;
+                case 6:
+                    $totalTaskProcessing++;
+                    break;
+            }
+            $task->time_real = 0;
+            $task->time_now = date('Y-m-d', strtotime(now()));
+
+            if ($task->status == 4 || $task->status == 3 || $task->status == 5 || $task->status == 6) {
+                $task->time_real = $task->real_end_time?
+                    round(((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600 - $task->time_pause), 2): 0;
+
+            } else if ($task->status == 2){
+                $task->time_real = round(((time() - strtotime($task->real_start_time))/3600 - $task->time_pause), 2);
+            }
         }
 
         return [
@@ -841,6 +891,14 @@ class TaskController extends Controller
                 'currentPage' => $tasks->currentPage(),
                 'lastPage' => $tasks->lastPage(),
             ],
+            'summary' => [
+                'total' => count($tasks),
+                'totalRealtime' => $totalRealtime,
+                'totalTime' => $totalTime,
+                'total_processing' => $totalTaskProcessing,
+                'total_pause' => $totalTaskPause,
+                'total_complete' => $totalTaskComplete,
+            ]
         ];
     }
 
@@ -933,6 +991,11 @@ class TaskController extends Controller
         if($status == 5){
             $task->progress  = 100;
         }
+        
+        if($status == 4){
+            $task->progress  = 100;
+        }
+        
         if($status == 20){
             $task->status = null;
 

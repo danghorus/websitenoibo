@@ -54,6 +54,7 @@
                             <label for="project_description" style="font-size:12px">Theo dự án</label>
                             <select class="form-select" @change="changeOption()" v-model="project" style="width:160px">
                                 <option value="0" selected="selected">Tất cả</option>
+                                <option value="1">Trống</option>
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">
                                     {{ project.project_name }}</option>
                             </select>
@@ -79,6 +80,7 @@
                             <select class="form-select" @change="changeOption()" v-model="performer"
                                 style="width:160px">
                                 <option value="0" selected="selected">Tất cả</option>
+                                <option value="20" >Trống</option>
                                 <option v-for="(user, index) in users" :key="index" :value="user.id">{{ user.fullname }}
                                 </option>
                             </select>
@@ -101,6 +103,54 @@
                     </li>
                     <li style="margin-top:38px;">
                         <button class="btn btn-outline-secondary "><a v-bind:href="'/my_work'">Việc của tôi</a></button>
+                    </li> &ensp;
+                    <li class="nav-item">
+                        <button class="btn btn-outline-info" @click="ShowInfoListWork()" type="button" data-toggle="collapse"
+                            data-target="#collapseExample_1" aria-expanded="false" aria-controls="collapseExample" style="margin-top: 38px">
+                            Thông tin
+                        </button>
+                        <div class="col-lg">
+                            <div class="collapse info-list-work" id="collapseExample_1" v-if="showInfoListWork">
+                                <div>
+                                    <table style="width:100%; border: 0px" class="my-work">
+                                        <h4 style="margin: 20px 0px 20px 130px;">Thông tin làm việc</h4>
+                                        <tr>
+                                            <td><b>Tổng số công việc của bạn</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.total }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Đang làm</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_processing }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Tạm dừng</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_pause }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Hoàn thành</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_complete }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Thời gian làm việc dự kiến trong ngày</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalTime }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Thời gian làm việc thực tế trong ngày</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalRealtime }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="float-right p-2">
+                                    <button type="submit" class="btn btn-secondary p-2" @click="ShowInfoListWork()">Đóng</button>
+                                </div>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </nav>
@@ -175,6 +225,7 @@
                             <select class="form-select" @change="changeProject($event, item.id)"
                                 v-model="item.project_id">
                                 <option value="1" disabled>Chọn dự án</option>
+                                <option value="" >Bỏ chọn</option>
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">
                                     {{ project.project_name }}</option>
                             </select>
@@ -220,6 +271,7 @@
                         <td>
                             <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                 @change="changePerformer($event, item.id)" v-model="item.task_performer">
+                                <option value="">Bỏ chọn</option>
                                 <option v-for="(user, index) in users" :key="index" :value="user.id">{{ user.fullname }}
                                 </option>
                             </select>
@@ -239,6 +291,7 @@
                             <div style="display: flex">
                                 <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                     @change="changeDepartment($event, item.id)" v-model="item.task_department">
+                                    <option value="">Bỏ chọn</option>
                                     <option value="2">Dev</option>
                                     <option value="3">Game Design</option>
                                     <option value="4">Art</option>
@@ -332,6 +385,7 @@ export default {
             showModal: false,
             showListWork: true,
             showFilter: false,
+            showInfoListWork: false,
             projects: [],
             departments: [],
             summary: '',
@@ -443,7 +497,9 @@ export default {
         ShowInfoListWork() {
             this.showInfoListWork = !this.showInfoListWork
         },
-
+        ShowInfoListWork() {
+            this.showInfoListWork = !this.showInfoListWork
+        },
         showModalEditTask(id) {
             this.showModalEdit = true;
             $(this.$refs.modalUpdateTask).modal('show');
@@ -499,6 +555,7 @@ export default {
             if (res.code == 200) {
                 this.list = res.tasks;
                 this.paginate = res.paginate;
+                this.summary = res.summary;
             }
         },
 
@@ -610,7 +667,20 @@ export default {
 
             if (res.code == 200) {
                 toastr.success('Xóa thành công');
-                this.getListWorks(page = res.paginate);
+                this.taskId = 0;
+                if (res.arr_parent.length > 0) {
+                    let arrIndex = [];
+                    let listData = _.cloneDeep(this.list);
+                    res.arr_parent.forEach(item => {
+                        let index = _.findIndex(listData, val => val.id === item);
+                        arrIndex.push(index);
+                        listData = listData[index]._children;
+                    });
+                    this.list = this.resetData([...this.list], arrIndex, 0, res.task_id);
+                } else {
+                    let index = _.findIndex(this.list, val => val.id == res.task_id);
+                    this.list.splice(index, 1);
+                }
             }
         },
     },
@@ -680,15 +750,23 @@ table.my-work td {
     border: 2px;
 }
 
-.info-my-work {
+.info-list-work {
     width: 500px;
     box-shadow: 2px 5px 5px #d0d0d0;
     position: absolute;
-    left: 15px;
+    right: 0px;
     top: 5px;
     z-index: 9;
     background: #c5c5c5;
     border: 2px;
+}
+
+.modal-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 /*
