@@ -161,8 +161,8 @@
                     <tr style="text-align: center;">
                         <th scope="col">STT</th>
                         <th scope="col" width="500px">Tên công việc</th>
-                        <th scope="col" width="120px">Loại công việc</th>
-                        <th scope="col">Cấp độ công việc</th>
+                        <th scope="col" width="150px">Loại công việc</th>
+                        <th scope="col" width="150px" >Cấp độ công việc</th>
                         <th scope="col" width="150px">Dự án</th>
                         <th scope="col" width="200px">Công việc cha</th>
                         <th scope="col" width="80px">Bắt đầu</th>
@@ -174,7 +174,7 @@
                         <th scope="col" width="100px">Bộ phận</th>
                         <th scope="col" width="40px">Tiến độ</th>
                         <th scope="col" width="145px">Trạng thái</th>
-                        <th scope="col" width="145px">Thao tác</th>
+                        <th scope="col" width="120px">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody v-for="(item, index) in list" :key="item.id">
@@ -242,7 +242,7 @@
                             </multiselect>-->
                         </td>
                         <!--@open="getTaskByProject(item.project_id)"-->
-                        <td style="width:500px;">
+                        <td>
                             <div>
                                 <treeselect :options="tasks" :load-options="loadOptions"
                                     @open="getTaskByProject(item.project_id)"
