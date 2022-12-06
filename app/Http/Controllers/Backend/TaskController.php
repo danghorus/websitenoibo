@@ -726,7 +726,8 @@ class TaskController extends Controller
                 'total_processing' => $totalTaskProcessing,
                 'total_pause' => $totalTaskPause,
                 'total_complete' => $totalTaskComplete,
-            ]
+            ],
+            'currentUser' => Auth::user(),
         ];
     }
 
@@ -1392,14 +1393,10 @@ class TaskController extends Controller
 
 
         if (isset($filter['project_id']) && $filter['project_id']) {
-            $filter['start_date'] = '2022-01-01';
-            $filter['end_date'] = '2025-12-31';
 
             $taskSummaryQuery->whereIn('t.project_id', $project);
-            //->whereRaw('start_time', '>=', $filter['start_date'])->whereRaw('end_time', '<=', $filter['end_date']);
 
             $summaryQuery->whereIn('t.project_id', $project);
-            //->whereRaw('start_time', '>=', $filter['start_date'])->whereRaw('end_time', '<=', $filter['end_date']);
         }
 
         if (isset($filter['task_department']) && $filter['task_department']) {
@@ -1409,19 +1406,11 @@ class TaskController extends Controller
             $summaryQuery->whereIn('t.task_department', $department);
         }
 
-//        if (isset($filter['start_date']) && $filter['start_date'] &&isset($filter['end_date']) && $filter['end_date']) {
-//
-//            $taskSummaryQuery->where('t.project_id', '=', $filter['project_id']);
-//
-//            $summaryQuery->where('t.project_id', '=', $filter['project_id']);
-//        }
         $taskSummaryQuery->where('valid', '=', 1);
         $taskSummary = $taskSummaryQuery->first();
 
         $users = $usersQuery->with(['task' => function ($q) use ($filter, $project, $department) {
             if (isset($filter['project_id']) && $filter['project_id']) {
-                $filter['start_date'] = '2022-01-01';
-                $filter['end_date'] = '2025-12-31';
                 $q->whereIn('project_id', $project)
                   ->where('start_time', '>=', $filter['start_date'])->where('end_time', '<=', $filter['end_date']);
             }
