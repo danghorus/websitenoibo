@@ -13,7 +13,17 @@
                 <template slot="name" slot-scope="props">
                     <input style="width:400px; border:0px;font-size:12px;"  @change="changeTaskName($event, props.row.id)" v-model="props.row.task_name">
                 </template>
-
+                <template slot="type" slot-scope="scope">
+                    <div style="display: flex; font-size:12px;">
+                        <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                            @change="changeSticker($event, scope.row.id)" v-model="scope.row.task_sticker">
+                            <option v-if="scope.row.task_sticker != 0 || scope.row.task_sticker == null" :value="0">Bỏ chọn</option>
+                            <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">
+                                {{ sticker.sticker_name }}
+                            </option>
+                        </select>
+                    </div>
+                </template>
                 <template slot="start_time_label" slot-scope="props">
                     <template v-if="props.row.weight != null || props.row.time != null">
                     <div style="display: flex">
@@ -177,7 +187,7 @@ import Paginate from "../../components/Paginate";
 export default {
     name: "ListTask",
     components: { VueAdsTable, CreateTask, Paginate },
-    props: ['paginate' , 'projectId', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
+    props: ['paginate' , 'projectId','sticker', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'searchProjectId', 'search',
         'startTime', 'taskPerformer', 'taskDepartment','progress', 'status', 'list', 'currentUser', 'bus'],
 
     data () {
@@ -205,6 +215,10 @@ export default {
                 {
                     title: 'Công việc',
                     property: 'name',
+                },
+                {
+                    title: 'Loại công việc',
+                    property: 'type',
                 },
                 {
                     title: 'Ngày bắt đầu',
@@ -495,6 +509,14 @@ export default {
                     toastr.success(res.message);
                     //this.getListWorks();
                 }
+            }
+        },
+        async changeSticker(e, taskId) {
+
+            const res = await $post(`/tasks/change-sticker/${taskId}`, { task_sticker: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
             }
         },
         async changeStartTime(e, taskId) {
