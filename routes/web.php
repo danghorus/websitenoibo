@@ -126,6 +126,19 @@ Route::middleware(['auth'])->group(function () {
     Route::post('stickers/update/{id}', [StickerController::class, 'update']);
     Route::post('stickers/delete/{id}', [StickerController::class, 'delete']);
     Route::get('/stickers/get_all', [StickerController::class, 'index']);
+    Route::post('stickers/change-sticker_name/{id}', [StickerController::class, 'changeStickerName']);
+    Route::post('stickers/change-sticker_department/{id}', [StickerController::class, 'changeStickerDepartment']);
+    Route::post('stickers/change-level1/{id}', [StickerController::class, 'changeLevel1']);
+    Route::post('stickers/change-level2/{id}', [StickerController::class, 'changeLevel2']);
+    Route::post('stickers/change-level3/{id}', [StickerController::class, 'changeLevel3']);
+    Route::post('stickers/change-level4/{id}', [StickerController::class, 'changeLevel4']);
+    Route::post('stickers/change-level5/{id}', [StickerController::class, 'changeLevel5']);
+    Route::post('stickers/change-level6/{id}', [StickerController::class, 'changeLevel6']);
+    Route::post('stickers/change-level7/{id}', [StickerController::class, 'changeLevel7']);
+    Route::post('stickers/change-level8/{id}', [StickerController::class, 'changeLevel8']);
+    Route::post('stickers/change-level9/{id}', [StickerController::class, 'changeLevel9']);
+    Route::post('stickers/change-level10/{id}', [StickerController::class, 'changeLevel10']);
+
 
 
     //Task

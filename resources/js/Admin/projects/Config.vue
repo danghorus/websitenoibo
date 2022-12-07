@@ -158,7 +158,7 @@
                         <tr>
                             <th scope="col" width="20px">STT</th>
                             <th scope="col" width="250px" style="text-align:center;">Tên nhãn dán</th>
-                            <th scope="col">Bộ phận</th>
+                            <th scope="col" >Bộ phận</th>
                             <th scope="col">Level 1</th>
                             <th scope="col">Level 2</th>
                             <th scope="col">Level 3</th>
@@ -175,18 +175,62 @@
                     <tbody>
                         <tr v-for="(sticker, index) in stickers" :key="index">
                             <td>{{ index + 1 }}</td>
-                            <td>{{ sticker.sticker_name }}</td>
-                            <td>{{ sticker.sticker_department_label }}</td>
-                            <td>{{ sticker.level_1 }}</td>
-                            <td>{{ sticker.level_2 }}</td>
-                            <td>{{ sticker.level_3 }}</td>
-                            <td>{{ sticker.level_4 }}</td>
-                            <td>{{ sticker.level_5 }}</td>
-                            <td>{{ sticker.level_6 }}</td>
-                            <td>{{ sticker.level_7 }}</td>
-                            <td>{{ sticker.level_8 }}</td>
-                            <td>{{ sticker.level_9 }}</td>
-                            <td>{{ sticker.level_10 }}</td>
+                            <td>
+                                <input style="width:100%; border:0px; text-align:left;" 
+                                @change="changeStickerName($event, sticker.id)" v-model="sticker.sticker_name">
+                            </td>
+                            <td>
+                                <select class="form-select" style="width:130px"
+                                @change="changeStickerDepartment($event, sticker.id)" v-model="sticker.sticker_department">
+                                    <option value="12" disabled>Lựa chọn</option>
+                                    <option value="1">Tất cả</option>
+                                    <option value="2">Dev</option>
+                                    <option value="3"> Game design</option>
+                                    <option value="4">Art</option>
+                                    <option value="5">Tester</option>
+                                    <option value="11">Marketing</option>
+                                </select>
+                            </td>
+                        <td>
+                            <input style="width: 70px; border:0px; text-align:left;"
+                            @change="changeLevel1($event, sticker.id)" v-model="sticker.level_1">
+                        </td>
+                        <td>
+                            <input style="width: 70px; border:0px; text-align:left;" 
+                            @change="changeLevel2($event, sticker.id)" v-model="sticker.level_2">
+                        </td>
+                        <td>
+                            <input style="width: 70px; border:0px; text-align:left;"
+                            @change="changeLevel3($event, sticker.id)" v-model="sticker.level_3">
+                        </td>
+                        <td>
+                            <input style="width: 70px; border:0px; text-align:left;"
+                            @change="changeLevel4($event, sticker.id)" v-model="sticker.level_4">
+                        </td>
+                        <td>
+                            <input style="width: 70px; border:0px; text-align:left;"
+                            @change="changeLevel5($event, sticker.id)" v-model="sticker.level_5">
+                        </td>
+                        <td>
+                            <input style="width: 70px; border:0px; text-align:left;"
+                            @change="changeLevel6($event, sticker.id)" v-model="sticker.level_6">
+                        </td>
+                        <td>
+                            <input style="width: 70px; border:0px; text-align:left;"
+                            @change="changeLevel7($event, sticker.id)" v-model="sticker.level_7">
+                        </td>
+                        <td>
+                            <input style="width: 70px; border:0px; text-align:left;"
+                            @change="changeLevel8($event, sticker.id)" v-model="sticker.level_8">
+                        </td>
+                        <td>
+                            <input style="width: 70px; border:0px; text-align:left;"
+                            @change="changeLevel9($event, sticker.id)" v-model="sticker.level_9">
+                        </td>
+                        <td>
+                            <input style="width: 70px; border:0px; text-align:left;"
+                            @change="changeLevel10($event, sticker.id)" v-model="sticker.level_10">
+                        </td>
                             <td>
                                 <nav class="navbar navbar-expand">
                                     <div class="collapse navbar-collapse">
@@ -258,6 +302,103 @@ export default {
             this.priority_label = priority.priority_label;
             this.priority_id = priority.id;
         },
+        async changeStickerName(e, stickerId) {
+            const res = await $post(`/stickers/change-sticker_name/${stickerId}`, { sticker_name: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getAllSticker();
+            }
+        },
+        async changeStickerDepartment(e, stickerId) {
+            const res = await $post(`/stickers/change-sticker_department/${stickerId}`, { sticker_department: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getAllSticker();
+            }
+        },
+        async changeLevel1(e, stickerId) {
+            const res = await $post(`/stickers/change-level1/${stickerId}`, { level_1: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getAllSticker();
+            }
+        },
+        async changeLevel2(e, stickerId) {
+            const res = await $post(`/stickers/change-level2/${stickerId}`, { level_2: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getAllSticker();
+            }
+        },
+        async changeLevel3(e, stickerId) {
+            const res = await $post(`/stickers/change-level3/${stickerId}`, { level_3: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getAllSticker();
+            }
+        },
+        async changeLevel4(e, stickerId) {
+            const res = await $post(`/stickers/change-level4/${stickerId}`, { level_4: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getAllSticker();
+            }
+        },
+        async changeLevel5(e, stickerId) {
+            const res = await $post(`/stickers/change-level5/${stickerId}`, { level_5: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getAllSticker();
+            }
+        },
+        async changeLevel6(e, stickerId) {
+            const res = await $post(`/stickers/change-level6/${stickerId}`, { level_6: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getAllSticker();
+            }
+        },
+        async changeLevel7(e, stickerId) {
+            const res = await $post(`/stickers/change-level7/${stickerId}`, { level_7: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getAllSticker();
+            }
+        },
+        async changeLevel8(e, stickerId) {
+            const res = await $post(`/stickers/change-level8/${stickerId}`, { level_8: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getAllSticker();
+            }
+        },
+        async changeLevel9(e, stickerId) {
+            const res = await $post(`/stickers/change-level9/${stickerId}`, { level_9: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getAllSticker();
+            }
+        },
+        async changeLevel10(e, stickerId) {
+            const res = await $post(`/stickers/change-level10/${stickerId}`, { level_10: e.target.value });
+
+            if (res.code == 200) {
+                toastr.success(res.message);
+                this.getAllSticker();
+            }
+        },
+    
         async savePriority() {
             if (!this.priority_label) {
                 toastr.error('Vui lòng nhập tên mức độ ưu tiên');
