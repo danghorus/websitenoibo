@@ -419,6 +419,7 @@ export default {
         changeOption(page) {
             this.getListWorks(page);
             this.getAllUser(page);
+            this.getAllSticker(page);
         },
 
         async loadOptions({ action, parentNode, callback }) {
@@ -462,7 +463,14 @@ export default {
             }
         },
         async getAllSticker() {
-            const res = await $get('/stickers/get_all');
+
+            let params = {};
+
+            if (this.option1 && this.option1 != 1) {
+                params.task_department = this.option1;
+            }
+
+            const res = await $get('/stickers/get_all', params);
             if (res.code == 200) {
                 this.stickers = res.data;
             }

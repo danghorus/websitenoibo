@@ -78,6 +78,18 @@
                                 <input type="text" v-model="sticker_name" class="form-control" id="sticker_name"
                                     placeholder="Nhập loại công việc">
                             </li> &ensp;
+                            <li class="nav-item">
+                                <label>Theo bộ phận</label>
+                                <select class="form-select" style="width:130px" v-model="sticker_department">
+                                    <option value="12" disabled>Lựa chọn</option>
+                                    <option value="1">Tất cả</option>
+                                    <option value="2">Dev</option>
+                                    <option value="3"> Game design</option>
+                                    <option value="4">Art</option>
+                                    <option value="5">Tester</option>
+                                    <option value="11">Marketing</option>
+                                </select>
+                            </li> &ensp;
                                 <li class="nav-item">
                                 <label>Level 1</label>
                                 <input type="text" v-model="level_1" class="form-control" id="level_1"
@@ -146,6 +158,7 @@
                         <tr>
                             <th scope="col" width="20px">STT</th>
                             <th scope="col" width="250px" style="text-align:center;">Tên nhãn dán</th>
+                            <th scope="col">Bộ phận</th>
                             <th scope="col">Level 1</th>
                             <th scope="col">Level 2</th>
                             <th scope="col">Level 3</th>
@@ -163,6 +176,7 @@
                         <tr v-for="(sticker, index) in stickers" :key="index">
                             <td>{{ index + 1 }}</td>
                             <td>{{ sticker.sticker_name }}</td>
+                            <td>{{ sticker.sticker_department_label }}</td>
                             <td>{{ sticker.level_1 }}</td>
                             <td>{{ sticker.level_2 }}</td>
                             <td>{{ sticker.level_3 }}</td>
@@ -208,6 +222,7 @@ export default {
         return{
             isShowCreateSticker: false,
             sticker_name: '',
+            sticker_department: '',
             level_1: '',
             level_2: '',
             level_3: '',
@@ -292,6 +307,7 @@ export default {
         handleUpdateSticker(sticker) {
             this.isShowCreateSticker = true;
             this.sticker_name = sticker.sticker_name;
+            this.sticker_department = sticker.sticker_department;
             this.level_1 = sticker.level_1;
             this.level_2 = sticker.level_2;
             this.level_3 = sticker.level_3;
@@ -312,6 +328,7 @@ export default {
             if (this.sticker_id > 0) {
                 const res = await $post(`/stickers/update/${this.sticker_id}`, {
                     sticker_name: this.sticker_name,
+                    sticker_department: this.sticker_department,
                     level_1: this.level_1,
                     level_2: this.level_2,
                     level_3: this.level_3,
@@ -327,6 +344,7 @@ export default {
                     toastr.success('Cập nhật thành công');
                     this.isShowCreateSticker = false;
                     this.sticker_name = '';
+                    this.sticker_department = '';
                     this.level_1 = '';
                     this.level_2 = '';
                     this.level_3 = '';
@@ -343,6 +361,7 @@ export default {
             } else {
                 const res = await $post('/stickers/create', {
                     sticker_name: this.sticker_name,
+                    sticker_department: this.sticker_department,
                     level_1: this.level_1,
                     level_2: this.level_2,
                     level_3: this.level_3,
@@ -359,6 +378,7 @@ export default {
                     toastr.success('Tạo mới thành công');
                     this.isShowCreateSticker = false;
                     this.sticker_name = '';
+                    this.sticker_department = '';
                     this.level_1 = '';
                     this.level_2 = '';
                     this.level_3 = '';
