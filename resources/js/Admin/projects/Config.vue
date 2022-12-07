@@ -155,9 +155,9 @@
                 </div>
                 <table class="table">
                     <thead>
-                        <tr>
+                        <tr style="text-align:center;">
                             <th scope="col" width="20px">STT</th>
-                            <th scope="col" width="250px" style="text-align:center;">Tên nhãn dán</th>
+                            <th scope="col" width="250px">Tên nhãn dán</th>
                             <th scope="col" >Bộ phận</th>
                             <th scope="col">Level 1</th>
                             <th scope="col">Level 2</th>
@@ -176,7 +176,7 @@
                         <tr v-for="(sticker, index) in stickers" :key="index">
                             <td>{{ index + 1 }}</td>
                             <td>
-                                <input style="width:100%; border:0px; text-align:left;" 
+                                <input class="form-control" style="width:100%; text-align:left;" 
                                 @change="changeStickerName($event, sticker.id)" v-model="sticker.sticker_name">
                             </td>
                             <td>
@@ -192,43 +192,43 @@
                                 </select>
                             </td>
                         <td>
-                            <input style="width: 70px; border:0px; text-align:left;"
+                            <input class="form-control" style="width: 80px; text-align:left;"
                             @change="changeLevel1($event, sticker.id)" v-model="sticker.level_1">
                         </td>
                         <td>
-                            <input style="width: 70px; border:0px; text-align:left;" 
+                            <input class="form-control" style="width: 80px; text-align:left;" 
                             @change="changeLevel2($event, sticker.id)" v-model="sticker.level_2">
                         </td>
                         <td>
-                            <input style="width: 70px; border:0px; text-align:left;"
+                            <input class="form-control" style="width: 80px; text-align:left;"
                             @change="changeLevel3($event, sticker.id)" v-model="sticker.level_3">
                         </td>
                         <td>
-                            <input style="width: 70px; border:0px; text-align:left;"
+                            <input class="form-control" style="width: 80px; text-align:left;"
                             @change="changeLevel4($event, sticker.id)" v-model="sticker.level_4">
                         </td>
                         <td>
-                            <input style="width: 70px; border:0px; text-align:left;"
+                            <input class="form-control" style="width: 80px; text-align:left;"
                             @change="changeLevel5($event, sticker.id)" v-model="sticker.level_5">
                         </td>
                         <td>
-                            <input style="width: 70px; border:0px; text-align:left;"
+                            <input class="form-control" style="width: 80px; text-align:left;"
                             @change="changeLevel6($event, sticker.id)" v-model="sticker.level_6">
                         </td>
                         <td>
-                            <input style="width: 70px; border:0px; text-align:left;"
+                            <input class="form-control" style="width: 80px; text-align:left;"
                             @change="changeLevel7($event, sticker.id)" v-model="sticker.level_7">
                         </td>
                         <td>
-                            <input style="width: 70px; border:0px; text-align:left;"
+                            <input class="form-control" style="width: 80px; text-align:left;"
                             @change="changeLevel8($event, sticker.id)" v-model="sticker.level_8">
                         </td>
                         <td>
-                            <input style="width: 70px; border:0px; text-align:left;"
+                            <input class="form-control" style="width: 80px; text-align:left;"
                             @change="changeLevel9($event, sticker.id)" v-model="sticker.level_9">
                         </td>
                         <td>
-                            <input style="width: 70px; border:0px; text-align:left;"
+                            <input class="form-control" style="width: 80px; text-align:left;"
                             @change="changeLevel10($event, sticker.id)" v-model="sticker.level_10">
                         </td>
                             <td>
