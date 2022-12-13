@@ -56,8 +56,7 @@
                                 <b>Ca hành chính</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
                                 time.checkout:'-:-' }}</div>
-                                <div>{{ time.go_out ? time.go_out: '-:-'}} - {{ time.go_in ?
-                                time.go_in:'-:-' }} (Ra ngoài: {{ time.time_out}})</div>
+                                <div>Số lần: {{ time.total_pause ? time.total_pause : 0 }} - Thời gian: {{ time.time_pause}}</div>
                                 <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
                                     Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_late_0 > 0">(Đi sớm: {{ time.go_early }} -
@@ -397,10 +396,12 @@ export default {
                 }else if (res.showBtn && res.showBtn == 'checkout') {
                     this.showCheckOut = true;
                 }
-                if (res.showBtn_1 && res.showBtn_1 == 'go_out') {
+                if (res.showBtn_1 == 'go_out') {
                     this.showGoOut = true;
-                } else if (res.showBtn_1 && res.showBtn_1 == 'go_in') {
+                    this.showGoIn = false;
+                } else if (res.showBtn_1 == 'go_in') {
                     this.showGoIn = true;
+                    this.showGoOut = false;
                 }
                 if (res.showBtn_2 && res.showBtn_2 == 'final_checkout') {
                     this.showFinalCheckout = true;

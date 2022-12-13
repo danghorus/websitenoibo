@@ -200,6 +200,8 @@ class TimeKeepingService
                                     $finalCheckout = $tmp[$key]['final_checkout'] = $time->final_checkout? date('H:i', strtotime($key. ' '. $time->final_checkout)) : '';
                                     $tmp[$key]['go_out'] = $time->go_out? date('H:i', strtotime($key. ' '. $time->go_out)) : '-:-';
                                     $tmp[$key]['go_in'] = $time->go_in? date('H:i', strtotime($key. ' '. $time->go_in)) : '-:-';
+                                    $tmp[$key]['time_pause'] = $time->time_pause? $time->time_pause : '';
+                                    $tmp[$key]['total_pause'] = $time->total_pause? $time->total_pause : '';
                                     if( $finalCheckout == ''){
                                         if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
                                             $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
@@ -664,11 +666,6 @@ class TimeKeepingService
             } else if ($timeKeeping->checkin && ! $timeKeeping->checkout) {
                 $showBtn = 'checkout';
             }
-            if ($timeKeeping->go_out == null) {
-                $showBtn_1 = 'go_out';
-            } else if ($timeKeeping->go_out && ! $timeKeeping->go_in) {
-                $showBtn_1 = 'go_in';
-            }
         }
         
         if ($currentUser->check_type == 1) {
@@ -680,9 +677,9 @@ class TimeKeepingService
             if(!$timeKeeping){
                  $showBtn_1 = '';
             }else{
-                if ($timeKeeping->go_out == null && $timeKeeping->checkin != null) {
+                if (($timeKeeping->go_out == null && $timeKeeping->checkin != null) || ($timeKeeping->go_in > $timeKeeping->go_out) ) {
                     $showBtn_1 = 'go_out';
-                } else if ($timeKeeping->go_out && ! $timeKeeping->go_in) {
+                } else if (($timeKeeping->go_out != null && ! $timeKeeping->go_in) || ($timeKeeping->go_out > $timeKeeping->go_in)) {
                     $showBtn_1 = 'go_in';
                 }
                 if($timeKeeping->checkin != null && $timeKeeping->final_checkout == null){
@@ -2183,7 +2180,7 @@ class TimeKeepingService
                     'check_date' => date('Y-m-d', time())
                 ])->first();
 
-            if (!$timeKeeping->go_out) {
+            if (!$timeKeeping->go_out ||($timeKeeping->go_in != null && $timeKeeping->go_in > $timeKeeping->go_out)){
                 $timeKeeping->go_out = date('H:i:s', time());
                 $timeKeeping->save();
 
@@ -2191,8 +2188,13 @@ class TimeKeepingService
                     'code' => 200,
                     'go_out' => true
                 ];
-            } else {
+            } else if(($timeKeeping->go_out != null && $timeKeeping->go_in == null) || ($timeKeeping->go_in < $timeKeeping->go_out)){
                 $timeKeeping->go_in = date('H:i:s', time());
+                $pause = (strtotime($timeKeeping->go_in) - strtotime($timeKeeping->go_out))/60;
+                $total_pause = 1;
+                $timeKeeping->time_pause += $pause;
+                $timeKeeping->total_pause += $total_pause;
+                
                 $timeKeeping->save();
 
                 return [
