@@ -496,7 +496,7 @@ td {
 }
 
 tr:hover {
-    background-color: coral;
+    background-color: rgb(219, 219, 219);
 }
 
 table table-bordered mt-5
