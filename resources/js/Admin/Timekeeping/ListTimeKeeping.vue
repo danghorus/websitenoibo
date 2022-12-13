@@ -10,8 +10,8 @@
                     @click="checkIn()">Checkout</button>
                 <button v-if=" currentUser.permission == 1" class="btn btn-primary" @click="showModalConfig()">Cấu
                     hình</button>
-                <button v-if=" showGoOut && currentUser.check_type == 1 " class="btn btn-danger" @click="GoOut()">Ra Ngoài</button>
-                <button v-if=" showGoIn && currentUser.check_type == 1 " class="btn btn-success" @click="GoOut()">Tiếp tục</button>
+                <button v-if=" showFinalCheckout && showGoOut && currentUser.check_type == 1 " class="btn btn-danger" @click="GoOut()">Ra Ngoài</button>
+                <button v-if=" showFinalCheckout && showGoIn && currentUser.check_type == 1 " class="btn btn-success" @click="GoOut()">Tiếp tục</button>
                 <button v-if="showFinalCheckout && currentUser.check_type == 1 " class="btn btn-success" @click="FinalCheckout()">Final Checkout</button>
             </div>
 
