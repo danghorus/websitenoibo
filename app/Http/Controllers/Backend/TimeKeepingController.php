@@ -125,6 +125,24 @@ class TimeKeepingController extends Controller
         return $result;
 
     }
+     public function final_checkout(Request $request)
+    {
+        $user = Auth::user();
+
+        $result = $this->timeKeepingService->FinalCheckoutHandmade($user);
+
+        return $result;
+
+    }
+    public function go_out(Request $request)
+    {
+        $user = Auth::user();
+
+        $result = $this->timeKeepingService->goOutHandmade($user);
+
+        return $result;
+
+    }
 
     public function export(Request $request)
     {
@@ -178,4 +196,5 @@ class TimeKeepingController extends Controller
             'data' => $data
         ];
     }
+    
 }

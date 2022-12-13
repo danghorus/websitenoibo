@@ -80,6 +80,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/time-keeping/get_user', [TimeKeepingController::class, 'getUser']);
     Route::get('/time-keeping/detail', [TimeKeepingController::class, 'detail']);
     Route::post('/time-keeping/checkin', [TimeKeepingController::class, 'checkin']);
+    Route::post('/time-keeping/final_checkout', [TimeKeepingController::class, 'final_checkout']);
+    Route::post('/time-keeping/go_out', [TimeKeepingController::class, 'go_out']);
     Route::post('/time-keeping/update', [TimeKeepingController::class, 'update']);
 
     Route::post('/time-keeping/petition', [TimeKeepingController::class, 'petition']);

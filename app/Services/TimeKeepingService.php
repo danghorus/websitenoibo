@@ -197,12 +197,25 @@ class TimeKeepingService
                                     $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
                                     $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
                                     $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
-                                    if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                         $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                    }else{
-                                         $tmp[$key]['checkout'] = '-:-';
+                                    $finalCheckout = $tmp[$key]['final_checkout'] = $time->final_checkout? date('H:i', strtotime($key. ' '. $time->final_checkout)) : '';
+                                    $tmp[$key]['go_out'] = $time->go_out? date('H:i', strtotime($key. ' '. $time->go_out)) : '-:-';
+                                    $tmp[$key]['go_in'] = $time->go_in? date('H:i', strtotime($key. ' '. $time->go_in)) : '-:-';
+                                    if( $finalCheckout == ''){
+                                        if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                            $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                        }else{
+                                            $tmp[$key]['checkout'] = '-:-';
+                                        }
+                                    } else {
+                                         $tmp[$key]['checkout'] =  $finalCheckout;
                                     }
                                     $configTimeKeepingDay = $settings[$day]?? [];
+
+                                    $GoOut = $time->go_out? strtotime($key. ' '. $time->go_out): '';
+                                    $GoIn = $time->go_in? strtotime($key. ' '. $time->go_in): '';
+                                    if( $GoOut && $GoIn ){
+                                        $tmp[$key]['time_out'] = (int)(($GoIn - $GoOut)/60);
+                                    }
 
                                     if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timePM']) {
                                         $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
@@ -636,6 +649,8 @@ class TimeKeepingService
 
 
         $showBtn = '';
+        $showBtn_1 = '';
+        $showBtn_2 = '';
 
         if ($currentUser->check_type == 2) {
             $timeKeeping = TimeKeeping::query()
@@ -649,6 +664,33 @@ class TimeKeepingService
             } else if ($timeKeeping->checkin && ! $timeKeeping->checkout) {
                 $showBtn = 'checkout';
             }
+            if ($timeKeeping->go_out == null) {
+                $showBtn_1 = 'go_out';
+            } else if ($timeKeeping->go_out && ! $timeKeeping->go_in) {
+                $showBtn_1 = 'go_in';
+            }
+        }
+        
+        if ($currentUser->check_type == 1) {
+            $timeKeeping = TimeKeeping::query()
+                ->where([
+                    'user_id' => $currentUser->id,
+                    'check_date' => date('Y-m-d', time())
+                ])->first();
+            if(!$timeKeeping){
+                 $showBtn_1 = '';
+            }else{
+                if ($timeKeeping->go_out == null && $timeKeeping->checkin != null) {
+                    $showBtn_1 = 'go_out';
+                } else if ($timeKeeping->go_out && ! $timeKeeping->go_in) {
+                    $showBtn_1 = 'go_in';
+                }
+                if($timeKeeping->checkin != null && $timeKeeping->final_checkout == null){
+                    $showBtn_2 = 'final_checkout';
+                } else if($timeKeeping->checkin != null && $timeKeeping->final_checkout != null){
+                    $showBtn_2 = 'final_checkout_hide';
+                }
+            }
         }
 
         return [
@@ -657,6 +699,8 @@ class TimeKeepingService
             'data' => $result,
             'current_user' => $currentUser,
             'showBtn' => $showBtn,
+            'showBtn_1' => $showBtn_1,
+            'showBtn_2' => $showBtn_2,
         ];
 
     }
@@ -2109,6 +2153,59 @@ class TimeKeepingService
         return false;
     }
 
+    public function FinalCheckoutHandmade(User $user)
+    {
+        if ($user->check_type == 1) {
+            $timeKeeping = TimeKeeping::query()
+                ->where([
+                    'user_id' => $user->id,
+                    'check_date' => date('Y-m-d', time())
+                ])->first();
+                $timeKeeping->final_checkout = date('H:i:s', time());
+                $timeKeeping->save();
+
+                return [
+                    'code' => 200,
+                ];
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function goOutHandmade(User $user)
+    {
+        if ($user->check_type == 1) {
+            $timeKeeping = TimeKeeping::query()
+                ->where([
+                    'user_id' => $user->id,
+                    'check_date' => date('Y-m-d', time())
+                ])->first();
+
+            if (!$timeKeeping->go_out) {
+                $timeKeeping->go_out = date('H:i:s', time());
+                $timeKeeping->save();
+
+                return [
+                    'code' => 200,
+                    'go_out' => true
+                ];
+            } else {
+                $timeKeeping->go_in = date('H:i:s', time());
+                $timeKeeping->save();
+
+                return [
+                    'code' => 200,
+                    'go_out' => false
+                ];
+            }
+
+            return true;
+        }
+
+        return false;
+    }
     /**
      * @param string $start_date
      * @param string $end_date

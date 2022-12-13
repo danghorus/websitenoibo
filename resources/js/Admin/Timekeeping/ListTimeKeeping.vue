@@ -1,3 +1,4 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
 <template>
     <div class="card">
         <div class="card-header" style="height:50px;">
@@ -7,10 +8,11 @@
                     @click="checkIn()">Checkin</button>
                 <button v-if="showCheckOut && currentUser.check_type == 2" class="btn btn-danger"
                     @click="checkIn()">Checkout</button>
-                <button v-if=" currentUser.permission == 1" class="btn btn-primary" @click="exportData()">Xuất file
-                    excel</button>
                 <button v-if=" currentUser.permission == 1" class="btn btn-primary" @click="showModalConfig()">Cấu
                     hình</button>
+                <button v-if=" showGoOut && currentUser.check_type == 1 " class="btn btn-danger" @click="GoOut()">Ra Ngoài</button>
+                <button v-if=" showGoIn && currentUser.check_type == 1 " class="btn btn-success" @click="GoOut()">Tiếp tục</button>
+                <button v-if="showFinalCheckout && currentUser.check_type == 1 " class="btn btn-success" @click="FinalCheckout()">Final Checkout</button>
             </div>
 
         </div>
@@ -45,7 +47,7 @@
                 <tbody>
                     <tr v-for="(user, index) in data" :key="index">
                         <td style="width:250px; font-size:14px; vertical-align: middle; height: 88px">{{ user.fullname
-                            }}</td>
+                        }}</td>
                         <td v-for="(time, index) in user.time_keeping" :key="index" :class="time.class"
                             @click="showModal(user.id, user.fullname, time)"
                             style="text-align:center;vertical-align: middle;width:12.375%">
@@ -53,7 +55,9 @@
                                 style="background-color: red;">
                                 <b>Ca hành chính</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
-                                    time.checkout:'-:-' }}</div>
+                                time.checkout:'-:-' }}</div>
+                                <div>{{ time.go_out ? time.go_out: '-:-'}} - {{ time.go_in ?
+                                time.go_in:'-:-' }} (Ra ngoài: {{ time.time_out}})</div>
                                 <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
                                     Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_late_0 > 0">(Đi sớm: {{ time.go_early }} -
@@ -72,7 +76,7 @@
                             <template v-else-if="time.petition_type == 4 && time.holiday != 1">
                                 <b>Thay đổi giờ công</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
-                                    time.checkout:'-:-' }}</div>
+                                time.checkout:'-:-' }}</div>
                                 <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
                                     Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
@@ -90,7 +94,7 @@
                             <template v-else-if="time.petition_type == 5 && time.holiday != 1">
                                 <b>Đăng ký làm tính công</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
-                                    time.checkout:'-:-' }}</div>
+                                time.checkout:'-:-' }}</div>
                                 <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
                                     Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
@@ -108,7 +112,7 @@
                             <template v-else-if="time.petition_type == 5 && time.holiday == 1">
                                 <b>Đăng ký làm tính công</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
-                                    time.checkout:'-:-' }}</div>
+                                time.checkout:'-:-' }}</div>
                                 <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
                                     Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
@@ -126,14 +130,14 @@
                             <template v-else-if="time.petition_type == 6">
                                 <b>Đăng ký làm nỗ lực</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
-                                    time.checkout:'-:-' }}</div>
+                                time.checkout:'-:-' }}</div>
                                 <div v-if="time.go_early_0 > 0 ">(Tổng giờ nỗ lực {{ time.go_early }})
                                 </div>
                             </template>
                             <template v-else-if="time.petition_type == 1 && time.holiday != 1">
                                 <b>Đi muộn/về sớm</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
-                                    time.checkout:'-:-' }}</div>
+                                time.checkout:'-:-' }}</div>
                                 <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
                                     Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
@@ -151,7 +155,7 @@
 							<template v-else-if="time.petition_type == 9 && time.holiday != 1">
                                 <b style="color:black;">Ra ngoài ({{time.go_out}} phút)</b>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
-                                    time.checkout:'-:-' }}</div>
+                                time.checkout:'-:-' }}</div>
                                 <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
                                     Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early_0 > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
@@ -240,7 +244,7 @@
                             </template>
                             <template v-else>
                                 <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ?
-                                    time.checkout:'-:-' }}</div>
+                                time.checkout:'-:-' }}</div>
                                 <div v-if="time.go_early_0 > 0 && time.checkout =='-:-'">(
                                     Đi sớm: {{ time.go_early }} -)</div>
                                 <div v-if="time.go_early > 0 && time.about_late > 0">(Đi sớm: {{ time.go_early }} - Về
@@ -348,11 +352,15 @@ export default {
     },
     data() {
         return {
+            isHidden: true,
             showDetail: false,
             modalConfig: false,
             showOtherTime: false,
             showCheckOut: false,
+            showFinalCheckout: false,
             showCheckIn: false,
+            showGoOut: false,
+            showGoIn: false,
             option: 1,
             labels: [],
             start_date: '',
@@ -386,8 +394,18 @@ export default {
                 this.currentUser = res.current_user;
                 if (res.showBtn && res.showBtn == 'checkin') {
                     this.showCheckIn = true;
-                } else if (res.showBtn && res.showBtn == 'checkout') {
+                }else if (res.showBtn && res.showBtn == 'checkout') {
                     this.showCheckOut = true;
+                }
+                if (res.showBtn_1 && res.showBtn_1 == 'go_out') {
+                    this.showGoOut = true;
+                } else if (res.showBtn_1 && res.showBtn_1 == 'go_in') {
+                    this.showGoIn = true;
+                }
+                if (res.showBtn_2 && res.showBtn_2 == 'final_checkout') {
+                    this.showFinalCheckout = true;
+                } else if (res.showBtn_2 && res.showBtn_2 == 'final_checkout_hide') {
+                    this.showFinalCheckout = false;
                 }
             }
         },
@@ -426,6 +444,25 @@ export default {
                 this.showCheckIn = false;
             }
         },
+        async GoOut() {
+            const res = await $post('/time-keeping/go_out');
+            if (res.code == 200) {
+                this.getTimeKeepings();
+                if (res.go_out) {
+                    this.showGoIn = true;
+                } else {
+                    this.showGoIn = false;
+                }
+
+                this.showGoOut = false;
+            }
+        },
+        async FinalCheckout() {
+            const res = await $post('/time-keeping/final_checkout');
+            if (res.code == 200) {
+                this.getTimeKeepings();
+            }
+        },
         async exportData() {
 
                 let option = this.option;
@@ -446,6 +483,21 @@ export default {
 </script>
 
 <style scoped>
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th,
+td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background-color: coral;
+}
 
 table table-bordered mt-5
 {
