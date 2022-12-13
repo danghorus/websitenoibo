@@ -86,7 +86,7 @@ class TimeKeepingService
             foreach($rangeHoliday as $key => $val) {
                 $arrHoliday[] = $key;
             }
-        }
+        } 
 
             foreach ($users as $user) {
                 if ($user->user_status == 1 && $user->position != "Giám đốc" && $user->id != 44) {
@@ -653,6 +653,8 @@ class TimeKeepingService
         $showBtn = '';
         $showBtn_1 = '';
         $showBtn_2 = '';
+        $myIp = "14.248.85.119";
+        $ip = $_SERVER["REMOTE_ADDR"];
 
         if ($currentUser->check_type == 2) {
             $timeKeeping = TimeKeeping::query()
@@ -682,9 +684,9 @@ class TimeKeepingService
                 } else if (($timeKeeping->go_out != null && ! $timeKeeping->go_in) || ($timeKeeping->go_out > $timeKeeping->go_in)) {
                     $showBtn_1 = 'go_in';
                 }
-                if($timeKeeping->checkin != null && $timeKeeping->final_checkout == null){
+                if($myIp == $ip && $timeKeeping->checkin != null && $timeKeeping->final_checkout == null){
                     $showBtn_2 = 'final_checkout';
-                } else if($timeKeeping->checkin != null && $timeKeeping->final_checkout != null){
+                } else if($myIp == $ip && $timeKeeping->checkin != null && $timeKeeping->final_checkout != null){
                     $showBtn_2 = 'final_checkout_hide';
                 }
             }
