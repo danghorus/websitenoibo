@@ -346,7 +346,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <b>Nếu bạn click vào button Final Checkout thì bạn sẽ không được tính thời gian sau thời gian Checkout nữa!</b>
+                            <b>Nếu bạn click vào button <button class="btn btn-danger" @click="FinalCheckout()">Final Checkout</button> thì bạn sẽ không được tính thời gian sau thời gian Checkout nữa!</b>
                             <br>
                             <br>
                             <center>
