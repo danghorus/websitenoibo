@@ -334,7 +334,7 @@
             </div>
         </div>
         <div>
-            <div ref="modal" class="modal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div ref="modalCheckout" class="modal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
                 <div class="modal-dialog" role="document" style=" max-width: 50%;" data-bs-backdrop="static"
                     data-bs-keyboard="false">
                     <div class="modal-content">
@@ -414,14 +414,6 @@ export default {
                 this.getTimeKeepings();
             }
         },
-        showModalFinalCheckout() {
-            this.modalFinalCheckout = true;
-            $(this.$refs.modal).modal('show');
-        },
-        closeModalFinalCheckout() {
-            $(this.$refs.modal).modal('hide');
-            this.modalFinalCheckout = false;
-        },
         async getTimeKeepings() {
             let params = {
                 option: this.option,
@@ -465,6 +457,14 @@ export default {
         closeModal() {
             $(this.$refs.modalDetail).modal('hide');
             this.showDetail = false;
+        },
+        showModalFinalCheckout() {
+            this.modalFinalCheckout = true;
+            $(this.$refs.modalCheckout).modal('show');
+        },
+        closeModalFinalCheckout() {
+            $(this.$refs.modalCheckout).modal('hide');
+            this.modalFinalCheckout = false;
         },
         showModalConfig() {
             this.modalConfig = true;
