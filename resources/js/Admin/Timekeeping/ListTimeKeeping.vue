@@ -12,7 +12,7 @@
                     hình</button>
                 <button v-if=" showFinalCheckout && showGoOut && currentUser.check_type == 1 " class="btn btn-danger" @click="GoOut()">Ra Ngoài</button>
                 <button v-if=" showFinalCheckout && showGoIn && currentUser.check_type == 1 " class="btn btn-success" @click="GoOut()">Tiếp tục</button>
-                <button v-if="showFinalCheckout && currentUser.check_type == 1 " class="btn btn-success" @click="FinalCheckout()">Final Checkout</button>
+                <button v-if="showFinalCheckout && currentUser.check_type == 1 " class="btn btn-success"  @click="showModalFinalCheckout()" >Final Checkout</button>
             </div>
 
         </div>
@@ -333,6 +333,31 @@
                 </div>
             </div>
         </div>
+        <div>
+            <div ref="modal" class="modal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog" role="document" style=" max-width: 50%;" data-bs-backdrop="static"
+                    data-bs-keyboard="false">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Final Checkout</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                @click="closeModalFinalCheckout()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <b>Nếu bạn click vào button Final Checkout thì bạn sẽ không được tính thời gian sau thời gian Checkout nữa!</b>
+                            <br>
+                            <br>
+                            <center>
+                                <button class="btn btn-danger" @click="FinalCheckout()">Final Checkout</button>
+                            </center>
+                        </div>
+        
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -351,12 +376,13 @@ export default {
     },
     data() {
         return {
+            showModalConfirm: false,
             isHidden: true,
             showDetail: false,
             modalConfig: false,
             showOtherTime: false,
             showCheckOut: false,
-            showFinalCheckout: false,
+            modalFinalCheckout: false,
             showCheckIn: false,
             showGoOut: false,
             showGoIn: false,
@@ -379,6 +405,22 @@ export default {
     methods: {
 		changeOption(){
             this.getReport();
+        },
+        async FinalCheckout() {
+            const res = await $post('/time-keeping/final_checkout');
+            if (res.code == 200) {
+                $(this.$refs.modal).modal('hide');
+                this.modalFinalCheckout = false;
+                this.getTimeKeepings();
+            }
+        },
+        showModalFinalCheckout() {
+            this.modalFinalCheckout = true;
+            $(this.$refs.modal).modal('show');
+        },
+        closeModalFinalCheckout() {
+            $(this.$refs.modal).modal('hide');
+            this.modalFinalCheckout = false;
         },
         async getTimeKeepings() {
             let params = {
@@ -456,12 +498,6 @@ export default {
                 }
 
                 this.showGoOut = false;
-            }
-        },
-        async FinalCheckout() {
-            const res = await $post('/time-keeping/final_checkout');
-            if (res.code == 200) {
-                this.getTimeKeepings();
             }
         },
         async exportData() {
