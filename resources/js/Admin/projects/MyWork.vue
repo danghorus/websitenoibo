@@ -351,24 +351,8 @@
                                 <option value="4"> Hoàn thành</option>
                             </select>
                         </td>
-                        <td v-else-if="item.status_title ='Hoàn thành'" style="background-color:green">
+                        <td v-else-if="item.status == 4" style="background-color:green">
                             <select class="form-select" style="height:34px; border:0px;" aria-label=".form-select-sm example"
-                                @change="changeStatus($event, item.id)" v-model="item.status">
-                                <option value="0" v-if="item.status == 0" :disabled="item.status == 0">
-                                    <p>Đang Chờ</p>
-                                </option>
-                                <option value="1" v-if="item.status == 1">Đang Chờ</option>
-                                <option value="2" :disabled="item.status == 2 || item.status == 4">Đang tiến hành</option>
-                                <option value="3" style="color: orange"
-                                    :disabled="item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6">Tạm dừng</option>
-                                <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
-                                    feedback</option>
-                                <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4"> Hoàn thành</option>
-                            </select>
-                        </td>
-                        <td v-else-if="item.status_title == 'Hoàn thành chậm'" style="background-color:gray">
-                            <select class="form-select" style="height:34px" aria-label=".form-select-sm example"
                                 @change="changeStatus($event, item.id)" v-model="item.status">
                                 <option value="0" v-if="item.status == 0" :disabled="item.status == 0">
                                     <p>Đang Chờ</p>
