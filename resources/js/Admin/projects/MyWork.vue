@@ -183,14 +183,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
-                            <vue-editor
-                                @enter="changeDescription($event, item.id)"
-                                v-model="item.description" 
-                                :editorToolbar="customToolbar">
-                            </vue-editor>
-                            <button @click="changeDescription($event, item.id)">Lưu</button>
-                        </td>
+                        
                         <td>
                             <select class="form-select" style="height:34px" aria-label=".form-select-sm example"
                                 @change="changeSticker($event, item.id)" v-model="item.task_sticker">
@@ -443,11 +436,10 @@ import Multiselect from 'vue-multiselect';
 import Treeselect from '@riophae/vue-treeselect';
 import DatePicker from 'vue2-datepicker';
 import CreateTask_Parent from './CreateTask_Parent.vue';
-import { VueEditor } from 'vue2-quill-editor';
 export default {
     name: "MyWork",
     el: '#infoMyWork',
-    components: { CreateTask_Parent, Multiselect, Treeselect, DatePicker, Paginate, VueEditor },
+    components: { CreateTask_Parent, Multiselect, Treeselect, DatePicker, Paginate },
     props: ['search', 'paginate', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'status', 'list', 'task_sticker', 'currentUser'],
     data() {
         return {
@@ -472,11 +464,7 @@ export default {
             startTime: '',
             endTime: '',
             task_performer: '',
-            customToolbar: [
-                ['bold', 'italic', 'underline', 'link'],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                ['image', 'code-block']
-            ]
+           
         }
     },
     created() {
