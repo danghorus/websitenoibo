@@ -27,7 +27,7 @@
                                 placeholder="Tên công việc" v-model="search">
                         </div>
                     </li>
-                    <li class="nav-item" v-if="option2 != 15">
+                    <li class="nav-item" v-if="option2 != 15" style="width:220px;">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px;">Chọn khoảng thời gian</label>
                             <date-picker style="margin-top:3px; width: 100%;" v-model="dateRange" type="date" range
@@ -155,48 +155,49 @@
                 </ul>
             </nav>
             <Paginate style=" margin:10px 0px 0px 10px;" v-model="paginate" :pagechange="onPageChange"></Paginate>
-            <table class="table-striped table-responsive table-hover result-point"
+            <table class="table-responsive table-hover"
                 style="width:99%; margin: 10px 0px 0px 10px">
                 <thead class="point-table-head">
                     <tr style="text-align: center;">
-                        <th scope="col">STT</th>
-                        <th scope="col" width="500px">Tên công việc</th>
-                        <th scope="col" width="150px">Loại công việc</th>
-                        <th scope="col" width="150px" >Cấp độ công việc</th>
-                        <th scope="col" width="150px">Dự án</th>
-                        <th scope="col" width="200px">Công việc cha</th>
-                        <th scope="col" width="80px">Bắt đầu</th>
-                        <th scope="col" width="60px">Thời lượng dư kiến (Giờ)</th>
-                        <th scope="col" width="80px">Kết thúc</th>
-                        <th scope="col" width="60px">Thời lượng thực tế (Giờ)</th>
-                        <th scope="col" width="50px">Trọng số</th>
-                        <th scope="col" width="200px">Người thực hiện</th>
-                        <th scope="col" width="100px">Bộ phận</th>
-                        <th scope="col" width="40px">Tiến độ</th>
-                        <th scope="col" width="145px">Trạng thái</th>
-                        <th scope="col" width="120px">Thao tác</th>
+                        <th scope="col">No</th>
+                        <th scope="col" width="600px">Work name</th>
+                        <th scope="col" width="150px">Type</th>
+                        <th scope="col" width="150px" >Level</th>
+                        <th scope="col" width="150px">Project</th>
+                        <!--<th scope="col" width="200px">Parent</th>-->
+                        <th scope="col" width="80px">Begin</th>
+                        <th scope="col" width="60px">Estimated(h)</th>
+                        <th scope="col" width="80px">End</th>
+                        <th scope="col" width="60px">Actual(h)</th>
+                        <th scope="col" width="50px">Weight</th>
+                        <th scope="col" width="200px">Performer</th>
+                        <th scope="col" width="100px">Department</th>
+                        <th scope="col" width="40px">Progress</th>
+                        <th scope="col" width="145px">Status</th>
+                        <th scope="col" width="120px">Manipulation</th>
                     </tr>
                 </thead>
                 <tbody v-for="(item, index) in list" :key="item.id">
                     <tr style="text-align:center;">
                         <td>{{ index + 1 }}</td>
                         <td scope="row" style="text-align:left;">
-                            <div style="display: flex; font-size:12px;">
-                                <textarea v-if="item.task_name == 'Click để thay đổi nội dung'"
-                                    style=" font-weight: bold; font-size:16px; width:100%; border:0px; word-wrap:break-word; resize: none;"
+                            <div style="display: flex; font-size:12px">
+                                <textarea class="form-control" v-if="item.task_name == 'Click để thay đổi nội dung'"
+                                    style=" font-weight: bold; font-size:16px; width:100%; resize: auto"
                                     @change="changeTaskName($event, item.id)" v-model="item.task_name">
                             </textarea>
-                                <textarea v-else style="width:100%; border:0px; word-wrap:break-word; resize: none;"
+                                <textarea class="form-control" v-else style="width:100%; resize: auto"
                                     @change="changeTaskName($event, item.id)" v-model="item.task_name">
                             </textarea>
+                            &ensp;
                                 <p @click="showModalEditTask(item.id)">
                                     <i class="fas fa-info-circle"
-                                        style="font-size:16px; margin-top: 15px; cursor: pointer" />
+                                        style="font-size:16px; margin-top: 1.5rem; cursor: pointer" />
                                 </p>
                             </div>
                         </td>
                         <td>
-                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                            <select class="form-select" style="height:34px" aria-label=".form-select-sm example"
                                 @change="changeSticker($event, item.id)" v-model="item.task_sticker">
                                 <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">
                                     {{ sticker.sticker_name }}
@@ -214,7 +215,7 @@
                             </multiselect>-->
                         </td>
                         <td>
-                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                            <select class="form-select" style="height:34px" aria-label=".form-select-sm example"
                                 @change="changePriority($event, item.id)" v-model="item.task_priority">
                                 <option v-for="(priority, index) in priorities" :key="index"
                                     :value="priority.priority_label">Level
@@ -222,7 +223,7 @@
                             </select>
                         </td>
                         <td style="text-align:left">
-                            <select class="form-select" @change="changeProject($event, item.id)"
+                            <select class="form-select" style="height:34px" @change="changeProject($event, item.id)"
                                 v-model="item.project_id">
                                 <option value="1" disabled>Chọn dự án</option>
                                 <option value="" >Bỏ chọn</option>
@@ -242,20 +243,20 @@
                             </multiselect>-->
                         </td>
                         <!--@open="getTaskByProject(item.project_id)"-->
-                        <td>
+                        <!--<td>
                             <div>
-                                <treeselect :options="tasks" :load-options="loadOptions"
+                                <treeselect border-radius="5px" size="34px" :options="tasks" :load-options="loadOptions"
                                     @open="getTaskByProject(item.project_id)"
                                     @select="changeTaskParent($event, item.id)" loadingText="Loading..."
                                     v-model="item.task_parent" :show-count="true" />
                             </div>
-                        </td>
+                        </td>-->
                         <td>
                             <DatePicker style="width: 120px" v-model="item.start_time" value-type="format" type="date"
                                 placeholder="Select time" @change="changeStartTime($event, item.id)">
                             </DatePicker>
                         </td>
-                        <td><input style="width:100%; border:0px; text-align:right;"
+                        <td><input class="form-control" style="width:100%;height:34px; text-align:right;"
                                 @change="changeTime($event, item.id)" v-model="item.time"></td>
                         <td>
                             <DatePicker style="width: 120px" v-model="item.end_time" value-type="format" type="date"
@@ -263,13 +264,13 @@
                             </DatePicker>
                         </td>
                         <td style=" text-align:right;">
-                            <input style="width:100%; border:0px; text-align:right;"
+                            <input class="form-control" style="width:100%;height:34px; text-align:right;"
                                 @change="changeRealTime($event, item.id)" v-model="item.real_time">
                         </td>
-                        <td> <input style="width:100%; border:0px;" @change="changeWeight($event, item.id)"
+                        <td> <input class="form-control" style="width:100%;height:34px; text-align:right;" @change="changeWeight($event, item.id)"
                                 v-model="item.weight"></td>
                         <td>
-                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                            <select class="form-select" style="width:100%;height:34px;;" aria-label=".form-select-sm example"
                                 @change="changePerformer($event, item.id)" v-model="item.task_performer">
                                 <option value="">Bỏ chọn</option>
                                 <option v-for="(user, index) in users" :key="index" :value="user.id">{{ user.fullname }}
@@ -289,7 +290,7 @@
                         </td>
                         <td>
                             <div style="display: flex">
-                                <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                <select class="form-select" style="width:100%;height:34px;" aria-label=".form-select-sm example"
                                     @change="changeDepartment($event, item.id)" v-model="item.task_department">
                                     <option value="">Bỏ chọn</option>
                                     <option value="2">Dev</option>
@@ -300,8 +301,8 @@
                                 </select>
                             </div>
                         </td>
-                        <td>{{ item.progress }}</td>
-                        <td>
+                        <td><p class="form-control" style="width:100%;height:34px; margin-top:14px" >{{ item.progress }}</p></td>
+                        <td v-if="item.status == 0" style="color: red; background-color:red">
                             <div style="display: flex">
                                 <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                     @change="changeStatus($event, item.id)" v-model="item.status">
@@ -315,9 +316,93 @@
                                 </select>
                             </div>
                         </td>
+                        <td v-else-if="item.status == 1" style="color: white; background-color:white">
+                            <div style="display: flex">
+                                <select class="form-select" style="width:100%;height:34px;" aria-label=".form-select-sm example"
+                                    @change="changeStatus($event, item.id)" v-model="item.status">
+                                    <option value="1">Đang chờ</option>
+                                    <option value="2">Đang tiến hành</option>
+                                    <option value="3">Tạm dừng</option>
+                                    <option value="5">Chờ feedback</option>
+                                    <option value="6">Làm lại </option>
+                                    <option value="4">Hoàn thành </option>
+                                    <option value="0">Đã quá hạn</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td v-else-if="item.status == 2" style="color: #008080; background-color:#008080">
+                            <div style="display: flex">
+                                <select class="form-select" style="width:100%;height:34px;" aria-label=".form-select-sm example"
+                                    @change="changeStatus($event, item.id)" v-model="item.status">
+                                    <option value="1">Đang chờ</option>
+                                    <option value="2">Đang tiến hành</option>
+                                    <option value="3">Tạm dừng</option>
+                                    <option value="5">Chờ feedback</option>
+                                    <option value="6">Làm lại </option>
+                                    <option value="4">Hoàn thành </option>
+                                    <option value="0">Đã quá hạn</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td v-else-if="item.status == 3" style="color: orange; background-color:orange">
+                            <div style="display: flex">
+                                <select class="form-select" style="width:100%;height:34px;" aria-label=".form-select-sm example"
+                                    @change="changeStatus($event, item.id)" v-model="item.status">
+                                    <option value="1">Đang chờ</option>
+                                    <option value="2">Đang tiến hành</option>
+                                    <option value="3">Tạm dừng</option>
+                                    <option value="5">Chờ feedback</option>
+                                    <option value="6">Làm lại </option>
+                                    <option value="4">Hoàn thành </option>
+                                    <option value="0">Đã quá hạn</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td v-else-if="item.status == 4" style="color: green; background-color:green">
+                            <div style="display: flex">
+                                <select class="form-select" style="width:100%;height:34px;" aria-label=".form-select-sm example"
+                                    @change="changeStatus($event, item.id)" v-model="item.status">
+                                    <option value="1">Đang chờ</option>
+                                    <option value="2">Đang tiến hành</option>
+                                    <option value="3">Tạm dừng</option>
+                                    <option value="5">Chờ feedback</option>
+                                    <option value="6">Làm lại </option>
+                                    <option value="4">Hoàn thành </option>
+                                    <option value="0">Đã quá hạn</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td v-else-if="item.status == 5" style="color: #ff8080; background-color:#ff8080">
+                            <div style="display: flex">
+                                <select class="form-select" style="width:100%;height:34px;" aria-label=".form-select-sm example"
+                                    @change="changeStatus($event, item.id)" v-model="item.status">
+                                    <option value="1">Đang chờ</option>
+                                    <option value="2">Đang tiến hành</option>
+                                    <option value="3">Tạm dừng</option>
+                                    <option value="5">Chờ feedback</option>
+                                    <option value="6">Làm lại </option>
+                                    <option value="4">Hoàn thành </option>
+                                    <option value="0">Đã quá hạn</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td v-else-if="item.status == 6" style="color: #ff0000; background-color:#ff0000">
+                            <div style="display: flex">
+                                <select class="form-select" style="width:100%;height:34px;" aria-label=".form-select-sm example"
+                                    @change="changeStatus($event, item.id)" v-model="item.status">
+                                    <option value="1">Đang chờ</option>
+                                    <option value="2">Đang tiến hành</option>
+                                    <option value="3">Tạm dừng</option>
+                                    <option value="5">Chờ feedback</option>
+                                    <option value="6">Làm lại </option>
+                                    <option value="4">Hoàn thành </option>
+                                    <option value="0">Đã quá hạn</option>
+                                </select>
+                            </div>
+                        </td>
                         <td>
-                            <button style="height: 25px;font-size:12px;" class="btn btn-danger"
-                                @click="deleteTask($event, item.id)">Xóa</button>
+                            <button class="btn btn-danger" style="height:34px"
+                                @click="deleteTask($event, item.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
                         </td>
                     </tr>
                 </tbody>
@@ -706,6 +791,9 @@ export default {
 </script>
 
 <style scoped>
+tr:hover {
+    background-color: coral;
+}
 table table-bordered mt-5 {
     background: #fff;
     border: 1px solid #999999;
