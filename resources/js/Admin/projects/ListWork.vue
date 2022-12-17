@@ -302,7 +302,7 @@
                             </div>
                         </td>
                         <td><p class="form-control" style="width:100%;height:34px; margin-top:14px" >{{ item.progress }}</p></td>
-                        <td v-if="item.status == 0" style="color: red; background-color:red">
+                        <td v-if="item.status == 0" style="color: black; background-color:black">
                             <div style="display: flex">
                                 <select class="form-select form-select-sm" aria-label=".form-select-sm example"
                                     @change="changeStatus($event, item.id)" v-model="item.status">

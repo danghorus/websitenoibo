@@ -289,7 +289,7 @@
                         <td class ="status" v-else-if="item.status_title == 'Hoàn thành chậm'" style="background-color:gray">Hoàn thành chậm
                         </td>
                         <td class ="status" v-else-if="item.status_title == 'Hoàn thành'" style="background-color:green">Hoàn thành</td>-->
-                        <td v-if="item.status == 0" style="background-color:red">
+                        <td v-if="item.status == 0" style="background-color:black">
                             <select class="form-select" style="height:34px" aria-label=".form-select-sm example"
                                 @change="changeStatus($event, item.id)" v-model="item.status">
                                 <option value="0" v-if="item.status == 0" :disabled="item.status == 0"><p>Đang Chờ</p></option>
