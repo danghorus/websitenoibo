@@ -595,15 +595,16 @@ class TaskController extends Controller
 
         $builder//->join('projects as p', 'tt.project_id', '=', 'p.id')
         ->where('task_performer', '=', Auth::id());
+
+        //$builder ->join('time_keeping as t', 'tt.task_performer', '=', 't.user_id', 'left');
+
          if ($taskPerformer && $taskPerformer > 0) {
             $builder->where('tt.task_performer', '=', $taskPerformer);
         }
 
-         if ($startTime && $startTime != '') {
-            $builder->whereDate('tt.start_time', '=', $startTime);
-        }
-         if ($endTime && $endTime != '') {
-            $builder->whereDate('tt.start_time', '=', $endTime);
+         if ($startTime && $startTime != '' && $endTime && $endTime != '') {
+            $builder->whereDate('tt.start_time', '>=', $startTime)->whereDate('tt.start_time', '<=', $endTime)
+                    ->orWhereDate('tt.end_time', '>=', $startTime)->whereDate('tt.end_time', '<=', $endTime);
         }
 
         if (isset($filters['project_id']) && $filters['project_id'] > 0) {
@@ -1087,6 +1088,7 @@ class TaskController extends Controller
             'message' => 'Cập nhật thành công'
         ];
     }
+    
     public function changeDescription($taskId, Request $request) {
         $description = $request->input('description');
 
@@ -1109,7 +1111,6 @@ class TaskController extends Controller
         $task->time = $time;
 
         $task->save();
-
         return [
             'code' => 200,
             'message' => 'Cập nhật thành công'
