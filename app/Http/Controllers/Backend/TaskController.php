@@ -581,37 +581,37 @@ class TaskController extends Controller
 
     public function myTasks(Request $request) {
         $filters = $request->all();
+        $projectId = $request->input('project_id');
+        $status = $request->input('status');
         $search = $request->input('search');
         $taskPerformer = $request->input('task_performer');
         $Status2 = $request->input('status2');
         $startTime = $request->input('start_time');
         $endTime = $request->input('end_time');
-        $perPage = 20;//$request->input('per_page');
+        $perPage = 20;
+        $Sort = $request->input('sort');;
 
         $builder = DB::table('tasks', 'tt')->select('tt.*')
-            ->where('tt.valid','=',1);
-            //->orderBy('start_time')->orderBy('id', 'DESC');
-            //->selectRaw('p.project_name');
+            ->where('tt.valid','=',1)
+            ->orderBy('start_time', $Sort)->orderBy('id', $Sort);
 
-        $builder->join('projects as p', 'tt.project_id', '=', 'p.id')
+        $builder//->join('projects as p', 'tt.project_id', '=', 'p.id')
         ->where('task_performer', '=', Auth::id());
-
-        $builder ->join('time_keeping as t', 'tt.task_performer', '=', 't.user_id', 'left');
 
          if ($taskPerformer && $taskPerformer > 0) {
             $builder->where('tt.task_performer', '=', $taskPerformer);
         }
 
-         if ($startTime && $startTime != '' && $endTime && $endTime != '') {
+        if ( $startTime != '' && $endTime != '') {
             $builder->whereDate('tt.start_time', '>=', $startTime)->whereDate('tt.start_time', '<=', $endTime)
-                    ->orWhereDate('tt.end_time', '>=', $startTime)->whereDate('tt.end_time', '<=', $endTime);
+                    ->orWhere('task_performer', '=', Auth::id())->WhereDate('tt.end_time', '>=', $startTime)->whereDate('tt.end_time', '<=', $endTime);
         }
 
-        if (isset($filters['project_id']) && $filters['project_id'] > 0) {
+        if ( $projectId && $projectId > 0) {
             $builder->where('project_id', '=', $filters['project_id']);
         }
 
-        if (isset($filters['status'])) {
+        if ($status) {
             $builder->where('status', '=', $filters['status']);
         }
         if($search && $search != ''){
@@ -621,25 +621,24 @@ class TaskController extends Controller
 
 
         if ($Status2 == 1) {
-            $builder->where('status', '!=', 4)->where('status', '!=', 5)
-            ->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
+            $builder->where('status', '!=', 4)->where('status', '!=', 5);
+            //->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
         }
-        if ($Status2 == 3) {
-            $builder->orderBy('start_time')->orderBy('id');
+        //if ($Status2 == 3) {
+        //    $builder->orderBy('start_time')->orderBy('id');
+        //}
+        if($Status2 == 2) {
+            $builder->where('status', '=', 4);
+        //    ->orderBy('start_time')->orderBy('id');
         }
-        else if($Status2 == 2) {
-            $builder->where('status', '=', 4)
-            ->orderBy('start_time')->orderBy('id');
+        if($Status2 == 5) {
+            $builder->where('status', '=', 5);
+        //    ->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
         }
-        else if($Status2 == 5) {
-            $builder->where('status', '=', 5)
-            ->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
-        }
-        else if($Status2 == 10) {
+        if($Status2 == 10) {
             $builder->where('start_time', '<=', date('Y-m-d', time()))
-            ->where('end_time', '>=', date('Y-m-d', time()))
-            //->where('status', '!=', 4)->where('status', '!=', 5)
-            ->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
+            ->where('end_time', '>=', date('Y-m-d', time()));
+        //    ->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
         }
 
         $tasks = $builder->paginate( $perPage , ['*'], 'page', $request->input('page') ?? 1);
@@ -712,6 +711,8 @@ class TaskController extends Controller
                 $task->time_real = round(((time() - strtotime($task->real_start_time))/3600 - $task->time_pause), 2);
             }
         }
+        $currentUser = Auth::user();
+
 
         return [
             'code' => 200,
@@ -728,7 +729,7 @@ class TaskController extends Controller
                 'total_pause' => $totalTaskPause,
                 'total_complete' => $totalTaskComplete,
             ],
-            'currentUser' => Auth::user(),
+            'currentUser' => $currentUser,
         ];
     }
 
@@ -1606,9 +1607,9 @@ class TaskController extends Controller
 
         $task->task_name = 'Click để thay đổi nội dung';
         $task->task_code ='';
-        $task->start_time = date('Y-m-d', strtotime(now()));//null;
+        $task->start_time = date('Y-m-d', strtotime(now()));
         $task->time =null;
-        $task->end_time = date('Y-m-d', strtotime(now()));;
+        $task->end_time = date('Y-m-d', strtotime(now()));
         $task->description = '';
         $task->task_priority = null;
         $task->task_sticker = null;

@@ -28,7 +28,7 @@
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo dự án</label>
-                            <select  class="form-select" @click="filterTask()" v-model="project" style="width:250px">
+                            <select  class="form-select" @change="changeOption()" v-model="project" style="width:250px">
                                 <option value="0" selected="selected">Tất cả</option>
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
                             </select>
@@ -37,7 +37,7 @@
                     <li v-if="option2 != 2 && option2 !=5" class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo trạng thái</label>
-                            <select @click="filterTask()" class="form-select" v-model="option" style="width:250px">
+                            <select @change="changeOption()" class="form-select" v-model="option" style="width:250px">
                                 <option value="10">Tất cả</option>
                                 <option value="0">Quá hạn</option>
                                 <option value="1">Đang chờ </option>
@@ -116,7 +116,7 @@
 
             </select>&emsp;
             <p>
-                <button @click="NewTask()" v-if="option2 == 1 || option2 == 3" class="btn btn-success btn-sm" 
+                <button @click="NewTaskToday()" v-if="option2 == 1 || option2 == 3" class="btn btn-success btn-sm" 
                 style="height:35px; font-size:15px; margin: -40px 0px 0px 300px;">Thêm mới</button>
             </p>
             <p>
@@ -140,7 +140,7 @@
                         <!--<th scope="col" width="10%">Công việc cha</th>-->
                         <th scope="col" width="7%">Department</th>
                         <!--<th scope="col" width="150px">Cấp độ công việc</th>-->
-                        <th scope="col" width="6%">Begin</th>
+                        <th scope="col" width="6%">Begin <input type="checkbox" @change="changeOption()" v-model="beginSort" ></th>
                         <th scope="col" width="3%">Estimated(h)</th>
                         <th scope="col" width="6%">End</th>
                         <th scope="col" width="3%">Actual(h)</th>
@@ -300,7 +300,7 @@
                                 <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
                                     feedback</option>
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4" > Hoàn thành</option>
+                                <option value="4"  v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
                             </select>
                         </td>
                         <td v-else-if="item.status == 1" style="background-color:white">
@@ -316,7 +316,7 @@
                                 <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
                                     feedback</option>
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4"> Hoàn thành</option>
+                                <option value="4" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
                             </select>
                         </td>
                         <td v-else-if="item.status == 2" style="background-color:#008080">
@@ -332,7 +332,7 @@
                                 <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
                                     feedback</option>
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4"> Hoàn thành</option>
+                                <option value="4" v-if="(currentUser.permission == 0 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
                             </select>
                         </td>
                         <td v-else-if="item.status == 3" style="background-color:orange">
@@ -348,7 +348,7 @@
                                 <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
                                     feedback</option>
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4"> Hoàn thành</option>
+                                <option value="4" v-if="(currentUser.permission == 0 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
                             </select>
                         </td>
                         <td v-else-if="item.status == 4" style="background-color:green">
@@ -364,7 +364,7 @@
                                 <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
                                     feedback</option>
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4"> Hoàn thành</option>
+                                <option value="4"  v-if="(currentUser.permission == 0 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
                             </select>
                         </td>
                         <td v-else-if="item.status == 5" style="background-color:#ff8080">
@@ -380,7 +380,7 @@
                                 <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
                                     feedback</option>
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4"> Hoàn thành</option>
+                                <option value="4"  v-if="(currentUser.permission == 0 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
                             </select>
                         </td>
                         <td v-else-if="item.status == 6" style="background-color:#ff0000">
@@ -396,7 +396,7 @@
                                 <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
                                     feedback</option>
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4"> Hoàn thành</option>
+                                <option value="4"  v-if="(currentUser.permission == 0 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
                             </select>
                         </td>
                         <td class="status">
@@ -427,6 +427,7 @@ export default {
     props: ['search', 'paginate', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'status', 'list', 'task_sticker', 'currentUser'],
     data() {
         return {
+            sort: '',
             search:'',
             paginate: [],
             option: 10,
@@ -448,6 +449,7 @@ export default {
             startTime: '',
             endTime: '',
             task_performer: '',
+            currentUser: '',
            
         }
     },
@@ -509,7 +511,8 @@ export default {
             }
         },
         async getAllSticker() {
-            const res = await $get('/stickers/get_all');
+
+            const res = await $get('/stickers/get_all_myWork');
             if (res.code == 200) {
                 this.stickers = res.data;
             }
@@ -549,10 +552,10 @@ export default {
         ShowInfoMyWork() {
             this.showInfoMyWork = !this.showInfoMyWork
         },
-        filterTask() {
-            this.getMyWorks();
-            this.showFilter = false;
-        },
+        //filterTask() {
+        //    this.getMyWorks();
+        //    this.showFilter = false;
+        //},
         async getMyWorks(page) {
             console.log(page, 'page');
             let params = {
@@ -561,6 +564,12 @@ export default {
 
             if (this.option && this.option != 10) {
                 params.status = this.option;
+            }
+
+            if (this.beginSort) {
+                params.sort = 'ASC';
+            } else {
+                params.sort = 'DESC';
             }
 
             if (this.option2) {
@@ -586,7 +595,8 @@ export default {
             if (res.code == 200) {
                 this.list = res.tasks;
                 this.paginate = res.paginate;
-                this.summary = res.summary
+                this.summary = res.summary;
+                this.currentUser = res.currentUser;
             }
         },
         onPageChange(page) {
