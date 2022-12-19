@@ -47,6 +47,36 @@ class StickerController extends Controller
             'data' => $stickers
         ];
     }
+    public function get_all_myWork(Request $request) {
+
+        //$department = $request->input('task_department');
+
+        $AuthDepartment = Auth::user()->department;
+
+        $builder = Sticker::query()->select('*');
+
+        $builder->where('sticker_department', '=', $AuthDepartment);
+        
+        $stickers = $builder->get();
+
+        foreach ($stickers as $sticker) {
+            if($sticker->sticker_department == 2){
+                $sticker->sticker_department_label = "Dev";
+            }else if($sticker->sticker_department == 3){
+                $sticker->sticker_department_label = "Game Design";
+            } else if($sticker->sticker_department == 4){
+                $sticker->sticker_department_label = "Art";
+            }else if($sticker->sticker_department == 5){
+                $sticker->sticker_department_label = "Tester";
+            } else if($sticker->sticker_department == 11){
+                $sticker->sticker_department_label = "Marketing";
+            }
+        }
+        return [
+            'code' => 200,
+            'data' => $stickers
+        ];
+    }
 
     public function changeStickerName($stickerId, Request $request) {
         $sticker_name = $request->input('sticker_name');
