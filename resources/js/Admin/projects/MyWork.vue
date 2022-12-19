@@ -360,7 +360,7 @@
                                 <option value="3" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)">Tạm dừng</option>
                                 <option value="5" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)">Chờ feedback</option>
                                 <option value="6" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)">Làm lại</option>
-                                <option value="4" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
+                                <option value="4" :disabled="item.status == 4"> Hoàn thành</option>
                             </select>
                         </td>
                         <td v-else-if="item.status == 5" style="background-color:#ff8080">
