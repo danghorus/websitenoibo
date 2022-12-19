@@ -593,10 +593,10 @@ class TaskController extends Controller
             //->orderBy('start_time')->orderBy('id', 'DESC');
             //->selectRaw('p.project_name');
 
-        $builder//->join('projects as p', 'tt.project_id', '=', 'p.id')
+        $builder->join('projects as p', 'tt.project_id', '=', 'p.id')
         ->where('task_performer', '=', Auth::id());
 
-        //$builder ->join('time_keeping as t', 'tt.task_performer', '=', 't.user_id', 'left');
+        $builder ->join('time_keeping as t', 'tt.task_performer', '=', 't.user_id', 'left');
 
          if ($taskPerformer && $taskPerformer > 0) {
             $builder->where('tt.task_performer', '=', $taskPerformer);
