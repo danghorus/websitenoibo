@@ -105,7 +105,7 @@
                 </ul>
             </nav>
             <h4 style=" margin: -30px 0px 0px 24px">Danh sách công việc</h4>
-            <select @change="changeOption()" class="form-select col-lg-2"
+            <select @change="changeOption2()" class="form-select col-lg-2"
                     style="position: absolute; left: 25px; top: 105px; width:220px; height:34px;" v-model="option2">
 				<option value="3">Tất cả</option>
                 <option value="10">Việc hôm nay</option>
@@ -460,8 +460,21 @@ export default {
         this.getAllTasks();
     },
     methods: {
+        changeOption2() {
+
+            this.option = 10;
+            this.search = '';
+            this.project = 0;
+            this.startTime = '';
+            this.endTime = '';
+
+            this.getMyWorks();
+        },
         changeOption() {
             this.getMyWorks();
+        },
+        ClearOption() {
+            this.option == null;
         },
         async loadOptions({ action, parentNode, callback }) {
             const res = await $get('/tasks/get_all', { project_id: this.projectId, task_parent: parentNode.id })
