@@ -186,6 +186,7 @@
                         
                         <td>
                             <select class="form-select" style="height:34px" aria-label=".form-select-sm example"
+                                @click="getStickerByDepartment(item.task_department)"
                                 @change="changeSticker($event, item.id)" v-model="item.task_sticker">
                                 <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">{{sticker.sticker_name}}
                                 </option>
@@ -506,13 +507,20 @@ export default {
                 this.priorities = res.data;
             }
         },
-        async getAllSticker() {
+        async getStickerByDepartment(task_department) {
+            const res = await $get('/stickers/get_all_myWork', { task_department: task_department })
 
-            const res = await $get('/stickers/get_all_myWork');
             if (res.code == 200) {
                 this.stickers = res.data;
             }
         },
+        //async getAllSticker() {
+
+        //    const res = await $get('/stickers/get_all_myWork');
+        //    if (res.code == 200) {
+        //        this.stickers = res.data;
+        //    }
+        //},
         async getAllTasks() {
             
             const res = await $get('/tasks/all_task');

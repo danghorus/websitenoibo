@@ -49,13 +49,15 @@ class StickerController extends Controller
     }
     public function get_all_myWork(Request $request) {
 
-        //$department = $request->input('task_department');
+        $department = $request->input('task_department');
 
-        $AuthDepartment = Auth::user()->department;
+        //$AuthDepartment = Auth::user()->department;
 
         $builder = Sticker::query()->select('*');
+        
+        $builder->where('sticker_department', '=', $department);
 
-        $builder->where('sticker_department', '=', $AuthDepartment);
+        //$builder->where('sticker_department', '=', $AuthDepartment);
         
         $stickers = $builder->get();
 
