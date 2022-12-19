@@ -322,7 +322,7 @@
                         <td v-else-if="item.status == 2" style="background-color:#008080">
                             <select class="form-select" style="height:34px;  border: none;" aria-label=".form-select-sm example"
                                 @change="changeStatus($event, item.id)" v-model="item.status">
-                                <option value="0" v-if="item.status == 0" :disabled="item.status == 0">
+                                <option value="0" v-if="item.status == 1" :disabled="item.status == 0">
                                     <p>Đang Chờ</p>
                                 </option>
                                 <option value="1" v-if="item.status == 1">Đang Chờ</option>
@@ -332,7 +332,7 @@
                                 <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
                                     feedback</option>
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4" v-if="(currentUser.permission == 0 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
+                                <option value="4" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
                             </select>
                         </td>
                         <td v-else-if="item.status == 3" style="background-color:orange">
@@ -348,23 +348,19 @@
                                 <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
                                     feedback</option>
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4" v-if="(currentUser.permission == 0 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
+                                <option value="4" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
                             </select>
                         </td>
                         <td v-else-if="item.status == 4" style="background-color:green">
                             <select class="form-select" style="height:34px; border:0px;" aria-label=".form-select-sm example"
                                 @change="changeStatus($event, item.id)" v-model="item.status">
-                                <option value="0" v-if="item.status == 0" :disabled="item.status == 0">
-                                    <p>Đang Chờ</p>
-                                </option>
-                                <option value="1" v-if="item.status == 1">Đang Chờ</option>
-                                <option value="2" :disabled="item.status == 2 || item.status == 4">Đang tiến hành</option>
-                                <option value="3" style="color: orange"
-                                    :disabled="item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6">Tạm dừng</option>
-                                <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
-                                    feedback</option>
-                                <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4"  v-if="(currentUser.permission == 0 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
+                                <option value="0" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)"><p>Đang Chờ</p></option>
+                                <option value="1" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)">Đang Chờ</option>
+                                <option value="2" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)">Đang tiến hành</option>
+                                <option value="3" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)">Tạm dừng</option>
+                                <option value="5" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)">Chờ feedback</option>
+                                <option value="6" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)">Làm lại</option>
+                                <option value="4" v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
                             </select>
                         </td>
                         <td v-else-if="item.status == 5" style="background-color:#ff8080">
@@ -380,7 +376,7 @@
                                 <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
                                     feedback</option>
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4"  v-if="(currentUser.permission == 0 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
+                                <option value="4"  v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
                             </select>
                         </td>
                         <td v-else-if="item.status == 6" style="background-color:#ff0000">
@@ -396,7 +392,7 @@
                                 <option value="5" :disabled="item.status == 4 || item.status == 5 || item.status == 6">Chờ
                                     feedback</option>
                                 <option value="6" v-if="item.status == 6">Làm lại</option>
-                                <option value="4"  v-if="(currentUser.permission == 0 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
+                                <option value="4"  v-if="(currentUser.permission == 1 || currentUser.permission == 2 || currentUser.permission == 3)"> Hoàn thành</option>
                             </select>
                         </td>
                         <td class="status">
