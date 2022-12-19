@@ -128,6 +128,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('stickers/update/{id}', [StickerController::class, 'update']);
     Route::post('stickers/delete/{id}', [StickerController::class, 'delete']);
     Route::get('/stickers/get_all', [StickerController::class, 'index']);
+    Route::get('/stickers/get_all_myWork', [StickerController::class, 'get_all_myWork']);
     Route::post('stickers/change-sticker_name/{id}', [StickerController::class, 'changeStickerName']);
     Route::post('stickers/change-sticker_department/{id}', [StickerController::class, 'changeStickerDepartment']);
     Route::post('stickers/change-level1/{id}', [StickerController::class, 'changeLevel1']);
