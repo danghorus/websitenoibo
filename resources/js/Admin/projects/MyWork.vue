@@ -389,7 +389,7 @@ export default {
             list_task: [],
             showModal: false,
             showModalEdit: false,
-            showMyWork: true,
+            showMyWork: false,
             showFilter: false,
             showInfoMyWork: false,
             projects: [],
@@ -411,6 +411,7 @@ export default {
         this.getAllPriority();
         this.getAllSticker();
         this.getAllTasks();
+        this.getStickerByDepartment(task_department);
     },
     methods: {
         changeOption2() {
@@ -459,6 +460,12 @@ export default {
             const res = await $get('/priorities/get_all');
             if (res.code == 200) {
                 this.priorities = res.data;
+            }
+        },
+        async getAllSticker() {
+            const res = await $get('/stickers/get_all');
+            if (res.code == 200) {
+                this.stickers = res.data;
             }
         },
         async getStickerByDepartment(task_department) {
