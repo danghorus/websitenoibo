@@ -657,7 +657,13 @@ class TaskController extends Controller
         $totalTaskProcessing = 0;
         $totalTaskPause = 0;
         $totalTaskComplete = 0;
-        $totalWaitFeedback = 0;
+        $totalTaskWait = 0;
+        $totalTaskWaitFb = 0;
+        $totalTaskAgain = 0;
+        $totalTaskCompleteSlow = 0;
+        $totalTaskSlow = 0;
+        $totalTaskWeight = 0;
+        $totalTaskWeightComplete = 0;
         $totalRealtime = 0;
         $totalTime = 0;
 
@@ -681,21 +687,21 @@ class TaskController extends Controller
             } else {
                 $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
             }
-
-            //$today = date('Y-m-d', strtotime(now()));
-
-            //if(($task->start_time <= $today) && ($task->end_time >= $today)) {
                 
                 $totalRealtime = $totalRealtime + $task->real_time;
                 $totalTime = $totalTime + $task->time;
-            //}
+                $totalTaskWeight = $totalTaskWeight + $task->weight;
+                //if($task->status == 4){
+                //    $totalTaskWeightComplete = $totalTaskWeightComplete  + $task->weight;
+                //}
+
 
             switch ($task->status) {
                 case 0:
-                    $totalTaskProcessing++;
+                    $totalTaskSlow++;
                     break;
                 case 1:
-                    $totalTaskProcessing++;
+                    $totalTaskWait++;
                     break;
                 case 2:
                     $totalTaskProcessing++;
@@ -705,12 +711,13 @@ class TaskController extends Controller
                     break;
                 case 4:
                     $totalTaskComplete++;
+                    $totalTaskWeightComplete = $totalTaskWeightComplete  + $task->weight;
                     break;
                 case 5:
-                    $totalWaitFeedback++;
+                    $totalTaskWaitFb++;
                     break;
                 case 6:
-                    $totalTaskProcessing++;
+                    $totalTaskAgain++;
                     break;
             }
         }
@@ -731,9 +738,15 @@ class TaskController extends Controller
                 'total' => count($task_01),
                 'totalRealtime' => $totalRealtime,
                 'totalTime' => $totalTime,
+                'totalWeight' => $totalTaskWeight,
+                'totalWeightComplete' => $totalTaskWeightComplete,
+                'total_slow' => $totalTaskSlow,
+                'total_wait' => $totalTaskWait,
                 'total_processing' => $totalTaskProcessing,
                 'total_pause' => $totalTaskPause,
                 'total_complete' => $totalTaskComplete,
+                'total_wait_fb' => $totalTaskWaitFb,
+                'total_again' => $totalTaskAgain,
             ],
             'currentUser' => $currentUser,
         ];
@@ -932,7 +945,12 @@ class TaskController extends Controller
         $totalTaskProcessing = 0;
         $totalTaskPause = 0;
         $totalTaskComplete = 0;
-        $totalWaitFeedback= 0;
+        $totalTaskWait = 0;
+        $totalTaskWaitFb = 0;
+        $totalTaskAgain = 0;
+        $totalTaskCompleteSlow = 0;
+        $totalTaskSlow = 0;
+        $totalTaskWeight = 0;
 
         foreach ($tasks as $task) {
             if (($task->status == 0 || $task->status == 1) && (strtotime($task->end_time) < time())) {
@@ -945,10 +963,10 @@ class TaskController extends Controller
 
             switch ($task->status) {
                 case 0:
-                    $totalTaskProcessing++;
+                    $totalTaskSlow++;
                     break;
                 case 1:
-                    $totalTaskProcessing++;
+                    $totalTaskWait++;
                     break;
                 case 2:
                     $totalTaskProcessing++;
@@ -957,13 +975,13 @@ class TaskController extends Controller
                     $totalTaskPause++;
                     break;
                 case 4:
-                    $totalTaskComplete++;
+                    $totalTaskComplete++; 
                     break;
                 case 5:
-                    $totalWaitFeedback++;
+                    $totalTaskWaitFb++;
                     break;
                 case 6:
-                    $totalTaskProcessing++;
+                    $totalTaskAgain++;
                     break;
             }
             $task->time_real = 0;
@@ -1532,6 +1550,47 @@ class TaskController extends Controller
         }])->where('id', '=', $taskId)->first();
 
         $newTaskId = Task::taskChildrent([$task], $task->task_parent);
+
+        $tasks = Task::query()->with(['parent'])->where('id', '=', $taskId)->get();
+        $arrParent = [];
+        foreach ($tasks as $value) {
+            if ($value->parent) {
+                $item = $value->parent;
+                while ($item) {
+                    $arrParent[] = $item->id;
+                    $item = $item->parent;
+                }
+            }
+        }
+
+        $newTasks = Task::query()->with(['taskUser'])->where('id', '=', $newTaskId)->first();
+        if ($newTasks) {
+            $newTasks->department_label = $newTasks->task_department? Task::DEPARTMENTS[$newTasks->task_department]: '';
+
+            if (($newTasks->status == 0 || $newTasks->status == 1) && (strtotime($newTasks->end_time) < time())) {
+                $newTasks->status_title = 'Đã quá hạn';
+            } elseif ($newTasks->status == 4 && ($newTasks->real_time > $newTasks->time)) {
+                $newTasks->status_title = 'Hoàn thành chậm';
+            } else {
+                $newTasks->status_title = $newTasks->status >= 0 ? Task::ARR_STATUS[$newTasks->status]: '';
+            }
+            $newTasks->fullname = $newTasks->taskUser? $newTasks->taskUser->fullname: '';
+            $totalChild = Task::query()->where('task_parent', '=', $newTaskId)->count();
+            $newTasks->_hasChildren = $totalChild > 0;
+            $newTasks->_children = [];
+        }
+
+        return [
+            'code' => 200,
+            'message' => 'Copy thành công',
+            'new_task' => $newTasks,
+            'arr_parent' => array_reverse($arrParent),
+        ];
+    }
+    public function copyMyWork($taskId) {
+        $task = Task::query()->where('valid', '=', 1)->where('id', '=', $taskId)->first();
+
+        $newTaskId = Task::taskChildrent([$task], $task->task_department);
 
         $tasks = Task::query()->with(['parent'])->where('id', '=', $taskId)->get();
         $arrParent = [];

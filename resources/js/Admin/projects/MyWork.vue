@@ -64,6 +64,11 @@
                                             <td>{{ summary.total }}</td>
                                         </tr>
                                         <tr>
+                                            <td><b>Đang chờ</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_wait }}</td>
+                                        </tr>
+                                        <tr>
                                             <td><b>Đang làm</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total_processing }}</td>
@@ -79,6 +84,21 @@
                                             <td>{{ summary.total_complete }}</td>
                                         </tr>
                                         <tr>
+                                            <td><b>Chờ feedback</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_wait_fb }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Làm lại</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_again }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Quá hạn</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_slow }}</td>
+                                        </tr>
+                                        <tr>
                                             <td><b>Thời gian làm việc dự kiến trong ngày</b></td>
                                             <td>:</td>
                                             <td>{{ summary.totalTime }}</td>
@@ -87,6 +107,16 @@
                                             <td><b>Thời gian làm việc thực tế trong ngày</b></td>
                                             <td>:</td>
                                             <td>{{ summary.totalRealtime }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Tổng trọng số</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalWeight }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Trọng số đã tích luỹ được</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalWeightComplete }}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -334,7 +364,9 @@
                         </td>
                         <td class="status">
                             <button style="height: 34px;" class="btn btn-danger" @click="deleteTask($event, item.id)">
-                                <i class="fa fa-trash" aria-hidden="true"></i></button>
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                            <button  @click="copyMyWork($event, item.id)" class="btn btn-success btn-sm" style="height:20px; font-size:10px;">Copy</button>
                         </td>
                     </tr>
                 </tbody>
@@ -411,7 +443,6 @@ export default {
         this.getAllPriority();
         this.getAllSticker();
         this.getAllTasks();
-        this.getStickerByDepartment(task_department);
     },
     methods: {
         changeOption2() {
@@ -419,6 +450,7 @@ export default {
             this.option = 10;
             this.search = '';
             this.project = 0;
+            this.dateRange = '';
             this.startTime = '';
             this.endTime = '';
 
@@ -483,14 +515,9 @@ export default {
                 this.list_task = res.data;
             }
         },
-        handleGetTasks(res) {
-            this.closeModalCreateTask_Parent()
-            this.closeModalCreateTask();
-            if (this.projectId > 0) {
-                this.bus.$emit('submit', _.cloneDeep(res))
-            } else {
-                this.getTaskTimeLine();
-            }
+        handleGetTasks() {
+            this.closeModalEditTask();
+            this.getMyWorks();
         },
 
         showModalEditTask(id) {

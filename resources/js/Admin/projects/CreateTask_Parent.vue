@@ -2,18 +2,14 @@
     <div>
         <div class="form-group">
             <label for="project_name">Tên công việc</label>
-            <input type="text" v-model="task.task_name" class="form-control" id="project_name" placeholder="Nhập tên công việc" readonly>
+            <input type="text" v-model="task.task_name" class="form-control" id="project_name"
+                placeholder="Nhập tên công việc" readonly>
         </div>
         <div class="form-group">
             <label for="project_name">Thông tin công việc</label>
-            <quill-editor
-                ref="myQuillEditor"
-                v-model="task.description"
-                :options="editorOption"
-                class="editor-form"
-            />
+            <quill-editor ref="myQuillEditor" v-model="task.description" :options="editorOption" class="editor-form" />
         </div>
-        
+
         <button @click="saveTask()" class="btn btn-primary">Cập nhật</button>
     </div>
 </template>
@@ -30,8 +26,8 @@ import _ from "lodash";
 
 export default {
     name: "CreateTask",
-    components: {quillEditor },
-    props: [ 'taskId', 'projectId'],
+    components: { quillEditor },
+    props: ['taskId', 'projectId'],
     data() {
         return {
             task: {
@@ -52,7 +48,7 @@ export default {
         },
 
         async saveTask() {
-            
+
 
             let data = {
                 task: this.task,
@@ -63,6 +59,7 @@ export default {
                 if (res.code == 200) {
                     toastr.success(res.message);
                     this.values = [];
+                    this.$emit('handleGetTasks', _.cloneDeep(res));
                 }
             }
         },
