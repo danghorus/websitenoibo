@@ -517,7 +517,6 @@ export default {
         },
         handleGetTasks() {
             this.closeModalEditTask();
-            this.getMyWorks();
         },
 
         showModalEditTask(id) {
@@ -535,7 +534,6 @@ export default {
             this.showFilter = !this.showFilter
         },
         ShowInfoMyWork() {
-            this.getMyWorks();
             this.showInfoMyWork = !this.showInfoMyWork
         },
         async getMyWorks(page) {
