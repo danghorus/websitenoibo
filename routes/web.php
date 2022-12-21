@@ -147,6 +147,7 @@ Route::middleware(['auth'])->group(function () {
     //Task
     Route::post('tasks/create', [TaskController::class, 'create']);
     Route::post('tasks/update/{id}', [TaskController::class, 'update']);
+    Route::post('tasks/update_description/{id}', [TaskController::class, 'update_description']);
     Route::get('tasks/get_all', [TaskController::class, 'getAll']);
     Route::get('tasks/all_task', [TaskController::class, 'all_task']);
     Route::get('tasks/index', [TaskController::class, 'index']);

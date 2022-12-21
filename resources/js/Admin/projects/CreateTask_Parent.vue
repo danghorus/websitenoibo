@@ -6,7 +6,7 @@
         </div>
         <div class="form-group">
             <label for="project_name">Thông tin công việc</label>
-            <editor @change="changeDescription($event, task.id)" api-key="0pn43qeafddiqh81a9ba9c5abtfey57b1m07tfsa05gir4s3" v-model="task.description" :init="{
+            <!--<editor @change="changeDescription($event, task.id)" api-key="0pn43qeafddiqh81a9ba9c5abtfey57b1m07tfsa05gir4s3" v-model="task.description" :init="{
                 height: 200,
                 menubar: false,
                 plugins: [
@@ -18,7 +18,17 @@
                     'undo redo | formatselect | bold italic backcolor | link \
                                alignleft aligncenter alignright alignjustify | \
                                bullist numlist outdent indent | removeformat | help'
-            }" />
+            }" />-->
+            <quill-editor
+                style="min-height:300px;"
+                ref="myQuillEditor"
+                v-model="task.description"
+                :options="editorOption"
+                class="editor-form"
+                @input="handleInput" 
+                @change="handleChange($event)"
+                
+            />
         </div>
         
         <button @click="saveTask()" class="btn btn-primary">Cập nhật</button>
@@ -26,6 +36,12 @@
 </template>
 
 <script>
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+import { quillEditor } from 'vue-quill-editor'
+
 import Editor from '@tinymce/tinymce-vue'
 import 'vue2-datepicker/index.css';
 import moment from "moment";
@@ -35,7 +51,7 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 
 export default {
     name: "CreateTask",
-    components: { Editor },
+    components: { Editor, quillEditor },
     props: [ 'taskId', 'projectId'],
     data() {
         return {
@@ -80,22 +96,21 @@ export default {
 
             let data = {
                 task: this.task,
-                user_related: this.values.map(item => item.id)
             };
 
             if (this.taskId) {
-                const res = await $post(`/tasks/update/${this.taskId}`, data);
+                const res = await $post(`/tasks/update_description/${this.taskId}`, data);
                 if (res.code == 200) {
                     toastr.success(res.message);
                     this.task = {
                         project_id: ''
                     };
-                    this.description = task.description;
+                    this.values = [];
                     this.$emit('handleGetTasks', _.cloneDeep(res));
                 }
             }
         },
-    }
+    },
 }
 </script>
 

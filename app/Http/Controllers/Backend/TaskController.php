@@ -412,6 +412,24 @@ class TaskController extends Controller
             'arr_new_parent' => array_reverse($arrNewParent),
         ];
     }
+    public function update_description($taskId, Request $request) {
+        $data = $request->all();
+
+        $taskInfo = $data['task'];
+
+        $task = Task::find($taskId);
+
+        $task->description = $taskInfo['description'] ?? '';
+
+        $task->save();
+
+
+        return [
+            'code' => 200,
+            'message' => 'Cập nhật thành công',
+        ];
+    }
+    
     public function all_task(Request $request)
     {
         $projectId = 14;

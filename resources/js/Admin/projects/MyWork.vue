@@ -342,7 +342,7 @@
             <Paginate style="margin: 0px 0px 0px 10px" v-model="paginate" :pagechange="onPageChange"></Paginate>
         </div>
         <div ref="modalInfoTask" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document" style=" max-width: 50%;">
+            <div class="modal-dialog" role="document" style=" max-width: 62%;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Nhập thông tin công việc</h5>
