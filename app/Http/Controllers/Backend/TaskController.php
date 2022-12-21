@@ -618,28 +618,21 @@ class TaskController extends Controller
             $builder->where('task_name', 'LIKE', "%$search%");
         }
 
-
-
-        if ($Status2 == 1) {
-            $builder->where('status', '!=', 4)->where('status', '!=', 5);
-            //->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
-        }
-        //if ($Status2 == 3) {
-        //    $builder->orderBy('start_time')->orderBy('id');
-        //}
         if($Status2 == 2) {
-            $builder->where('status', '=', 4);
-        //    ->orderBy('start_time')->orderBy('id');
+            $builder->where('start_time', '<=', date('Y-m-d', strtotime("today")))
+                     ->where('end_time', '>=', date('Y-m-d', strtotime("today")));
+        } else if($Status2 == 3){
+            $builder->where('start_time', '<=', date('Y-m-d', strtotime("yesterday")))
+                     ->where('end_time', '>=', date('Y-m-d', strtotime("yesterday")));
+        } else if($Status2 == 4){
+            $builder->where('start_time', '>=', date('Y-m-d', strtotime('monday this week')))
+                     ->where('end_time', '<=', date('Y-m-d', strtotime('sunday this week')));
+        } else if($Status2 == 5){
+            $builder->where('start_time', '>=', date('Y-m-d', strtotime("monday last week")))
+                     ->where('end_time', '<=', date('Y-m-d', strtotime("sunday last week")));
         }
-        if($Status2 == 5) {
-            $builder->where('status', '=', 5);
-        //    ->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
-        }
-        if($Status2 == 10) {
-            $builder->where('start_time', '<=', date('Y-m-d', time()))
-            ->where('end_time', '>=', date('Y-m-d', time()));
-        //    ->orderBy('start_time', 'DESC')->orderBy('id', 'DESC');
-        }
+        //dd(strtotime("monday this week"));
+        //dd(strtotime("today"));
 
         $tasks = $builder->paginate( $perPage , ['*'], 'page', $request->input('page') ?? 1);
 

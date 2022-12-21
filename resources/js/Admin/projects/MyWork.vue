@@ -7,11 +7,11 @@
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px;">Nhập tên công việc</label>
                             <input @input="changeOption()" class="form-control"
-                                style="margin-top:3px;width:220px;height:33px;font-size:14px" type="text" placeholder="Tên công việc"
+                                style="margin-top:3px;width:300px;height:33px;font-size:14px" type="text" placeholder="Tên công việc"
                                 v-model="search">
                         </div>
                     </li>
-                    <li v-if="option2 != 10" class="nav-item">
+                    <!--<li v-if="option2 != 10" class="nav-item">
                         <div class="form-group p-1">
                             <DatePicker style="width: 100%; margin-top: 35px" v-model="startTime" value-type="format" type="date"
                                 placeholder="Ngày bắt đầu" @change="changeOption()">
@@ -24,28 +24,36 @@
                                 placeholder="Ngày kết thúc" @change="changeOption()">
                             </DatePicker>
                         </div>
+                    </li>-->
+                    <li class="nav-item" v-if="option2 != 2 && option2 != 3" style="width:270px;">
+                        <div class="form-group p-2">
+                            <label for="project_description" style="font-size:12px;">Chọn khoảng thời gian</label>
+                            <date-picker style="margin-top:3px; width: 100%;" v-model="dateRange" type="date" range
+                                placeholder="Vui lòng chọn khoảng thời gian" @change="changeOption()">
+                            </date-picker>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo dự án</label>
-                            <select  class="form-select" @change="changeOption()" v-model="project" style="width:250px">
+                            <select  class="form-select" @change="changeOption()" v-model="project" style="width:170px">
                                 <option value="0" selected="selected">Tất cả</option>
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
                             </select>
                         </div>
                     </li>
-                    <li v-if="option2 != 2 && option2 !=5" class="nav-item">
+                    <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo trạng thái</label>
-                            <select @change="changeOption()" class="form-select" v-model="option" style="width:250px">
+                            <select @change="changeOption()" class="form-select" v-model="option" style="width:170px">
                                 <option value="10">Tất cả</option>
                                 <option value="0">Quá hạn</option>
                                 <option value="1">Đang chờ </option>
                                 <option value="2">Đang làm</option>
                                 <option value="3">Tạm dừng</option>
-                                <option v-if="option2 != 1" value="5">Chờ feedback</option>
+                                <option value="5">Chờ feedback</option>
                                 <option value="6">Làm lại</option>
-								<option v-if="option2 != 1" value="4">Hoàn thành</option>
+								<option value="4">Hoàn thành</option>
                             </select>
                         </div>
                     </li>
@@ -107,22 +115,22 @@
             <h4 style=" margin: -30px 0px 0px 24px">Danh sách công việc</h4>
             <select @change="changeOption2()" class="form-select col-lg-2"
                     style="position: absolute; left: 25px; top: 105px; width:220px; height:34px;" v-model="option2">
-				<option value="3">Tất cả</option>
-                <option value="10">Việc hôm nay</option>
-                <option value="1">Chưa hoàn thành</option>
-                <option value="5">Chờ feedback</option>
-                <option value="2">Đã hoàn thành</option>
+				<option value="1">Tất cả</option>
+                <option value="2">Việc hôm nay</option>
+                <option value="3">Việc hôm qua</option>
+                <option value="4">Việc tuần này</option>
+                <option value="5">Việc tuần trước</option>
 
 
             </select>&emsp;
             <p>
-                <button @click="NewTaskToday()" v-if="option2 == 1 || option2 == 3" class="btn btn-success btn-sm" 
+                <button @click="NewTaskToday()" v-if="option2 == 1 || option2 == 4 || option2 == 2" class="btn btn-success btn-sm" 
                 style="height:35px; font-size:15px; margin: -40px 0px 0px 300px;">Thêm mới</button>
             </p>
-            <p>
-                <button @click="NewTaskToday()" v-if="option2 == 10" class="btn btn-success btn-sm"
+            <!--<p>
+                <button @click="NewTaskToday()" v-if="option2 == 1 || option2 == 4 || option2 == 2" class="btn btn-success btn-sm"
                     style="height:35px; font-size:15px; margin: -72px 0px 0px 300px;">Thêm mới</button>
-            </p>
+            </p>-->
             <!--<button class="btn btn-outline-secondary" @click="handleShowFilter()" type="button" data-toggle="collapse"
                 data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample1"
                 style="float:right; margin:  -35px 10px 0px 0px;">
@@ -425,10 +433,11 @@ export default {
     data() {
         return {
             sort: '',
+            dateRange: '',
             search:'',
             paginate: [],
             option: 10,
-            option2: 10,
+            option2: 2,
             toggle: false,
             show: false,
             list: [],
@@ -554,6 +563,7 @@ export default {
             this.showFilter = !this.showFilter
         },
         ShowInfoMyWork() {
+            this.getMyWorks();
             this.showInfoMyWork = !this.showInfoMyWork
         },
         //filterTask() {
@@ -584,12 +594,17 @@ export default {
                 params.project_id = this.project;
             }
 
-            if (this.startTime) {
-                params.start_time = this.startTime;
+            if (this.dateRange) {
+                params.start_time = this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD');
+                params.end_time = this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : moment().endOf('month').format('YYYY-MM-DD');
             }
-            if (this.endTime) {
-                params.end_time = this.endTime;
-            }
+            
+            //if (this.startTime) {
+            //    params.start_time = this.startTime;
+            //}
+            //if (this.endTime) {
+            //    params.end_time = this.endTime;
+            //}
             if (this.search) {
                 params.search = this.search || '';
             }
