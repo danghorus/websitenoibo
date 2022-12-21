@@ -173,7 +173,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('tasks/get-report', [TaskController::class, 'getReport']);
     Route::get('tasks/copy/{id}', [TaskController::class, 'copy']);
-     Route::get('tasks/copyMyWork/{id}', [TaskController::class, 'copyMyWork']);
+     Route::get('tasks/copyMyWorks/{id}', [TaskController::class, 'copyMyWorks']);
     Route::get('tasks/delete/{id}', [TaskController::class, 'deleteTask']);
     Route::get('tasks/new_task', [TaskController::class, 'new_task']);
     Route::get('tasks/new_task_today', [TaskController::class, 'new_task_today']);

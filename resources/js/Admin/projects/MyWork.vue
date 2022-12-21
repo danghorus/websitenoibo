@@ -366,7 +366,9 @@
                             <button style="height: 34px;" class="btn btn-danger" @click="deleteTask($event, item.id)">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </button>
-                            <button  @click="copyMyWork($event, item.id)" class="btn btn-success btn-sm" style="height:20px; font-size:10px;">Copy</button>
+                            <button style="height: 34px;"  @click="copyMyWorks(item.id)" class="btn btn-success">
+                                <i class="fa fa-copy" aria-hidden="true"></i>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -733,11 +735,12 @@ export default {
 
             }
         },
-        async copyMyWork(id) {
-            const res = await $get(`/tasks/copyMyWork/${id}`);
+        async copyMyWorks(id) {
+            const res = await $get(`/tasks/copy/${id}`);
 
             if (res.code == 200) {
                 toastr.success('Copy thành công');
+                this.getMyWorks();
             }
         },
     },

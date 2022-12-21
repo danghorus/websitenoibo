@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class TaskController extends Controller
 {
@@ -1587,10 +1588,12 @@ class TaskController extends Controller
             'arr_parent' => array_reverse($arrParent),
         ];
     }
-    public function copyMyWork($taskId) {
-        $task = Task::query()->where('valid', '=', 1)->where('id', '=', $taskId)->first();
+    public function copyMyWorks($taskId) {
+       $task = Task::query()->with(['children' => function ($q) {
+            $q->where('valid', '=', 1);
+        }])->where('id', '=', $taskId)->first();
 
-        $newTaskId = Task::taskChildrent([$task], $task->task_department);
+        $newTaskId = Task::taskChildrent([$task], $task->task_parent);
 
         $tasks = Task::query()->with(['parent'])->where('id', '=', $taskId)->get();
         $arrParent = [];
@@ -1607,6 +1610,8 @@ class TaskController extends Controller
         $newTasks = Task::query()->with(['taskUser'])->where('id', '=', $newTaskId)->first();
         if ($newTasks) {
             $newTasks->department_label = $newTasks->task_department? Task::DEPARTMENTS[$newTasks->task_department]: '';
+            $newTasks->start_time = $newTasks->task_start_time ? date('Y-m-d', strtotime(now())) : date('Y-m-d', strtotime(now()));
+            $newTasks->end_time = $newTasks->task_end_time ? date('Y-m-d', strtotime(now())) : date('Y-m-d', strtotime(now()));
 
             if (($newTasks->status == 0 || $newTasks->status == 1) && (strtotime($newTasks->end_time) < time())) {
                 $newTasks->status_title = 'Đã quá hạn';
