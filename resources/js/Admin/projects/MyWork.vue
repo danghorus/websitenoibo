@@ -11,20 +11,6 @@
                                 v-model="search">
                         </div>
                     </li>
-                    <!--<li v-if="option2 != 10" class="nav-item">
-                        <div class="form-group p-1">
-                            <DatePicker style="width: 100%; margin-top: 35px" v-model="startTime" value-type="format" type="date"
-                                placeholder="Ngày bắt đầu" @change="changeOption()">
-                            </DatePicker>
-                        </div>
-                    </li>
-                    <li v-if="option2 != 10" class="nav-item">
-                        <div class="form-group p-1">
-                            <DatePicker style="width: 100%; margin-top: 35px" v-model="endTime" value-type="format" type="date"
-                                placeholder="Ngày kết thúc" @change="changeOption()">
-                            </DatePicker>
-                        </div>
-                    </li>-->
                     <li class="nav-item" v-if="option2 != 2 && option2 != 3" style="width:270px;">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px;">Chọn khoảng thời gian</label>
@@ -127,15 +113,6 @@
                 <button @click="NewTaskToday()" v-if="option2 == 1 || option2 == 4 || option2 == 2" class="btn btn-success btn-sm" 
                 style="height:35px; font-size:15px; margin: -40px 0px 0px 300px;">Thêm mới</button>
             </p>
-            <!--<p>
-                <button @click="NewTaskToday()" v-if="option2 == 1 || option2 == 4 || option2 == 2" class="btn btn-success btn-sm"
-                    style="height:35px; font-size:15px; margin: -72px 0px 0px 300px;">Thêm mới</button>
-            </p>-->
-            <!--<button class="btn btn-outline-secondary" @click="handleShowFilter()" type="button" data-toggle="collapse"
-                data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample1"
-                style="float:right; margin:  -35px 10px 0px 0px;">
-                 Tạo bộ lọc
-            </button>-->
             <Paginate style="margin: 0px 0px 0px 10px" v-model="paginate" :pagechange="onPageChange"></Paginate>
             <table class="table-responsive table-hover"
                 style="width:99%; margin: 0px 0px 0px 10px">
@@ -147,7 +124,6 @@
                         <th scope="col" width="10%">Project</th>
                         <!--<th scope="col" width="10%">Công việc cha</th>-->
                         <th scope="col" width="7%">Department</th>
-                        <!--<th scope="col" width="150px">Cấp độ công việc</th>-->
                         <th scope="col" width="6%">Begin <input type="checkbox" @change="changeOption()" v-model="beginSort" ></th>
                         <th scope="col" width="3%">Estimated(h)</th>
                         <th scope="col" width="6%">End</th>
@@ -170,25 +146,9 @@
                                     @change="changeTaskName($event, item.id)" v-model="item.task_name">
                                 </textarea>
                                 &ensp;
-                                    <p @click="showModalEditTask($event, item.id)">
-                                        <i class="fas fa-info-circle" style="font-size:16px; margin-top: 1.5rem; cursor: pointer" />
-                                    </p>
-                            </div>
-                            <div data-bs-backdrop="static" data-bs-keyboard="false" ref="modalUpdateTask" class="modal" tabindex="-1" role="dialog">
-                                <div class="modal-dialog" role="document" style=" max-width: 60%;">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Thông tin công việc</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                                @click="closeModalEditTask()">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            123
-                                        </div>
-                                    </div>
-                                </div>
+                                <p @click="showModalEditTask(item.id)">
+                                    <i class="fas fa-info-circle" style="font-size:16px; margin-top: 1.5rem; cursor: pointer" />
+                                </p>
                             </div>
                         </td>
                         
@@ -199,16 +159,6 @@
                                 <option v-for="(sticker, index) in stickers" :key="index" :value="sticker.sticker_name">{{sticker.sticker_name}}
                                 </option>
                             </select>
-                            <!--<multiselect 
-                                v-model="item.task_sticker" 
-                                :options="stickers" 
-                                value="id" 
-                                label="sticker_name" 
-                                :close-on-select="true"
-                                :show-labels="true" 
-                                placeholder="Vui lòng chọn"  
-                                @select="changeSticker($event ,item.id)">
-                            </multiselect>-->
                         </td>
                         <td style="text-align:left;">
                             <select class="form-select" style="height:34px;" @change="changeProject($event, item.id)" v-model="item.project_id">
@@ -216,12 +166,6 @@
                                 <option v-for="(project, index) in projects" :key="index" :value="project.id">{{project.project_name}}</option>
                         </select>
                         </td>
-                        <!--<td style="text-align:left;">
-                            <select class="form-select" @change="changeParent($event, item.id)" v-model="item.task_parent">
-                                <option value="" disabled>Lựa chọn</option>
-                                <option v-for="(task, index) in list_task" :key="index" :value="task.id">{{task.task_name}}</option>
-                            </select>
-                        </td>-->
                         <!--<td>
                             <treeselect
                                 :options="list"
@@ -241,13 +185,6 @@
                                 <option value="11"> Marketing</option>
                             </select>
                         </td>
-                        <!--<td>
-                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                                @change="changePriority($event, item.id)" v-model="item.task_priority">
-                                <option v-for="(priority, index) in priorities" :key="index" :value="priority.priority_label">Level
-                                    {{priority.priority_label}}</option>
-                            </select>
-                        </td>-->
                          <td>
                             <DatePicker 
                                 style="width: 120px;" 
@@ -289,15 +226,6 @@
                             @change="changeProgress($event, item.id)" 
                             v-model="item.progress">
                         </td>
-                        <!--<td class ="status" v-if="item.status == 0" style="background-color:red">Đã quá hạn</td>
-                        <td class ="status" v-else-if="item.status == 1" style="background-color:white">Đang chờ</td>
-                        <td class ="status" v-else-if="item.status == 2" style="background-color:#008080">Đang làm</td>
-                        <td class ="status" v-else-if="item.status == 3" style="background-color:orange">Tạm dừng</td>
-                        <td class ="status" v-else-if="item.status == 5" style="background-color:#ff8080">Chờ feedback</td>
-                        <td class ="status" v-else-if=" item.status==6" style="background-color:#ff0000">Làm lại</td>
-                        <td class ="status" v-else-if="item.status_title == 'Hoàn thành chậm'" style="background-color:gray">Hoàn thành chậm
-                        </td>
-                        <td class ="status" v-else-if="item.status_title == 'Hoàn thành'" style="background-color:green">Hoàn thành</td>-->
                         <td v-if="item.status == 0" style="background-color:black">
                             <select class="form-select" style="height:34px" aria-label=".form-select-sm example"
                                 @change="changeStatus($event, item.id)" v-model="item.status">
@@ -407,12 +335,27 @@
                         <td class="status">
                             <button style="height: 34px;" class="btn btn-danger" @click="deleteTask($event, item.id)">
                                 <i class="fa fa-trash" aria-hidden="true"></i></button>
-                            <!--<button class="btn btn-success" style="height:20px; font-size:10px;" @click="copyMyWork($event, item.id)">Copy</button>-->
                         </td>
                     </tr>
                 </tbody>
             </table>
             <Paginate style="margin: 0px 0px 0px 10px" v-model="paginate" :pagechange="onPageChange"></Paginate>
+        </div>
+        <div ref="modalInfoTask" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document" style=" max-width: 50%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Nhập thông tin công việc</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            @click="closeModalEditTask()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <CreateTask_Parent v-if="showModalEdit" :projects="projects" :taskId="taskEditId" @handleGetTasks="handleGetTasks()" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -425,10 +368,12 @@ import Multiselect from 'vue-multiselect';
 import Treeselect from '@riophae/vue-treeselect';
 import DatePicker from 'vue2-datepicker';
 import CreateTask_Parent from './CreateTask_Parent.vue';
+import CreateTask from './CreateTask.vue';
+
 export default {
     name: "MyWork",
     el: '#infoMyWork',
-    components: { CreateTask_Parent, Multiselect, Treeselect, DatePicker, Paginate },
+    components: { CreateTask, CreateTask_Parent, Multiselect, Treeselect, DatePicker, Paginate },
     props: ['search', 'paginate', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'status', 'list', 'task_sticker', 'currentUser'],
     data() {
         return {
@@ -523,13 +468,6 @@ export default {
                 this.stickers = res.data;
             }
         },
-        //async getAllSticker() {
-
-        //    const res = await $get('/stickers/get_all_myWork');
-        //    if (res.code == 200) {
-        //        this.stickers = res.data;
-        //    }
-        //},
         async getAllTasks() {
             
             const res = await $get('/tasks/all_task');
@@ -550,11 +488,11 @@ export default {
 
         showModalEditTask(id) {
             this.showModalEdit = true;
-            $(this.$refs.modalUpdateTask).modal('show');
+            $(this.$refs.modalInfoTask).modal('show');
             this.taskEditId = id;
         },
         closeModalEditTask() {
-            $(this.$refs.modalUpdateTask).modal('hide');
+            $(this.$refs.modalInfoTask).modal('hide');
             this.showModalEdit = false;
             this.taskEditId = 0;
         },
@@ -566,10 +504,6 @@ export default {
             this.getMyWorks();
             this.showInfoMyWork = !this.showInfoMyWork
         },
-        //filterTask() {
-        //    this.getMyWorks();
-        //    this.showFilter = false;
-        //},
         async getMyWorks(page) {
             console.log(page, 'page');
             let params = {
@@ -598,13 +532,7 @@ export default {
                 params.start_time = this.dateRange.length > 1 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : moment().startOf('month').format('YYYY-MM-DD');
                 params.end_time = this.dateRange.length > 1 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : moment().endOf('month').format('YYYY-MM-DD');
             }
-            
-            //if (this.startTime) {
-            //    params.start_time = this.startTime;
-            //}
-            //if (this.endTime) {
-            //    params.end_time = this.endTime;
-            //}
+    
             if (this.search) {
                 params.search = this.search || '';
             }
@@ -770,7 +698,6 @@ export default {
                     let index = _.findIndex(this.list, val => val.id == res.task_id);
                     this.list.splice(index, 1);
                 }
-                //this.getMyWorks();
 
             }
         },
