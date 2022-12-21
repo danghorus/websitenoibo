@@ -631,10 +631,10 @@ class TaskController extends Controller
             $builder->where('start_time', '>=', date('Y-m-d', strtotime("monday last week")))
                      ->where('end_time', '<=', date('Y-m-d', strtotime("sunday last week")));
         }
-        //dd(strtotime("monday this week"));
-        //dd(strtotime("today"));
+        
 
-        $tasks = $builder->paginate( $perPage , ['*'], 'page', $request->input('page') ?? 1);
+        $task_01 = $builder->get();
+
 
         $totalTaskProcessing = 0;
         $totalTaskPause = 0;
@@ -643,7 +643,7 @@ class TaskController extends Controller
         $totalRealtime = 0;
         $totalTime = 0;
 
-        foreach ($tasks as $task) {
+        foreach ($task_01 as $task) {
             if ($task->status == 0) {
                 $task->status_title = 'Đã quá hạn';
             } elseif ($task->status == 1) {
@@ -664,11 +664,13 @@ class TaskController extends Controller
                 $task->status_title = $task->status >= 0 ? Task::ARR_STATUS[$task->status]: '';
             }
 
-            $today = date('Y-m-d', strtotime(now()));
-            if(($task->start_time <= $today) && ($task->end_time >= $today)) {
+            //$today = date('Y-m-d', strtotime(now()));
+
+            //if(($task->start_time <= $today) && ($task->end_time >= $today)) {
+                
                 $totalRealtime = $totalRealtime + $task->real_time;
                 $totalTime = $totalTime + $task->time;
-            }
+            //}
 
             switch ($task->status) {
                 case 0:
@@ -693,17 +695,10 @@ class TaskController extends Controller
                     $totalTaskProcessing++;
                     break;
             }
-            $task->time_real = 0;
-            $task->time_now = date('Y-m-d', strtotime(now()));
-
-            if ($task->status == 4 || $task->status == 3 || $task->status == 5 || $task->status == 6) {
-                $task->time_real = $task->real_end_time?
-                    round(((strtotime($task->real_end_time) - strtotime($task->real_start_time))/3600 - $task->time_pause), 2): 0;
-
-            } else if ($task->status == 2){
-                $task->time_real = round(((time() - strtotime($task->real_start_time))/3600 - $task->time_pause), 2);
-            }
         }
+
+        $tasks = $builder->paginate( $perPage , ['*'], 'page', $request->input('page') ?? 1);
+       
         $currentUser = Auth::user();
 
 
@@ -715,7 +710,7 @@ class TaskController extends Controller
                 'lastPage' => $tasks->lastPage(),
             ],
             'summary' => [
-                'total' => count($tasks),
+                'total' => count($task_01),
                 'totalRealtime' => $totalRealtime,
                 'totalTime' => $totalTime,
                 'total_processing' => $totalTaskProcessing,
