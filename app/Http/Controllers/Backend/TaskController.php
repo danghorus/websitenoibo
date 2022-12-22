@@ -634,7 +634,7 @@ class TaskController extends Controller
             $builder->where('status', '=', $filters['status']);
         }
         if($search && $search != ''){
-            $builder->where('task_name', 'LIKE', "%$search%");
+            $builder->where('task_name', 'LIKE','%' . $search . '%');
         }
 
         if($Status2 == 2) {
@@ -804,7 +804,7 @@ class TaskController extends Controller
             $builder->where('status', '=', $filters['status']);
         }
         if ($search && $search != '') {
-            $builder->where('task_name', 'LIKE', "%$search%");
+            $builder->where('task_name', 'LIKE', '%' . $search . '%');
         }
         if($Status2 == 2) {
             $builder->where('start_time', '<=', date('Y-m-d', strtotime("today")))

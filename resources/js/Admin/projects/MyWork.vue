@@ -6,7 +6,7 @@
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px;">Nhập tên công việc</label>
-                            <input @input="changeOption()" class="form-control"
+                            <input @change="changeOption()" class="form-control"
                                 style="margin-top:3px;width:300px;height:33px;font-size:14px" type="text" placeholder="Tên công việc"
                                 v-model="search">
                         </div>
