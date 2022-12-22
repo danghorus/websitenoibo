@@ -50,74 +50,137 @@
                     </li> &ensp;
                     <li class="nav-item">
                         <button class="btn btn-outline-info" @click="ShowInfoMyWork()" type="button" data-toggle="collapse"
-                            data-target="#collapseExample_1" aria-expanded="false" aria-controls="collapseExample"
-                            style="margin-top: 38px"> Thông tin
+                            data-target="#collapseExample" style="margin-top: 38px"> Thông tin
                         </button>
                         <div class="col-lg">
-                            <div class="collapse info-my-work" id="collapseExample_1" v-if="showInfoMyWork">
+                            <div class="collapse info-my-work" id="collapseExample" v-if="showInfoMyWork">
                                 <div>
                                     <table style="width:100%; border: 0px" class="my-work">
+                                        <div class="float-left" style="margin-top: 15px; margin-left: 5px;">
+                                            <button type="submit" class="btn" @click="ShowInfoMyWork()"><h4>X</h4></button>
+                                        </div>
                                         <h4 style="margin: 20px 0px 20px 130px;">Thông tin làm việc</h4>
-                                        <tr>
+                                        <tr v-if="summary.total > 0" style="color:green;">
                                             <td><b>Tổng số công việc của bạn</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else >
+                                            <td>Tổng số công việc của bạn</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_wait > 0" style="color:green;">
                                             <td><b>Đang chờ</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total_wait }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Đang chờ</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_wait }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_processing > 0" style="color:green;">
                                             <td><b>Đang làm</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total_processing }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Đang làm</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_processing }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_pause > 0" style="color:green;">
                                             <td><b>Tạm dừng</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total_pause }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Tạm dừng</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_pause }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_complete > 0" style="color:green;">
                                             <td><b>Hoàn thành</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total_complete }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Hoàn thành</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_complete }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_wait_fb > 0" style="color:green;">
                                             <td><b>Chờ feedback</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total_wait_fb }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Chờ feedback</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_wait_fb }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_again > 0" style="color:green;">
                                             <td><b>Làm lại</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total_again }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Làm lại</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_again }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_slow > 0" style="color:green;">
                                             <td><b>Quá hạn</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total_slow }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Quá hạn</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_slow }}</td>
+                                        </tr>
+                                        <tr v-if="summary.totalTime > 0" style="color:green;">
                                             <td><b>Thời gian làm việc dự kiến trong ngày</b></td>
                                             <td>:</td>
                                             <td>{{ summary.totalTime }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Thời gian làm việc dự kiến trong ngày</td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalTime }}</td>
+                                        </tr>
+                                        <tr v-if="summary.totalRealtime > 0" style="color:green;">
                                             <td><b>Thời gian làm việc thực tế trong ngày</b></td>
                                             <td>:</td>
                                             <td>{{ summary.totalRealtime }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Thời gian làm việc thực tế trong ngày</td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalRealtime }}</td>
+                                        </tr>
+                                        <tr v-if="summary.totalWeight > 0" style="color:green;">
                                             <td><b>Tổng trọng số</b></td>
                                             <td>:</td>
                                             <td>{{ summary.totalWeight }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Tổng trọng số</td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalWeight }}</td>
+                                        </tr>
+                                        <tr v-if="summary.totalWeightComplete > 0" style="color:green;">
                                             <td><b>Trọng số đã tích luỹ được</b></td>
                                             <td>:</td>
                                             <td>{{ summary.totalWeightComplete }}</td>
                                         </tr>
+                                        <tr v-else>
+                                            <td>Trọng số đã tích luỹ được</td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalWeightComplete }}</td>
+                                        </tr>
+
                                     </table>
                                 </div>
                                 <div class="float-right p-2">
@@ -536,7 +599,8 @@ export default {
             this.showFilter = !this.showFilter
         },
         ShowInfoMyWork() {
-            this.showInfoMyWork = !this.showInfoMyWork
+            this.showInfoMyWork = !this.showInfoMyWork;
+            this.getMyWorks();
         },
         async getMyWorks(page) {
             console.log(page, 'page');

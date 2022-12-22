@@ -2,19 +2,18 @@
     <div>
         <div class="mt-4">
             <h3 style="margin: -30px 0px 0px 25px;">Danh sách công việc</h3>
-            <select @change="changeOption()" class="form-select col-lg-2"
+            <select @change="changeOption2()" class="form-select col-lg-2"
                 style="position: absolute; left: 25px; top: 110px; width:220px; height:34px;" v-model="option2">
-                <option value="3">Tất cả</option>
-                <option value="15">Việc hôm nay</option>
-                <option value="10">Mới tạo</option>
-                <option value="1">Chưa hoàn thành</option>
-                <option value="5">Chờ feedback</option>
-                <option value="2">Đã hoàn thành</option>
+                <option value="1">Tất cả</option>
+                <option value="2">Việc hôm nay</option>
+                <option value="3">Việc hôm qua</option>
+                <option value="4">Việc tuần này</option>
+                <option value="5">Việc tuần trước</option>
             </select>
-            <button v-if="option2 != 15" class="btn btn-success btn-sm" @click="NewTask()"
+            <!--<button v-if="option2 != 15" class="btn btn-success btn-sm" @click="NewTask()"
                 style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới
-            </button>
-            <button v-if="option2 == 15" class="btn btn-success btn-sm" @click="NewTaskToday()"
+            </button>-->
+            <button v-if="option2 == 1 || option2 == 2 || option2 == 4" class="btn btn-success btn-sm" @click="NewTaskToday()"
                 style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới
             </button>
             <nav class="navbar navbar-expand-lg" style="margin-top:-55px;float:right;">
@@ -27,7 +26,7 @@
                                 placeholder="Tên công việc" v-model="search">
                         </div>
                     </li>
-                    <li class="nav-item" v-if="option2 != 15" style="width:220px;">
+                    <li class="nav-item" v-if="option2 != 2 && option2 != 3" style="width:220px;">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px;">Chọn khoảng thời gian</label>
                             <date-picker style="margin-top:3px; width: 100%;" v-model="dateRange" type="date" range
@@ -35,20 +34,6 @@
                             </date-picker>
                         </div>
                     </li>
-                    <!--<li class="nav-item">
-                        <div class="form-group p-1">
-                            <DatePicker style="width: 100%; margin-top: 33px" v-model="startTime" value-type="format" type="date"
-                                placeholder="Ngày bắt đầu" @change="changeOption()">
-                            </DatePicker>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <div class="form-group p-1">
-                            <DatePicker style="width: 100%; margin-top: 33px" v-model="endTime" value-type="format" type="date"
-                            placeholder="Ngày kết thúc" @change="changeOption()">
-                            </DatePicker>
-                        </div>
-                    </li>-->
                     <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo dự án</label>
@@ -86,7 +71,7 @@
                             </select>
                         </div>
                     </li>
-                    <li v-if="option2 != 2 &&  option2 != 5" class="nav-item">
+                    <li class="nav-item">
                         <div class="form-group p-2">
                             <label for="project_description" style="font-size:12px">Theo trạng thái</label>
                             <select @change="changeOption()" class="form-select" v-model="option" style="width:160px">
@@ -114,35 +99,125 @@
                                 <div>
                                     <table style="width:100%; border: 0px" class="my-work">
                                         <h4 style="margin: 20px 0px 20px 130px;">Thông tin làm việc</h4>
-                                        <tr>
+                                        <tr v-if="summary.total > 0" style="color:green;">
                                             <td><b>Tổng số công việc của bạn</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Tổng số công việc của bạn</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_wait > 0" style="color:green;">
+                                            <td><b>Đang chờ</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_wait }}</td>
+                                        </tr>
+                                        <tr v-else>
+                                            <td>Đang chờ</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_wait }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_processing > 0" style="color:green;">
                                             <td><b>Đang làm</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total_processing }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Đang làm</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_processing }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_pause > 0" style="color:green;">
                                             <td><b>Tạm dừng</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total_pause }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Tạm dừng</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_pause }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_complete > 0" style="color:green;">
                                             <td><b>Hoàn thành</b></td>
                                             <td>:</td>
                                             <td>{{ summary.total_complete }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Hoàn thành</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_complete }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_wait_fb > 0" style="color:green;">
+                                            <td><b>Chờ feedback</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_wait_fb }}</td>
+                                        </tr>
+                                        <tr v-else>
+                                            <td>Chờ feedback</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_wait_fb }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_again > 0" style="color:green;">
+                                            <td><b>Làm lại</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_again }}</td>
+                                        </tr>
+                                        <tr v-else>
+                                            <td>Làm lại</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_again }}</td>
+                                        </tr>
+                                        <tr v-if="summary.total_slow > 0" style="color:green;">
+                                            <td><b>Quá hạn</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_slow }}</td>
+                                        </tr>
+                                        <tr v-else>
+                                            <td>Quá hạn</td>
+                                            <td>:</td>
+                                            <td>{{ summary.total_slow }}</td>
+                                        </tr>
+                                        <tr v-if="summary.totalTime > 0" style="color:green;">
                                             <td><b>Thời gian làm việc dự kiến trong ngày</b></td>
                                             <td>:</td>
                                             <td>{{ summary.totalTime }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-else>
+                                            <td>Thời gian làm việc dự kiến trong ngày</td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalTime }}</td>
+                                        </tr>
+                                        <tr v-if="summary.totalRealtime > 0" style="color:green;">
                                             <td><b>Thời gian làm việc thực tế trong ngày</b></td>
                                             <td>:</td>
                                             <td>{{ summary.totalRealtime }}</td>
+                                        </tr>
+                                        <tr v-else>
+                                            <td>Thời gian làm việc thực tế trong ngày</td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalRealtime }}</td>
+                                        </tr>
+                                        <tr v-if="summary.totalWeight > 0" style="color:green;">
+                                            <td><b>Tổng trọng số</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalWeight }}</td>
+                                        </tr>
+                                        <tr v-else>
+                                            <td>Tổng trọng số</td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalWeight }}</td>
+                                        </tr>
+                                        <tr v-if="summary.totalWeightComplete > 0" style="color:green;">
+                                            <td><b>Trọng số đã tích luỹ được</b></td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalWeightComplete }}</td>
+                                        </tr>
+                                        <tr v-else>
+                                            <td>Trọng số đã tích luỹ được</td>
+                                            <td>:</td>
+                                            <td>{{ summary.totalWeightComplete }}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -191,8 +266,7 @@
                             </textarea>
                             &ensp;
                                 <p @click="showModalEditTask(item.id)">
-                                    <i class="fas fa-info-circle"
-                                        style="font-size:16px; margin-top: 1.5rem; cursor: pointer" />
+                                    <i class="fas fa-info-circle" style="font-size:16px; margin-top: 1.5rem; cursor: pointer" />
                                 </p>
                             </div>
                         </td>
@@ -402,27 +476,30 @@
                         </td>
                         <td>
                             <button class="btn btn-danger" style="height:34px"
-                                @click="deleteTask($event, item.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                @click="deleteTask($event, item.id)"><i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                            <button style="height: 34px;" @click="copyListWorks(item.id)" class="btn btn-success">
+                                <i class="fa fa-copy" aria-hidden="true"></i>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
             <Paginate style="float:right; padding: 10px;" v-model="paginate" :pagechange="onPageChange"></Paginate>
             <div>
-                <div ref="modalCreateTask" class="modal" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document" style=" max-width: 60%;">
+                <div ref="modalInfoTask" class="modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document" style=" max-width: 62%;">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Tạo mới Công việc</h5>
+                                <h5 class="modal-title">Nhập thông tin công việc</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                    @click="closeModalCreateTask()">
+                                    @click="closeModalEditTask()">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <create-task v-if="showModal" :users="users" :groupUsers="groupUsers"
-                                    :priorities="priorities" :stickers="stickers" :projects="projects"
-                                    :projectId="projectId" @handleCreateTask="handleCreateTask" />
+                                <CreateTask_Parent v-if="showModalEdit" :projects="projects" :taskId="taskEditId"
+                                    @handleGetTasks="handleGetTasks()" />
                             </div>
                         </div>
                     </div>
@@ -437,17 +514,18 @@
 import { $get, $post } from "../../ultis";
 import Paginate from "../../components/Paginate";
 import Multiselect from 'vue-multiselect';
-import CreateTask from "./CreateTask";
 import DatePicker from 'vue2-datepicker';
 import Treeselect from '@riophae/vue-treeselect';
 import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 import 'vue2-datepicker/index.css';
 import _ from "lodash";
+import CreateTask_Parent from './CreateTask_Parent.vue';
+
 
 
 export default {
     name: "ListWork",
-    components: { DatePicker, Multiselect, CreateTask, Treeselect, Paginate },
+    components: { DatePicker, Multiselect, CreateTask_Parent, Treeselect, Paginate },
     props: [, 'paginate', 'users', 'groupUsers', 'priorities', 'stickers', 'projects', 'search',
         'startTime', 'endTime', 'taskPerformer', 'task_performer', 'taskDepartment', 'status', 'list', 'currentUser'],
     data() {
@@ -458,7 +536,7 @@ export default {
             search: '',
             option: 10,
             option1: 12,
-            option2: 15,
+            option2: 2,
             performer: 0,
             project: 0,
             project_id: '',
@@ -502,6 +580,18 @@ export default {
     methods: {
 
         changeOption(page) {
+            this.getListWorks(page);
+            this.getAllUser(page);
+            this.getAllSticker(page);
+        },
+        changeOption2(page) {
+            this.option = 10;
+            this.option1 = 12;
+            this.search = '';
+            this.project = 0;
+            this.performer
+            this.dateRange = '';
+
             this.getListWorks(page);
             this.getAllUser(page);
             this.getAllSticker(page);
@@ -595,13 +685,16 @@ export default {
         },
         showModalEditTask(id) {
             this.showModalEdit = true;
-            $(this.$refs.modalUpdateTask).modal('show');
+            $(this.$refs.modalInfoTask).modal('show');
             this.taskEditId = id;
         },
         closeModalEditTask() {
-            $(this.$refs.modalUpdateTask).modal('hide');
+            $(this.$refs.modalInfoTask).modal('hide');
             this.showModalEdit = false;
             this.taskEditId = 0;
+        },
+        handleGetTasks() {
+            this.closeModalEditTask();
         },
 
         filterTask() {
@@ -774,6 +867,15 @@ export default {
                     let index = _.findIndex(this.list, val => val.id == res.task_id);
                     this.list.splice(index, 1);
                 }
+            }
+            
+        },
+        async copyListWorks(id) {
+            const res = await $get(`/tasks/copy/${id}`);
+
+            if (res.code == 200) {
+                toastr.success('Copy thành công');
+                this.getListWorks();
             }
         },
     },
