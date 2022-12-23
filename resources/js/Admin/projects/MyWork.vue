@@ -203,8 +203,16 @@
 
             </select>&emsp;
             <p>
-                <button @click="NewTaskToday()" v-if="option2 == 1 || option2 == 4 || option2 == 2" class="btn btn-success btn-sm" 
+                <button @click="NewTaskToday()" v-if="option2 == 1 || option2 == 2 || option2 == 4" class="btn btn-success btn-sm" 
                 style="height:35px; font-size:15px; margin: -40px 0px 0px 300px;">Thêm mới</button>
+            </p>
+             <p>
+                <button @click="NewTaskYesterday()" v-if="option2 == 3" class="btn btn-success btn-sm" 
+                style="height:35px; font-size:15px; margin: -72px 0px 0px 300px;">Thêm mới</button>
+            </p>
+            <p>
+                <button @click="NewTaskLastWeek()" v-if="option2 == 5" class="btn btn-success btn-sm"
+                    style="height:35px; font-size:15px; margin: -72px 0px 0px 300px;">Thêm mới</button>
             </p>
             <Paginate style="margin: 0px 0px 0px 10px" v-model="paginate" :pagechange="onPageChange"></Paginate>
             <table class="table-responsive table-hover"
@@ -679,6 +687,22 @@ export default {
         },
         async NewTaskToday() {
             const res = await $get('/tasks/new_task_today');
+
+            if (res.code == 200) {
+                toastr.success('Thêm mới thành công');
+                this.getMyWorks();
+            }
+        },
+        async NewTaskYesterday() {
+            const res = await $get('/tasks/new_task_yesterday');
+
+            if (res.code == 200) {
+                toastr.success('Thêm mới thành công');
+                this.getMyWorks();
+            }
+        },
+        async NewTaskLastWeek() {
+            const res = await $get('/tasks/new_task_last_week');
 
             if (res.code == 200) {
                 toastr.success('Thêm mới thành công');

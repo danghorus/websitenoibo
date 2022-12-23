@@ -16,6 +16,12 @@
             <button v-if="option2 == 1 || option2 == 2 || option2 == 4" class="btn btn-success btn-sm" @click="NewTaskToday()"
                 style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới
             </button>
+            <button v-if="option2 == 3" class="btn btn-success btn-sm" @click="NewTaskYesterday()"
+                style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới
+            </button>
+            <button v-if="option2 == 5" class="btn btn-success btn-sm" @click="NewTaskLastWeek()"
+                style="height:35px; font-size:15px; margin: 0px 0px 0px 300px;">Thêm mới
+            </button>
             <nav class="navbar navbar-expand-lg" style="margin-top:-55px;float:right;">
                 <ul class="navbar-nav mr-auto" style="font-size:16px;">
                     <li class="nav-item">
@@ -625,6 +631,22 @@ export default {
         },
         async NewTaskToday() {
             const res = await $get('/tasks/list_new_task_today');
+
+            if (res.code == 200) {
+                toastr.success('Thêm mới thành công');
+                this.getListWorks();
+            }
+        },
+        async NewTaskYesterday() {
+            const res = await $get('/tasks/list_new_task_yesterday');
+
+            if (res.code == 200) {
+                toastr.success('Thêm mới thành công');
+                this.getListWorks();
+            }
+        },
+        async NewTaskLastWeek() {
+            const res = await $get('/tasks/list_new_task_last_week');
 
             if (res.code == 200) {
                 toastr.success('Thêm mới thành công');

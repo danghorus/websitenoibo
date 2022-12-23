@@ -177,8 +177,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('tasks/delete/{id}', [TaskController::class, 'deleteTask']);
     Route::get('tasks/new_task', [TaskController::class, 'new_task']);
     Route::get('tasks/new_task_today', [TaskController::class, 'new_task_today']);
+    Route::get('tasks/new_task_yesterday', [TaskController::class, 'new_task_yesterday']);
+    Route::get('tasks/new_task_last_week', [TaskController::class, 'new_task_last_week']);
     Route::get('tasks/list_new_task', [TaskController::class, 'list_new_task']);
     Route::get('tasks/list_new_task_today', [TaskController::class, 'list_new_task_today']);
+    Route::get('tasks/list_new_task_yesterday', [TaskController::class, 'list_new_task_yesterday']);
+    Route::get('tasks/list_new_task_last_week', [TaskController::class, 'list_new_task_last_week']);
     Route::get('tasks/invalid', [TaskController::class, 'invalid']);
     Route::get('/tasks/delete/{id}/invalid', [TaskController::class, 'invalidDelete']);
     Route::get('/tasks/restore/{id}', [TaskController::class, 'restore']);
