@@ -488,17 +488,18 @@ export default {
             }
         },
         async GoOut() {
+           
             const res = await $post('/time-keeping/go_out');
+
             if (res.code == 200) {
-                this.getTimeKeepings();
                 if (res.go_out) {
                     this.showGoIn = true;
                 } else {
                     this.showGoIn = false;
                 }
-
                 this.showGoOut = false;
             }
+            this.getTimeKeepings();
         },
         async exportData() {
 

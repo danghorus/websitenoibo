@@ -83,6 +83,18 @@ class TimeKeepingController extends Controller
         ];
     }
 
+    public function go_out_detail(Request $request) {
+        $filters = $request->all();
+
+        $data = $this->timeKeepingService->getDetailTimeGoOut($filters);
+
+        return [
+            'code' => 200,
+            'data' => $data,
+            'currentUser' => Auth::user()
+        ];
+    }
+
     public function getUser(Request $request) {
         $filters = $request->all();
 

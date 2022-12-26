@@ -58,8 +58,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/petition/create_petition_time_keeping', [PetitionController::class, 'create_petition_time_keeping']);
     Route::post('/petition/create_holiday', [PetitionController::class, 'create_holiday']);
     Route::post('/petition/warrior', [PetitionController::class, 'warrior']);
-    Route::get('/approved', [PetitionController::class, 'approved'])->name('approved');
-    Route::get('/unapproved', [PetitionController::class, 'unapproved'])->name('unapproved');
+    Route::get('approved', [PetitionController::class, 'approved'])->name('approved');
+    Route::get('unapproved', [PetitionController::class, 'unapproved'])->name('unapproved');
 
     Route::post('/partner/connect', [PartnerController::class, 'connect']);
     Route::get('/partner/get_devices', [PartnerController::class, 'getDevices']);
@@ -79,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/time-keeping/get', [TimeKeepingController::class, 'get']);
     Route::get('/time-keeping/get_user', [TimeKeepingController::class, 'getUser']);
     Route::get('/time-keeping/detail', [TimeKeepingController::class, 'detail']);
+    Route::get('/time-keeping/go_out_detail', [TimeKeepingController::class, 'go_out_detail']);
     Route::post('/time-keeping/checkin', [TimeKeepingController::class, 'checkin']);
     Route::post('/time-keeping/final_checkout', [TimeKeepingController::class, 'final_checkout']);
     Route::post('/time-keeping/go_out', [TimeKeepingController::class, 'go_out']);
@@ -165,6 +166,8 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('tasks/change-pause/{id}', [TaskController::class, 'changePause']);
     Route::post('tasks/change-department/{id}', [TaskController::class, 'changeDepartment']);
     Route::post('tasks/change-performer/{id}', [TaskController::class, 'changePerformer']);
+    Route::post('tasks/change-user_fix/{id}', [TaskController::class, 'changeUserFix']);
+    Route::post('tasks/change-user_test/{id}', [TaskController::class, 'changeUserTest']);
 	Route::post('tasks/change-sticker/{id}', [TaskController::class, 'changeSticker']);
     Route::post('tasks/change-priority/{id}', [TaskController::class, 'changePriority']);
     Route::post('tasks/change-weight/{id}', [TaskController::class, 'changeWeight']);
@@ -179,6 +182,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('tasks/new_task_today', [TaskController::class, 'new_task_today']);
     Route::get('tasks/new_task_yesterday', [TaskController::class, 'new_task_yesterday']);
     Route::get('tasks/new_task_last_week', [TaskController::class, 'new_task_last_week']);
+    Route::get('tasks/new_task_bug', [TaskController::class, 'new_task_bug']);
     Route::get('tasks/list_new_task', [TaskController::class, 'list_new_task']);
     Route::get('tasks/list_new_task_today', [TaskController::class, 'list_new_task_today']);
     Route::get('tasks/list_new_task_yesterday', [TaskController::class, 'list_new_task_yesterday']);

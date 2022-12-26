@@ -6,6 +6,7 @@ use App\Models\ConfigTimeKeeping;
 use App\Models\DeviceTimeKeeping;
 use App\Models\TimeKeeping;
 use App\Models\TimeKeepingDetail;
+use App\Models\TimeGoOut;
 use App\Models\TimeKeepingPetition;
 use App\Models\Petition;
 use App\Models\User;
@@ -653,8 +654,20 @@ class TimeKeepingService
         $showBtn = '';
         $showBtn_1 = '';
         $showBtn_2 = '';
-        $myIp = "14.248.85.119";
-        $ip = $_SERVER["REMOTE_ADDR"];
+        $myIp = '14.248.85.119';
+
+        if (!empty($_SERVER['HTTP_CLIENT_IP']))
+        {
+            $ip_address = $_SERVER['HTTP_CLIENT_IP'];
+        }
+        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+        {
+            $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        else
+        {
+            $ip_address = $_SERVER['REMOTE_ADDR'];
+        }
 
         if ($currentUser->check_type == 2) {
             $timeKeeping = TimeKeeping::query()
@@ -679,14 +692,14 @@ class TimeKeepingService
             if(!$timeKeeping){
                  $showBtn_1 = '';
             }else{
-                if (($timeKeeping->go_out == null && $timeKeeping->checkin != null) || ($timeKeeping->go_in > $timeKeeping->go_out) ) {
+                if ($timeKeeping->btn_check == 1 ) {
                     $showBtn_1 = 'go_out';
-                } else if (($timeKeeping->go_out != null && ! $timeKeeping->go_in) || ($timeKeeping->go_out > $timeKeeping->go_in)) {
+                } else if ($timeKeeping->btn_check == 2) {
                     $showBtn_1 = 'go_in';
                 }
-                if($myIp == $ip && $timeKeeping->checkin != null && $timeKeeping->final_checkout == null){
+                if($timeKeeping->checkin != null && $timeKeeping->final_checkout == null){
                     $showBtn_2 = 'final_checkout';
-                } else if($myIp == $ip && $timeKeeping->checkin != null && $timeKeeping->final_checkout != null){
+                } else if( $timeKeeping->checkin != null && $timeKeeping->final_checkout != null){
                     $showBtn_2 = 'final_checkout_hide';
                 }
             }
@@ -708,6 +721,15 @@ class TimeKeepingService
     {
         $user = User::query()->with(['timeKeepingDetail' => function ($q) use ($filters) {
             $q->where('check_date', '=', $filters['date']);
+        }])->where('id', '=', $filters['user_id'])->first();
+
+        return $user;
+    }
+
+    public function getDetailTimeGoOut(array $filters)
+    {
+        $user = User::query()->with(['timeGoOutDetail' => function ($q) use ($filters) {
+            $q->where('go_date', '=', $filters['date']);
         }])->where('id', '=', $filters['user_id'])->first();
 
         return $user;
@@ -857,6 +879,7 @@ class TimeKeepingService
                 'check_date' => $data['date']
             ])->first();
 
+
         if (! $timeKeeping) {
             $timeKeeping = new TimeKeeping();
             $timeKeeping->user_id = $data['user_id'];
@@ -885,6 +908,9 @@ class TimeKeepingService
         }
         if (isset($data['time_to']) && $data['time_to'] != '') {
             $timeKeeping->time_to = $data['time_to'];
+        }
+        if (isset($data['date_to']) && $data['date_to'] != '') {
+            $timeKeeping->date_to = $data['date_to'];
         }
         if (isset($data['date_to']) && $data['date_to'] != '') {
             $timeKeeping->date_to = $data['date_to'];
@@ -2173,7 +2199,7 @@ class TimeKeepingService
         return false;
     }
 
-    public function goOutHandmade(User $user)
+    public function goOutHandmade1(User $user)
     {
         if ($user->check_type == 1) {
             $timeKeeping = TimeKeeping::query()
@@ -2181,9 +2207,14 @@ class TimeKeepingService
                     'user_id' => $user->id,
                     'check_date' => date('Y-m-d', time())
                 ])->first();
+                
 
             if (!$timeKeeping->go_out ||($timeKeeping->go_in != null && $timeKeeping->go_in > $timeKeeping->go_out)){
                 $timeKeeping->go_out = date('H:i:s', time());
+                
+                $total_pause = 1;
+                $timeKeeping->total_pause += $total_pause;
+                
                 $timeKeeping->save();
 
                 return [
@@ -2192,10 +2223,9 @@ class TimeKeepingService
                 ];
             } else if(($timeKeeping->go_out != null && $timeKeeping->go_in == null) || ($timeKeeping->go_in < $timeKeeping->go_out)){
                 $timeKeeping->go_in = date('H:i:s', time());
+
                 $pause = (strtotime($timeKeeping->go_in) - strtotime($timeKeeping->go_out))/60;
-                $total_pause = 1;
                 $timeKeeping->time_pause += $pause;
-                $timeKeeping->total_pause += $total_pause;
                 
                 $timeKeeping->save();
 
@@ -2209,6 +2239,57 @@ class TimeKeepingService
         }
 
         return false;
+    }
+    public function goOutHandmade(User $user)
+    {
+
+        $go_out = TimeGoOut::query()
+            ->where([
+                'user_id' => $user->id,
+                'go_date' => date('Y-m-d', time())
+            ])->orderBy('updated_at', 'desc')->first();
+        $timeKeeping = TimeKeeping::query()
+        ->where([
+            'user_id' => $user->id,
+            'check_date' => date('Y-m-d', time())
+        ])->first();
+            
+        if (!$go_out) {
+            $go_out = new TimeGoOut();
+            $go_out->user_id = $user->id;
+            $go_out->go_date = date('Y-m-d', time());
+            $go_out->go_out = date('H:i:s', time());
+
+            $timeKeeping->btn_check = 2;
+            $timeKeeping->total_pause =  $timeKeeping->total_pause + 1;
+
+        } else {
+            if (empty($go_out->go_in)) {
+                $go_out->go_in = date('H:i:s', time());
+                $time_pause = $go_out->time_pause = (strtotime($go_out->go_in) - strtotime($go_out->go_out))/60;
+
+                $timeKeeping->btn_check = 1;
+                $timeKeeping->time_pause =  $timeKeeping->time_pause + $time_pause;
+
+            }else{
+                $go_out = new TimeGoOut();
+                $go_out->user_id = $user->id;
+                $go_out->go_date = date('Y-m-d', time());
+                $go_out->go_out = date('H:i:s', time());
+
+                $timeKeeping->btn_check = 2;
+                $timeKeeping->total_pause =  $timeKeeping->total_pause + 1;
+
+            }
+        }
+        $go_out->save();
+        $timeKeeping->save();
+
+        return [
+            'status' => '200',
+            'message' => 'Thao tác thành công'
+        ];
+
     }
     /**
      * @param string $start_date
