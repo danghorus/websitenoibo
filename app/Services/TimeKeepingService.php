@@ -697,9 +697,9 @@ class TimeKeepingService
                 } else if ($timeKeeping->btn_check == 2) {
                     $showBtn_1 = 'go_in';
                 }
-                if($timeKeeping->checkin != null && $timeKeeping->final_checkout == null){
+                if(/*$myIp == $ip_address &&*/ $timeKeeping->checkin != null && $timeKeeping->final_checkout == null){
                     $showBtn_2 = 'final_checkout';
-                } else if( $timeKeeping->checkin != null && $timeKeeping->final_checkout != null){
+                } else if(/*$myIp == $ip_address &&*/ $timeKeeping->checkin != null && $timeKeeping->final_checkout != null){
                     $showBtn_2 = 'final_checkout_hide';
                 }
             }
