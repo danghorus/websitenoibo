@@ -27,7 +27,10 @@ class Petition extends Model
         'petition_status',
         'type_approved',
 		'type_paid',
-        'check_type'
+        'check_type',
+        'readed',
+        'infringe',
+
     ];
 
     public function user()

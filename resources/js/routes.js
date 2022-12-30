@@ -9,8 +9,12 @@ import MyWork from "./Admin/projects/MyWork";
 import ListWork from "./Admin/projects/ListWork";
 import ListWorkDone from "./Admin/projects/ListWorkDone";
 import Project_Report from "./Admin/projects/Report";
+import Project_ReportClone from "./Admin/projects/ReportClone";
 import Project_Warrior from "./Admin/projects/Warrior";
 import InvalidTasks from "./Admin/projects/InvalidTasks";
+
+import History from "./Admin/histories/History";
+
 
 export const routes = [
     {
@@ -64,6 +68,11 @@ export const routes = [
         component: Project_Report
     },
     {
+        path: "/project-report_clone",
+        name: "Project_ReportClone",
+        component: Project_ReportClone
+    },
+    {
         path: "/warrior",
         name: "Project_Warrior",
         component: Project_Warrior
@@ -72,5 +81,11 @@ export const routes = [
         path: "/invalid_tasks",
         name: "Invalid Tasks",
         component: InvalidTasks
-    }
+    },
+
+    {
+        path: "/histories",
+        name: "History",
+        component: History
+    },
 ];

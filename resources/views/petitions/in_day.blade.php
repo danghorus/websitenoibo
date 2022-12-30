@@ -21,10 +21,10 @@
 
 
             <div class="modal-body">
-                <form action="{{ route('petitions.store') }}" method="POST" id="InDay">
+                <form action="{{ route('petitions.store') }}" method="POST" id="InDay" name="InDay">
                     @csrf
 					<div class="form-check" style="font-size:24px;">
-                        <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault">
+                        <input oninput="Checkdate()" class="form-check-input" type="checkbox" value="1" id="flexCheckDefault">
                         <label class="form-check-label" for="flexCheckDefault">
                             <b>Đã được quản lý trực tiếp duyệt</b>
                         </label>
@@ -69,18 +69,19 @@
                         <label for="">Loại nghỉ phép</label>
                     </div>
 					<div class="form-floating mb-3">
-                        <select class="form-control" id="type_paid" name="type_paid">
+                        <select onchange="Checkdate()" class="form-control" id="type_paid" name="type_paid">
 						<option value="0">Nghỉ phép không lương</option>
 						<option value="1">Nghỉ phép có lương</option>
 						</select>
                         <label for="">Hình thức nghỉ phép:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="inday1" name="date_from" type="date" />
+                        <input oninput="Checkdate()" class="form-control" id="inday" name="date_from" type="date" />
                         <script>
-                            document.getElementById('inday1').value = new Date().toISOString().substring(0, 10);
+                            document.getElementById('inday').value = new Date().toISOString().substring(0, 10);
                         </script>
                         <label for="">Chọn ngày xin nghỉ phép:</label>
+                        <div id="vmsg3" style="color:brown; margin: 10px;"></div>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" name="time_from" type="time" value="08:00" hidden/>
@@ -132,6 +133,27 @@
                         return true;
                     })
                     });
+                    function Checkdate() {
+                        var paid = InDay.type_paid;
+                        var p = paid.selectedIndex;
+
+                        var now = new Date().getTime();
+                        var dateSelect = new Date(document.getElementById('inday').value).getTime();
+
+                        var d = (dateSelect - now)/1000;
+                        var d_h = (d - (d % 3600))/3600 + 1;
+                        var d_m = ((d % 3600) - (d % 3600)%60)/60 ;
+
+                        if(d_h < 48 && p == 0) {
+                            $('#vmsg3').html("Bạn đã vi phạm nội quy!!! Bạn tạo yêu cầu trước thời gian nghỉ "+d_h+" giờ "+d_m+" phút "
+                            +" Trong nội quy là 48 giờ trước thời gian nghỉ. Nếu bạn tiếp tục bạn sẽ được tính 1 lần vi phạm nội quy.");
+                        }else if(d_h < 120 && p == 1){
+                            $('#vmsg3').html("Bạn đã vi phạm nội quy!!! Bạn tạo yêu cầu trước thời gian nghỉ "+d_h+" giờ "+d_m+" phút "
+                            +" Trong nội quy là 120 giờ trước thời gian nghỉ. Nếu bạn tiếp tục bạn sẽ được tính 1 lần vi phạm nội quy.");
+                        }else{
+                            $('#vmsg3').html('');
+                        }
+                    }
                 </script>
             </div>
         </div>

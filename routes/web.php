@@ -18,6 +18,8 @@ use App\Http\Controllers\Backend\PartnerController;
 use App\Http\Controllers\Backend\TimeKeepingController;
 use App\Http\Controllers\Backend\WorkController;
 use App\Http\Controllers\Backend\ProjectController;
+use App\Http\Controllers\Backend\HistoryController;
+
 
 
 /*
@@ -111,6 +113,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('project-report', [ProjectController::class, 'report']);
     Route::get('project-report_clone', [ProjectController::class, 'reportClone']);
     Route::get('warrior', [WarriorController::class, 'warrior']);
+
+    //History
+    Route::get('histories', [HistoryController::class, 'index']);
+    Route::get('/histories/get', [HistoryController::class, 'get']);
+
 
     //Priority
     Route::post('priorities/create', [PriorityController::class, 'create']);

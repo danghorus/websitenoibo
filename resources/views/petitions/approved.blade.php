@@ -76,46 +76,57 @@
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item ">
                                 <a class="nav-link" href="{{ url('/petitions') }}">
-                                    Yêu cầu cần duyệt </a>
+                                    Yêu cầu cần duyệt
+                                    <?php if( (Auth::user()->permission == 1 || Auth::user()->permission == 2 || Auth::user()->permission == 3) && count($petitions1) > 0){ ?>
+                                    <span class="badge">{{count($petitions1)}}</span>
+                                    <?php }  ?>
+                                    <?php if( Auth::user()->permission == 0 && count($petitions01) > 0){ ?>
+                                    <span class="badge">{{count($petitions01)}}</span>
+                                    <?php } ?> 
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{url('/approved')}}" style="background-color: #408080; color:#fff">
-                                    Đã duyệt </a>
+                                    Đã duyệt
+                                    <?php if(count($petitions02) > 0){ ?>
+                                    <span class="badge">{{count($petitions02)}}</span>
+                                    <?php } ?>
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('/unapproved') }}" >
-                                    Từ chối </a>
+                                    Từ chối
+                                    <?php if(count($petitions03) > 0){ ?>
+                                    <span class="badge">{{count($petitions03)}}</span>
+                                    <?php } ?>
+                                </a>
+                             <li style="margin-left: 25px;">
+                                <input class ="form-control" id="searchText" type="text" placeholder="Search.."\
+                                       style="width:150%; border-radius:5px;">
                             </li>
-                            <!--<li class="nav-item">
-                                <input type="date" name="search" class="form-control mb-2" id="inlineFormInput" >
-                            </li>-->
-                            <li>
-
+                            <li style="margin-left: 47%;">
+                                <input class ="form-control" id="searchMonth" name="searchMonth" type="month"
+                                    style="width:120%; border-radius:5px;">
                             </li>
-                            <li>
-                                <input class="form-control mb-2" id="myInput" type="text" placeholder="Search.."\
-                                       style="width:100%; border-radius:0px 0px 0px 0px;">
-                                <!--<select class="form-control" id="yourAge">
-                                    <option value="Đi muộn về sớm">Đi muộn về sớm</option>
-                                    <option value="Nghỉ phép">Nghỉ phép</option>
-                                    <option value="3">Nghỉ việc</option>
-                                    <option value="4">Thay đổi giờ công</option>
-                                    <option value="5">Đăng ký làm thêm</option>
-                                    <option value="6">Đăng ký nỗ lực</option>
-                                </select>-->
-                            </li>
-                            <script>
-                                var input = document.getElementById("myInput");
-                                var sel1 = document.getElementById("yourAge");
-
-                                sel1.onclick = function(){
-                                    sel1 = document.getElementById("yourAge");
-                                    var selected = sel1.options[sel1.selectedIndex].value;
-                                    input = document.getElementById("myInput");
-                                    input.value=selected;
-                                };
-                            </script>
-                        </ul>
+                         </ul>
+                        <script>
+                            $(document).ready(function(){
+                                $("#searchMonth").on("change", function() {
+                                    let value = $(this).val().toLowerCase();
+                                    console.log(value)
+                                    $("#myTable tr").filter(function() {
+                                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                    });
+                                });
+                                $("#searchText").on("keyup", function() {
+                                    var value = $(this).val().toLowerCase();
+                                    console.log(value)
+                                    $("#myTable tr").filter(function() {
+                                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                    });
+                                });
+                            });
+                        </script>
                         <ul class="navbar-nav" style="float:right; margin: -50px 0px 0px 0px;">
                             <li class="nav-item dropdown">
                                 <button class="btn btn-success dropdown-toggle" type="button"
@@ -124,7 +135,7 @@
                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_goLate">Đi muộn/về sớm</a></li>
                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_goOut">Đăng ký ra ngoài</a></li>
                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_OTWar">Đăng ký làm nỗ lực</a></li>
-                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_warrior">Đăng ký Warrior</a></li>
+                                    <!--<li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal_warrior">Đăng ký Warrior</a></li>-->
                                     <li class="dropdown-submenu">
                                         <a class="dropdown-item dropdown-toggle" href="#" data-bs-auto-close="true">Đăng ký làm công</a>
                                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -170,244 +181,83 @@
                                 <table class="table-striped table-responsive table-hover result-point">
                                     <thead class="point-table-head">
                                     <tr style="text-align: center;">
-                                        <th style="width:50px">STT</th>
-                                        <th style="width:50px">ID</th>
-                                        <th width=12%>Người yêu cầu</th>
-                                        <th width=12%>Loại yêu cầu</th>
-                                        <th width=25%>Thông tin yêu cầu</th>
+                                        <th style="width:40px">STT</th>
+                                        <th width=10%>Người yêu cầu</th>
+                                        <th width=17%>Loại yêu cầu</th>
+                                        <th width=18%>Thông tin yêu cầu</th>
                                         <th width=20%>Lý do</th>
-                                        <th width=12%>Ngày gửi</th>
-                                        <th width=14%>Thao tác</th>
+                                        <th width=17%>Trạng thái</th>
+                                        <th width=10%>Ngày gửi</th>
+                                        <th width=6%>Thao tác</th>
                                     </tr>
                                     </thead>
                                     <?php $i=0;?>
                                     @foreach ($petitions as $petition )
-                                        <?php if( Auth::user()->permission == 0 && Auth::user()->fullname == $petition->user_fullname) { ?>
-                                        <tbody id="myTable">
-                                        <tr>
-                                            <td>{{ ++$i }}</td>
-                                            <td>{{ $petition->id }}</td>
-                                            <td>{{ $petition->user_fullname }}</td>
-                                            <td>
-                                                <?php
-                                                $type = $petition->petition_type;
-                                                $leave = $petition->type_leave;
-                                                if($type == 1){
-                                                    echo "Đi muộn về sớm";
-                                                }
-                                                if($type == 2){
-                                                    if($leave == 1){
-                                                        echo "Nghỉ phép nửa ngày(sáng)";
-                                                    }else if($leave == 2){
-                                                        echo "Nghỉ phép nửa ngày(chiều)";
-                                                    } else if($leave == 3) {
-                                                        echo "Nghỉ phép một ngày";
-                                                    } else if($leave == 3) {
-                                                        echo "Nghỉ phép nhiều ngày";
-                                                    }
-                                                }
-                                                if($type == 3){
-                                                    echo "Nghỉ việc";
-                                                }
-                                                if($type == 4){
-                                                    echo "Thay đổi giờ chấm công";
-                                                }
-                                                if($type == 5){
-                                                    echo "Đăng ký làm thêm";
-                                                }
-                                                if($type == 6){
-                                                    echo "Đăng ký làm nỗ lực";
-                                                }
-                                                if($type == 9){
-                                                    echo "Đăng ký ra ngoài";
-                                                }
-                                                ?>
-                                            </td>
-                                            <td>
-                                                <?php
-                                                $type = $petition->petition_type;
-                                                $leave = $petition->type_leave;
-                                                $time_from_old = $petition->time_from_old? date("H:i", strtotime($petition->time_from_old)): ' -:- ';
-                                                $time_from = $petition->time_from? date("H:i", strtotime($petition->time_from)): ' -:- ';
-                                                $date_from = date("d-m-Y", strtotime($petition->date_from));
-                                                $time_to_old = $petition->time_to_old? date("H:i", strtotime($petition->time_to_old)): ' -:- ';
-                                                $time_to = $petition->time_to? date("H:i", strtotime($petition->time_to)): ' -:- ';
-                                                $date_to = date("d-m-Y", strtotime($petition->date_to));
-                                                if($type == 4 ){
-                                                    if($time_from_old == $time_from){
-                                                        echo "Ngày <b>".$date_from."</b> từ ".$time_from_old."-><b>".$time_to_old."</b> thành ".$time_from." -><b>".$time_to."</b>.";
-                                                    } else if($time_to_old == $time_to){
-                                                        echo "Ngày <b>".$date_from."</b> từ <b>".$time_from_old."</b>->".$time_to_old." thành <b>".$time_from."</b> ->".$time_to.".";
-                                                    }else {
-                                                        echo "Ngày <b>".$date_from."</b> từ <b>".$time_from_old."</b>-><b>".$time_to_old."</b> thành <b>".$time_from."</b>-><b>".$time_to."</b>.";
-                                                    }
-                                                } else if($type == 1){
-                                                    echo "Ngày <b>".$date_from."</b> từ <b>".$time_from."</b> đến <b>".$time_to."</b>.";
-                                                } else if($type == 2){
-                                                    if($leave == 1){
-                                                        echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == 2){
-                                                        echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == 3){
-                                                        echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == 4){
-                                                        echo "Ngày <b>".$date_from."</b> đến hết ngày <b>".$date_to."</b>.";
-                                                    }
-                                                } else if($type == 3){
-                                                    echo "Ngày bắt đầu nghỉ việc <b>".$date_from."</b>.";
-                                                } else if($type == 5){
-                                                    echo "Đăng ký làm ngày <b>".$date_from."</b>.";
-                                                } else if($type == 6){
-                                                    echo "Đăng ký làm nỗ lực ngày <b>".$date_from."</b>.";
-                                                } else if($type == 9){
-                                                    echo "Đăng ký ra ngoài <b>".$date_from."</b> từ <b>".$time_from."</b> đến <b>".$time_to."</b>.";
-                                                }
-                                                ?>
-                                            </td>
-                                            <td>{{ $petition->petition_reason }}</td>
-                                            <td>
-                                                <?php
-                                                $date_created_at_d = date("d-m-Y", strtotime($petition->created_at ));
-                                                $date_created_at_t = date("H:i", strtotime($petition->created_at ));
-                                                echo  $date_created_at_t." ngày ".$date_created_at_d;
-                                                ?>
-                                            </td>
-                                            <td style="text-align: center;">
-                                                <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
-                                                </form>
-                                                <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" onclick="return confirm('Bạn có chắc chắn xoá yêu cầu này?');"
-                                                            class="btn btn-danger" style="font-size:12px;">Xoá</button>
-                                            </td>
-                                        </tr>
-                                        </tbody>
+                                        <?php if( Auth::user()->permission == 0 && Auth::user()->id == $petition->user_id) { ?>
+                                            <tbody id="myTable">
+                                                <tr>
+                                                    <td hidden>{{ $petition->date_from }}</td>
+                                                    <td>{{ ++$i }}</td>
+                                                    <td>{{ $petition->fullname }}</td>
+                                                    <td>{{ $petition->petition_type_title}}</td>
+                                                    <td>{{$petition->info}}</td>
+                                                    <td>{{ $petition->petition_reason }}</td>
+                                                    <td>{{ $petition->check }}</td>
+                                                    <td>{{$petition->send}}</td>
+                                                    <td style="text-align: center;">
+                                                        <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
+                                                        </form>
+                                                        <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" onclick="return confirm('Bạn có chắc chắn xoá yêu cầu này?');"
+                                                                    class="btn btn-danger" style="font-size:12px;">Xoá</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
                                         <?php } ?>
-                                        <?php
-                                        $date = date("m-Y", time());
-                                        $date_from = date("m-Y", strtotime($petition->date_from));
-                                        if( (Auth::user()->permission == 1 || Auth::user()->permission == 2 || Auth::user()->permission == 3)){ ?>
-                                        <tbody id="myTable">
-                                        <tr>
-                                            <td style="text-align: center;">{{ ++$i }}</td>
-                                            <td style="text-align: center;">{{ $petition->id }}</td>
-                                        <!--<td>{{ $petition->user_fullname }}</td>-->
-                                            <td>
-                                                @foreach($users as $user)
-                                                    <?php if($petition->user_id == $user->id){
-                                                        $petition->user_fullname = $user->fullname;
-                                                        echo $user->fullname;
-                                                    }
-                                                    ?>
-                                                @endforeach
-                                            </td>
-                                            <td>
-                                                <?php
-                                                $type = $petition->petition_type;
-                                                $leave = $petition->type_leave;
-                                                if($type == 1){
-                                                    echo "Đi muộn về sớm";
-                                                }
-                                                if($type == 2){
-                                                    if($leave == 1){
-                                                        echo "Nghỉ phép nửa ngày(sáng)";
-                                                    }else if($leave == 2){
-                                                        echo "Nghỉ phép nửa ngày(chiều)";
-                                                    } else if($leave == 3) {
-                                                        echo "Nghỉ phép một ngày";
-                                                    } else {
-                                                        echo "Nghỉ phép nhiều ngày";
-                                                    }
-                                                }
-                                                if($type == 3){
-                                                    echo "Nghỉ việc";
-                                                }
-                                                if($type == 4){
-                                                    echo "Thay đổi giờ chấm công";
-                                                }
-                                                if($type == 5){
-                                                    echo "Đăng ký làm thêm";
-                                                }
-                                                if($type == 6){
-                                                    echo "Đăng ký làm nỗ lực";
-                                                }
-                                                ?>
-                                            </td>
-                                            <td>
-                                                <?php
-                                                $type = $petition->petition_type;
-                                                $leave = $petition->type_leave;
-                                                $time_from_old = $petition->time_from_old? date("H:i", strtotime($petition->time_from_old)): ' -:- ';
-                                                $time_from = $petition->time_from? date("H:i", strtotime($petition->time_from)): ' -:- ';
-                                                $date_from = date("d-m-Y", strtotime($petition->date_from));
-                                                $time_to_old = $petition->time_to_old? date("H:i", strtotime($petition->time_to_old)): ' -:- ';
-                                                $time_to = $petition->time_to? date("H:i", strtotime($petition->time_to)): ' -:- ';
-                                                $date_to = date("d-m-Y", strtotime($petition->date_to));
-                                                if($type == 4 ){
-                                                    if($time_from_old == $time_from){
-                                                        echo "Ngày <b>".$date_from."</b> từ ".$time_from_old."-><b>".$time_to_old."</b> thành ".$time_from." -><b>".$time_to."</b>.";
-                                                    } else if($time_to_old == $time_to){
-                                                        echo "Ngày <b>".$date_from."</b> từ <b>".$time_from_old."</b>->".$time_to_old." thành <b>".$time_from."</b> ->".$time_to.".";
-                                                    }else {
-                                                        echo "Ngày <b>".$date_from."</b> từ <b>".$time_from_old."</b>-><b>".$time_to_old."</b> thành <b>".$time_from."</b>-><b>".$time_to."</b>.";
-                                                    }
-                                                } else if($type == 1){
-                                                    echo "Ngày <b>".$date_from."</b> từ <b>".$time_from."</b> đến <b>".$time_to."</b>.";
-                                                } else if($type == 2){
-                                                    if($leave == 1){
-                                                        echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == 2){
-                                                        echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == 3){
-                                                        echo "Ngày <b>".$date_from."</b>.";
-                                                    } else if($leave == 4){
-                                                        echo "Ngày <b>".$date_from."</b> đến hết ngày <b>".$date_to."</b>.";
-                                                    }
-                                                } else if($type == 3){
-                                                    echo "Ngày bắt đầu nghỉ việc <b>".$date_from."</b>.";
-                                                } else if($type == 5){
-                                                    echo "Đăng ký làm ngày <b>".$date_from."</b>.";
-                                                } else if($type == 6){
-                                                    echo "Đăng ký làm nỗ lực ngày <b>".$date_from."</b>.";
-                                                }
-                                                ?>
-                                            </td>
-
-                                            <td>{{ $petition->petition_reason }}</td>
-                                            <td style="text-align: center;">
-                                                <?php
-                                                $date_created_at_d = date("d-m-Y", strtotime($petition->created_at ));
-                                                $date_created_at_t = date("H:i", strtotime($petition->created_at ));
-                                                echo  $date_created_at_t." ngày ".$date_created_at_d;
-                                                ?>
-                                            </td>
-                                            <td style="text-align: center;">
-                                                <nav class="navbar navbar-expand-lg navbar-light bg-light" >
-                                                    <ul class="navbar-nav mr-auto" style="font-size:16px;" >
-                                                        &emsp;&nbsp;
-                                                        <li class="nav-item">
-                                                            <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST"></form>
-                                                            <form method="POST" action="{{ route('petitions.update', $petition->id) }}">
-                                                                @csrf
-                                                                @method('PUT')
-                                                                <input id="read" type="text" name="read" value="2" hidden>
-                                                                <button type="submit" class="btn btn-success" style="font-size:12px;">Đã đọc</button>
-                                                            </form>
-                                                        </li> &ensp;
-                                                        <li class="nav-item">
-                                                            <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" onclick="return confirm('Bạn có chắc chắn xoá yêu cầu này?');"
-                                                                        class="btn btn-danger" style="font-size:12px;">Xoá</button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </nav>
-                                            </td>
-                                        </tr>
-                                        </tbody>
+                                        <?php if( (Auth::user()->permission == 1 || Auth::user()->permission == 2 || Auth::user()->permission == 3)){ ?>
+                                            <tbody id="myTable">
+                                                <tr>
+                                                    <td hidden>{{ $petition->date_from }}</td>
+                                                    <td>{{ ++$i }}</td>
+                                                    <td>{{$petition->fullname}}</td>
+                                                    <td>{{$petition->petition_type_title}}</td>
+                                                    <td>{{$petition->info}}</td>
+                                                    <td>{{ $petition->petition_reason }}</td>
+                                                    <td>{{ $petition->check }}</td>
+                                                    <td>{{$petition->send}}</td>
+                                                    <td style="text-align: center;">
+                                                        <nav class="navbar navbar-expand">
+                                                            <ul class="navbar-nav" >
+                                                                <?php
+                                                                $read = $petition->readed;
+                                                                if($read == 0 && Auth::user()->id == $petition->user_id){ ?>
+                                                                <li class="nav-item">
+                                                                        <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
+                                                                    </form>
+                                                                    <form method="POST" action="{{ route('petitions.update', $petition->id) }}">
+                                                                        @csrf
+                                                                        @method('PUT')
+                                                                        <input id="readed" type="text" name="readed" value="1" hidden>
+                                                                        <button type="submit" class="btn btn-success" style="font-size:12px;">Đã đọc</button>
+                                                                    </form>    
+                                                                </li>
+                                                                    <?php } ?>
+                                                                    &ensp;
+                                                                <li class="nav-item">
+                                                                    <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" onclick="return confirm('Bạn có chắc chắn xoá yêu cầu này?');"
+                                                                                class="btn btn-danger" style="font-size:12px;">Xoá</button>
+                                                                    </form>
+                                                                </li> 
+                                                            </ul>
+                                                        </nav>             
+                                                    </td>
+                                                </tr>
+                                            </tbody>
                                         <?php } ?>
                                     @endforeach
                                 </table>

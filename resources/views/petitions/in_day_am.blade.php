@@ -21,10 +21,10 @@
 
 
             <div class="modal-body">
-                <form action="{{ route('petitions.store') }}" method="POST" id="InDayAm">
+                <form action="{{ route('petitions.store') }}" method="POST" id="InDayAm" name="InDayAm">
                     @csrf
 					<div class="form-check" style="font-size:24px;">
-                        <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault">
+                        <input oninput="CheckdateAM()" class="form-check-input" type="checkbox" value="1" id="flexCheckDefault">
                         <label class="form-check-label" for="flexCheckDefault">
                             <b>Đã được quản lý trực tiếp duyệt</b>
                         </label>
@@ -69,21 +69,22 @@
                         <label for="">Loại nghỉ phép</label>
                     </div>
 					<div class="form-floating mb-3">
-                        <select class="form-control" id="type_paid" name="type_paid">
+                        <select onchange="CheckdateAM()" class="form-control" id="type_paid_am" name="type_paid">
 						<option value="0">Nghỉ phép không lương</option>
 						<option value="1">Nghỉ phép có lương</option>
 						</select>
                         <label for="">Hình thức nghỉ phép:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="indayam" name="date_from" type="date" />
+                        <input type="date" oninput="CheckdateAM()" class="form-control" id="indayam" name="date_from"  />
                         <script>
                             document.getElementById('indayam').value = new Date().toISOString().substring(0, 10);
                         </script>
                         <label for="">Chọn ngày xin nghỉ phép:</label>
+                        <div id="vmsgAM3" style="color:rgb(204, 7, 7); margin: 10px;"></div>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="time_from" type="time" value="08:00" hidden/>
+                        <input class="form-control" name="time_from" id="timeFrom" type="time" value="08:00" hidden/>
                         <label for="">Thời gian từ:</label>
                     </div>
                     <div class="form-floating mb-3">
@@ -132,6 +133,27 @@
                         return true; 
                     })
                     });
+                    function CheckdateAM() {
+                        var paid_am = InDayAm.type_paid_am;
+                        var p_am = paid_am.selectedIndex;
+
+                        var now_am = new Date().getTime();
+                        var dateSelect_am = new Date(document.getElementById('indayam').value).getTime();
+
+                        var d_am = (dateSelect_am - now_am)/1000;
+                        var d_h_am = (d_am - (d_am % 3600))/3600 + 1;
+                        var d_m_am = ((d_am % 3600) - (d_am % 3600)%60)/60 ;
+
+                        if(d_h_am < 48 && p_am == 0) {
+                            $('#vmsgAM3').html("Bạn đã vi phạm nội quy!!! Bạn tạo yêu cầu trước thời gian nghỉ "+d_h_am+" giờ "+d_m_am+" phút "
+                            +" Trong nội quy là 48 giờ trước thời gian nghỉ. Nếu bạn tiếp tục bạn sẽ được tính 1 lần vi phạm nội quy.");
+                        }else if(d_h_am < 120 && p_am == 1){
+                            $('#vmsgAM3').html("Bạn đã vi phạm nội quy!!! Bạn tạo yêu cầu trước thời gian nghỉ "+d_h_am+" giờ "+d_m_am +" phút "
+                            +" Trong nội quy là 120 giờ trước thời gian nghỉ. Nếu bạn tiếp tục bạn sẽ được tính 1 lần vi phạm nội quy.");
+                        }else{
+                            $('#vmsgAM3').html('');
+                        }
+                    }
                 </script>
             </div>
         </div>

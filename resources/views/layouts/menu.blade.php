@@ -23,7 +23,7 @@
             left: 57,5%;
             z-index: 99;
         }
-        
+
 
     </style>
 
@@ -120,7 +120,7 @@
 
 </head>
 <body>
-    
+
         <div id="loading">
             <img id="loading-image" src="{{ asset('img/loading_5.gif') }}" alt="" />
             Đang tải dữ liệu...
@@ -139,7 +139,7 @@
                             <a class="nav-link" href="{{ url('/petitions') }}">
                                 <span>Yêu cầu</span>
                                 <?php if( (Auth::user()->permission == 1 || Auth::user()->permission == 2 || Auth::user()->permission == 3) && count($petitions1) > 0){ ?>
-                                <span class="badge">{{count($petitions1)}}</span>
+                                <span class="badge">{{count($petitions1) + count($petitions02) + count($petitions03)}}</span>
                                 <?php }  ?>
 								<?php if( Auth::user()->permission == 0 && count($petitions01) > 0){ ?>
                                 <span class="badge">{{count($petitions01)}}</span>
@@ -168,10 +168,16 @@
                                 <a class="dropdown-item" href="{{ url('/list_work') }}">Việc bộ phận</a>
                                 <a class="dropdown-item" href="{{ url('/my_work') }}">Việc của tôi</a>
                                 <a class="dropdown-item" href="{{ url('/project-report') }}">Thống kê</a>
-                                <a class="dropdown-item" href="{{ url('/project-report_clone') }}">Thống kê Clone</a>
+                                <!--<a class="dropdown-item" href="{{ url('/project-report_clone') }}">Thống kê Clone</a>-->
 
 
                                 <!--<a class="dropdown-item" href="{{ url('/warrior') }}">Warrior đăng ký</a>-->
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link">Lịch Sử</a>
+                            <div class="dropdown-content">
+                                <a class="dropdown-item" href="{{ url('/histories') }}">Lịch sử </a>
                             </div>
                         </li>
                         <!--<li class="nav-item dropdown">
@@ -189,6 +195,7 @@
                     @extends('petitions.go_late')
                     @extends('petitions.go_Out')
                     @extends('petitions.quit')
+                    @extends('petitions.unapproved_reason')
                     @extends('petitions.in_day_am')
                     @extends('petitions.in_day_pm')
                     @extends('petitions.in_day')

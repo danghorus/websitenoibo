@@ -21,10 +21,10 @@
 
 
             <div class="modal-body">
-                <form action="{{ route('petitions.store') }}" method="POST" id="InDayPM">
+                <form action="{{ route('petitions.store') }}" method="POST" id="InDayPm" name="InDayPm">
                     @csrf
 					<div class="form-check" style="font-size:24px;">
-                        <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault">
+                        <input oninput="CheckdatePM()" class="form-check-input" type="checkbox" value="1" id="flexCheckDefault">
                         <label class="form-check-label" for="flexCheckDefault">
                             <b>Đã được quản lý trực tiếp duyệt</b>
                         </label>
@@ -69,18 +69,19 @@
                         <label for="">Loại nghỉ phép</label>
                     </div>
 					<div class="form-floating mb-3">
-                        <select class="form-control" id="type_paid" name="type_paid">
+                        <select onchange="CheckdatePM()" class="form-control" id="type_paid_pm" name="type_paid">
 						<option value="0">Nghỉ phép không lương</option>
 						<option value="1">Nghỉ phép có lương</option>
 						</select>
                         <label for="">Hình thức nghỉ phép:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="indaypm" name="date_from" type="date" />
+                        <input oninput="CheckdatePM()" class="form-control" id="indaypm" name="date_from" type="date" />
                         <script>
                             document.getElementById('indaypm').value = new Date().toISOString().substring(0, 10);
                         </script>
                         <label for="">Chọn ngày xin nghỉ phép:</label>
+                        <div id="vmsgPM3" style="color:rgb(204, 7, 7); margin: 10px;"></div>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" name="time_from" type="time" value="13:30" hidden/>
@@ -133,6 +134,27 @@
                         return true; 
                     })
                     });
+                    function CheckdatePM() {
+                        var paid_pm = InDayPm.type_paid_pm;
+                        var p_pm = paid_pm.selectedIndex;
+
+                        var now_pm = new Date().getTime();
+                        var dateSelect_pm = new Date(document.getElementById('indaypm').value).getTime();
+
+                        var d_pm = (dateSelect_pm - now_pm)/1000;
+                        var d_h_pm = (d_pm - (d_pm % 3600))/3600 + 1;
+                        var d_m_pm = ((d_pm % 3600) - (d_pm % 3600)%60)/60 ;
+
+                        if(d_h_pm < 48 && p_pm == 0) {
+                            $('#vmsgPM3').html("Bạn đã vi phạm nội quy!!! Bạn tạo yêu cầu trước thời gian nghỉ "+d_h_pm+" giờ "+d_m_pm+" phút "
+                            +" Trong nội quy là 48 giờ trước thời gian nghỉ. Nếu bạn tiếp tục bạn sẽ được tính 1 lần vi phạm nội quy.");
+                        }else if(d_h_pm < 120 && p_pm == 1){
+                            $('#vmsgPM3').html("Bạn đã vi phạm nội quy!!! Bạn tạo yêu cầu trước thời gian nghỉ "+d_h_pm+" giờ "+d_m_pm +" phút "
+                            +" Trong nội quy là 120 giờ trước thời gian nghỉ. Nếu bạn tiếp tục bạn sẽ được tính 1 lần vi phạm nội quy.");
+                        }else{
+                            $('#vmsgPM3').html('');
+                        }
+                    }
                 </script>
             </div>
         </div>

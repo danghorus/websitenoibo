@@ -21,10 +21,10 @@
 
 
             <div class="modal-body">
-                <form action="{{ route('petitions.store') }}" method="POST" id="Multi">
+                <form action="{{ route('petitions.store') }}" method="POST" id="Multi" name="InDayM">
                     @csrf
 					<div class="form-check" style="font-size:24px;">
-                        <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault">
+                        <input oninput="CheckdateM()" class="form-check-input" type="checkbox" value="1" id="flexCheckDefault">
                         <label class="form-check-label" for="flexCheckDefault">
                             <b >Đã được quản lý trực tiếp duyệt</b>
                         </label>
@@ -69,24 +69,22 @@
                         <label for="">Loại nghỉ phép</label>
                     </div>
 					<div class="form-floating mb-3">
-                        <select class="form-control" id="type_paid" name="type_paid">
+                        <select onchange="CheckdateM()" class="form-control" id="type_paid_m" name="type_paid">
 						<option value="0">Nghỉ phép không lương</option>
 						<option value="1">Nghỉ phép có lương</option>
 						</select>
                         <label for="">Hình thức nghỉ phép:</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="multidayfrom" name="date_from" type="date" />
+                        <input oninput="CheckdateM()" onchange="DateM()" class="form-control" id="multidayfrom" name="date_from" type="date" />
                         <script>
                             document.getElementById('multidayfrom').value = new Date().toISOString().substring(0, 10);
                         </script>
                         <label for="">Từ ngày:</label>
+                        <div id="vmsgM3" style="color:brown; margin: 10px;"></div>
                     </div>
                      <div class="form-floating mb-3">
-                        <input class="form-control" id="multidayto" name="date_to" type="date" />
-                        <script>
-                            document.getElementById('multidayto').value = new Date().toISOString().substring(0, 10);
-                        </script>
+                        <input  oninput="CheckdateM()" class="form-control" id="multidayto" name="date_to" type="date" />
                         <label for="">Đến ngày:</label>
                     </div>
                     <div class="form-floating mb-3">
@@ -139,6 +137,49 @@
                         return true;
                     })
                     });
+                    function DateM() {
+                        document.getElementById('multidayto').value = document.getElementById('multidayfrom').value;
+                        }
+                    function CheckdateM() {
+
+                        var paid_m = InDayM.type_paid_m;
+                        var p_m = paid_m.selectedIndex;
+
+                        var now_m = new Date().getTime();
+                        var dateSelect_from = new Date(document.getElementById('multidayfrom').value).getTime();
+                        var dateSelect_to = new Date(document.getElementById('multidayto').value).getTime();
+
+
+                        var d_ft = (dateSelect_to - dateSelect_from)/1000/3600/24 + 1;
+                        var d_m = (dateSelect_from - now_m)/1000;
+                        var d_h_m = (d_m - (d_m % 3600))/3600 + 1;
+                        var d_m_m = ((d_m % 3600) - (d_m % 3600)%60)/60 ;
+                        if(d_ft < 3){
+                            if(d_h_m < 48 && p_m == 0) {
+                                $('#vmsgM3').html("Bạn đã vi phạm nội quy!!! Bạn tạo yêu cầu nghỉ phép "+d_ft+
+                                " ngày và trước thời gian nghỉ "+d_h_m+" giờ "+d_m_m+" phút "
+                                +" Trong nội quy là tạo yêu cầu 48 giờ trước thời gian nghỉ. Nếu bạn tiếp tục bạn sẽ được tính 1 lần vi phạm nội quy.");
+                            }else if(d_h_m < 120 && p_m == 1){
+                                $('#vmsgM3').html("Bạn đã vi phạm nội quy!!! Bạn tạo yêu cầu nghỉ phép "+d_ft+
+                                " ngày và trước thời gian nghỉ "+d_h_m+" giờ "+d_m_m+" phút "
+                                +" Trong nội quy là tạo yêu cầu 120 (5 ngày) giờ trước thời gian nghỉ. Nếu bạn tiếp tục bạn sẽ được tính 1 lần vi phạm nội quy.");
+                            }else{
+                                $('#vmsgM3').html('');
+                            }
+                        } else if(d_ft > 2){
+                            if(d_h_m < 168 && p_m == 0) {
+                               $('#vmsgM3').html("Bạn đã vi phạm nội quy!!! Bạn tạo yêu cầu nghỉ phép "+d_ft+
+                                " ngày và trước thời gian nghỉ "+d_h_m+" giờ "+d_m_m+" phút "
+                                +" Trong nội quy là tạo yêu cầu 168 giờ(7 ngày) trước thời gian nghỉ. Nếu bạn tiếp tục bạn sẽ được tính 1 lần vi phạm nội quy.");
+                            }else if(d_h_m < 336 && p_m == 1){
+                                $('#vmsgM3').html("Bạn đã vi phạm nội quy!!! Bạn tạo yêu cầu nghỉ phép "+d_ft+
+                                " ngày và trước thời gian nghỉ "+d_h_m+" giờ "+d_m_m+" phút "
+                                +" Trong nội quy là tạo yêu cầu 336 giờ(14 ngày) trước thời gian nghỉ. Nếu bạn tiếp tục bạn sẽ được tính 1 lần vi phạm nội quy.");
+                            }else{
+                                $('#vmsgM3').html('');
+                            }
+                        }
+                    }
                 </script>
             </div>
         </div>
