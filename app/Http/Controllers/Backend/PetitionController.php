@@ -637,27 +637,27 @@ class PetitionController extends Controller
             return redirect()->route('petitions.index', compact('users'));
 
         }
-        if($petitionRead){
+        /*if($petitionRead){
             $petition -> update([
                 'petition_status' => $petitionStatus,
             ]);
             $users = User::all();
             return redirect()->route('petitions.index', compact('users'));
-        }
+        }*/
 
         if($petitionRead && $petition->status == 2){
             $petition -> update([
                 $petition->readed = 1,
             ]);
             $users = User::all();
-            return redirect()->route('petitions.approved', compact('users'));
+            return redirect()->route('petitions.index', compact('users'));
 
         }else if($petitionRead && $petition->status == 0){
             $petition -> update([
                 $petition->readed = 1,
             ]);
             $users = User::all();
-            return redirect()->route('petitions.unapproved', compact('users'));
+            return redirect()->route('petitions.index', compact('users'));
 
         }  
 
