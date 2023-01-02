@@ -181,14 +181,14 @@
                                 <table class="table-striped table-responsive table-hover result-point">
                                     <thead class="point-table-head">
                                     <tr style="text-align: center;">
-                                        <th style="width:40px">STT</th>
-                                        <th width=10%>Người yêu cầu</th>
+                                        <th style="width:30px">STT</th>
+                                        <th width=8%>Người yêu cầu</th>
                                         <th width=17%>Loại yêu cầu</th>
-                                        <th width=18%>Thông tin yêu cầu</th>
-                                        <th width=20%>Lý do</th>
+                                        <th width=17%>Thông tin yêu cầu</th>
+                                        <th width=18%>Lý do</th>
                                         <th width=17%>Trạng thái</th>
-                                        <th width=10%>Ngày gửi</th>
-                                        <th width=6%>Thao tác</th>
+                                        <th width=12%>Ngày gửi</th>
+                                        <th width=10%>Thao tác</th>
                                     </tr>
                                     </thead>
                                     <?php $i=0;?>

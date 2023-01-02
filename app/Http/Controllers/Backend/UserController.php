@@ -26,10 +26,12 @@ class UserController extends Controller
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
         if ($request->has('search')) {
             $users = User::where('fullname', 'like', "%{$request->search}%")->get();
         }
-        return view('users.index', compact('users','petitions1', 'petitions01'));
+        return view('users.index', compact('users','petitions1', 'petitions01','petitions02', 'petitions03'));
     }
 
     /**
@@ -43,7 +45,9 @@ class UserController extends Controller
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
-        return view('users.create',compact('users','petitions1', 'petitions01'));
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
+        return view('users.create',compact('users','petitions1', 'petitions01','petitions02', 'petitions03'));
     }
 
     /**
@@ -96,8 +100,10 @@ class UserController extends Controller
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
 
-        return redirect()->route('users.index',compact('users','petitions1', 'petitions01'))->with('message', 'User Register Successfully');
+        return redirect()->route('users.index',compact('users','petitions1', 'petitions01','petitions02', 'petitions03'))->with('message', 'User Register Successfully');
 
     }
 
@@ -113,7 +119,9 @@ class UserController extends Controller
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
-        return view('users.edit', compact('user', 'users','petitions1', 'petitions01'));
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
+        return view('users.edit', compact('user', 'users','petitions1', 'petitions01', 'petitions02', 'petitions03'));
     }
 
     /**
@@ -166,6 +174,8 @@ class UserController extends Controller
         $builder = User::query()->select(['id', 'fullname', 'department', 'user_code', 'place_id']);
         if($department == 12){
             $builder->where('department', '=', $AuthDepartment);
+        }else if($department == 20){
+            $builder;
         }else if($department != null){
            $builder->where('department', '=', $department);
         }else{

@@ -20,7 +20,9 @@ class ProjectController extends Controller
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
-        return view('projects.index', compact('users','petitions1', 'petitions01'));
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
+        return view('projects.index', compact('users','petitions1', 'petitions01', 'petitions02', 'petitions03'));
     }
 
     public function my_work(Request $request)
@@ -29,7 +31,9 @@ class ProjectController extends Controller
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
-        return view('projects.my_work',  compact('users','petitions1', 'petitions01'));
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
+        return view('projects.my_work',  compact('users','petitions1', 'petitions01', 'petitions02', 'petitions03'));
     }
     public function list_work(Request $request)
     {
@@ -37,7 +41,9 @@ class ProjectController extends Controller
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
-        return view('projects.list_work',  compact('users','petitions1', 'petitions01'));
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
+        return view('projects.list_work',  compact('users','petitions1', 'petitions01', 'petitions02', 'petitions03'));
     }
 	
 	public function list_work_done(Request $request)
@@ -46,7 +52,9 @@ class ProjectController extends Controller
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
-        return view('projects.list_work_done',  compact('users','petitions1', 'petitions01'));
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
+        return view('projects.list_work_done',  compact('users','petitions1', 'petitions01', 'petitions02', 'petitions03'));
     }
 
     public function report(Request $request)
@@ -55,8 +63,20 @@ class ProjectController extends Controller
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
-        return view('projects.report',  compact('users','petitions1', 'petitions01'));
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
+        return view('projects.report',  compact('users','petitions1', 'petitions01', 'petitions02', 'petitions03'));
     }
+
+    public function reportClone(Request $request)
+    {
+        $users = User::all();
+		$petitions1 = Petition::where('petition_status', 1)->get();
+		$userId = Auth::user()->id;
+		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        return view('projects.report_clone',  compact('users','petitions1', 'petitions01', 'petitions02', 'petitions03'));
+    }
+
 
     public function warrior(Request $request)
     {
@@ -64,7 +84,9 @@ class ProjectController extends Controller
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
-        return view('projects.warrior',  compact('users','petitions1', 'petitions01'));
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
+        return view('projects.warrior',  compact('users','petitions1', 'petitions01', 'petitions02', 'petitions03'));
     }
 
     public function getAll(Request $request) {

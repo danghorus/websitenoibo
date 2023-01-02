@@ -227,8 +227,6 @@ class PetitionController extends Controller
                 $petition->fullname = $user->fullname;
             }
 
-
-            $infringe = $petition->infringe;
             $type = $petition->petition_type;
             $leave = $petition->type_leave;
             $time_from_old = $petition->time_from_old? date("H:i", strtotime($petition->time_from_old)): ' -:- ';
@@ -240,11 +238,26 @@ class PetitionController extends Controller
             $date_created_at_d = date("d-m-Y", strtotime($petition->created_at ));
             $date_created_at_t = date("H:i", strtotime($petition->created_at ));
 
-            $petition->send =  $date_created_at_t." ngày ".$date_created_at_d;
-
-            if($infringe == 1){
-                $petition->infringe_title = "Vi phạm";
+            if($petition->date_to !=null){
+                $date_ft = (strtotime($petition->date_to) - strtotime($petition->date_from))/3600/24 +1;
+            }else{
+                 $date_ft = "";
             }
+            $petition->date_ft =  $date_ft;
+
+            $date_from_check = strtotime($petition->date_from) + 8*3600;
+            $created_at_check = strtotime($petition->created_at);
+            $time_check = ($date_from_check - $created_at_check);
+            $time_check_h = ($time_check - $time_check%3600)/3600;
+            $time_check_m = (($time_check%3600) - ($time_check%3600)%60)/60;
+            $time_check_d =  ($time_check_h -  $time_check_h%24)/24;
+            $time_check_hh = ($time_check_h%24);
+
+            $petition->check_1 = $date_from_check;
+            $petition->check_2 = $created_at_check;
+            $petition->time_check =  $time_check_h;
+
+            $petition->send =  $date_created_at_t." ngày ".$date_created_at_d;
 
             if( $type == 1){
                $petition->petition_type_title =  "Đi muộn về sớm";
@@ -255,20 +268,50 @@ class PetitionController extends Controller
                 if($leave == 1){
                     if($petition->type_paid == 0){
                         $petition->petition_type_title =  "Nghỉ phép không lương nửa ngày(sáng)";
+                        if($time_check_h < 48){
+                            $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                        }else{
+                             $petition->check = "";
+                        }
                     }else if($petition->type_paid == 1){
                         $petition->petition_type_title =  "Nghỉ phép có lương nửa ngày(sáng)";
+                        if($time_check_h < 120){
+                            $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                        }else{
+                             $petition->check = "";
+                        }
                     }
                 }else if($leave == 2){
                     if($petition->type_paid == 0){
                         $petition->petition_type_title =  "Nghỉ phép không lương nửa ngày(chiều)";
+                        if($time_check_h < 48){
+                            $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                        }else{
+                             $petition->check = "";
+                        }
                     }else if($petition->type_paid == 1){
                         $petition->petition_type_title =  "Nghỉ phép có lương nửa ngày(chiều)";
+                        if($time_check_h < 120){
+                            $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                        }else{
+                             $petition->check = "";
+                        }
                     }
                 } else if($leave == 3){
                     if($petition->type_paid == 0){
                         $petition->petition_type_title =  "Nghỉ phép không lương một ngày";
+                        if($time_check_h < 48){
+                            $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                        }else{
+                             $petition->check = "";
+                        }
                     }else if($petition->type_paid == 1){
                         $petition->petition_type_title =  "Nghỉ phép có lương một ngày";
+                        if($time_check_h < 120){
+                           $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                        }else{
+                             $petition->check = "";
+                        }
                     }
                 } else if($leave == 4){
 
@@ -276,8 +319,36 @@ class PetitionController extends Controller
 
                     if($petition->type_paid == 0){
                         $petition->petition_type_title =  "Nghỉ phép không lương nhiều ngày";
+                        if($date_ft < 3){
+                            if($time_check_h < 48){
+                               $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                            }else{
+                                $petition->check = "";
+                            }
+                        } else {
+                            if($time_check_h < 120){
+                               $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                            }else{
+                                $petition->check = "";
+                            }
+
+                        }
                     }else if($petition->type_paid == 1){
                         $petition->petition_type_title =  "Nghỉ phép có lương nhiều ngày";
+                        if($date_ft <3){
+                            if($time_check_h < 168){
+                                $petition->check = "Vi phạm";
+                            }else{
+                                $petition->check = "";
+                            }
+                        } else {
+                            if($time_check_h < 336){
+                                $petition->check = "Vi phạm";
+                            }else{
+                                $petition->check = "";
+                            }
+
+                        }
                     }
                 }
             }else if($type == 3){
@@ -330,6 +401,25 @@ class PetitionController extends Controller
             $date_created_at_d = date("d-m-Y", strtotime($petition->created_at ));
             $date_created_at_t = date("H:i", strtotime($petition->created_at ));
 
+            if($petition->date_to !=null){
+                $date_ft = (strtotime($petition->date_to) - strtotime($petition->date_from))/3600/24 +1;
+            }else{
+                 $date_ft = "";
+            }
+            $petition->date_ft =  $date_ft;
+
+            $date_from_check = strtotime($petition->date_from) + 8*3600;
+            $created_at_check = strtotime($petition->created_at);
+            $time_check = ($date_from_check - $created_at_check);
+            $time_check_h = ($time_check - $time_check%3600)/3600;
+            $time_check_m = (($time_check%3600) - ($time_check%3600)%60)/60;
+            $time_check_d =  ($time_check_h -  $time_check_h%24)/24;
+            $time_check_hh = ($time_check_h%24);
+
+            $petition->check_1 = $date_from_check;
+            $petition->check_2 = $created_at_check;
+            $petition->time_check =  $time_check_h;
+
             $petition->send =  $date_created_at_t." ngày ".$date_created_at_d;
 
             if( $type == 1){
@@ -341,20 +431,50 @@ class PetitionController extends Controller
                 if($leave == 1){
                     if($petition->type_paid == 0){
                         $petition->petition_type_title =  "Nghỉ phép không lương nửa ngày(sáng)";
+                        if($time_check_h < 48){
+                            $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                        }else{
+                             $petition->check = "";
+                        }
                     }else if($petition->type_paid == 1){
                         $petition->petition_type_title =  "Nghỉ phép có lương nửa ngày(sáng)";
+                        if($time_check_h < 120){
+                            $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                        }else{
+                             $petition->check = "";
+                        }
                     }
                 }else if($leave == 2){
                     if($petition->type_paid == 0){
                         $petition->petition_type_title =  "Nghỉ phép không lương nửa ngày(chiều)";
+                        if($time_check_h < 48){
+                            $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                        }else{
+                             $petition->check = "";
+                        }
                     }else if($petition->type_paid == 1){
                         $petition->petition_type_title =  "Nghỉ phép có lương nửa ngày(chiều)";
+                        if($time_check_h < 120){
+                            $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                        }else{
+                             $petition->check = "";
+                        }
                     }
                 } else if($leave == 3){
                     if($petition->type_paid == 0){
                         $petition->petition_type_title =  "Nghỉ phép không lương một ngày";
+                        if($time_check_h < 48){
+                            $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                        }else{
+                             $petition->check = "";
+                        }
                     }else if($petition->type_paid == 1){
                         $petition->petition_type_title =  "Nghỉ phép có lương một ngày";
+                        if($time_check_h < 120){
+                           $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                        }else{
+                             $petition->check = "";
+                        }
                     }
                 } else if($leave == 4){
 
@@ -362,8 +482,36 @@ class PetitionController extends Controller
 
                     if($petition->type_paid == 0){
                         $petition->petition_type_title =  "Nghỉ phép không lương nhiều ngày";
+                        if($date_ft < 3){
+                            if($time_check_h < 48){
+                               $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                            }else{
+                                $petition->check = "";
+                            }
+                        } else {
+                            if($time_check_h < 120){
+                               $petition->check = "Vi phạm do tạo yêu cầu trước ". $time_check_d." ngày ". $time_check_hh." giờ ".$time_check_m." phút.";
+                            }else{
+                                $petition->check = "";
+                            }
+
+                        }
                     }else if($petition->type_paid == 1){
                         $petition->petition_type_title =  "Nghỉ phép có lương nhiều ngày";
+                        if($date_ft <3){
+                            if($time_check_h < 168){
+                                $petition->check = "Vi phạm";
+                            }else{
+                                $petition->check = "";
+                            }
+                        } else {
+                            if($time_check_h < 336){
+                                $petition->check = "Vi phạm";
+                            }else{
+                                $petition->check = "";
+                            }
+
+                        }
                     }
                 }
             }else if($type == 3){

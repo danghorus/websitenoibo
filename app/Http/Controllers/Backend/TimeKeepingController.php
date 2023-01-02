@@ -32,7 +32,9 @@ class TimeKeepingController extends Controller
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
-        return view('timekeeping.index', compact('users','petitions1', 'petitions01'));
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
+        return view('timekeeping.index', compact('users','petitions1', 'petitions01', 'petitions02', 'petitions03'));
     }
 
     public function report(Request $request)
@@ -40,27 +42,33 @@ class TimeKeepingController extends Controller
         $users = User::all();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
 		$petitions1 = Petition::where('petition_status', 1)->get();
 
-        return view('timekeeping.report', compact('users', 'petitions1', 'petitions01'));
+        return view('timekeeping.report', compact('users', 'petitions1', 'petitions01', 'petitions02', 'petitions03'));
     }
     public function wage(Request $request)
     {
         $users = User::all();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
 		$petitions1 = Petition::where('petition_status', 1)->get();
 
-        return view('timekeeping.wage', compact('users', 'petitions1', 'petitions01'));
+        return view('timekeeping.wage', compact('users', 'petitions1', 'petitions01', 'petitions02', 'petitions03'));
     }
     public function bonus(Request $request)
     {
         $users = User::all();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
 		$petitions1 = Petition::where('petition_status', 1)->get();
 
-        return view('timekeeping.bonus', compact('users', 'petitions1', 'petitions01'));
+        return view('timekeeping.bonus', compact('users', 'petitions1', 'petitions01', 'petitions02', 'petitions03'));
     }
 
     public function get(Request $request) {

@@ -155,13 +155,14 @@
                                 <table class="table-striped table-responsive table-hover result-point">
                                     <thead class="point-table-head">
                                     <tr style="text-align: center;">
-                                        <th style="width:50px">STT</th>
-                                        <th width=12%>Người yêu cầu</th>
-                                        <th width=20%>Loại yêu cầu</th>
-                                        <th width=22%>Thông tin yêu cầu</th>
-                                        <th width=22%>Lý do</th>
+                                        <th style="width:30px">STT</th>
+                                        <th width=8%>Người yêu cầu</th>
+                                        <th width=17%>Loại yêu cầu</th>
+                                        <th width=17%>Thông tin yêu cầu</th>
+                                        <th width=18%>Lý do</th>
+                                        <th width=17%>Trạng thái</th>
                                         <th width=12%>Ngày gửi</th>
-                                        <th width=11%>Thao tác</th>
+                                        <th width=10%>Thao tác</th>
                                     </tr>
                                     </thead>
                                     <?php $i=0;?>
@@ -175,6 +176,7 @@
                                             <td>{{ $petition->petition_type_title}}</td>
                                             <td>{{$petition->info}}</td>
                                             <td>{{ $petition->petition_reason }}</td>
+                                            <td>{{ $petition->check }}</td>
                                             <td>{{$petition->send}}</td>
                                             <td style="text-align: center;">
                                                 <form action="{{ route('petitions.destroy',$petition->id) }}" method="POST">
@@ -197,6 +199,7 @@
                                             <td>{{$petition->petition_type_title}}</td>
                                             <td>{{$petition->info}}</td>
                                             <td>{{ $petition->petition_reason }}</td>
+                                            <td>{{ $petition->check }}</td>
                                             <td>{{$petition->send}}</td>
                                             <td style="text-align: center;">
                                                  <nav class="navbar navbar-expand">

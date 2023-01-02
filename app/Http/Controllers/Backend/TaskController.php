@@ -601,6 +601,8 @@ class TaskController extends Controller
     public function myTasks(Request $request) {
         $filters = $request->all();
         $projectId = $request->input('project_id');
+        $userTest =  $request->input('user_test');
+        $userFix =  $request->input('user_fix');
         $status = $request->input('status');
         $search = $request->input('search');
         $taskPerformer = $request->input('task_performer');
@@ -614,8 +616,8 @@ class TaskController extends Controller
             ->where('tt.valid','=',1)
             ->orderBy('start_time', $Sort)->orderBy('id', $Sort);
 
-        $builder//->join('projects as p', 'tt.project_id', '=', 'p.id')
-        ->where('task_performer', '=', Auth::id());
+        //$builder//->join('projects as p', 'tt.project_id', '=', 'p.id')
+        //        ->where('task_performer', '=', Auth::id());
 
          if ($taskPerformer && $taskPerformer > 0) {
             $builder->where('tt.task_performer', '=', $taskPerformer);
@@ -627,7 +629,13 @@ class TaskController extends Controller
         }
 
         if ( $projectId && $projectId > 0) {
-            $builder->where('project_id', '=', $filters['project_id']);
+            $builder->where('project_id', '=', $projectId);
+        }
+        if ( $userTest && $userTest > 0) {
+            $builder->where('user_test', '=', $userTest);
+        }
+        if ( $userFix && $userFix > 0) {
+            $builder->where('user_test', '=', $userFix);
         }
 
         if ($status) {
@@ -638,17 +646,24 @@ class TaskController extends Controller
         }
 
         if($Status2 == 2) {
+            $builder->where('task_performer', '=', Auth::id());
             $builder->where('start_time', '<=', date('Y-m-d', strtotime("today")))
                      ->where('end_time', '>=', date('Y-m-d', strtotime("today")));
         } else if($Status2 == 3){
+            $builder->where('task_performer', '=', Auth::id());
             $builder->where('start_time', '<=', date('Y-m-d', strtotime("yesterday")))
                      ->where('end_time', '>=', date('Y-m-d', strtotime("yesterday")));
         } else if($Status2 == 4){
+            $builder->where('task_performer', '=', Auth::id());
             $builder->where('start_time', '>=', date('Y-m-d', strtotime('monday this week')))
                      ->where('end_time', '<=', date('Y-m-d', strtotime('sunday this week')));
         } else if($Status2 == 5){
+            $builder->where('task_performer', '=', Auth::id());
             $builder->where('start_time', '>=', date('Y-m-d', strtotime("monday last week")))
                      ->where('end_time', '<=', date('Y-m-d', strtotime("sunday last week")));
+        } else if($Status2 == 6){
+            $builder->where('user_test', '=', Auth::id());
+            $builder->where('task_sticker','=', 'Bug');
         }
         
 
@@ -1254,6 +1269,42 @@ class TaskController extends Controller
             'message' => 'Cập nhật thành công'
         ];
     }
+    public function changeUserFix($taskId, Request $request) {
+        $user_fix = $request->input('user_fix');;
+
+        $task = Task::find($taskId);
+
+         if ( $user_fix == 0){
+            $task->user_fix = null;
+        } else {
+            $task->user_fix = $user_fix;
+        }
+
+        $task->save();
+
+        return [
+            'code' => 200,
+            'message' => 'Cập nhật thành công'
+        ];
+    }
+    public function changeUserTest($taskId, Request $request) {
+        $user_test = $request->input('user_test');;
+
+        $task = Task::find($taskId);
+
+         if ( $user_test == 0){
+            $task->user_test = null;
+        } else {
+            $task->user_test = $user_test;
+        }
+
+        $task->save();
+
+        return [
+            'code' => 200,
+            'message' => 'Cập nhật thành công'
+        ];
+    }
     public function changeWeight($taskId, Request $request) {
         $weight = $request->input('weight');;
 
@@ -1751,6 +1802,42 @@ class TaskController extends Controller
         $task->task_predecessor = null;
         $task->task_parent = null;
         $task->task_performer = $userId;
+        $task->status= 1;
+        $task->project_id = 1;
+
+        $task->save();
+
+        $newTasks = Task::query()->with(['taskUser'])->where('id', '=', $task->id)->first();
+
+        return [
+            'code' => 200,
+            'message' => 'Thêm mới thành công',
+            'new_task' => $newTasks,
+        ];
+    }
+    public function new_task_bug(Request $request) {
+
+        $task = new Task();
+
+        $userId = Auth::user()->id;
+        $Department = Auth::user()->department;
+
+        $task->task_name = 'Click để thay đổi nội dung';
+        $task->task_code ='';
+        $task->start_time = date('Y-m-d', strtotime(now()));
+        $task->time =null;
+        $task->end_time = date('Y-m-d', strtotime(now()));
+        $task->description = '';
+        $task->task_priority = null;
+        $task->task_sticker = "Bug";
+        $task->task_department = 2;
+        $task->weight = null;
+        $task->project_id = null;
+        $task->task_predecessor = null;
+        $task->task_parent = null;
+        $task->task_performer = null;
+        $task->user_test = $userId;
+        $task->user_fix = null;
         $task->status= 1;
         $task->project_id = 1;
 

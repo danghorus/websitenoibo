@@ -20,8 +20,10 @@ class HistoryController extends Controller
 		$petitions1 = Petition::where('petition_status', 1)->get();
 		$userId = Auth::user()->id;
 		$petitions01 = Petition::where('petition_status', 1)->where('user_id', '=', $userId)->get();
+        $petitions02 = Petition::where('petition_status', 2)->where('user_id', '=', $userId)->get();
+        $petitions03 = Petition::where('petition_status', 3)->where('user_id', '=', $userId)->get();
 
-        return view('histories.index', compact('users','petitions1', 'petitions01'));
+        return view('histories.index', compact('users','petitions1', 'petitions01', 'petitions02', 'petitions03'));
     }
     public function get(Request $request) {
         $histories = History::query()->get();
