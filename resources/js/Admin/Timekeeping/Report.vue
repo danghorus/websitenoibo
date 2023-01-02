@@ -152,7 +152,7 @@
                             <td style=" text-align:right; width:150px;" v-if="user.date_official_new != 0">
                                 {{ user.totalWorkDateY ? user.totalWorkDateY+" năm":" "}}
                                 {{ user.totalWorkDateM ? user.totalWorkDateM+" tháng" :" "}}
-                                {{ user.totalWorkDateD ? user.totalWorkDateD:" "}}
+                                {{ user.totalWorkDateD ? user.totalWorkDateD+" ngày" : " "}}
                             </td>
                             <td v-else style=" text-align:right; width:150px;"> Thử việc</td>
                             <td >{{ user.totalGoLate }}</td>

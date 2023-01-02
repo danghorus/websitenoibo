@@ -911,6 +911,11 @@ class TimeKeepingService
         }
         if (isset($data['date_to']) && $data['date_to'] != '') {
             $timeKeeping->date_to = $data['date_to'];
+
+            $start = date('Y-m-d',strtotime($data['date']));
+            $end = date('Y-m-d',strtotime($data['date_to']. ' +1 days'));
+            $totalLeave = $this->timeReport($start, $end) ?? 0;
+            $timeKeeping->total_leave = $totalLeave['total'];
         }
         if (isset($data['type_paid']) && $data['type_paid'] != '') {
             $timeKeeping->type_paid = $data['type_paid'];
@@ -988,10 +993,12 @@ class TimeKeepingService
         }
 
         if ($filters['start_date'] != '' && $filters['end_date'] != '' ) {
+            $start_date_00 = date("Y-01-01", strtotime($filters['start_date']));
             $start_date = $filters['start_date'];
             $end_date =  date('Y-m-d',strtotime($filters['end_date']. ' +1 days'));
 
             $timeExpected = $this->timeReport($start_date, $end_date);
+            $TimeE = $this->timeReport($start_date_00, $end_date);
             $expectedWar1_3 = ($timeExpected['total'] - $totalHo ) * 1;
             $expectedWar1 = ($timeExpected['total'] - $totalHo ) * 2;
             $expectedWar2 = ($timeExpected['total'] - $totalHo ) * 3;
@@ -999,9 +1006,13 @@ class TimeKeepingService
 
             if  (strtotime($filters['end_date']. ' +1 days') >= time() ) {
                 $timeNow = $this->timeReport($start_date, date('Y-m-d', time()));
+                $TimeN = $this->timeReport($start_date_00, date('Y-m-d', time()));
             } else {
                 $timeNow = $timeExpected;
+                $TimeN = $TimeE;
             }
+
+             
 
             $nowWar1_3 = ($timeNow['total'] - $totalHo ) * 1;
             $nowWar1 = ($timeNow['total'] - $totalHo ) * 2;
@@ -1009,22 +1020,37 @@ class TimeKeepingService
             $nowWar3 = ($timeNow['total'] - $totalHo ) * 4;
 
             $range = $timeNow['range'];
+            $range_00 = $TimeN['range'];
+
 
             $keyArr = array_keys($range);
 
             $diff = date_diff(date_create($filters['end_date']), date_create(end($keyArr)));
-
+          
             $timeRange = $diff->format('%a');
 
-            $users = \App\Models\User::getAllUser($filters, $range);
 
-
+            $users = \App\Models\User::getAllUser($filters,$range);
+            $users_00 = \App\Models\User::getAllUser($filters,$range_00);
+            
 
             $config = ConfigTimeKeeping::query()->where('code', '=', 'TIME')->first();
 
             if ($config && $config->settings) {
                 $settings = json_decode($config->settings, true);
             }
+                foreach ($users_00 as $user_00) {
+
+                    $totalPaidLeave = 0;
+                     foreach ($user_00->timeKeeping as $value) {
+
+                        $labelDay = $range_00[$value->check_date];
+
+                        $total_paid = $value->total_paid;
+
+                        }
+
+                }
 
                 foreach ($users as $user) {
 
@@ -1054,6 +1080,7 @@ class TimeKeepingService
                         $totalUnpaidLeave = 0;
                         $totalPaidLeave = 0;
                         $totalPaidLeaveFull = 0;
+                        $totalPaidLeaveRemain = 0;
                         $totalPayroll = 0;
                         $totalHourEfforts = 0;
 
@@ -1084,18 +1111,19 @@ class TimeKeepingService
 
                             }else{
 
-                                $totalPaidLeaveFull = $totalWorkDate->m +1;
+                                //$totalPaidLeaveFull = $totalWorkDate->m +1;
 
                             }
                         }
 
                         foreach ($user->timeKeeping as $value) {
 
-                            $labelDay = $range[$value->check_date];
+                            $labelDay = $range_00[$value->check_date];
                             $configDay = $settings[$labelDay] ?? [];
                             $type = $value->petition_type;
                             $paid = $value->type_paid;
                             $leave = $value->type_leave;
+                            $total_leave = $value->total_leave;
                             $total_pause = $value->total_pause;
                             $time_pause = $value->time_pause;
 
@@ -1193,22 +1221,21 @@ class TimeKeepingService
                                         
                                     }else if($type == 2 && ($leave == 1 || $leave == 2) ){
                                         if($paid == 0){
-                                            $totalUnpaidLeave = $totalUnpaidLeave + 1/2;
+                                            $totalUnpaidLeave += $total_leave;
                                         }else if($paid == 1){
-                                            $totalPaidLeave = $totalPaidLeave + 1/2;
+                                            $totalPaidLeave += $total_leave;
                                         }
                                         $totalTimeKeeping = $totalTimeKeeping + 1/2;
                                         
                                     }else if($type == 2 && ($leave == 3 || $leave == 4)){
                                         if($paid == 0){
-                                            $totalUnpaidLeave++;
+                                            $totalUnpaidLeave += $total_leave;
                                         }else if($paid == 1){
-                                            $totalPaidLeave++;
+                                            $totalPaidLeave += $total_leave;
                                         }
 
                                     }else if($type == 5){
                                         $totalOT++;
-                                        $totalTimeKeeping++;
                                         
                                     }else if($type == 6){
                                         $totalWar++;
@@ -1223,13 +1250,12 @@ class TimeKeepingService
                                         $totalTimeKeeping = $totalTimeKeeping + 1/2;   
                                     }else if($type == 2 && ($leave == 1 || $leave == 2 || $leave == 3 || $leave == 4 )){
                                         if($paid == 0){
-                                            $totalUnpaidLeave++;
+                                            $totalUnpaidLeave += $total_leave;
                                         }else if($paid == 1){
-                                            $totalPaidLeave++;
+                                            $totalPaidLeave += $total_leave;
                                         }
                                     }else if($type == 5){
                                         $totalOT =  $totalOT+ 1/2;
-                                        $totalTimeKeeping = $totalTimeKeeping + 1/2;
                                         
                                     }else if($type == 6){
                                         $totalWar++;
@@ -1252,8 +1278,30 @@ class TimeKeepingService
 
                             }else if($checkIn && !$checkOut){
                                     $totalNotCheckOut++;
+
+                            }else if(!$checkIn && !$checkOut){
+                                if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' ||
+                                    $labelDay == 'thursday' || $labelDay == 'friday'){
+
+                                    if($type == 2 && ($leave == 3 || $leave == 4)){
+                                        if($paid == 0){
+                                            $totalUnpaidLeave += $total_leave;
+                                        }else if($paid == 1){
+                                            $totalPaidLeave += $total_leave;
+                                        }
+                                } else if($labelDay == 'saturday'){
+                                    
+                                   if($type == 2 && ($leave == 1 || $leave == 2 || $leave == 3 || $leave == 4 )){
+                                        if($paid == 0){
+                                            $totalUnpaidLeave += $total_leave;
+                                        }else if($paid == 1){
+                                            $totalPaidLeave += $total_leave;
+                                        }
+                                    }
+                                }
                             }
                         }
+                    }
 
                         $totalHourEfforts = ($timeWar + $timeGoEarly + $timeAboutLate)/3600;
 
@@ -1361,7 +1409,7 @@ class TimeKeepingService
 
                         $result[] = [
 
-                             'fullname' => $user->fullname,
+                            'fullname' => $user->fullname,
                             'id' => $user->id,
                             'date_official' => $user->date_official,
                             'date_official_new' => $date_official_new,
