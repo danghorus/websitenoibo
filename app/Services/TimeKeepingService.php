@@ -912,8 +912,8 @@ class TimeKeepingService
         if (isset($data['date_to']) && $data['date_to'] != '') {
             $timeKeeping->date_to = $data['date_to'];
         }
-        if (isset($data['date_to']) && $data['date_to'] != '') {
-            $timeKeeping->date_to = $data['date_to'];
+        if (isset($data['type_paid']) && $data['type_paid'] != '') {
+            $timeKeeping->type_paid = $data['type_paid'];
         }
 
         $timeKeeping->save();
@@ -966,7 +966,8 @@ class TimeKeepingService
 
         foreach ($holidays as $holiday) {
             $labelHoliday = [];
-            $rangeHoliday = $this->getLabelTimeKeeping($holiday->holiday_date_start, date('Y-m-d',strtotime('+1 days', strtotime($holiday->holiday_date_end))), $labelHoliday);
+            $rangeHoliday = $this->getLabelTimeKeeping($holiday->holiday_date_start, 
+                date('Y-m-d',strtotime('+1 days', strtotime($holiday->holiday_date_end))), $labelHoliday);
             foreach($rangeHoliday as $key => $val) {
                 $arrHoliday[] = $key;
             }
@@ -977,6 +978,7 @@ class TimeKeepingService
             if(strtotime($holiday->holiday_date_start) <= time()){
                 if(strtotime($holiday->holiday_date_start) >= strtotime($filters['start_date'])
                 && strtotime($holiday->holiday_date_start) <= strtotime($filters['end_date'])){
+
                         $holiday_start = date('Y-m-d',strtotime($holiday->holiday_date_start));
                         $holiday_end = date('Y-m-d',strtotime($holiday->holiday_date_end. ' +1 days'));
                         $timeHoliday = $this->timeReport($holiday_start, $holiday_end) ?? 0;
@@ -1034,6 +1036,8 @@ class TimeKeepingService
                         $timeGoLate = 0;
                         $totalGoEarly = 0;
                         $timeGoEarly = 0;
+                        $totalPause = 0;
+                        $timePause = 0;
                         $totalGoOut = 0;
                         $timeGoOut = 0;
 
@@ -1089,237 +1093,169 @@ class TimeKeepingService
 
                             $labelDay = $range[$value->check_date];
                             $configDay = $settings[$labelDay] ?? [];
+                            $type = $value->petition_type;
+                            $paid = $value->type_paid;
+                            $leave = $value->type_leave;
+                            $total_pause = $value->total_pause;
+                            $time_pause = $value->time_pause;
 
-                             if(in_array($value->check_date, $arrHoliday) ){
+                            if(in_array($value->check_date, $arrHoliday) ){
+
+                                if($type == 5 || $type == 6){
+                                    $checkIn = $value->checkin? strtotime($value->check_date. ' '. $value->checkin): '';
+                                    $checkOut = $value->checkout? strtotime($value->check_date. ' '. $value->checkout): '';
+                                }else{
                                 $checkIn ='';
                                 $checkOut = '';
+                                }
                             }else{
                                 $checkIn = $value->checkin? strtotime($value->check_date. ' '. $value->checkin): '';
                                 $checkOut = $value->checkout? strtotime($value->check_date. ' '. $value->checkout): '';
                             }
                             $timeFrom = strtotime($value->check_date. ' '. $value->time_from);
                             $timeTo = strtotime($value->check_date. ' '. $value->time_to);
-                            if($value->petition_type == 9) {
-                                if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' || $labelDay == 'thursday' || $labelDay == 'friday'){
-                                    $totalTimeKeeping ++;
-                                }else if($labelDay == 'saturday'){
-                                    $totalTimeKeeping = $totalTimeKeeping + 1/2;
-                                }
+
+                            if($type == 9) {  
                                 $totalGoOut++;
                                 $timeGoOut += ($timeTo - $timeFrom);
                             }
-                            if ($checkIn !="" && $checkOut !="") {
-                                if ($configDay && ($value->petition_type == 0 || $value->petition_type == 1 || $value->petition_type == 4 || $value->petition_type == 9)) {
-                                    $start = $configDay['start_timeAM'] != '' ? strtotime($value->check_date . ' ' . $configDay['start_timeAM']) : '';
-                                    $end = $configDay['end_timePM'] != '' ? strtotime($value->check_date . ' ' . $configDay['end_timePM']) : '';
-
-                                    if ($checkIn && $start && $checkIn > $start) {
-                                        $totalGoLate++;
-                                        $timeGoLate += $checkIn - $start;
-                                    } else if ($checkIn && $start && $checkIn < $start) {
-                                        $totalGoEarly++;
-                                        $timeGoEarly += $start - $checkIn;
-                                    }
-                                    if ($checkOut && $end && $checkOut > $end) {
-                                        $totalAboutLate++;
-                                        $timeAboutLate += $checkOut - $end;
-                                    } else if ($checkOut && $end && $checkOut < $end) {
-                                        $totalAboutEarly++;
-                                        $timeAboutEarly += $end - $checkOut;
-                                    }
-
-                                }else if ($configDay && $value->petition_type == 5) {
-                                    $start = $configDay['start_timeAM'] != '' ? strtotime($value->check_date . ' ' . $configDay['start_timeAM']) : '';
-                                    $end = $configDay['end_timePM'] != '' ? strtotime($value->check_date . ' ' . $configDay['end_timePM']) : '';
-                                    if ($checkIn && $checkOut) {
-                                        $totalOT++;
-                                    }
-                                    if ($checkIn && $start && $checkIn > $start) {
-                                        $totalGoLate++;
-                                        $timeGoLate += $checkIn - $start;
-                                    } else if ($checkIn && $start && $checkIn < $start) {
-                                        $totalGoEarly++;
-                                        $timeGoEarly += $start - $checkIn;
-                                    }
-                                    if ($checkOut && $end && $checkOut > $end) {
-                                        $totalAboutLate++;
-                                        $timeAboutLate += $checkOut - $end;
-                                    } else if ($checkOut && $end && $checkOut < $end) {
-                                        $totalAboutEarly++;
-                                        $timeAboutEarly += $end - $checkOut;
-                                    }
-                                } else if ($configDay && $value->petition_type == 6 && $checkIn && $checkOut) {
-                                    $totalWar++;
-                                    $timeWar += $checkOut - $checkIn;
-                                } else if ($configDay && $value->petition_type == 2 && $value->type_leave == 1) {
-                                    $start = $configDay['start_timePM'] != '' ? strtotime($value->check_date . ' ' . $configDay['start_timePM']) : '';
-                                    $end = $configDay['end_timePM'] != '' ? strtotime($value->check_date . ' ' . $configDay['end_timePM']) : '';
-
-                                    $totalUnpaidLeave = $totalUnpaidLeave + 1 / 2;
-
-                                    if ($checkIn && $start && $checkIn > $start) {
-                                        $totalGoLate++;
-                                        $timeGoLate += $checkIn - $start;
-                                    } else if ($checkIn && $start && $checkIn < $start) {
-                                        $totalGoEarly++;
-                                        $timeGoEarly += $start - $checkIn;
-                                    }
-                                    if ($checkOut && $end && $checkOut > $end) {
-                                        $totalAboutLate++;
-                                        $timeAboutLate += $checkOut - $end;
-                                    } else if ($checkOut && $end && $checkOut < $end) {
-                                        $totalAboutEarly++;
-                                        $timeAboutEarly += $end - $checkOut;
-                                    }
-
-                                } else if ($configDay && $value->petition_type == 2 && $value->type_leave == 2) {
-                                    $start = $configDay['start_timeAM'] != '' ? strtotime($value->check_date . ' ' . $configDay['start_timeAM']) : '';
-                                    $end = $configDay['end_timeAM'] != '' ? strtotime($value->check_date . ' ' . $configDay['end_timeAM']) : '';
-
-                                    $totalUnpaidLeave = $totalUnpaidLeave + 1 / 2;
-
-                                    if ($checkIn && $start && $checkIn > $start) {
-                                        $totalGoLate++;
-                                        $timeGoLate += $checkIn - $start;
-                                    } else if ($checkIn && $start && $checkIn < $start) {
-                                        $totalGoEarly++;
-                                        $timeGoEarly += $start - $checkIn;
-                                    }
-                                    if ($checkOut && $end && $checkOut > $end) {
-                                        $totalAboutLate++;
-                                        $timeAboutLate += $checkOut - $end;
-                                    } else if ($checkOut && $end && $checkOut < $end) {
-                                        $totalAboutEarly++;
-                                        $timeAboutEarly += $end - $checkOut;
-                                    }
-
-                                } else if ($configDay && $value->petition_type == 2 && ($value->type_leave == 3 || $value->type_leave == 4)) {
-                                    $totalUnpaidLeave++;
-                                    $totalGoLate = $totalGoLate;
-                                    $timeGoEarly = $timeGoEarly;
-                                    $timeAboutLate =  $timeAboutLate;
-                                    $timeAboutEarly =  $timeAboutEarly;
-                                }
-                            }
 
                             if ($checkIn && $checkOut) {
-                                if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' || $labelDay == 'thursday' || $labelDay == 'friday'){
-                                    if($value->petition_type == 0 || $value->petition_type == 1 || $value->petition_type == 4){
+                                if($configDay && $type != 6){
+                                    if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' ||
+                                    $labelDay == 'thursday' || $labelDay == 'friday'){
+                                        if ($type == 0 || $type == 1 || $type == 4 || $type == 5 || $type == 9) {
+                                            $start = $configDay['start_timeAM'] != '' ? strtotime($value->check_date . ' ' . $configDay['start_timeAM']) : '';
+                                            $end = $configDay['end_timePM'] != '' ? strtotime($value->check_date . ' ' . $configDay['end_timePM']) : '';
+    
+                                        }else if ($type == 2 && $leave == 1) {
+                                            $start = $configDay['start_timePM'] != '' ? strtotime($value->check_date . ' ' . $configDay['start_timePM']) : '';
+                                            $end = $configDay['end_timePM'] != '' ? strtotime($value->check_date . ' ' . $configDay['end_timePM']) : '';
+
+                                        }else if ($type == 2 && $leave == 2) {
+                                            $start = $configDay['start_timeAM'] != '' ? strtotime($value->check_date . ' ' . $configDay['start_timeAM']) : '';
+                                            $end = $configDay['end_timeAM'] != '' ? strtotime($value->check_date . ' ' . $configDay['end_timeAM']) : '';
+
+                                        }
+
+                                        if ($checkIn > $start) {
+                                                $totalGoLate++;
+                                                $timeGoLate += $checkIn - $start;
+                                            } else if ($checkIn < $start) {
+                                                $totalGoEarly++;
+                                                $timeGoEarly += $start - $checkIn;
+                                            }
+                                            if ($checkOut > $end) {
+                                                $totalAboutLate++;
+                                                $timeAboutLate += $checkOut - $end;
+                                            } else if ( $checkOut < $end) {
+                                                $totalAboutEarly++;
+                                                $timeAboutEarly += $end - $checkOut;
+                                            }
+                                    } else if($labelDay == 'saturday'){
+                                        $start = $configDay['start_timeAM'] != '' ? strtotime($value->check_date . ' ' . $configDay['start_timeAM']) : '';
+                                        $end = strtotime($value->check_date . ' ' . '13:30');
+                                        $end12 = strtotime($value->check_date . ' ' . '12:00');
+                                        if ($checkIn > $start) {
+                                            $totalGoLate++;
+                                            $timeGoLate += $checkIn - $start;
+                                        } else if ($checkIn < $start) {
+                                            $totalGoEarly++;
+                                            $timeGoEarly += $start - $checkIn;
+                                        }
+                                        if ($checkOut > $end) {
+                                            $totalAboutLate++;
+                                            $timeAboutLate += $checkOut - $end;
+                                        } else if ( $checkOut < $end) {
+                                            if($checkOut < $end12){
+                                                $totalAboutEarly++;
+                                                $timeAboutEarly += $end - $checkOut;
+                                            } else{
+                                                $totalAboutEarly =  $totalAboutEarly;
+                                                $timeAboutEarly = $timeAboutEarly;
+                                            }
+                                        }
+
+                                    }
+
+                                    $totalPause += $total_pause;
+                                    $timePause += $time_pause;
+                                } else if($configDay && $type == 6){
+                                    $totalPause += $total_pause;
+                                    $timePause += $time_pause;
+                                }
+
+                                if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' ||
+                                    $labelDay == 'thursday' || $labelDay == 'friday'){
+
+                                    if($type == 0 || $type == 1 || $type == 4 || $type == 9){
                                         $totalTimeKeeping++;
-                                        $totalWorkingDays++;
-                                    }else if($value->petition_type == 2 && $value->type_leave == 1 ){
+                                        
+                                    }else if($type == 2 && ($leave == 1 || $leave == 2) ){
+                                        if($paid == 0){
+                                            $totalUnpaidLeave = $totalUnpaidLeave + 1/2;
+                                        }else if($paid == 1){
+                                            $totalPaidLeave = $totalPaidLeave + 1/2;
+                                        }
                                         $totalTimeKeeping = $totalTimeKeeping + 1/2;
-                                        $totalWorkingDays++;
-                                    }else if($value->petition_type == 2 && $value->type_leave == 2 ){
-                                        $totalTimeKeeping = $totalTimeKeeping + 1/2;
-                                        $totalWorkingDays++;
-                                    }else if($value->petition_type == 2 && $value->type_leave == 3 || $value->type_leave == 4 ){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays = $totalWorkingDays;
-                                    }else if($value->petition_type == 5){
+                                        
+                                    }else if($type == 2 && ($leave == 3 || $leave == 4)){
+                                        if($paid == 0){
+                                            $totalUnpaidLeave++;
+                                        }else if($paid == 1){
+                                            $totalPaidLeave++;
+                                        }
+
+                                    }else if($type == 5){
+                                        $totalOT++;
                                         $totalTimeKeeping++;
-                                        $totalWorkingDays++;
-                                    }else if($value->petition_type == 6){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays++;
-                                    }else if($value->petition_type == 7){
+                                        
+                                    }else if($type == 6){
+                                        $totalWar++;
+                                        $timeWar += $checkOut - $checkIn;
+
+                                    }else if($type == 7){
                                         $totalTimeKeeping++;
-                                        $totalWorkingDays++;
+                                        
                                     }
                                 } else if($labelDay == 'saturday'){
-                                    if($value->petition_type == 0 || $value->petition_type == 1 || $value->petition_type == 4){
+                                    if($type == 0 || $type == 1 || $type == 4 || $type == 9){
+                                        $totalTimeKeeping = $totalTimeKeeping + 1/2;   
+                                    }else if($type == 2 && ($leave == 1 || $leave == 2 || $leave == 3 || $leave == 4 )){
+                                        if($paid == 0){
+                                            $totalUnpaidLeave++;
+                                        }else if($paid == 1){
+                                            $totalPaidLeave++;
+                                        }
+                                    }else if($type == 5){
+                                        $totalOT =  $totalOT+ 1/2;
                                         $totalTimeKeeping = $totalTimeKeeping + 1/2;
-                                        $totalWorkingDays++;
-                                    }else if($value->petition_type == 2 && $value->type_leave == 1 ){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays++;
-                                    }else if($value->petition_type == 2 && $value->type_leave == 2 ){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays++;
-                                    }else if($value->petition_type == 2 && ($value->type_leave == 3 || $value->type_leave == 4 )){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays = $totalWorkingDays;
-                                    }else if($value->petition_type == 5){
+                                        
+                                    }else if($type == 6){
+                                        $totalWar++;
+                                        $timeWar += $checkOut - $checkIn;
+                                        
+                                    }else if($type == 7){
                                         $totalTimeKeeping = $totalTimeKeeping + 1/2;
-                                        $totalWorkingDays++;
-                                    }else if($value->petition_type == 6){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays++;
-                                    }else if($value->petition_type == 7){
-                                        $totalTimeKeeping = $totalTimeKeeping + 1/2;
-                                        $totalWorkingDays++;
+                                        
                                     }
                                 }else if($labelDay == 'sunday'){
-                                    if($value->petition_type == 0 || $value->petition_type == 1 || $value->petition_type == 4){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays = $totalWorkingDays;
-                                    }else if($value->petition_type == 2 && $value->type_leave == 1 ){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays = $totalWorkingDays;
-                                    }else if($value->petition_type == 2 && $value->type_leave == 2 ){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays = $totalWorkingDays;
-                                    }else if($value->petition_type == 2 && ($value->type_leave == 3 || $value->type_leave == 4 )){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays = $totalWorkingDays;
-                                    }else if($value->petition_type == 5){
+                                    if($type == 5){
                                         $totalTimeKeeping++;
-                                        $totalWorkingDays++;
-                                    }else if($value->petition_type == 6){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays++;
-                                    }else if($value->petition_type == 7){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays = $totalWorkingDays;
+                                        
+                                    }else if($type == 6){
+                                        $totalWar++;
+                                        $timeWar += $checkOut - $checkIn;
+                                        
                                     }
                                 }
-                            }else if($checkIn && !$checkOut) {
-                                if($value->petition_type == 7){
-                                    if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' || $labelDay == 'thursday' || $labelDay == 'friday'){
-                                        $totalTimeKeeping++;
-                                        $totalWorkingDays++;
-                                    }else if($labelDay == 'saturday'){
-                                        $totalTimeKeeping = $totalTimeKeeping +1/2;
-                                        $totalWorkingDays++;
-                                    }else if($labelDay == 'sunday'){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays = $totalWorkingDays;
-                                    }
-                                } else {
+
+                            }else if($checkIn && !$checkOut){
                                     $totalNotCheckOut++;
-                                }
-                            }else if(!$checkIn && $checkOut) {
-                                if($value->petition_type == 7){
-                                    if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' || $labelDay == 'thursday' || $labelDay == 'friday'){
-                                        $totalTimeKeeping++;
-                                        $totalWorkingDays++;
-                                    }else if($labelDay == 'saturday'){
-                                        $totalTimeKeeping = $totalTimeKeeping +1/2;
-                                        $totalWorkingDays++;
-                                    }else if($labelDay == 'sunday'){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays = $totalWorkingDays;
-                                    }
-                                } else {
-                                    $totalNotCheckIn++;
-                                }
-                            }else {
-                                if($value->petition_type == 7){
-                                    if($labelDay == 'monday' || $labelDay == 'tuesday' || $labelDay == 'wednesday' || $labelDay == 'thursday' || $labelDay == 'friday'){
-                                        $totalTimeKeeping++;
-                                        $totalWorkingDays++;
-                                    }else if($labelDay == 'saturday'){
-                                        $totalTimeKeeping = $totalTimeKeeping +1/2;
-                                        $totalWorkingDays++;
-                                    }else if($labelDay == 'sunday'){
-                                        $totalTimeKeeping = $totalTimeKeeping;
-                                        $totalWorkingDays = $totalWorkingDays;
-                                    }
-                                }
                             }
                         }
 
-                        $totalHourEfforts = (($timeWar + $timeGoEarly + $timeAboutLate) - ($timeGoLate + $timeAboutEarly))/3600;
+                        $totalHourEfforts = ($timeWar + $timeGoEarly + $timeAboutLate)/3600;
 
                         $currentWar = '';
                         $nextWar = '';
@@ -1337,19 +1273,19 @@ class TimeKeepingService
                                     $nextWar = 'Warrior 1';
                                     $AllowanceWarrior = 0;
                                     $timeIncreaseWar = $expectedWar1_3 - $totalHourEfforts;
-                                } elseif ( $totalHourEfforts > $nowWar1_3 && $totalHourEfforts< $nowWar1) {
+                                } elseif ( $totalHourEfforts >= $nowWar1_3 && $totalHourEfforts< $nowWar1) {
                                     $currentWar = 'Warrior 1';
                                     $nextWar = 'Warrior 2';
                                     $AllowanceWarrior = 700000;
                                     $timeHoldWar = $expectedWar1_3- $totalHourEfforts;
                                     $timeIncreaseWar = $expectedWar1 - $totalHourEfforts;
-                                } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
+                                } elseif ($totalHourEfforts >= $nowWar1 && $totalHourEfforts< $nowWar2) {
                                     $currentWar = 'Warrior 2';
                                     $nextWar = 'Warrior 3';
                                     $AllowanceWarrior = 900000;
                                     $timeHoldWar = $expectedWar1 - $totalHourEfforts;
                                     $timeIncreaseWar = $expectedWar2 - $totalHourEfforts;
-                                } elseif ($totalHourEfforts > $nowWar2) {
+                                } elseif ($totalHourEfforts >= $nowWar2) {
                                     $currentWar = 'Warrior 3';
                                     $nextWar = 'Warrior 3';
                                     $AllowanceWarrior = 1100000;
@@ -1362,19 +1298,19 @@ class TimeKeepingService
                                     $nextWar = 'Warrior 1';
                                     $AllowanceWarrior = 0;
                                     $timeIncreaseWar = $expectedWar1 - $totalHourEfforts;
-                                } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
+                                } elseif ($totalHourEfforts >= $nowWar1 && $totalHourEfforts< $nowWar2) {
                                     $currentWar = 'Warrior 1';
                                     $nextWar = 'Warrior 2';
                                     $AllowanceWarrior = 700000;
                                     $timeHoldWar = $expectedWar1- $totalHourEfforts;
                                     $timeIncreaseWar = $expectedWar2 - $totalHourEfforts;
-                                } elseif ($totalHourEfforts > $nowWar2 && $totalHourEfforts< $nowWar3) {
+                                } elseif ($totalHourEfforts >= $nowWar2 && $totalHourEfforts< $nowWar3) {
                                     $currentWar = 'Warrior 2';
                                     $nextWar = 'Warrior 3';
                                     $AllowanceWarrior = 900000;
                                     $timeHoldWar = $expectedWar2 - $totalHourEfforts;
                                     $timeIncreaseWar = $expectedWar3 - $totalHourEfforts;
-                                } elseif ($totalHourEfforts > $nowWar3) {
+                                } elseif ($totalHourEfforts >= $nowWar3) {
                                     $currentWar = 'Warrior 3';
                                     $nextWar = 'Warrior 3';
                                     $AllowanceWarrior = 1100000;
@@ -1389,13 +1325,13 @@ class TimeKeepingService
                                 if( $totalHourEfforts < $nowWar1_3) {
                                     $currentWar = 'Soldier';
                                     $AllowanceWarrior = 0;
-                                } elseif ( $totalHourEfforts > $nowWar1_3 && $totalHourEfforts< $nowWar1) {
+                                } elseif ( $totalHourEfforts >= $nowWar1_3 && $totalHourEfforts< $nowWar1) {
                                     $currentWar = 'Warrior 1';
                                     $AllowanceWarrior = 700000;
-                                } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
+                                } elseif ($totalHourEfforts >= $nowWar1 && $totalHourEfforts< $nowWar2) {
                                     $currentWar = 'Warrior 2';
                                     $AllowanceWarrior = 900000;
-                                } elseif ($totalHourEfforts > $nowWar2) {
+                                } elseif ($totalHourEfforts >= $nowWar2) {
                                     $currentWar = 'Warrior 3';
                                     $AllowanceWarrior = 1100000;
                                 }
@@ -1403,19 +1339,19 @@ class TimeKeepingService
                                 if($totalHourEfforts < $nowWar1) {
                                     $currentWar = 'Soldier';
                                     $AllowanceWarrior = 0;
-                                } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
+                                } elseif ($totalHourEfforts >= $nowWar1 && $totalHourEfforts< $nowWar2) {
                                     $currentWar = 'Warrior 1';
                                     $AllowanceWarrior = 700000;
-                                } elseif ($totalHourEfforts > $nowWar2 && $totalHourEfforts< $nowWar3) {
+                                } elseif ($totalHourEfforts >= $nowWar2 && $totalHourEfforts< $nowWar3) {
                                     $currentWar = 'Warrior 2';
                                     $AllowanceWarrior = 900000;
-                                } elseif ($totalHourEfforts > $nowWar3) {
+                                } elseif ($totalHourEfforts >= $nowWar3) {
                                     $currentWar = 'Warrior 3';
                                     $AllowanceWarrior = 1100000;
                                 }
                             }
                         }
-                        $totalUnpaidLeave = $timeNow['total'] - $totalTimeKeeping - $totalHo;
+                        $totalPayroll = $totalTimeKeeping + $totalOT + $totalPaidLeave - ($timeGoLate/3600 + $timeAboutEarly/3600 + $timePause/60)/8 ;
                         $rateGoLate = $totalTimeKeeping? round(($totalGoLate/$totalTimeKeeping), 4) * 100 : 0;
 
                         $wage_now = number_format($user->wage_now);
@@ -1439,18 +1375,21 @@ class TimeKeepingService
                             'timeGoLate' => round($timeGoLate/3600, 2),
                             'totalGoEarly' => $totalGoEarly,
                             'timeGoEarly' => $timeGoEarly/3600,
+                            'totalPause' => $totalPause,
+                            'timePause' => round($timePause/60, 2),
                             'totalGoOut' => $totalGoOut,
                             'timeGoOut' => round($timeGoOut/3600, 2),
                             'totalAboutLate' => $totalAboutLate,
                             'timeAboutLate' => $timeAboutLate/3600,
                             'totalAboutEarly' => $totalAboutEarly,
                             'timeAboutEarly' => round($timeAboutEarly/3600, 2),
-                            'totalTimeKeeping' => $totalTimeKeeping,
+                            'timeWar' => round($timeWar/3600, 2),
+                            'totalTimeKeeping' =>  round($totalTimeKeeping - ($timeGoLate/3600 + $timeAboutEarly/3600 + $timePause/60)/8, 2),
                             'totalWorkingDays' => $totalWorkingDays,
                             'totalUnpaidLeave' => $totalUnpaidLeave,
                             'totalPaidLeave' => $totalPaidLeave,
                             'totalPaidLeaveFull' => $totalPaidLeaveFull,
-                            'totalPayroll' => $totalPayroll,
+                            'totalPayroll' => round($totalPayroll,2),
                             'totalHourEfforts' => $totalHourEfforts,
                             'currentWar' => $currentWar,
                             'nextWar' => $nextWar,
@@ -1461,7 +1400,7 @@ class TimeKeepingService
                             'rateGoLate' => $rateGoLate ?? 0,
                             'totalNotCheckIn' => $totalNotCheckIn,
                             'totalNotCheckOut' => $totalNotCheckOut,
-                            'totalGoLateAboutEarly' => round(($timeGoLate/3600 + $timeAboutEarly/3600),2),
+                            'totalGoLateAboutEarly' => round(($timeGoLate/3600 + $timeAboutEarly/3600 + $timePause/60),2),
 
                             'totalOT' => $totalOT,
                             'totalWar' => $totalWar,
@@ -1538,609 +1477,6 @@ class TimeKeepingService
         ];
     }
 
-    public function wage(array $filters)
-    {
-        $result = [];
-        $expected = [];
-        $current = [];
-
-        if ($filters['start_date'] != '' && $filters['end_date'] != '' ) {
-            $start_date = $filters['start_date'];
-            $end_date =  date('Y-m-d',strtotime($filters['end_date']. ' +1 days'));
-
-            $timeExpected = $this->timeReport($start_date, $end_date); //Tổng công chuẩn trong tháng
-
-            if  (strtotime($filters['end_date']. ' +1 days') >= time() ) {
-                $timeNow = $this->timeReport($start_date, date('Y-m-d', time())); // Tổng số công đã đi làm trong tháng
-                $totalDayNow = $this->timeTotal($start_date, date('Y-m-d', time())); //Tổng số ngày đã đi làm trong tháng
-            } else {
-                $timeNow = $timeExpected; // Tổng số công đã đi làm trong tháng
-                $totalDayNow = $this->timeTotal($start_date, $end_date); //Tổng số ngày đã đi làm trong tháng
-            }
-
-            $nowWar1_3 = $timeNow['total'] * 1;
-            $nowWar1 = $timeNow['total'] * 2;
-            $nowWar2 = $timeNow['total'] * 3;
-            $nowWar3 = $timeNow['total'] * 4;
-
-            $range = $timeNow['range'];
-
-            $keyArr = array_keys($range);
-
-            $users = \App\Models\User::getAllUser($filters, $range);
-
-            $config = ConfigTimeKeeping::query()->where('code', '=', 'TIME')->first();
-            if ($config && $config->settings) {
-                $settings = json_decode($config->settings, true);
-            }
-
-            foreach ($users as $user) {
-
-                if ($user->user_status == 1 && $user->position != "Giám đốc" ) {
-                    $totalWorkDate = 0;
-
-                    $totalGoLate = 0;
-                    $timeGoLate = 0;
-                    $totalGoEarly = 0;
-                    $timeGoEarly = 0;
-
-                    $totalAboutLate = 0;
-                    $timeAboutLate = 0;
-                    $totalAboutEarly = 0;
-                    $timeAboutEarly = 0;
-
-                    $totalTimeKeeping = 0;
-                    $totalWorkingDays = 0;
-                    $totalNotCheckIn = 0;
-                    $totalNotCheckOut = 0;
-
-                    foreach ($user->timeKeeping as $value) {
-                        $labelDay = $range[$value->check_date];
-                        $configDay = $settings[$labelDay] ?? [];
-
-                        $checkIn = $value->checkin? strtotime($value->check_date. ' '. $value->checkin): '';
-                        $checkOut = $value->checkout? strtotime($value->check_date. ' '. $value->checkout): '';
-
-                        if ($configDay) {
-                            $start = $configDay['start_time'] != ''? strtotime($value->check_date. ' '. $configDay['start_time']): '';
-                            $end = $configDay['end_time'] != ''? strtotime($value->check_date. ' '. $configDay['end_time']): '';
-
-                            if ($checkIn && $start && $checkIn > $start) {
-                                $totalGoLate++;
-                                $timeGoLate += $checkIn - $start;
-                            } else if ($checkIn && $start && $checkIn < $start) {
-                                $totalGoEarly++;
-                                $timeGoEarly += $start - $checkIn;
-                            }
-
-                            if ($checkOut && $end && $checkOut > $end) {
-                                $totalAboutLate++;
-                                $timeAboutLate += $checkOut - $end;
-                            } else if ($checkOut && $end && $checkOut < $end) {
-                                $totalAboutEarly++;
-                                $timeAboutEarly += $end - $checkOut;
-                            }
-                        }
-                        if ($checkIn && $checkOut) {
-                            switch ($labelDay) {
-                                case 'monday':
-                                case 'tuesday':
-                                case 'wednesday':
-                                case 'thursday':
-                                case 'friday':
-                                    $totalTimeKeeping++;
-                                    break;
-                                case 'saturday':
-                                    $totalTimeKeeping = $totalTimeKeeping + 1/2;
-                                    break;
-                            }
-                            switch ($labelDay) {
-                                case 'monday':
-                                case 'tuesday':
-                                case 'wednesday':
-                                case 'thursday':
-                                case 'friday':
-                                case 'saturday':
-                                    $totalWorkingDays++;
-                                    break;
-                            }
-                        } elseif ($checkIn && !$checkOut) {
-                            $totalNotCheckOut++;
-                        } elseif (!$checkIn && $checkOut) {
-                            $totalNotCheckIn++;
-                        }
-                    }
-
-                    $totalHourEfforts = (($timeGoEarly + $timeAboutLate) - ($timeGoLate + $timeAboutEarly))/3600;
-
-                    $currentWar = '';
-                    $EmployeeLongtime =1094;
-                    $AllowanceWarrior = 0;
-
-                    if($totalWorkDate > $EmployeeLongtime ){
-                        if($totalHourEfforts < $nowWar1_3) {
-                            $currentWar = 'Soldier';
-                            $AllowanceWarrior = 0;
-                        } elseif ( $totalHourEfforts > $nowWar1_3 && $totalHourEfforts< $nowWar1) {
-                            $currentWar = 'Warrior 1';
-                            $AllowanceWarrior = 700000;
-                        } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
-                            $currentWar = 'Warrior 2';
-                            $AllowanceWarrior = 900000;
-                        } elseif ($totalHourEfforts > $nowWar2) {
-                            $currentWar = 'Warrior 3';
-                            $AllowanceWarrior = 1100000;
-                        }
-                    }else{
-                        if($totalHourEfforts < $nowWar1) {
-                            $currentWar = 'Soldier';
-                            $AllowanceWarrior = 0;
-                        } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
-                            $currentWar = 'Warrior 1';
-                            $AllowanceWarrior = 700000;
-                        } elseif ($totalHourEfforts > $nowWar2 && $totalHourEfforts< $nowWar3) {
-                            $currentWar = 'Warrior 2';
-                            $AllowanceWarrior = 900000;
-                        } elseif ($totalHourEfforts > $nowWar3) {
-                            $currentWar = 'Warrior 3';
-                            $AllowanceWarrior = 1100000;
-                        }
-                    }
-                    if(($timeNow['total'] - $totalTimeKeeping) >=1){
-                        $totalPaidLeave = 1;
-                    } else{
-                        $totalPaidLeave = 0;
-                    }
-                    $totalUnpaidLeave = $timeNow['total'] - $totalTimeKeeping - $totalPaidLeave;
-                    $totalNoWorkingDays = $totalDayNow['total'] - $totalWorkingDays;
-
-                    $wage_now = number_format($user->wage_now);
-                    $AllowanceWar  = number_format($AllowanceWarrior);
-
-                    if( $user->date_official != ""){
-                        $Social_Insurance = 1000000;
-                    } else {
-                        $Social_Insurance = 0;
-                    }
-                    $SocialInsurance  = number_format($Social_Insurance);
-
-                    $wage_actual = $user->wage_now*($totalTimeKeeping +$totalPaidLeave)/$timeExpected['total'];
-                    $wage_actual_format =number_format( $wage_actual);
-                    if( $user->date_official != ""){
-                        $Total_Wage = $wage_actual + $Social_Insurance + $AllowanceWarrior;
-                    } else {
-                        $Total_Wage = ($wage_actual + $AllowanceWarrior)*0.8;
-                    }
-                    $TotalWage = number_format($Total_Wage);
-                    $TotalWage05 = number_format($Total_Wage*0.3);
-                    $TotalWage20 = number_format($Total_Wage*0.7);
-
-                    $result[] = [
-
-                        'fullname' => $user->fullname,
-                        'id' => $user->id,
-                        'date_official' => $user->date_official,
-                        'wage_now' => $wage_now,
-                        'AllowanceWarrior' => $AllowanceWar,
-                        'Social_Insurance' => $SocialInsurance,
-                        'TotalWage'=> $TotalWage,
-                        'TotalWage05'=> $TotalWage05,
-                        'TotalWage20'=> $TotalWage20,
-                        'wage_actual' => $wage_actual_format,
-                        'totalGoLate' => $totalGoLate,
-                        'timeGoLate' => round($timeGoLate/3600, 2),
-                        'totalGoEarly' => $totalGoEarly,
-                        'timeGoEarly' => $timeGoEarly/3600,
-                        'totalAboutLate' => $totalAboutLate,
-                        'timeAboutLate' => $timeAboutLate/3600,
-                        'totalAboutEarly' => $totalAboutEarly,
-                        'timeAboutEarly' => round($timeAboutEarly/3600, 2),
-                        'totalTimeKeeping' => $totalTimeKeeping,
-                        'totalWorkingDays' => $totalWorkingDays,
-                        'totalNoWorkingDays' => $totalNoWorkingDays,
-                        'totalUnpaidLeave' => $totalUnpaidLeave,
-                        'totalPaidLeave' => $totalPaidLeave,
-                        'totalHourEfforts' => $totalHourEfforts,
-                        'currentWar' => $currentWar,
-                        'totalNotCheckIn' => $totalNotCheckIn,
-                        'totalNotCheckOut' => $totalNotCheckOut,
-                        'totalGoLateAboutEarly' => round(($timeGoLate/3600 + $timeAboutEarly/3600),2),
-                    ];
-                }
-            }
-
-            $expected = [
-                'start_date' => $filters['start_date'],
-                'end_date' => $filters['end_date'],
-                'total' => $timeExpected['total'] ?? '',
-            ];
-
-            $current = [
-                'start_date' => $filters['start_date'],
-                'start_month' => date('m-Y',strtotime($filters['start_date'])),
-                'end_date' => end($keyArr),
-                'total' => $timeNow['total'],
-                'warrior1_3' => $nowWar1_3,
-                'warrior1' => $nowWar1,
-                'warrior2' => $nowWar2,
-                'warrior3' => $nowWar3,
-            ];
-        } else {
-            $users = \App\Models\User::getAllUser($filters);
-
-            foreach ($users as $user) {
-                if($user->user_status == 1 && $user->position != "Giám đốc") {
-                    $result[] = [
-                        'fullname' => $user->fullname,
-                        'id' => $user->id,
-                        'date_official' => $user->date_official,
-                        'wage_now' => $user->wage_now,
-                        'totalGoLate' => 0,
-                        'timeGoLate' => 0,
-                        'totalGoEarly' => 0,
-                        'timeGoEarly' => 0,
-                        'totalAboutLate' => 0,
-                        'timeAboutLate' => 0,
-                        'totalAboutEarly' => 0,
-                        'timeAboutEarly' => 0,
-                        'totalTimeKeeping' => 0,
-                        'totalWorkingDays' => 0,
-                        'totalNoWorkingDays' => 0,
-                        'totalUnpaidLeave' => 0,
-                        'totalHourEfforts' => 0,
-                        'totalNotCheckIn' => 0,
-                        'totalNotCheckOut' => 0,
-                        'totalGoLateAboutEarly' => 0,
-                    ];
-                }
-            }
-        }
-
-        return [
-            'result' => $result,
-            'expected' => $expected,
-            'current' => $current
-        ];
-
-    }
-
-    public function bonus(array $filters)
-    {
-        $result = [];
-        $expected = [];
-        $current = [];
-
-        if ($filters['start_date'] != '' && $filters['end_date'] != '' ) {
-            $start_date = $filters['start_date'];
-            $end_date =  date('Y-m-d',strtotime($filters['end_date']. ' +1 days'));
-
-            $timeExpected = $this->timeReport($start_date, $end_date);
-            $expectedWar1_3 = $timeExpected['total'] * 1;
-            $expectedWar1 = $timeExpected['total'] * 2;
-            $expectedWar2 = $timeExpected['total'] * 3;
-            $expectedWar3 = $timeExpected['total'] * 4;
-
-            if  (strtotime($filters['end_date']. ' +1 days') >= time() ) {
-                $timeNow = $this->timeReport($start_date, date('Y-m-d', time()));
-            } else {
-                $timeNow = $timeExpected;
-            }
-
-            $nowWar1_3 = $timeNow['total'] * 1;
-            $nowWar1 = $timeNow['total'] * 2;
-            $nowWar2 = $timeNow['total'] * 3;
-            $nowWar3 = $timeNow['total'] * 4;
-
-            $range = $timeNow['range'];
-
-            $keyArr = array_keys($range);
-
-            $diff = date_diff(date_create($filters['end_date']), date_create(end($keyArr)));
-
-            $timeRange = $diff->format('%a');
-
-            $users = \App\Models\User::getAllUser($filters, $range);
-
-            $config = ConfigTimeKeeping::query()->where('code', '=', 'TIME')->first();
-
-            if ($config && $config->settings) {
-                $settings = json_decode($config->settings, true);
-            }
-
-            foreach ($users as $user) {
-
-                if ($user->user_status == 1 && $user->position != "Giám đốc" ) {
-                    $totalWorkDate = 0;
-
-                    $totalGoLate = 0;
-                    $timeGoLate = 0;
-                    $totalGoEarly = 0;
-                    $timeGoEarly = 0;
-
-                    $totalAboutLate = 0;
-                    $timeAboutLate = 0;
-                    $totalAboutEarly = 0;
-                    $timeAboutEarly = 0;
-
-                    $totalTimeKeeping = 0;
-                    $totalWorkingDays = 0;
-                    $totalNotCheckIn = 0;
-                    $totalNotCheckOut = 0;
-                    $totalUnpaidLeave = 0;
-                    $totalHourEfforts = 0;
-
-                    foreach ($user->timeKeeping as $value) {
-                        $labelDay = $range[$value->check_date];
-                        $configDay = $settings[$labelDay] ?? [];
-
-                        $checkIn = $value->checkin? strtotime($value->check_date. ' '. $value->checkin): '';
-                        $checkOut = $value->checkout? strtotime($value->check_date. ' '. $value->checkout): '';
-
-                        if ($configDay) {
-                            $start = $configDay['start_time'] != ''? strtotime($value->check_date. ' '. $configDay['start_time']): '';
-                            $end = $configDay['end_time'] != ''? strtotime($value->check_date. ' '. $configDay['end_time']): '';
-
-                            if ($checkIn && $start && $checkIn > $start) {
-                                $totalGoLate++;
-                                $timeGoLate += $checkIn - $start;
-                            } else if ($checkIn && $start && $checkIn < $start) {
-                                $totalGoEarly++;
-                                $timeGoEarly += $start - $checkIn;
-                            }
-
-                            if ($checkOut && $end && $checkOut > $end) {
-                                $totalAboutLate++;
-                                $timeAboutLate += $checkOut - $end;
-                            } else if ($checkOut && $end && $checkOut < $end) {
-                                $totalAboutEarly++;
-                                $timeAboutEarly += $end - $checkOut;
-                            }
-                        }
-
-                        if ($checkIn && $checkOut) {
-                            switch ($labelDay) {
-                                case 'monday':
-                                case 'tuesday':
-                                case 'wednesday':
-                                case 'thursday':
-                                case 'friday':
-                                    $totalTimeKeeping++;
-                                    break;
-                                case 'saturday':
-                                    $totalTimeKeeping = $totalTimeKeeping + 1/2;
-                                    break;
-                            }
-                            switch ($labelDay) {
-                                case 'monday':
-                                case 'tuesday':
-                                case 'wednesday':
-                                case 'thursday':
-                                case 'friday':
-                                case 'saturday':
-                                    $totalWorkingDays++;
-                                    break;
-                            }
-                        }  elseif ($checkIn && !$checkOut) {
-                            $totalNotCheckOut++;
-                        } elseif (!$checkIn && $checkOut) {
-                            $totalNotCheckIn++;
-                        }
-                    }
-
-                    $totalHourEfforts = (($timeGoEarly + $timeAboutLate) - ($timeGoLate + $timeAboutEarly))/3600;
-
-                    $currentWar = '';
-                    $nextWar = '';
-                    $timeHoldWar = 0;
-                    $timeIncreaseWar = 0;
-                    $avgTimeHoldWar = 0;
-                    $avgTimeIncreaseWar = 0;
-                    $EmployeeLongtime =1094;
-                    $AllowanceWarrior = 0;
-
-                    if ($timeRange) {
-                        if($totalWorkDate > $EmployeeLongtime ){
-                            if($totalWorkDate > $EmployeeLongtime && $totalHourEfforts < $nowWar1_3) {
-                                $currentWar = 'Soldier';
-                                $nextWar = 'Warrior 1';
-                                $AllowanceWarrior = 0;
-                                $timeIncreaseWar = $expectedWar1_3 - $totalHourEfforts;
-                            } elseif ( $totalHourEfforts > $nowWar1_3 && $totalHourEfforts< $nowWar1) {
-                                $currentWar = 'Warrior 1';
-                                $nextWar = 'Warrior 2';
-                                $AllowanceWarrior = 700000;
-                                $timeHoldWar = $expectedWar1_3- $totalHourEfforts;
-                                $timeIncreaseWar = $expectedWar1 - $totalHourEfforts;
-                            } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
-                                $currentWar = 'Warrior 2';
-                                $nextWar = 'Warrior 3';
-                                $AllowanceWarrior = 900000;
-                                $timeHoldWar = $expectedWar1 - $totalHourEfforts;
-                                $timeIncreaseWar = $expectedWar2 - $totalHourEfforts;
-                            } elseif ($totalHourEfforts > $nowWar2) {
-                                $currentWar = 'Warrior 3';
-                                $nextWar = 'Warrior 3';
-                                $AllowanceWarrior = 1100000;
-                                $timeHoldWar = $expectedWar2 - $totalHourEfforts;
-                                $timeIncreaseWar =$expectedWar2 - $totalHourEfforts;
-                            }
-                        } else{
-                            if($totalHourEfforts < $nowWar1) {
-                                $currentWar = 'Soldier';
-                                $nextWar = 'Warrior 1';
-                                $AllowanceWarrior = 0;
-                                $timeIncreaseWar = $expectedWar1 - $totalHourEfforts;
-                            } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
-                                $currentWar = 'Warrior 1';
-                                $nextWar = 'Warrior 2';
-                                $AllowanceWarrior = 700000;
-                                $timeHoldWar = $expectedWar1- $totalHourEfforts;
-                                $timeIncreaseWar = $expectedWar2 - $totalHourEfforts;
-                            } elseif ($totalHourEfforts > $nowWar2 && $totalHourEfforts< $nowWar3) {
-                                $currentWar = 'Warrior 2';
-                                $nextWar = 'Warrior 3';
-                                $AllowanceWarrior = 900000;
-                                $timeHoldWar = $expectedWar2 - $totalHourEfforts;
-                                $timeIncreaseWar = $expectedWar3 - $totalHourEfforts;
-                            } elseif ($totalHourEfforts > $nowWar3) {
-                                $currentWar = 'Warrior 3';
-                                $nextWar = 'Warrior 3';
-                                $AllowanceWarrior = 1100000;
-                                $timeHoldWar = $expectedWar3 - $totalHourEfforts;
-                                $timeIncreaseWar = $expectedWar3 - $totalHourEfforts;
-                            }
-                        }
-
-                        $avgTimeHoldWar = $timeHoldWar/$timeRange;
-                        $avgTimeIncreaseWar = $timeIncreaseWar/$timeRange;
-
-                    } else{
-                        if($totalWorkDate > $EmployeeLongtime ){
-                            if($totalWorkDate > $EmployeeLongtime && $totalHourEfforts < $nowWar1_3) {
-                                $currentWar = 'Soldier';
-                                $AllowanceWarrior = 0;
-                            } elseif ( $totalHourEfforts > $nowWar1_3 && $totalHourEfforts< $nowWar1) {
-                                $currentWar = 'Warrior 1';
-                                $AllowanceWarrior = 700000;
-                            } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
-                                $currentWar = 'Warrior 2';
-                                $AllowanceWarrior = 900000;
-                            } elseif ($totalHourEfforts > $nowWar2) {
-                                $currentWar = 'Warrior 3';
-                                $AllowanceWarrior = 1100000;
-                            }
-                        } else{
-                            if($totalHourEfforts < $nowWar1) {
-                                $currentWar = 'Soldier';
-                                $AllowanceWarrior = 0;
-                            } elseif ($totalHourEfforts > $nowWar1 && $totalHourEfforts< $nowWar2) {
-                                $currentWar = 'Warrior 1';
-                                $AllowanceWarrior = 700000;
-                            } elseif ($totalHourEfforts > $nowWar2 && $totalHourEfforts< $nowWar3) {
-                                $currentWar = 'Warrior 2';
-                                $AllowanceWarrior = 900000;
-                            } elseif ($totalHourEfforts > $nowWar3) {
-                                $currentWar = 'Warrior 3';
-                                $AllowanceWarrior = 1100000;
-                            }
-                        }
-                    }
-                    $totalUnpaidLeave = $timeNow['total'] - $totalTimeKeeping;
-                    $rateGoLate = $totalWorkingDays? round(($totalGoLate/$totalWorkingDays), 4) * 100 : 0;
-
-                    $date_official = new Datetime($user->date_official);
-                    $date_official_new = date('d-m-Y', strtotime($user->date_official));
-
-                    $date_now = new Datetime(date('Y-m-d', time()));
-                    $totalWorkDate = ($date_official)->diff($date_now);
-
-                    $wage_now = number_format($user->wage_now);
-                    $AllowanceWar  = number_format($AllowanceWarrior);
-                    $wage_actual = $user->wage_now*$totalTimeKeeping/$timeExpected['total'];
-                    $wage_actual_format =number_format( $wage_actual);
-
-                    $result[] = [
-
-                        'fullname' => $user->fullname,
-                        'id' => $user->id,
-                        'date_official' => $user->date_official,
-                        'date_official_new' => $date_official_new,
-                        'wage_now' => $wage_now,
-                        'AllowanceWarrior' => $AllowanceWar,
-                        'wage_actual' => $wage_actual_format,
-                        'totalWorkDateY' => $totalWorkDate->y,
-                        'totalWorkDateM' => $totalWorkDate->m,
-                        'totalWorkDateD' => $totalWorkDate->d,
-                        'totalGoLate' => $totalGoLate,
-                        'timeGoLate' => round($timeGoLate/3600, 2),
-                        'totalGoEarly' => $totalGoEarly,
-                        'timeGoEarly' => $timeGoEarly/3600,
-                        'totalAboutLate' => $totalAboutLate,
-                        'timeAboutLate' => $timeAboutLate/3600,
-                        'totalAboutEarly' => $totalAboutEarly,
-                        'timeAboutEarly' => round($timeAboutEarly/3600, 2),
-                        'totalTimeKeeping' => $totalTimeKeeping,
-                        'totalWorkingDays' => $totalWorkingDays,
-                        'totalUnpaidLeave' => $totalUnpaidLeave,
-                        'totalHourEfforts' => $totalHourEfforts,
-                        'currentWar' => $currentWar,
-                        'nextWar' => $nextWar,
-                        'timeHoldWar' => $timeHoldWar,
-                        'timeIncreaseWar' => $timeIncreaseWar,
-                        'avgTimeHoldWar' => $avgTimeHoldWar,
-                        'avgTimeIncreaseWar' => $avgTimeIncreaseWar,
-                        'rateGoLate' => $rateGoLate ?? 0,
-                        'totalNotCheckIn' => $totalNotCheckIn,
-                        'totalNotCheckOut' => $totalNotCheckOut,
-                        'totalGoLateAboutEarly' => round(($timeGoLate/3600 + $timeAboutEarly/3600),2),
-                    ];
-                }
-            }
-
-            $expected = [
-                'start_date' => $filters['start_date'],
-                'end_date' => $filters['end_date'],
-                'total' => $timeExpected['total'] ?? '',
-                'warrior1_3' => $expectedWar1_3 ?? '',
-                'warrior1' => $expectedWar1 ?? '',
-                'warrior2' => $expectedWar2 ?? '',
-                'warrior3' => $expectedWar3 ?? '',
-            ];
-
-            $current = [
-                'start_date' => $filters['start_date'],
-                'start_month' => date('m - Y',strtotime($filters['start_date'])),
-                'end_date' => end($keyArr),
-                'total' => $timeNow['total'],
-                'warrior1_3' => $nowWar1_3,
-                'warrior1' => $nowWar1,
-                'warrior2' => $nowWar2,
-                'warrior3' => $nowWar3,
-            ];
-        } else {
-            $users = \App\Models\User::getAllUser($filters);
-
-            foreach ($users as $user) {
-                if($user->user_status == 1 && $user->position != "Giám đốc") {
-                    $result[] = [
-                        'fullname' => $user->fullname,
-                        'id' => $user->id,
-                        'date_official' => $user->date_official,
-                        'wage_now' => $user->wage_now,
-                        'totalGoLate' => 0,
-                        'timeGoLate' => 0,
-                        'totalGoEarly' => 0,
-                        'timeGoEarly' => 0,
-                        'totalAboutLate' => 0,
-                        'timeAboutLate' => 0,
-                        'totalAboutEarly' => 0,
-                        'timeAboutEarly' => 0,
-                        'totalTimeKeeping' => 0,
-                        'totalWorkingDays' => 0,
-                        'totalUnpaidLeave' => 0,
-                        'totalHourEfforts' => 0,
-                        'currentWar' => 0,
-                        'nextWar' => 0,
-                        'timeHoldWar' => 0,
-                        'timeIncreaseWar' => 0,
-                        'avgTimeHoldWar' => 0,
-                        'avgTimeIncreaseWar' => 0,
-                        'rateGoLate' => 0,
-                        'totalNotCheckIn' => 0,
-                        'totalNotCheckOut' => 0,
-                        'totalGoLateAboutEarly' => 0,
-                    ];
-                }
-            }
-        }
-
-        return [
-            'result' => $result,
-            'expected' => $expected,
-            'current' => $current
-        ];
-
-    }
 
     public function checkinHandmade(User $user)
     {
@@ -2199,47 +1535,6 @@ class TimeKeepingService
         return false;
     }
 
-    public function goOutHandmade1(User $user)
-    {
-        if ($user->check_type == 1) {
-            $timeKeeping = TimeKeeping::query()
-                ->where([
-                    'user_id' => $user->id,
-                    'check_date' => date('Y-m-d', time())
-                ])->first();
-                
-
-            if (!$timeKeeping->go_out ||($timeKeeping->go_in != null && $timeKeeping->go_in > $timeKeeping->go_out)){
-                $timeKeeping->go_out = date('H:i:s', time());
-                
-                $total_pause = 1;
-                $timeKeeping->total_pause += $total_pause;
-                
-                $timeKeeping->save();
-
-                return [
-                    'code' => 200,
-                    'go_out' => true
-                ];
-            } else if(($timeKeeping->go_out != null && $timeKeeping->go_in == null) || ($timeKeeping->go_in < $timeKeeping->go_out)){
-                $timeKeeping->go_in = date('H:i:s', time());
-
-                $pause = (strtotime($timeKeeping->go_in) - strtotime($timeKeeping->go_out))/60;
-                $timeKeeping->time_pause += $pause;
-                
-                $timeKeeping->save();
-
-                return [
-                    'code' => 200,
-                    'go_out' => false
-                ];
-            }
-
-            return true;
-        }
-
-        return false;
-    }
     public function goOutHandmade(User $user)
     {
 

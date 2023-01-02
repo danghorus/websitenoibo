@@ -2,6 +2,14 @@
     <div class="card">
         <div class="card-header" style="height:50px;">
             <h4>Bảng thống kê chấm công</h4>
+            <div class="col-lg-6" style="margin-top:-32px; padding-left:300px;">
+                <div class="form-check" >
+                    <input class="form-check-input" type="checkbox" v-model="option1" name="flexRadioDefault"
+                        id="flexRadioDefault2">
+                        <label v-if="option1 == false">Bảng Warrior</label>
+                        <label v-if="option1 == true">Bảng giờ công</label>
+                </div>
+            </div>
             <div style="position: absolute; right: 10px; top: 8px">
                 <select class="form-select" v-model="option"  @change="getReport()">
                     <option value="2">Theo tháng</option>
@@ -80,119 +88,114 @@
                 </table>
             </div>
             <div>
-                <table class="table-striped table-responsive table-hover result-point">
+                <table class="table table-responsive">
                     <thead class="point-table-head">
                         <tr style="vertical-align: middle; font-size:12px; text-align:center; ">
 
-                            <th style="vertical-align: middle; width:205px; border:0px;" rowspan="2">
+                            <th style="vertical-align: middle; border:0px;" rowspan="2">
                                 <input style="border:0px;" type="text" name="search" class="form-control mb-2 input-search" v-model="search"
                                     placeholder="Tìm kiếm" @input="changeOption()">
                             </th>
-                            <th style="vertical-align: middle; width:90px;" rowspan="2" @click="sort('date_official')">
+                            <th style="vertical-align: middle;" rowspan="2" @click="sort('date_official')">
                                 Ngày làm việc chính thức</th>
                             <th style="vertical-align: middle; width:160px;" rowspan="2">Số ngày đã làm việc chính thức
                             </th>
                             <th colspan="2" style="vertical-align: middle;">Đi muộn</th>
                             <th colspan="2" style="vertical-align: middle;">Về sớm</th>
                             <th colspan="2" style="vertical-align: middle;">Ra ngoài</th>
-                            <th rowspan="2" style="vertical-align: middle; width:60px;">Tổng giờ ĐMVS</th>
-                            <th rowspan="2" style="vertical-align: middle; width:70px;">Số giờ đi sớm</th>
-                            <th rowspan="2" style="vertical-align: middle; width:70px;">Số giờ về muộn</th>
-                            <th rowspan="2" style="vertical-align: middle; width:70px;">Công thực tế</th>
-							<th rowspan="2" style="vertical-align: middle; width:70px;">Nghỉ phép có lương</th>
-                            <th rowspan="2" style="vertical-align: middle; width:60px;">Nghỉ phép có lương(12)</th>
-                            <th rowspan="2" style="vertical-align: middle; width:60px;">Công tính lương</th>
-                            <th rowspan="2" style="vertical-align: middle; width:80px;">Ngày phép có lương còn lại</th>
-                            <th rowspan="2" style="vertical-align: middle; width:60px;">Công đăng ký làm thêm</th>
-                            <th rowspan="2" style="vertical-align: middle; width:66px;">Công đăng ký nỗ lực</th>
-                            <th rowspan="2" style="vertical-align: middle; width:60px;">Nghỉ không lương</th>
-                            <th rowspan="2" style="vertical-align: middle; width:66px;">Tổng giờ nỗ lực</th>
-                            <th rowspan="2" style="vertical-align: middle; width:90px;">Warrior hiện tại</th>
-                            <th rowspan="2" style="vertical-align: middle; width:65px;"
+                            <th rowspan="2" style="vertical-align: middle;">Tổng giờ ĐMVS</th>
+                            <th rowspan="2" style="vertical-align: middle;">ĐMVS/công</th>
+                            
+                            <template v-if="option1 == true">
+                            <th rowspan="2" style="vertical-align: middle;">Công thực tế</th>
+                            <th rowspan="2" style="vertical-align: middle;">Công đăng ký làm thêm</th>
+							<th rowspan="2" style="vertical-align: middle;">Nghỉ phép có lương</th>
+                            <th rowspan="2" style="vertical-align: middle;">Nghỉ phép không lương</th>
+                            <th rowspan="2" style="vertical-align: middle;">Công tính lương</th>
+                            <th rowspan="2" style="vertical-align: middle;">Ngày phép có lương còn lại</th>
+                            </template>
+                            <template v-if="option1 == false">
+                                <th rowspan="2" style="vertical-align: middle;">Số giờ đi sớm</th>
+                                <th rowspan="2" style="vertical-align: middle;">Số giờ về muộn</th>
+                                <th rowspan="2" style="vertical-align: middle;">Công đăng ký nỗ lực</th>
+                                <th rowspan="2" style="vertical-align: middle;">Số giờ ĐKNL</th>
+                            <th rowspan="2" style="vertical-align: middle;">Tổng giờ nỗ lực</th>
+                            <th rowspan="2" style="vertical-align: middle;">Warrior hiện tại</th>
+                            <th rowspan="2" style="vertical-align: middle;"
                                 v-if="expected.end_date > current.end_date">TG để giữ Warrior</th>
-                            <th rowspan="2" style="vertical-align: middle; width:65px;"
+                            <th rowspan="2" style="vertical-align: middle;"
                                 v-if="expected.end_date > current.end_date">TGTB để giữ Warrior</th>
-                            <th rowspan="2" style="vertical-align: middle; width:90px;"
+                            <th rowspan="2" style="vertical-align: middle;"
                                 v-if="expected.end_date > current.end_date">Warrior tiếp theo</th>
-                            <th rowspan="2" style="vertical-align: middle;width:65px;"
+                            <th rowspan="2" style="vertical-align: middle;"
                                 v-if="expected.end_date > current.end_date"> TG để lên Warrior</th>
-                            <th rowspan="2" style="vertical-align: middle;width:65px;"
+                            <th rowspan="2" style="vertical-align: middle;"
                                 v-if="expected.end_date > current.end_date">TGTB để lên Warrior</th>
-                            <th rowspan="2" style="vertical-align: middle; width:80px;">Tỷ lệ đi muộn</th>
-							<th rowspan="2" style="vertical-align: middle; width:20px;"></th>
+                            </template>
+                            <th rowspan="2" style="vertical-align: middle;">Tỷ lệ đi muộn</th>
                         </tr>
                         <tr style="font-size:12px; text-align:center;">
-                            <th style="vertical-align: middle; width:40px;">Số lần</th>
-                            <th style="vertical-align: middle; width:60px;">Thời gian</th>
-                            <th style="vertical-align: middle; width:40px;">Số lần</th>
-                            <th style="vertical-align: middle; width:60px;">Thời gian</th>
-                            <th style="vertical-align: middle; width:40px;">Số lần</th>
-                            <th style="vertical-align: middle; width:60px;">Thời gian</th>
+                            <th style="vertical-align: middle;">Số lần</th>
+                            <th style="vertical-align: middle;">Thời gian</th>
+                            <th style="vertical-align: middle;">Số lần</th>
+                            <th style="vertical-align: middle;">Thời gian</th>
+                            <th style="vertical-align: middle;">Số lần</th>
+                            <th style="vertical-align: middle;">Thời gian</th>
                         </tr>
                     </thead>
                     <tbody class="detail" style="font-size:14px;">
                         <tr v-for="(user, index) in data" :key="index">
-
-                            <td style="width:200px;font-size:16px" v-if="user.rateGoLate >= 12.5" ><b style="color:red;">{{ user.fullname }}</b></td>
-                            <td style="width:200px;" v-else>{{ user.fullname }}</td>
-
-                            <td style=" text-align:center; width:90px;" v-if="user.date_official_new != 0">{{
-                            user.date_official_new}}</td>
-                            <td style=" text-align:center;  width:90px;" v-else><b>Thử việc</b></td>
+                            <td style="font-size:16px" v-if="user.rateGoLate >= 12.5" ><b style="color:red;">{{ user.fullname }}</b></td>
+                            <td v-else>{{ user.fullname }}</td>
+                            <td style=" text-align:center;" v-if="user.date_official_new != 0">{{user.date_official_new}}</td>
+                            <td style=" text-align:center; " v-else><b>Thử việc</b></td>
                             <td style=" text-align:right; width:150px;" v-if="user.date_official_new != 0">
                                 {{ user.totalWorkDateY ? user.totalWorkDateY+" năm":" "}}
                                 {{ user.totalWorkDateM ? user.totalWorkDateM+" tháng" :" "}}
                                 {{ user.totalWorkDateD ? user.totalWorkDateD:" "}}
                             </td>
                             <td v-else style=" text-align:right; width:150px;"> Thử việc</td>
-                            <td style="width:40px;">{{ user.totalGoLate }}</td>
-                            <td style="width:60px;">{{ formatNumber(user.timeGoLate) }}</td>
-                            <td style="width:40px;">{{ user.totalAboutEarly }}</td>
-                            <td style="width:60px;">{{ formatNumber(user.timeAboutEarly) }}</td>
-                            <td style="width:40px;">{{ user.totalGoOut }}</td>
-                            <td style="width:60px;">{{ formatNumber(user.timeGoOut) }}</td>
-                            <td style="width:70px;">{{ user.totalGoLateAboutEarly }}</td>
-                            <td style="width:70px;">{{ formatNumber(user.timeGoEarly) }}</td>
-                            <td style="width:70px;">{{ formatNumber(user.timeAboutLate) }}</td>
-                            <!--<td style="width:70px;">{{ user.totalWorkingDays }}</td>-->
-                            <td style="width:70px;">{{ user.totalTimeKeeping }}</td>
-							<td style="width:70px;">{{ user.totalPaidLeave }}</td>
-                            <td style="width:70px;">{{ user.totalPaidLeave12 }}</td>
-                            <td style="width:70px;">{{ user.totalPayroll }}</td>
-                            <td style="width:70px;">{{ user.totalPaidLeaveFull }}</td>
-                            <td style="width:70px;">{{ user.totalOT}}</td>
-                            <td style="width:66px;">{{ user.totalWar}}</td>
-                            <td style="width:66px;">{{ user.totalUnpaidLeave }}</td>
-                            <!--<td style="width:66px;">{{ user.totalNotCheckOut }}</td>-->
-                            <td style="width:66px;">{{ formatNumber(user.totalHourEfforts) }}</td>
+                            <td >{{ user.totalGoLate }}</td>
+                            <td >{{ formatNumber(user.timeGoLate) }}</td>
+                            <td >{{ user.totalAboutEarly }}</td>
+                            <td >{{ formatNumber(user.timeAboutEarly) }}</td>
+                            <td >{{ user.totalPause }}</td>
+                            <td >{{ formatNumber(user.timePause) }}</td>
+                            <td >{{ user.totalGoLateAboutEarly }}</td>
+                            <td>{{ formatNumber(user.totalGoLateAboutEarly/8) }}</td>
+                            
+                            <template v-if="option1 == true">
+                                <td >{{ user.totalTimeKeeping }}</td>
+                                <td>{{ user.totalOT}}</td>
+                                <td >{{ user.totalPaidLeave }}</td>
+                                <td>{{ user.totalUnpaidLeave }}</td>
+                                <td >{{ user.totalPayroll }}</td>
+                                <td >{{ user.totalPaidLeaveFull }}</td>
+                            </template>
+                            <template v-if="option1 == false">
+                                <td>{{ formatNumber(user.timeGoEarly) }}</td>
+                                <td>{{ formatNumber(user.timeAboutLate) }}</td>
+                                <td>{{ user.totalWar}}</td>
+                                <td>{{ formatNumber(user.timeWar) }}</td>
+                                <td >{{ formatNumber(user.totalHourEfforts) }}</td>
+                                <td v-if="user.currentWar == 'Warrior 1'"><b style="color:green;">{{ user.currentWar }}</b></td>
+                                <td v-else-if="user.currentWar == 'Warrior 2'"><b style="color:orange;">{{ user.currentWar }}</b></td>
+                                <td v-else-if="user.currentWar == 'Warrior 3'"><b style="color:#800000;">{{ user.currentWar }}</b></td>
+                                <td v-else ><b style="color:gray;">{{ user.currentWar }}</b></td>
+                                <td style="" v-if="expected.end_date > current.end_date">{{formatNumber(user.timeHoldWar) }}</td>
+                                <td style="" v-if="expected.end_date > current.end_date">{{formatNumber(user.avgTimeHoldWar)}}</td>
+                                <td v-if=" expected.end_date > current.end_date & user.nextWar == 'Warrior 1'" ><b style="color:green;">{{ user.nextWar }}</b></td>
+                                <td v-else-if=" expected.end_date > current.end_date & user.nextWar == 'Warrior 2'" ><b style="color:orange;">{{ user.nextWar }}</b></td>
+                                <td v-else-if=" expected.end_date > current.end_date & user.nextWar == 'Warrior 3'" ><b style="color:#800000;">{{ user.nextWar }}</b></td>
+                                <td v-else-if=" expected.end_date > current.end_date & user.nextWar == 'Soldier'" ><b style="color:gray;">{{ user.currentWar }}</b></td>
+                                <td style="" v-if="expected.end_date > current.end_date">{{ formatNumber(user.timeIncreaseWar) }}</td>
+                                <td style="" v-if="expected.end_date > current.end_date & user.avgTimeIncreaseWar < 5"><b style="color:green;">{{formatNumber(user.avgTimeIncreaseWar)}}</b></td>
+                                <td style="" v-else-if="expected.end_date > current.end_date & user.avgTimeIncreaseWar > 5">{{formatNumber(user.avgTimeIncreaseWar)}}</td>
+                            </template>
 
-                            <td v-if="user.currentWar == 'Warrior 1'" style="width:90px;"><b style="color:green;">{{ user.currentWar }}</b></td>
-                            <td v-else-if="user.currentWar == 'Warrior 2'" style="width:90px;"><b style="color:orange;">{{ user.currentWar }}</b></td>
-                            <td v-else-if="user.currentWar == 'Warrior 3'" style="width:90px;"><b style="color:#800000;">{{ user.currentWar }}</b></td>
-                            <td v-else style="width:90px;"><b style="color:gray;">{{ user.currentWar }}</b></td>
+                            <td style=" font-size:16px" v-if="user.rateGoLate >= 12.5" ><b style="color:red;">{{ formatNumber(user.rateGoLate)}} %</b></td>
+                            <td v-else> {{ formatNumber(user.rateGoLate)}} %</td>
 
-                            <td style="width:65px;" v-if="expected.end_date > current.end_date">{{
-                            formatNumber(user.timeHoldWar) }}
-                            </td>
-                            <td style="width:65px;" v-if="expected.end_date > current.end_date">{{
-                            formatNumber(user.avgTimeHoldWar)
-                            }}
-                            </td>
-                            <td v-if=" expected.end_date > current.end_date & user.nextWar == 'Warrior 1'" style="width:90px;"><b style="color:green;">{{ user.nextWar }}</b></td>
-                            <td v-else-if=" expected.end_date > current.end_date & user.nextWar == 'Warrior 2'" style="width:90px;"><b style="color:orange;">{{ user.nextWar }}</b></td>
-                            <td v-else-if=" expected.end_date > current.end_date & user.nextWar == 'Warrior 3'" style="width:90px;"><b style="color:#800000;">{{ user.nextWar }}</b></td>
-                            <td v-else-if=" expected.end_date > current.end_date & user.nextWar == 'Soldier'" style="width:90px;"><b style="color:gray;">{{ user.currentWar }}</b></td>
-
-                            <!--<td style="width:90px;" v-if="expected.end_date > current.end_date">{{ user.nextWar }}</td>-->
-
-
-                            <td style="width:65px;" v-if="expected.end_date > current.end_date">{{
-                            formatNumber(user.timeIncreaseWar) }}
-                            </td>
-                            <td style="width:65px;" v-if="expected.end_date > current.end_date & user.avgTimeIncreaseWar < 5"><b style="color:green;">{{formatNumber(user.avgTimeIncreaseWar)}}</b></td>
-							<td style="width:65px;" v-else-if="expected.end_date > current.end_date & user.avgTimeIncreaseWar > 5"">{{formatNumber(user.avgTimeIncreaseWar)}}</td>
-                            <td style="width:85px; font-size:16px" v-if="user.rateGoLate >= 12.5" ><b style="color:red;">{{ formatNumber(user.rateGoLate)}} %</b></td>
-                            <td style="width:85px;" v-else> {{ formatNumber(user.rateGoLate)}} %</td>
                         </tr>
                     </tbody>
                 </table>
@@ -215,6 +218,7 @@ export default {
     data() {
         return {
             option: 2,
+            option1: true,
             dateRange: '',
             data: [],
             expected: {},
@@ -289,13 +293,30 @@ export default {
 
 <style scoped>
 table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th,
+td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background-color: coral;
+}
+
+table {
     background: #fff;
     border: 1px solid #999999;
 }
 
 table thead tr th {
     padding: 5px;
-    border: 0px solid #9b9b9b;
+    border: 1px solid #9b9b9b;
+    text-align: center;
     color: #000;
 }
 
@@ -336,9 +357,9 @@ thead.detail {
     display: table;
 }
 
-tbody.detail {
+/*tbody.detail {
     height: 850px;
     overflow: auto;
     display: block;
-}
+}*/
 </style>

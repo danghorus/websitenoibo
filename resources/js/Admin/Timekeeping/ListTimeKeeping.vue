@@ -54,7 +54,7 @@
                             <template>
                                 <b v-if="time.petition_type == 0 && time.label_day != 'sunday' && time.holiday != 1">Ca hành chính</b>
                                 <b v-else-if="time.petition_type == 4 && time.holiday != 1">Thay đổi giờ công</b>
-                                <b v-else-if="time.petition_type == 5 && time.holiday != 1">Đăng ký làm tính công</b>
+                                <b v-else-if="time.petition_type == 5">Đăng ký làm tính công</b>
                                 <b v-else-if="time.petition_type == 6">Đăng ký làm nỗ lực</b>
                                 <b v-else-if="time.petition_type == 1 && time.holiday != 1">Đi muộn/về sớm</b>
                                 <b v-else-if="time.petition_type == 9 && time.holiday != 1" style="color:black;">Ra ngoài ({{time.go_out}} phút)</b>
