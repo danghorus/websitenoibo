@@ -208,7 +208,7 @@ class PetitionController extends Controller
         return view('petitions.create',compact('users'));
     }
 
-    public function approved(Request $request)
+    public function approved()
     {
 
         $petitions = Petition::where('petition_status', 2)->orderby('created_at', 'DESC')->get();
@@ -372,6 +372,7 @@ class PetitionController extends Controller
 
         return view('petitions.approved',compact('petitions','petitions1','users', 'petitions01', 'petitions02', 'petitions03'));
     }
+
     public function unapproved()
     {
 
@@ -598,7 +599,6 @@ class PetitionController extends Controller
      */
     public function update(Request $request, Petition $petition)
     {
-
         $petitionStatus = $request->petition_status;
         $infringe = $request->infringe;
         $petitionRead = $request->readed;
@@ -633,33 +633,27 @@ class PetitionController extends Controller
                 $dataUpdate['type_paid'] =$petition->type_paid;
                 $this->timeKeepingService->update($dataUpdate);
             }
-            $users = User::all();
-            return redirect()->route('petitions.index', compact('users'));
+            
+           return redirect()->route('petitions.index');
 
+        }else{
+
+            if( $petition->petition_status == 2){
+                $petition -> update([
+                    $petition->readed = 1,
+                ]);
+
+            return redirect()->route('petitions.index');
+
+            }else if( $petition->petition_status == 3){
+                $petition -> update([
+                    $petition->readed = 1,
+                ]);
+
+            return redirect()->route('petitions.index');
+
+            } 
         }
-        /*if($petitionRead){
-            $petition -> update([
-                'petition_status' => $petitionStatus,
-            ]);
-            $users = User::all();
-            return redirect()->route('petitions.index', compact('users'));
-        }*/
-
-        if($petitionRead && $petition->status == 2){
-            $petition -> update([
-                $petition->readed = 1,
-            ]);
-            $users = User::all();
-            return redirect()->route('petitions.index', compact('users'));
-
-        }else if($petitionRead && $petition->status == 0){
-            $petition -> update([
-                $petition->readed = 1,
-            ]);
-            $users = User::all();
-            return redirect()->route('petitions.index', compact('users'));
-
-        }  
 
     }
 
