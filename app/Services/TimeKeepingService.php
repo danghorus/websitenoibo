@@ -105,17 +105,27 @@ class TimeKeepingService
                                             $tmp[$key]['petition_type'] = $time->petition_type;
                                             $tmp[$key]['type_leave'] = $time->type_leave;
                                             $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
-                                            if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                                $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                            }else{
-                                                $tmp[$key]['checkout'] = '-:-';
+                                            $finalCheckout = $tmp[$key]['final_checkout'] = $time->final_checkout? date('H:i', strtotime($key. ' '. $time->final_checkout)) : '';
+
+                                            if( $finalCheckout == ''){
+                                                if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                    $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                                }else{
+                                                    $tmp[$key]['checkout'] = '-:-';
+                                                }
+                                            } else {
+                                                $tmp[$key]['checkout'] =  $finalCheckout;
                                             }
                                             $configTimeKeepingDay = $settings[$day]?? [];
                                             $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
-                                            if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                                $checkOut = strtotime($key. ' '. $time->checkout);
-                                            }else {
-                                                $checkOut = '';
+                                            if( $finalCheckout == null){
+                                                if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                    $checkOut = strtotime($key. ' '. $time->checkout);
+                                                }else {
+                                                    $checkOut = '';
+                                                }
+                                            }else{
+                                                $checkOut = strtotime($key. ' '. $time->final_checkout);
                                             }
 
                                             if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timePM']) {
@@ -158,20 +168,30 @@ class TimeKeepingService
                                             $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
                                             $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
                                             $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
-                                            if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                                $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                            }else{
-                                                $tmp[$key]['checkout'] = '-:-';
+                                            $finalCheckout = $tmp[$key]['final_checkout'] = $time->final_checkout? date('H:i', strtotime($key. ' '. $time->final_checkout)) : '';
+
+                                            if( $finalCheckout == ''){
+                                                if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                    $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                                }else{
+                                                    $tmp[$key]['checkout'] = '-:-';
+                                                }
+                                            } else {
+                                                $tmp[$key]['checkout'] =  $finalCheckout;
                                             }
 
                                             $configTimeKeepingDay = $settings[$day]?? [];
 
                                             if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timePM']) {
                                                 $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
-                                                if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                                    $checkOut = strtotime($key. ' '. $time->checkout);
-                                                }else {
-                                                    $checkOut = '';
+                                                if( $finalCheckout == null){
+                                                    if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                        $checkOut = strtotime($key. ' '. $time->checkout);
+                                                    }else {
+                                                        $checkOut = '';
+                                                    }
+                                                }else{
+                                                    $checkOut = strtotime($key. ' '. $time->final_checkout);
                                                 }
 
                                                 $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
@@ -222,10 +242,14 @@ class TimeKeepingService
 
                                     if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timePM']) {
                                         $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
-                                        if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                            $checkOut = strtotime($key. ' '. $time->checkout);
-                                        }else {
-                                             $checkOut = '';
+                                        if( $finalCheckout == null){
+                                            if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                $checkOut = strtotime($key. ' '. $time->checkout);
+                                            }else {
+                                                $checkOut = '';
+                                            }
+                                        }else{
+                                            $checkOut = strtotime($key. ' '. $time->final_checkout);
                                         }
                                         $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
                                         $end = $configTimeKeepingDay['end_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_timePM']): '';
@@ -267,20 +291,30 @@ class TimeKeepingService
                                     $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
                                     $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
                                     $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
-                                    if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                         $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                    }else{
-                                         $tmp[$key]['checkout'] = '-:-';
+                                    $finalCheckout = $tmp[$key]['final_checkout'] = $time->final_checkout? date('H:i', strtotime($key. ' '. $time->final_checkout)) : '';
+
+                                    if( $finalCheckout == ''){
+                                        if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                            $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                        }else{
+                                            $tmp[$key]['checkout'] = '-:-';
+                                        }
+                                    } else {
+                                         $tmp[$key]['checkout'] =  $finalCheckout;
                                     }
                                     $configTimeKeepingDay = $settings[$day]?? [];
 									$timeFrom = $time->time_from? strtotime($key. ' '. $time->time_from): '';
 									$timeTo = $time->time_to? strtotime($key. ' '. $time->time_to): '';
                                     if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timePM']) {
                                         $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
-                                        if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                            $checkOut = strtotime($key. ' '. $time->checkout);
-                                        }else {
-                                             $checkOut = '';
+                                        if( $finalCheckout == null){
+                                            if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                $checkOut = strtotime($key. ' '. $time->checkout);
+                                            }else {
+                                                $checkOut = '';
+                                            }
+                                        }else{
+                                            $checkOut = strtotime($key. ' '. $time->final_checkout);
                                         }
                                         $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
                                         $end = $configTimeKeepingDay['end_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_timePM']): '';
@@ -325,10 +359,16 @@ class TimeKeepingService
                                             $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
                                             $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
 
-                                            if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                                $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                            }else{
-                                                $tmp[$key]['checkout'] = '-:-';
+                                            $finalCheckout = $tmp[$key]['final_checkout'] = $time->final_checkout? date('H:i', strtotime($key. ' '. $time->final_checkout)) : '';
+
+                                            if( $finalCheckout == ''){
+                                                if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                    $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                                }else{
+                                                    $tmp[$key]['checkout'] = '-:-';
+                                                }
+                                            } else {
+                                                $tmp[$key]['checkout'] =  $finalCheckout;
                                             }
 
                                             $tmp[$key]['class'] = 'text-light bg-secondary';
@@ -337,11 +377,15 @@ class TimeKeepingService
 
                                             if ($configTimeKeepingDay && $configTimeKeepingDay['start_timePM'] && $configTimeKeepingDay['end_timePM']) {
                                                 $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
-                                            if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                            if( $finalCheckout == null){
+                                                if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
                                                     $checkOut = strtotime($key. ' '. $time->checkout);
                                                 }else {
                                                     $checkOut = '';
                                                 }
+                                            }else{
+                                                $checkOut = strtotime($key. ' '. $time->final_checkout);
+                                            }
 
                                                 $start = $configTimeKeepingDay['start_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timePM']): '';
                                                 $end = $configTimeKeepingDay['end_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_timePM']): '';
@@ -376,10 +420,16 @@ class TimeKeepingService
                                             $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
                                             $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
                                             $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
-                                            if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                                $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                            }else{
-                                                $tmp[$key]['checkout'] = '-:-';
+                                            $finalCheckout = $tmp[$key]['final_checkout'] = $time->final_checkout? date('H:i', strtotime($key. ' '. $time->final_checkout)) : '';
+
+                                            if( $finalCheckout == ''){
+                                                if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                    $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                                }else{
+                                                    $tmp[$key]['checkout'] = '-:-';
+                                                }
+                                            } else {
+                                                $tmp[$key]['checkout'] =  $finalCheckout;
                                             }
 
                                             $tmp[$key]['class'] = ' text-light bg-secondary';
@@ -389,10 +439,14 @@ class TimeKeepingService
                                             if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timeAM']) {
                                                 $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
 
-                                                if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                                    $checkOut = strtotime($key. ' '. $time->checkout);
-                                                }else {
-                                                    $checkOut = '';
+                                                if( $finalCheckout == null){
+                                                    if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                        $checkOut = strtotime($key. ' '. $time->checkout);
+                                                    }else {
+                                                        $checkOut = '';
+                                                    }
+                                                }else{
+                                                    $checkOut = strtotime($key. ' '. $time->final_checkout);
                                                 }
 
                                                 $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
@@ -429,11 +483,17 @@ class TimeKeepingService
                                             $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
                                             $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
                                             $tmp[$key]['checkout'] = $time->checkout? date('H:i', strtotime($key. ' '. $time->checkout)) : '-:-';
-                                            //if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                            //    $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                            //}else{
-                                            //    $tmp[$key]['checkout'] = '-:-';
-                                            //}
+                                            // $finalCheckout = $tmp[$key]['final_checkout'] = $time->final_checkout? date('H:i', strtotime($key. ' '. $time->final_checkout)) : '';
+
+                                            // if( $finalCheckout == ''){
+                                            //     if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                            //         $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                            //     }else{
+                                            //         $tmp[$key]['checkout'] = '-:-';
+                                            //     }
+                                            // } else {
+                                            //     $tmp[$key]['checkout'] =  $finalCheckout;
+                                            // }
 
                                             $tmp[$key]['class'] = 'text-light bg-dark';
 
@@ -442,12 +502,15 @@ class TimeKeepingService
                                             if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timePM']) {
                                                 $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
                                                 $checkOut = $time->checkout? strtotime($key. ' '. $time->checkout): '';
-                                                //if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                                //    $checkOut = strtotime($key. ' '. $time->checkout);
-                                                //}else {
-                                                //    $checkOut = '';
-                                                //}
-
+                                                // if( $finalCheckout == null){
+                                                //     if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                //         $checkOut = strtotime($key. ' '. $time->checkout);
+                                                //     }else {
+                                                //         $checkOut = '';
+                                                //     }
+                                                // }else{
+                                                //     $checkOut = strtotime($key. ' '. $time->final_checkout);
+                                                // }
                                                 $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
                                                 $end = $configTimeKeepingDay['end_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_timePM']): '';
 
@@ -485,11 +548,17 @@ class TimeKeepingService
                                             $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
                                             $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
                                             $tmp[$key]['checkout'] = $time->checkout? date('H:i', strtotime($key. ' '. $time->checkout)) : '-:-';
-                                            //if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                            //    $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                            //}else{
-                                            //    $tmp[$key]['checkout'] = '-:-';
-                                            //}
+                                            // $finalCheckout = $tmp[$key]['final_checkout'] = $time->final_checkout? date('H:i', strtotime($key. ' '. $time->final_checkout)) : '';
+
+                                            // if( $finalCheckout == ''){
+                                            //     if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                            //         $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                            //     }else{
+                                            //         $tmp[$key]['checkout'] = '-:-';
+                                            //     }
+                                            // } else {
+                                            //     $tmp[$key]['checkout'] =  $finalCheckout;
+                                            // }
 
                                             $tmp[$key]['class'] = 'text-light bg-dark';
 
@@ -498,11 +567,15 @@ class TimeKeepingService
                                             if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timePM']) {
                                                 $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
                                                 $checkOut = $time->checkout? strtotime($key. ' '. $time->checkout): '';
-                                                //if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                                //    $checkOut = strtotime($key. ' '. $time->checkout);
-                                                //}else {
-                                                //    $checkOut = '';
-                                                //}
+                                                // if( $finalCheckout == null){
+                                                //     if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                //         $checkOut = strtotime($key. ' '. $time->checkout);
+                                                //     }else {
+                                                //         $checkOut = '';
+                                                //     }
+                                                // }else{
+                                                //     $checkOut = strtotime($key. ' '. $time->final_checkout);
+                                                // }
 
                                                 $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
                                                 $end = $configTimeKeepingDay['end_timePM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['end_timePM']): '';
@@ -539,19 +612,29 @@ class TimeKeepingService
                                     $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
                                     $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
                                     $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
-                                    if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                         $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                    }else{
-                                         $tmp[$key]['checkout'] = '-:-';
+                                    $finalCheckout = $tmp[$key]['final_checkout'] = $time->final_checkout? date('H:i', strtotime($key. ' '. $time->final_checkout)) : '';
+
+                                    if( $finalCheckout == ''){
+                                        if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                            $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                        }else{
+                                            $tmp[$key]['checkout'] = '-:-';
+                                        }
+                                    } else {
+                                        $tmp[$key]['checkout'] =  $finalCheckout;
                                     }
 
                                     $configTimeKeepingDay = $settings[$day]?? [];
                                     $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
-                                    if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                    if( $finalCheckout == null){
+                                        if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
                                             $checkOut = strtotime($key. ' '. $time->checkout);
                                         }else {
-                                             $checkOut = '';
+                                            $checkOut = '';
                                         }
+                                    }else{
+                                        $checkOut = strtotime($key. ' '. $time->final_checkout);
+                                    }
 
                                     if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timePM']) {
                                         $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
@@ -591,20 +674,30 @@ class TimeKeepingService
                                     $tmp[$key]['time_from'] = $time->time_from? date('H:i', strtotime($key. ' '. $time->time_from)) : '-:-';
                                     $tmp[$key]['time_to'] = $time->time_to? date('H:i', strtotime($key. ' '. $time->time_to)) : '-:-';
                                     $tmp[$key]['checkin'] = $time->checkin? date('H:i', strtotime($key. ' '. $time->checkin)) : '-:-';
-                                    if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                         $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
-                                    }else{
-                                         $tmp[$key]['checkout'] = '-:-';
+                                   $finalCheckout = $tmp[$key]['final_checkout'] = $time->final_checkout? date('H:i', strtotime($key. ' '. $time->final_checkout)) : '';
+
+                                    if( $finalCheckout == ''){
+                                        if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                            $tmp[$key]['checkout'] = date('H:i', strtotime($key. ' '. $time->checkout));
+                                        }else{
+                                            $tmp[$key]['checkout'] = '-:-';
+                                        }
+                                    } else {
+                                        $tmp[$key]['checkout'] =  $finalCheckout;
                                     }
 
                                     $configTimeKeepingDay = $settings[$day]?? [];
 
                                     if ($configTimeKeepingDay && $configTimeKeepingDay['start_timeAM'] && $configTimeKeepingDay['end_timePM']) {
                                         $checkIn = $time->checkin? strtotime($key. ' '. $time->checkin): '';
-                                        if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
-                                            $checkOut = strtotime($key. ' '. $time->checkout);
-                                        }else {
-                                             $checkOut = '';
+                                        if( $finalCheckout == null){
+                                            if(date('H:i', strtotime($key. ' '. $time->checkout)) > '17:30' || strtotime($key. ' '. $time->checkout) < strtotime("today")){
+                                                $checkOut = strtotime($key. ' '. $time->checkout);
+                                            }else {
+                                                $checkOut = '';
+                                            }
+                                        }else{
+                                            $checkOut = strtotime($key. ' '. $time->final_checkout);
                                         }
 
                                         $start = $configTimeKeepingDay['start_timeAM'] != ''? strtotime($key. ' '. $configTimeKeepingDay['start_timeAM']): '';
@@ -1126,19 +1219,29 @@ class TimeKeepingService
                             $total_leave = $value->total_leave;
                             $total_pause = $value->total_pause;
                             $time_pause = $value->time_pause;
+                            $FinalCheckout = strtotime($value->check_date. ' '. $value->final_checkout);
 
                             if(in_array($value->check_date, $arrHoliday) ){
-
                                 if($type == 5 || $type == 6){
                                     $checkIn = $value->checkin? strtotime($value->check_date. ' '. $value->checkin): '';
-                                    $checkOut = $value->checkout? strtotime($value->check_date. ' '. $value->checkout): '';
+                                   
+                                    if( $FinalCheckout == null){
+                                        $checkOut = strtotime($value->check_date. ' '. $value->checkout);
+                                    }else{
+                                        $checkOut = strtotime($value->check_date. ' '. $value->final_checkout);
+                                    }
                                 }else{
                                 $checkIn ='';
                                 $checkOut = '';
                                 }
                             }else{
                                 $checkIn = $value->checkin? strtotime($value->check_date. ' '. $value->checkin): '';
-                                $checkOut = $value->checkout? strtotime($value->check_date. ' '. $value->checkout): '';
+                                if( $FinalCheckout == null){
+                                    $checkOut = $value->checkout? strtotime($value->check_date. ' '. $value->checkout): '';
+                                }else{
+                                     $checkOut = strtotime($value->check_date. ' '. $value->final_checkout);
+                                }
+                               
                             }
                             $timeFrom = strtotime($value->check_date. ' '. $value->time_from);
                             $timeTo = strtotime($value->check_date. ' '. $value->time_to);
@@ -1197,7 +1300,7 @@ class TimeKeepingService
                                         } else if ( $checkOut < $end) {
                                             if($checkOut < $end12){
                                                 $totalAboutEarly++;
-                                                $timeAboutEarly += $end - $checkOut;
+                                                $timeAboutEarly += $end12 - $checkOut;
                                             } else{
                                                 $totalAboutEarly =  $totalAboutEarly;
                                                 $timeAboutEarly = $timeAboutEarly;
@@ -1604,15 +1707,60 @@ class TimeKeepingService
             $go_out->go_out = date('H:i:s', time());
 
             $timeKeeping->btn_check = 2;
-            $timeKeeping->total_pause =  $timeKeeping->total_pause + 1;
+
+                if(($go_out->go_out >= "08:00:00" && $go_out->go_out < "12:00:00") 
+                    || ($go_out->go_out >= "13:30:00" && $go_out->go_out < "17:30:00"))
+                    {
+                        $timeKeeping->total_pause++;
+
+                }else if($go_out->go_out < "08:00:00" || $go_out->go_out > "17:30:00")
+                    {
+                        $timeKeeping->total_pause_w++;
+                }
 
         } else {
             if (empty($go_out->go_in)) {
                 $go_out->go_in = date('H:i:s', time());
+                $time8 = strtotime($go_out->go_date. ' ' . '08:00:00');
+                $time12 = strtotime($go_out->go_date. ' ' . '12:00:00');
+                $time135 = strtotime($go_out->go_date. ' ' . '13:30:00');
+                $time175 = strtotime($go_out->go_date. ' ' . '17:30:00');
+
                 $time_pause = $go_out->time_pause = (strtotime($go_out->go_in) - strtotime($go_out->go_out))/60;
+                $time_pause8_1 = ($time8 - strtotime($go_out->go_out))/60;
+                $time_pause8_2 = (strtotime($go_out->go_in) - $time8)/60;
+                $time_pause12_1 = ($time12 - strtotime($go_out->go_out))/60;
+                $time_pause12_2 = (strtotime($go_out->go_in) - $time12)/60;
+                $time_pause135_1 = ($time135 - strtotime($go_out->go_out))/60;
+                $time_pause135_2 = (strtotime($go_out->go_in) - $time135)/60;
+                $time_pause175_1 = ($time175 - strtotime($go_out->go_out))/60;
+                $time_pause175_2 = (strtotime($go_out->go_in) - $time175)/60;
 
                 $timeKeeping->btn_check = 1;
-                $timeKeeping->time_pause =  $timeKeeping->time_pause + $time_pause;
+                if(($go_out->go_out > "08:00:00" && $go_out->go_out < "12:00:00" && $go_out->go_in < "12:00:00") 
+                || ($go_out->go_out > "13:30:00" && $go_out->go_out < "17:30:00" && $go_out->go_in < "17:30:00"))
+                {
+                    $timeKeeping->time_pause += $time_pause;
+
+                }else if(($go_out->go_out < "08:00:00" && $go_out->go_in < "08:00:00") 
+                || ($go_out->go_out > "17:30:00" && $go_out->go_in > "17:30:00") 
+                || ($go_out->go_out > "11:00:00" && $go_out->go_out <= "12:00:00" && $go_out->go_in <= "12:00:00"))
+                {
+                    $timeKeeping->time_pause_w += $time_pause;
+                }else if($go_out->go_out < "08:00:00" && $go_out->go_in > "08:00:00"){
+                    $timeKeeping->time_pause_w += $time_pause8_1;
+                    $timeKeeping->time_pause += $time_pause8_2;
+                }else if($go_out->go_out < "17:30:00" && $go_out->go_in > "17:30:00"){
+                    $timeKeeping->time_pause_w += $time_pause175_2;
+                    $timeKeeping->time_pause += $time_pause175_1;
+                }else if($go_out->go_out < "12:00:00" && $go_out->go_in > "12:00:00" && $go_out->go_in < "13:30:00"){
+                    $timeKeeping->time_pause += $time_pause12_1;
+                }else if($go_out->go_out < "12:00:00" && $go_out->go_in > "12:00:00" && $go_out->go_in > "13:30:00"){
+                    $timeKeeping->time_pause += ($time_pause - 90) ;
+                }else if($go_out->go_out < "13:30:00" && $go_out->go_in > "13:30:00"){
+                    $timeKeeping->time_pause += $time_pause135_2 ;
+                }
+                
 
             }else{
                 $go_out = new TimeGoOut();
@@ -1621,7 +1769,16 @@ class TimeKeepingService
                 $go_out->go_out = date('H:i:s', time());
 
                 $timeKeeping->btn_check = 2;
-                $timeKeeping->total_pause =  $timeKeeping->total_pause + 1;
+                if(($go_out->go_out > "08:00:00" && $go_out->go_out < "11:00:00") 
+                || ($go_out->go_out > "13:30:00" && $go_out->go_out < "17:30:00"))
+                {
+                    $timeKeeping->total_pause =  $timeKeeping->total_pause + 1;
+
+                }else if($go_out->go_out < "08:00:00" || $go_out->go_out > "17:30:00"  
+                || ($go_out->go_out > "11:00:00" && $go_out->go_out <= "12:00:00"))
+                {
+                    $timeKeeping->total_pause_w =  $timeKeeping->total_pause_w + 1;
+                }
 
             }
         }
