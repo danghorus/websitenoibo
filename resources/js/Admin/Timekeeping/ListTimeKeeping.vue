@@ -76,7 +76,10 @@
 
                                 <template v-else>
 
-                                    <div>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ? time.checkout:'-:-' }}</div>
+                                    <div v-if="time.final_checkout != 0 && time.final_checkout != null">
+                                        {{ time.checkin ? time.checkin: '-:-'}} - <b style="color:#ff8080 ;">{{ time.checkout ? time.checkout:'-:-' }}</b>
+                                    </div>
+                                    <div v-else>{{ time.checkin ? time.checkin: '-:-'}} - {{ time.checkout ? time.checkout:'-:-' }}</div>
 
                                     <div v-if="time.total_pause > 0">Số lần: {{ time.total_pause ? time.total_pause : 0 }} - Thời gian: {{ time.time_pause}}</div>
 
